@@ -1,0 +1,29 @@
+<entities>
+    <entity>
+        <id>FORESTER</id>
+        <name>Forester</name>
+        <texture>textures/buildings/medieval/medieval_lumber.png</texture>
+        <storage>
+            <capacity>100</capacity>
+        </storage>
+        <producer>
+            <resource>WOOD</resource>
+            <time>0.5</time>
+        </producer>
+        <occupy_tile/>
+    </entity>
+    <entity>
+        <id>WAREHOUSE</id>
+        <name>Warehouse</name>
+        <texture>textures/buildings/medieval/medieval_house.png</texture>
+        <storage warehouse="true">
+            <capacity>100</capacity>
+        </storage>
+        <occupy_tile/>
+    </entity>
+    <entity>
+        <id>resource_path_follower</id>
+        <name>resource_path_follower</name>
+        <pathfollower/>
+    </entity>
+</entities>
