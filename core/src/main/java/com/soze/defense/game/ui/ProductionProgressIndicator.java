@@ -38,14 +38,14 @@ public class ProductionProgressIndicator {
     float time = resourceProducerComponent.getTime();
     float percent = progress / time;
 
-    this.resourceSprite.setBounds(position.x, position.y + size.y, 32, 32);
+    this.resourceSprite.setBounds(position.x - size.x / 2, position.y + size.y / 2, 32, 32);
     this.resourceSprite.draw(batch, percent < 0.75f ? 0.75f : percent);
 
     if (mouseOver) {
       this.font.setColor(Color.WHITE);
       this.font.draw(batch,
           String.format("%.1f", progress) + "/" + new DecimalFormat("#.#").format(time) + " s",
-          position.x + 32, position.y + size.y + 22);
+          position.x - (size.x / 2) + 32, position.y + (size.y / 2) + 22);
     }
   }
 

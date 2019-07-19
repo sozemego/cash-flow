@@ -31,7 +31,7 @@ public class GraphicsSystem extends BaseRenderingSystem {
     Sprite sprite = graphicsComponent.getSprite();
     Vector2 position = physicsComponent.getPosition();
     Vector2 size = physicsComponent.getSize();
-    sprite.setBounds(position.x, position.y, size.x, size.y);
+    sprite.setBounds(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y);
 
     sprite.draw(batch);
   }

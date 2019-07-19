@@ -80,7 +80,7 @@ public class GameService {
       LOG.info("Tile does not exist at {}. Create object call skipped", position);
       return;
     }
-    engine.addEntity(objectFactory.createEntity(id, tile.getPosition()));
+    engine.addEntity(objectFactory.createEntity(id, tile.getCenter()));
   }
 
   public List<Entity> getAllEntities() {

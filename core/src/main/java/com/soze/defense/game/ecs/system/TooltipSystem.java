@@ -47,6 +47,7 @@ public class TooltipSystem extends BaseRenderingSystem {
     TooltipComponent tooltipComponent = entity.getComponent(TooltipComponent.class);
 
     Vector2 position = physicsComponent.getPosition();
+    Vector2 size = physicsComponent.getSize();
 
     Vector2 mouse = mousePointer.getMouseWorldCoordinates();
     boolean mouseOver = physicsComponent.isPointIn(mouse);
@@ -57,7 +58,7 @@ public class TooltipSystem extends BaseRenderingSystem {
       String capacity = String.valueOf(storageComponent.getCapacity());
 
       font.setColor(Color.WHITE);
-      font.draw(batch, capacityTaken + "/" + capacity, position.x, position.y);
+      font.draw(batch, capacityTaken + "/" + capacity, position.x - size.x / 2, position.y - size.y / 2);
     }
 
     ResourceProducerComponent resourceProducerComponent = entity

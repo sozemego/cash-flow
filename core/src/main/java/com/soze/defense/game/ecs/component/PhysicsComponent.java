@@ -30,7 +30,8 @@ public class PhysicsComponent extends BaseComponent {
   }
 
   public boolean isPointIn(Vector2 point) {
-    return new Rectangle(position.x, position.y, size.x, size.y).contains(point);
+    return new Rectangle(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y)
+        .contains(point);
   }
 
   @Override
