@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.soze.defense.game.world.World;
 import java.util.HashSet;
 import java.util.Set;
 import org.slf4j.Logger;

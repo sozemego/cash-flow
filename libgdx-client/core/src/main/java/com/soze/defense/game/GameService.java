@@ -15,6 +15,7 @@ import com.soze.defense.game.ecs.system.ResourceProducerSystem;
 import com.soze.defense.game.ecs.system.TooltipSystem;
 import com.soze.defense.game.pathfinder.Path;
 import com.soze.defense.game.pathfinder.PathFinder;
+import com.soze.defense.game.world.World;
 import com.soze.defense.input.MousePointer;
 import com.soze.klecs.engine.Engine;
 import com.soze.klecs.entity.Entity;

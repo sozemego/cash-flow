@@ -16,6 +16,7 @@ import com.soze.defense.game.ecs.component.ResourceProducerComponent;
 import com.soze.defense.game.ecs.component.StorageComponent;
 import com.soze.defense.game.ecs.component.TooltipComponent;
 import com.soze.defense.game.ecs.component.WarehouseStorageComponent;
+import com.soze.defense.game.world.World;
 import com.soze.klecs.entity.Entity;
 import com.soze.klecs.entity.EntityFactory;
 import java.util.HashMap;

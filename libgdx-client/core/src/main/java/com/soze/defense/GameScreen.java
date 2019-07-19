@@ -9,7 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.soze.defense.game.GameInputHandler;
 import com.soze.defense.game.GameService;
-import com.soze.defense.game.World;
+import com.soze.defense.game.world.World;
+import com.soze.defense.game.world.WorldHttpClient;
 import com.soze.defense.input.FluidCamera;
 import com.soze.defense.input.MousePointer;
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class GameScreen implements Screen {
   public GameScreen(MyAssetManager assetManager) {
     this.myAssetManager = assetManager;
 
-    this.world = new World(this.myAssetManager);
+    this.world = new World(this.myAssetManager, new WorldHttpClient());
     this.gameService = new GameService(this.world, this.myAssetManager, this.batch,
         this.mousePointer);
     this.gameService.init();
