@@ -59,7 +59,7 @@ public class ResourceProducerSystem extends BaseEntitySystem {
         storageComponent.addResource(resourceProducerComponent.getResource());
         findConsumer(entity, resourceProducerComponent.getResource());
       }
-      LOG.info("Produced {}", resourceProducerComponent.getResource());
+      LOG.trace("Produced {}", resourceProducerComponent.getResource());
     }
 
   }
@@ -84,7 +84,7 @@ public class ResourceProducerSystem extends BaseEntitySystem {
         })
         .collect(Collectors.toList());
 
-    LOG.info("Consumers for {} are {}", resource, consumers);
+    LOG.debug("Consumers for {} are {}", resource, consumers);
     if (consumers.isEmpty()) {
       return;
     }
@@ -93,12 +93,12 @@ public class ResourceProducerSystem extends BaseEntitySystem {
 
     //2. find path to consumer
     Tile from = gameService.getTileUnderEntity(entity);
-    LOG.info("from {}", from);
+    LOG.trace("from {}", from);
     Tile to = gameService.getTileUnderEntity(consumer);
-    LOG.info("to {}", to);
+    LOG.trace("to {}", to);
     //assume path is always found
     Path path = pathFinder.findPath(from, to);
-    LOG.info("path {}", path);
+    LOG.debug("path {}", path);
     gameService.transportResource(consumer, path, resource);
 
     StorageComponent storageComponent = entity.getComponent(StorageComponent.class);
