@@ -58,18 +58,12 @@ public class GameService {
     engine.addSystem(new PathFollowerRenderingSystem(engine, batch, assetManager));
     engine.addSystem(new GraphicsSystem(engine, batch));
 
-//    engine.addEntity(objectFactory
-//        .createEntity("FORESTER", world.getTileAt(new Vector2(240, 240)).getPosition()));
-    engine.addEntity(objectFactory
-        .createEntity("FORESTER", world.getTileAt(new Vector2(2400, 2400)).getPosition()));
-//    engine.addEntity(
-//        objectFactory.createEntity("FORESTER", world.getTileAt(new Vector2(240, 0)).getPosition()));
-//    engine.addEntity(objectFactory
-//        .createEntity("FORESTER", world.getTileAt(new Vector2(360, 240)).getPosition()));
-    engine.addEntity(
-        objectFactory.createEntity("FORESTER", world.getTileAt(new Vector2(360, 0)).getPosition()));
-    engine.addEntity(objectFactory
-        .createEntity("WAREHOUSE", world.getTileAt(new Vector2(600, 600)).getPosition()));
+    createObject("FORESTER", new Vector2(240, 240));
+    createObject("FORESTER", new Vector2(2400, 2400));
+    createObject("FORESTER", new Vector2(2400, 0));
+    createObject("FORESTER", new Vector2(360, 240));
+    createObject("FORESTER", new Vector2(360, 0));
+    createObject("WAREHOUSE", new Vector2(600, 600));
   }
 
   public void update(float delta) {
@@ -78,6 +72,15 @@ public class GameService {
 
   public void render(SpriteBatch batch, float delta) {
     engine.render(delta);
+  }
+
+  public void createObject(String id, Vector2 position) {
+    Tile tile = world.getTileAt(position);
+    if (tile == null) {
+      LOG.info("Tile does not exist at {}. Create object call skipped", position);
+      return;
+    }
+    engine.addEntity(objectFactory.createEntity(id, tile.getPosition()));
   }
 
   public List<Entity> getAllEntities() {
