@@ -2,6 +2,7 @@ package com.soze.defense.game.ecs.system;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.soze.defense.game.Tile;
 import com.soze.defense.game.ecs.NodeHelper;
 import com.soze.defense.game.ecs.component.PathFollowerComponent;
 import com.soze.defense.game.ecs.component.PhysicsComponent;
@@ -34,7 +35,7 @@ public class PathFollowerSystem extends BaseEntitySystem {
     Path path = pathFollowerComponent.getPath();
 
     path.getCurrent().ifPresent(tile -> {
-      float speed = 0f;
+      float speed = Tile.WIDTH / 4;
       Vector2 targetCenter = tile.getCenter();
       float radians = MathUtils.atan2(targetCenter.y - position.y, targetCenter.x - position.x);
 
