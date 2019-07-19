@@ -1,12 +1,17 @@
 package com.soze.common.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorldDTO {
 
-  private final List<TileDTO> tiles;
-  private final int tileWidth;
-  private final int tileHeight;
+  private List<TileDTO> tiles = new ArrayList<>();
+  private int tileWidth;
+  private int tileHeight;
+
+  public WorldDTO() {
+
+  }
 
   public WorldDTO(List<TileDTO> tiles, int tileWidth, int tileHeight) {
     this.tiles = tiles;

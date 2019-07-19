@@ -5,6 +5,9 @@ public class TileDTO {
   private int x;
   private int y;
 
+  public TileDTO() {
+  }
+
   public TileDTO(int x, int y) {
     this.x = x;
     this.y = y;
