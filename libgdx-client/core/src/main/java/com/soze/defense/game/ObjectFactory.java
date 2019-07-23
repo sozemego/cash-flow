@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
+import com.soze.common.dto.FactoryDTO;
 import com.soze.defense.MyAssetManager;
 import com.soze.defense.game.ecs.component.BaseComponent;
 import com.soze.defense.game.ecs.component.GraphicsComponent;
@@ -17,6 +18,7 @@ import com.soze.defense.game.ecs.component.StorageComponent;
 import com.soze.defense.game.ecs.component.TooltipComponent;
 import com.soze.defense.game.ecs.component.WarehouseStorageComponent;
 import com.soze.defense.game.world.World;
+import com.soze.klecs.engine.Engine;
 import com.soze.klecs.entity.Entity;
 import com.soze.klecs.entity.EntityFactory;
 import java.util.HashMap;
@@ -29,15 +31,15 @@ public class ObjectFactory {
   private static final Logger LOG = LoggerFactory.getLogger(ObjectFactory.class);
 
   private final MyAssetManager assetManager;
-  private final EntityFactory entityFactory;
+  private final Engine engine;
   private final World world;
 
   private final Map<String, Element> entities = new HashMap<>();
 
-  public ObjectFactory(MyAssetManager assetManager, EntityFactory entityFactory,
+  public ObjectFactory(MyAssetManager assetManager, Engine engine,
       World world) {
     this.assetManager = assetManager;
-    this.entityFactory = entityFactory;
+    this.engine = engine;
     this.world = world;
   }
 
@@ -57,7 +59,7 @@ public class ObjectFactory {
 
   public Entity createEntity(String id, Vector2 position, Map<String, Object> context) {
     LOG.info("Creating entity {} at {}", id, position);
-    Entity entity = entityFactory.createEntity();
+    Entity entity = engine.getEntityFactory().createEntity();
 
     Element element = entities.get(id);
     if (element == null) {
@@ -126,6 +128,13 @@ public class ObjectFactory {
 
     LOG.info("Created entity {} at {} with {} components", id, position,
         entity.getAllComponents(BaseComponent.class).size());
+    engine.addEntity(entity);
     return entity;
+  }
+
+  public void createFactory(FactoryDTO factoryDTO) {
+    LOG.info("Creating entity from factory {}", factoryDTO.getId());
+    String templateId = factoryDTO.getTemplateId();
+    createEntity(templateId, new Vector2(200 * factoryDTO.getX(), 200 * factoryDTO.getY()));
   }
 }

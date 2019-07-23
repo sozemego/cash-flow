@@ -13,6 +13,7 @@
   <modules>
 
     <module>common</module>
+    <module>factory-service</module>
   </modules>
 
   <properties>

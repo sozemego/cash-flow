@@ -13,6 +13,8 @@ import com.soze.defense.game.ecs.system.PathFollowerRenderingSystem;
 import com.soze.defense.game.ecs.system.PathFollowerSystem;
 import com.soze.defense.game.ecs.system.ResourceProducerSystem;
 import com.soze.defense.game.ecs.system.TooltipSystem;
+import com.soze.defense.game.factory.FactoryClient;
+import com.soze.defense.game.factory.FactoryService;
 import com.soze.defense.game.pathfinder.Path;
 import com.soze.defense.game.pathfinder.PathFinder;
 import com.soze.defense.game.world.World;
@@ -36,6 +38,7 @@ public class GameService {
   private final MyAssetManager assetManager;
 
   private final World world;
+  private final FactoryService factoryService;
   private final Engine engine = new Engine();
   private final ObjectFactory objectFactory;
   private final SpriteBatch batch;
@@ -45,26 +48,28 @@ public class GameService {
       MousePointer mousePointer) {
     this.world = world;
     this.assetManager = assetManager;
-    this.objectFactory = new ObjectFactory(assetManager, engine.getEntityFactory(), world);
+    this.objectFactory = new ObjectFactory(assetManager, engine, world);
     this.batch = batch;
     this.mousePointer = mousePointer;
+    this.factoryService = new FactoryService(new FactoryClient(), objectFactory);
   }
 
   public void init() {
     objectFactory.loadEntityTemplates();
     world.init();
+    factoryService.init();
     engine.addSystem(new ResourceProducerSystem(engine, this, new PathFinder(this)));
     engine.addSystem(new TooltipSystem(engine, batch, assetManager, mousePointer));
     engine.addSystem(new PathFollowerSystem(engine));
     engine.addSystem(new PathFollowerRenderingSystem(engine, batch, assetManager));
     engine.addSystem(new GraphicsSystem(engine, batch));
 
-    createObject("FORESTER", new Vector2(240, 240));
-    createObject("FORESTER", new Vector2(2400, 2400));
-    createObject("FORESTER", new Vector2(2400, 0));
-    createObject("FORESTER", new Vector2(360, 240));
-    createObject("FORESTER", new Vector2(360, 0));
-    createObject("WAREHOUSE", new Vector2(600, 600));
+//    createObject("FORESTER", new Vector2(240, 240));
+//    createObject("FORESTER", new Vector2(2400, 2400));
+//    createObject("FORESTER", new Vector2(2400, 0));
+//    createObject("FORESTER", new Vector2(360, 240));
+//    createObject("FORESTER", new Vector2(360, 0));
+//    createObject("WAREHOUSE", new Vector2(600, 600));
   }
 
   public void update(float delta) {
