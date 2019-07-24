@@ -1,7 +1,6 @@
-package com.soze.common.dto;
+package com.soze.factory.domain;
 
-
-public class FactoryDTO {
+public class Factory {
 
   private String id;
   private String templateId;
@@ -13,11 +12,10 @@ public class FactoryDTO {
   private int width;
   private int height;
 
-  private ProducerDTO producer;
-  private StorageDTO storage;
+  private Producer producer;
+  private Storage storage;
 
-
-  public FactoryDTO() {
+  public Factory() {
 
   }
 
@@ -85,19 +83,35 @@ public class FactoryDTO {
     this.height = height;
   }
 
-  public ProducerDTO getProducer() {
+  public Producer getProducer() {
     return producer;
   }
 
-  public void setProducer(ProducerDTO producer) {
+  public void setProducer(Producer producer) {
     this.producer = producer;
   }
 
-  public StorageDTO getStorage() {
+  public Storage getStorage() {
     return storage;
   }
 
-  public void setStorage(StorageDTO storage) {
+  public void setStorage(Storage storage) {
     this.storage = storage;
+  }
+
+  @Override
+  public String toString() {
+    return "Factory{" +
+        "id='" + id + '\'' +
+        ", templateId='" + templateId + '\'' +
+        ", name='" + name + '\'' +
+        ", texture='" + texture + '\'' +
+        ", x=" + x +
+        ", y=" + y +
+        ", width=" + width +
+        ", height=" + height +
+        ", producer=" + producer +
+        ", storage=" + storage +
+        '}';
   }
 }
