@@ -135,6 +135,8 @@ public class ObjectFactory {
   public void createFactory(FactoryDTO factoryDTO) {
     LOG.info("Creating entity from factory {}", factoryDTO.getId());
     String templateId = factoryDTO.getTemplateId();
-    createEntity(templateId, new Vector2(200 * factoryDTO.getX(), 200 * factoryDTO.getY()));
+    Vector2 position = new Vector2(Tile.WIDTH * factoryDTO.getX(), Tile.HEIGHT * factoryDTO.getY());
+    Tile tile = world.getTileAt(position);
+    createEntity(templateId, tile.getCenter());
   }
 }
