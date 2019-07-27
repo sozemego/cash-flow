@@ -6,6 +6,9 @@ import com.soze.common.dto.StorageDTO;
 import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.Producer;
 import com.soze.factory.service.FactoryService;
+import com.soze.factory.service.FactoryTemplateLoader;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -20,10 +23,13 @@ public class FactoryController {
   private static final Logger LOG = LoggerFactory.getLogger(FactoryController.class);
 
   private final FactoryService factoryService;
+  private final FactoryTemplateLoader factoryTemplateLoader;
 
   @Autowired
-  public FactoryController(FactoryService factoryService) {
+  public FactoryController(FactoryService factoryService,
+                           FactoryTemplateLoader factoryTemplateLoader) {
     this.factoryService = factoryService;
+    this.factoryTemplateLoader = factoryTemplateLoader;
   }
 
   @GetMapping(value = "/")
@@ -33,6 +39,13 @@ public class FactoryController {
                                                  .collect(Collectors.toList());
     LOG.info("Returning {} factories", factoryDTOS.size());
     return factoryDTOS;
+  }
+
+  @GetMapping(value = "/templates")
+  public String getTemplate() throws Exception {
+    File entities = factoryTemplateLoader.getEntities();
+    List<String> list = Files.readAllLines(entities.toPath());
+    return String.join("\n", list);
   }
 
   private FactoryDTO convert(Factory factory) {

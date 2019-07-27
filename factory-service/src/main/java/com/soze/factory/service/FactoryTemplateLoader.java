@@ -6,6 +6,7 @@ import com.soze.common.json.JsonUtils;
 import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.Producer;
 import com.soze.factory.domain.Storage;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -32,17 +33,13 @@ public class FactoryTemplateLoader {
   private final Map<String, JsonNode> jsonEntities = new HashMap<>();
 
   @PostConstruct
-  public void setup() {
+  public void setup() throws Exception {
     LOG.info("Factory templates init...");
-    try {
-      List<JsonNode> objects = JsonUtils.parseList(entities.getFile(), JsonNode.class);
-      for (JsonNode object : objects) {
-        jsonEntities.put(object.get("id").asText(), object);
-      }
-      LOG.info("Loaded {} entities", jsonEntities.size());
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
+    List<JsonNode> objects = JsonUtils.parseList(getEntities(), JsonNode.class);
+    for (JsonNode object : objects) {
+      jsonEntities.put(object.get("id").asText(), object);
     }
+    LOG.info("Loaded {} entities", jsonEntities.size());
   }
 
   public Factory constructFactoryByTemplateId(String id) {
@@ -77,6 +74,10 @@ public class FactoryTemplateLoader {
 
   private JsonNode findRootById(String id) {
     return jsonEntities.get(id);
+  }
+
+  public File getEntities() throws IOException  {
+    return entities.getFile();
   }
 
 }
