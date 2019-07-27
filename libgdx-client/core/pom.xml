@@ -49,6 +49,11 @@
             <version>3.14.2</version>
         </dependency>
         <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.soze</groupId>
             <artifactId>common</artifactId>
             <version>0.1.0</version>

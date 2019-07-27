@@ -98,7 +98,7 @@ public class ResourceProducerSystem extends BaseEntitySystem {
     //assume path is always found
     Path path = pathFinder.findPath(from, to);
     LOG.debug("path {}", path);
-    gameService.transportResource(consumer, path, resource);
+//    gameService.transportResource(consumer, path, resource);
 
     StorageComponent storageComponent = entity.getComponent(StorageComponent.class);
     storageComponent.removeResource(resource);

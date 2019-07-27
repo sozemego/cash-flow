@@ -57,7 +57,7 @@ public class GameInputHandler implements InputProcessor {
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
     if (pressedKeys.contains(Keys.L) && button == Buttons.LEFT) {
-      gameService.createObject("FORESTER", getGameCoords(screenX, screenY));
+
     }
     return false;
   }

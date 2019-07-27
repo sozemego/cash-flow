@@ -46,17 +46,17 @@ public class ObjectFactory {
     LOG.info("Loaded {} entity templates", templates.size());
   }
 
-  public Entity createEntity(String id, Vector2 position) {
-    return createEntity(id, position, new HashMap<>());
+  public Entity createEntity(String id, String templateId, Vector2 position) {
+    return createEntity(id, templateId, position, new HashMap<>());
   }
 
-  public Entity createEntity(String id, Vector2 position, Map<String, Object> context) {
-    LOG.info("Creating entity {} at {}", id, position);
-    Entity entity = engine.getEntityFactory().createEntity();
+  public Entity createEntity(String id, String templateId, Vector2 position, Map<String, Object> context) {
+    LOG.info("Creating entity with templateId {} at {}", templateId, position);
+    Entity entity = engine.getEntityFactory().createEntity(id);
 
-    JsonNode root = templates.get(id);
+    JsonNode root = templates.get(templateId);
     if (root == null) {
-      throw new IllegalArgumentException("No entity with id " + id);
+      throw new IllegalArgumentException("No entity template with id " + templateId);
     }
 
     PhysicsComponent physicsComponent = new PhysicsComponent(position,
@@ -127,10 +127,9 @@ public class ObjectFactory {
 
   public void createFactory(FactoryDTO factoryDTO) {
     LOG.info("Creating entity from factory {}", factoryDTO.getId());
-    String templateId = factoryDTO.getTemplateId();
     Vector2 position = new Vector2(Tile.WIDTH * factoryDTO.getX(), Tile.HEIGHT * factoryDTO.getY());
     Tile tile = world.getTileAt(position);
-    createEntity(templateId, tile.getCenter());
+    createEntity(factoryDTO.getId(), factoryDTO.getTemplateId(), tile.getCenter());
   }
 
 }

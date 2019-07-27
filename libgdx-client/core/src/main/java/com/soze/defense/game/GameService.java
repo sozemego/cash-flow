@@ -15,6 +15,7 @@ import com.soze.defense.game.ecs.system.ResourceProducerSystem;
 import com.soze.defense.game.ecs.system.TooltipSystem;
 import com.soze.defense.game.factory.FactoryClient;
 import com.soze.defense.game.factory.FactoryService;
+import com.soze.defense.game.factory.FactoryWebSocketClient;
 import com.soze.defense.game.pathfinder.Path;
 import com.soze.defense.game.pathfinder.PathFinder;
 import com.soze.defense.game.world.World;
@@ -45,13 +46,18 @@ public class GameService {
   private final MousePointer mousePointer;
 
   public GameService(World world, MyAssetManager assetManager, SpriteBatch batch,
-      MousePointer mousePointer) {
+                     MousePointer mousePointer) {
     this.world = world;
     this.assetManager = assetManager;
     this.objectFactory = new ObjectFactory(assetManager, engine, world);
     this.batch = batch;
     this.mousePointer = mousePointer;
-    this.factoryService = new FactoryService(new FactoryClient(), objectFactory);
+
+    FactoryWebSocketClient factoryWebSocketClient = FactoryWebSocketClient
+        .create("ws://localhost:9001/factory/websocket");
+
+    this.factoryService = new FactoryService(new FactoryClient(), factoryWebSocketClient,
+        objectFactory);
   }
 
   public void init() {
@@ -64,12 +70,6 @@ public class GameService {
     engine.addSystem(new PathFollowerRenderingSystem(engine, batch, assetManager));
     engine.addSystem(new GraphicsSystem(engine, batch));
 
-//    createObject("FORESTER", new Vector2(240, 240));
-//    createObject("FORESTER", new Vector2(2400, 2400));
-//    createObject("FORESTER", new Vector2(2400, 0));
-//    createObject("FORESTER", new Vector2(360, 240));
-//    createObject("FORESTER", new Vector2(360, 0));
-//    createObject("WAREHOUSE", new Vector2(600, 600));
   }
 
   public void update(float delta) {
@@ -78,15 +78,6 @@ public class GameService {
 
   public void render(SpriteBatch batch, float delta) {
     engine.render(delta);
-  }
-
-  public void createObject(String id, Vector2 position) {
-    Tile tile = world.getTileAt(position);
-    if (tile == null) {
-      LOG.info("Tile does not exist at {}. Create object call skipped", position);
-      return;
-    }
-    engine.addEntity(objectFactory.createEntity(id, tile.getCenter()));
   }
 
   public List<Entity> getAllEntities() {
@@ -137,27 +128,27 @@ public class GameService {
     return !getEntityOnTile(tile).isPresent();
   }
 
-  public void transportResource(Entity consumer, Path path, Resource resource) {
-    Map<String, Object> context = new HashMap<>();
-    String resourceName = resource.toString().toLowerCase();
-    context.put("texture", "textures/resources/" + resourceName + ".png");
-    Vector2 position = path.getCurrent().get().getCenter();
-    Entity transportedResource = objectFactory
-        .createEntity("resource_path_follower", position, context);
-    PhysicsComponent physicsComponent = transportedResource.getComponent(PhysicsComponent.class);
-    physicsComponent.setPosition(position.x, position.y);
-    physicsComponent.setSize(32, 32);
-    transportedResource.getComponent(PathFollowerComponent.class).setPath(path);
-    path.next();
-    engine.addEntity(transportedResource);
-
-    path.setOnFinish(() -> {
-      BaseStorage storage = consumer.getComponentByParent(BaseStorage.class);
-      if (storage == null) {
-        return;
-      }
-      storage.addResource(resource);
-    });
-  }
+//  public void transportResource(Entity consumer, Path path, Resource resource) {
+//    Map<String, Object> context = new HashMap<>();
+//    String resourceName = resource.toString().toLowerCase();
+//    context.put("texture", "textures/resources/" + resourceName + ".png");
+//    Vector2 position = path.getCurrent().get().getCenter();
+//    Entity transportedResource = objectFactory
+//        .createEntity("resource_path_follower", position, context);
+//    PhysicsComponent physicsComponent = transportedResource.getComponent(PhysicsComponent.class);
+//    physicsComponent.setPosition(position.x, position.y);
+//    physicsComponent.setSize(32, 32);
+//    transportedResource.getComponent(PathFollowerComponent.class).setPath(path);
+//    path.next();
+//    engine.addEntity(transportedResource);
+//
+//    path.setOnFinish(() -> {
+//      BaseStorage storage = consumer.getComponentByParent(BaseStorage.class);
+//      if (storage == null) {
+//        return;
+//      }
+//      storage.addResource(resource);
+//    });
+//  }
 
 }
