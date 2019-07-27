@@ -47,7 +47,7 @@ public class FactoryTemplateLoader {
   public Factory constructFactoryByTemplateId(String id) {
     JsonNode root = findRootById(id);
     if (root == null) {
-      throw new IllegalStateException("Did not find template by id " + id);
+      throw new IllegalArgumentException("Did not find template by id " + id);
     }
 
     Factory factory = new Factory();
