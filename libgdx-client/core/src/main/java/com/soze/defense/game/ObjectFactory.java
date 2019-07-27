@@ -1,11 +1,8 @@
 package com.soze.defense.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.XmlReader;
-import com.badlogic.gdx.utils.XmlReader.Element;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.soze.common.dto.FactoryDTO;
 import com.soze.defense.MyAssetManager;
 import com.soze.defense.game.ecs.component.BaseComponent;
@@ -20,7 +17,6 @@ import com.soze.defense.game.ecs.component.WarehouseStorageComponent;
 import com.soze.defense.game.world.World;
 import com.soze.klecs.engine.Engine;
 import com.soze.klecs.entity.Entity;
-import com.soze.klecs.entity.EntityFactory;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -34,7 +30,7 @@ public class ObjectFactory {
   private final Engine engine;
   private final World world;
 
-  private final Map<String, Element> entities = new HashMap<>();
+  private final Map<String, JsonNode> templates = new HashMap<>();
 
   public ObjectFactory(MyAssetManager assetManager, Engine engine,
       World world) {
@@ -44,13 +40,10 @@ public class ObjectFactory {
   }
 
   public void loadEntityTemplates() {
-    String path = "data/entities.xml";
-    LOG.info("Loading entity templates from {}...", path);
-    XmlReader xmlReader = new XmlReader();
-    Element root = xmlReader.parse(Gdx.files.internal(path));
-    Array<Element> elements = root.getChildrenByName("entity");
-    elements.forEach(entity -> entities.put(entity.getChildByName("id").getText(), entity));
-    LOG.info("Loaded {} entity templates", entities.size());
+    TemplateLoader templateLoader = new TemplateLoader();
+    templates.clear();
+    templates.putAll(templateLoader.getTemplates());
+    LOG.info("Loaded {} entity templates", templates.size());
   }
 
   public Entity createEntity(String id, Vector2 position) {
@@ -61,8 +54,8 @@ public class ObjectFactory {
     LOG.info("Creating entity {} at {}", id, position);
     Entity entity = engine.getEntityFactory().createEntity();
 
-    Element element = entities.get(id);
-    if (element == null) {
+    JsonNode root = templates.get(id);
+    if (root == null) {
       throw new IllegalArgumentException("No entity with id " + id);
     }
 
@@ -70,19 +63,19 @@ public class ObjectFactory {
         new Vector2(Tile.WIDTH, Tile.HEIGHT));
     entity.addComponent(physicsComponent);
 
-    Element texture = element.getChildByName("texture");
+    JsonNode texture = root.get("texture");
     if (texture != null) {
-      String textureName = texture.getText();
+      String textureName = texture.asText();
       Sprite sprite = new Sprite(assetManager.getTexture(textureName));
       sprite.setPosition(position.x, position.y);
       GraphicsComponent graphicsComponent = new GraphicsComponent(sprite);
       entity.addComponent(graphicsComponent);
     }
 
-    Element storage = element.getChildByName("storage");
+    JsonNode storage = root.get("storage");
     if (storage != null) {
-      int capacity = Integer.parseInt(storage.getChildByName("capacity").getText());
-      boolean warehouse = Boolean.parseBoolean(storage.getAttribute("warehouse", "false"));
+      int capacity = Integer.parseInt(storage.get("capacity").asText());
+      boolean warehouse = storage.get("storage") != null && Boolean.parseBoolean(storage.get("storage").asText());
       if (warehouse) {
         WarehouseStorageComponent warehouseStorageComponent = new WarehouseStorageComponent(
             capacity);
@@ -93,16 +86,16 @@ public class ObjectFactory {
       }
     }
 
-    Element producer = element.getChildByName("producer");
+    JsonNode producer = root.get("producer");
     if (producer != null) {
-      Resource resource = Resource.valueOf(producer.getChildByName("resource").getText());
-      float time = Float.parseFloat(producer.getChildByName("time").getText());
+      Resource resource = Resource.valueOf(producer.get("resource").asText());
+      float time = Float.parseFloat(producer.get("time").asText());
       ResourceProducerComponent resourceProducerComponent = new ResourceProducerComponent(resource,
           time);
       entity.addComponent(resourceProducerComponent);
     }
 
-    Element pathFollower = element.getChildByName("pathfollower");
+    JsonNode pathFollower = root.get("pathfollower");
     if (pathFollower != null) {
       PathFollowerComponent pathFollowerComponent = new PathFollowerComponent();
       entity.addComponent(pathFollowerComponent);
@@ -118,8 +111,8 @@ public class ObjectFactory {
 
     entity.addComponent(new TooltipComponent());
 
-    Element occupyTile = element.getChildByName("occupy_tile");
-    if (occupyTile != null) {
+    JsonNode occupyTile = root.get("occupyTile");
+    if (occupyTile != null && occupyTile.isBoolean() && occupyTile.asBoolean()) {
       OccupyTileComponent occupyTileComponent = new OccupyTileComponent();
       Tile tile = world.getTileAt(position);
       occupyTileComponent.setTile(tile);
@@ -139,4 +132,5 @@ public class ObjectFactory {
     Tile tile = world.getTileAt(position);
     createEntity(templateId, tile.getCenter());
   }
+
 }
