@@ -1,5 +1,6 @@
 package com.soze.common.json;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +33,14 @@ public class JsonUtils {
       return MAPPER
           .readValue(json, MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
     } catch (IOException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
+
+  public static String serialize(Object object) {
+    try {
+      return MAPPER.writeValueAsString(object);
+    } catch (JsonProcessingException e) {
       throw new IllegalArgumentException(e);
     }
   }
