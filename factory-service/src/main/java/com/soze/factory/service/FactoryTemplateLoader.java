@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class FactoryTemplateLoader {
   }
 
   public Factory constructFactoryByTemplateId(String id) {
-    JsonNode root = findRootById(id);
+    JsonNode root = findRootById(Objects.requireNonNull(id));
     if (root == null) {
       throw new IllegalArgumentException("Did not find template by id " + id);
     }
