@@ -65,7 +65,7 @@ public class FactoryTemplateLoader {
     Producer producer = new Producer();
     producer.setProducing(false);
     producer.setProgress(0);
-    producer.setTime(producerNode.get("time").asInt());
+    producer.setTime((float) producerNode.get("time").asDouble());
     producer.setResource(Resource.valueOf(producerNode.get("resource").asText()));
     factory.setProducer(producer);
 
