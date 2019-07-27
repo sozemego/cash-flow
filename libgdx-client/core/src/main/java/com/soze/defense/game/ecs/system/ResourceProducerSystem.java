@@ -84,7 +84,6 @@ public class ResourceProducerSystem extends BaseEntitySystem {
         })
         .collect(Collectors.toList());
 
-    LOG.debug("Consumers for {} are {}", resource, consumers);
     if (consumers.isEmpty()) {
       return;
     }
