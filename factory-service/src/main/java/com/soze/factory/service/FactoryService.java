@@ -1,7 +1,6 @@
 package com.soze.factory.service;
 
 import com.soze.factory.domain.Factory;
-import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
