@@ -42,7 +42,8 @@ public class FactoryController {
   }
 
   @GetMapping(value = "/templates")
-  public String getTemplate() throws Exception {
+  public String getTemplates() throws Exception {
+    LOG.info("Calling getTemplates");
     File entities = factoryTemplateLoader.getEntities();
     List<String> list = Files.readAllLines(entities.toPath());
     return String.join("\n", list);
