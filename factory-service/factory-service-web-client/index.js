@@ -9,21 +9,18 @@ socket.onerror = function onError(error) {
 };
 
 function start() {
-  fetchFactories();
   socket.onmessage = function onMessage(msg) {
     if (msg.data) {
       const data = JSON.parse(msg.data);
       if (data.type == 'RESOURCE_PRODUCED') {
         handleResourceProduced(data);
       }
+      if (data.type == 'FACTORY_ADDED') {
+        handleFactoryAdded(data);
+      }
+      console.log(data.type);
     }
   };
-}
-
-function fetchFactories() {
-  fetch('http://localhost:9001/factory/')
-  .then(result => result.json())
-  .then(factories => factories.forEach(addFactory));
 }
 
 const factories = {};
@@ -90,7 +87,7 @@ function factoryTemplate(factory) {
       </div>
       <div>
         <span>Storage - [${getAllResourceCount(
-          factory)} / ${factory.storage.capacity}]</span>
+      factory)} / ${factory.storage.capacity}]</span>
       </div>
    </div>
   `
@@ -111,4 +108,9 @@ function handleResourceProduced(message) {
   const count = storage.resources[resource] || 0;
   storage.resources[resource] = count + 1;
   updateFactory(factory);
+}
+
+function handleFactoryAdded(message) {
+  const {factoryDTO} = message;
+  addFactory(factoryDTO);
 }
