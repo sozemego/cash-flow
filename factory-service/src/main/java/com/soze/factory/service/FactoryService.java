@@ -3,6 +3,7 @@ package com.soze.factory.service;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
+import com.soze.common.ws.factory.server.ResourceProductionStarted;
 import com.soze.common.ws.factory.server.ServerMessage;
 import com.soze.factory.FactoryConverter;
 import com.soze.factory.domain.Factory;
@@ -73,20 +74,24 @@ public class FactoryService {
     if (producer.isProducing()) {
       return;
     }
+
+    producer.startProduction();
     float timeRemaining = producer.getTime() - producer.getProgress();
     executorService.schedule(() -> {
       finishProducing(factory);
       startProducing(factory);
     }, (long) timeRemaining, TimeUnit.MILLISECONDS);
+
+    ResourceProductionStarted resourceProductionStarted = new ResourceProductionStarted(factory.getId(), factory.getProducer().getResource());
+    sendToAll(resourceProductionStarted);
   }
 
   private void finishProducing(Factory factory) {
     LOG.info("Factory {} finished producing {}", factory.getId(),
         factory.getProducer().getResource());
     Producer producer = factory.getProducer();
+    producer.stopProduction();
     Storage storage = factory.getStorage();
-    producer.setProgress(0);
-    producer.setProducing(false);
     storage.addResource(producer.getResource());
     sendToAll(new ResourceProduced(factory.getId(), producer.getResource()));
   }

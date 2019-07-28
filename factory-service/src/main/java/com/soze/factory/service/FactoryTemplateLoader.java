@@ -63,8 +63,7 @@ public class FactoryTemplateLoader {
 
     JsonNode producerNode = root.get("producer");
     Producer producer = new Producer();
-    producer.setProducing(false);
-    producer.setProgress(0);
+    producer.stopProduction();
     producer.setTime((float) producerNode.get("time").asDouble());
     producer.setResource(Resource.valueOf(producerNode.get("resource").asText()));
     factory.setProducer(producer);
