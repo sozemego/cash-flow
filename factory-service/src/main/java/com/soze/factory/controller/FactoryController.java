@@ -62,6 +62,7 @@ public class FactoryController {
 
     StorageDTO storageDTO = new StorageDTO();
     storageDTO.setCapacity(factory.getStorage().getCapacity());
+    storageDTO.getResources().putAll(factory.getStorage().getResources());
     factoryDTO.setStorage(storageDTO);
 
     ProducerDTO producerDTO = new ProducerDTO();

@@ -66,6 +66,10 @@ public class Storage {
     return getCapacity() - getCapacityTaken();
   }
 
+  public Map<Resource, Integer> getResources() {
+    return new HashMap<>(resources);
+  }
+
   @Override
   public String toString() {
     return "Storage{" +
