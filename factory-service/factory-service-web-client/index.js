@@ -76,15 +76,23 @@ function createDom(factory) {
 
 function factoryTemplate(factory) {
   return `
-    <div>
-      <span>
-          ${factory.id}
-      </span>
-      <span>
-          ${factory.name}
-      </span>
-      <span>Storage ${getAllResourceCount(factory)} / ${factory.storage.capacity}</span>
-    </div>
+    <div style="width:100%">
+      <div>
+        <span class="smaller">
+            ${factory.id}
+        </span>
+      </div>
+      <div>
+        <span>
+            ${factory.name}
+        </span>
+      
+      </div>
+      <div>
+        <span>Storage - [${getAllResourceCount(
+          factory)} / ${factory.storage.capacity}]</span>
+      </div>
+   </div>
   `
 }
 
