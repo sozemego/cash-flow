@@ -7,6 +7,7 @@ public class ResourceProducerComponent extends BaseComponent {
   private final Resource resource;
   private final float time;
   private float progress;
+  private boolean producing;
 
   public ResourceProducerComponent(Resource resource, float time) {
     this.resource = resource;
@@ -27,5 +28,13 @@ public class ResourceProducerComponent extends BaseComponent {
 
   public void setProgress(float progress) {
     this.progress = progress;
+  }
+
+  public boolean isProducing() {
+    return producing;
+  }
+
+  public void setProducing(boolean producing) {
+    this.producing = producing;
   }
 }
