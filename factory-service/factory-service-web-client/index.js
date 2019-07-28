@@ -111,10 +111,11 @@ function getAllResourceCount(factory) {
 function handleResourceProduced(message) {
   const {factoryId, resource} = message;
   const {factory} = factories[factoryId];
-  const {storage} = factory;
+  const {storage, producer} = factory;
 
   const count = storage.resources[resource] || 0;
   storage.resources[resource] = count + 1;
+  producer.progress = 0;
   updateFactory(factory);
 }
 
