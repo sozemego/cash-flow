@@ -1,10 +1,7 @@
 package com.soze.factory.controller;
 
 import com.soze.common.dto.FactoryDTO;
-import com.soze.common.dto.ProducerDTO;
-import com.soze.common.dto.StorageDTO;
-import com.soze.factory.domain.Factory;
-import com.soze.factory.domain.Producer;
+import com.soze.factory.FactoryConverter;
 import com.soze.factory.service.FactoryService;
 import com.soze.factory.service.FactoryTemplateLoader;
 import java.io.File;
@@ -24,18 +21,23 @@ public class FactoryController {
 
   private final FactoryService factoryService;
   private final FactoryTemplateLoader factoryTemplateLoader;
+  private final FactoryConverter factoryConverter;
 
   @Autowired
   public FactoryController(FactoryService factoryService,
-                           FactoryTemplateLoader factoryTemplateLoader) {
+                           FactoryTemplateLoader factoryTemplateLoader,
+                           FactoryConverter factoryConverter) {
     this.factoryService = factoryService;
     this.factoryTemplateLoader = factoryTemplateLoader;
+    this.factoryConverter = factoryConverter;
   }
 
   @GetMapping(value = "/")
   public List<FactoryDTO> getFactories() {
     LOG.info("Calling getFactories");
-    List<FactoryDTO> factoryDTOS = factoryService.getFactories().stream().map(this::convert)
+    List<FactoryDTO> factoryDTOS = factoryService.getFactories()
+                                                 .stream()
+                                                 .map(factoryConverter::convert)
                                                  .collect(Collectors.toList());
     LOG.info("Returning {} factories", factoryDTOS.size());
     return factoryDTOS;
@@ -47,33 +49,6 @@ public class FactoryController {
     File entities = factoryTemplateLoader.getEntities();
     List<String> list = Files.readAllLines(entities.toPath());
     return String.join("\n", list);
-  }
-
-  private FactoryDTO convert(Factory factory) {
-    FactoryDTO factoryDTO = new FactoryDTO();
-    factoryDTO.setId(factory.getId());
-    factoryDTO.setTemplateId(factory.getTemplateId());
-    factoryDTO.setName(factory.getName());
-    factoryDTO.setTexture(factory.getTexture());
-    factoryDTO.setWidth(factory.getWidth());
-    factoryDTO.setHeight(factory.getHeight());
-    factoryDTO.setX(factory.getX());
-    factoryDTO.setY(factory.getY());
-
-    StorageDTO storageDTO = new StorageDTO();
-    storageDTO.setCapacity(factory.getStorage().getCapacity());
-    storageDTO.getResources().putAll(factory.getStorage().getResources());
-    factoryDTO.setStorage(storageDTO);
-
-    ProducerDTO producerDTO = new ProducerDTO();
-    Producer producer = factory.getProducer();
-    producerDTO.setProducing(producer.isProducing());
-    producerDTO.setProgress(producer.getProgress());
-    producerDTO.setTime(producer.getTime());
-    producerDTO.setResource(producer.getResource());
-    factoryDTO.setProducer(producerDTO);
-
-    return factoryDTO;
   }
 
 }

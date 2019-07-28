@@ -1,8 +1,10 @@
 package com.soze.factory.service;
 
 import com.soze.common.json.JsonUtils;
+import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ServerMessage;
+import com.soze.factory.FactoryConverter;
 import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.Producer;
 import com.soze.factory.domain.Storage;
@@ -11,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -28,17 +29,21 @@ public class FactoryService {
 
   private static final Logger LOG = LoggerFactory.getLogger(FactoryService.class);
 
-  private final List<Factory> factories = new ArrayList<>();
-
   private final FactoryTemplateLoader templateLoader;
+  private final FactoryConverter factoryConverter;
+
+  private final List<Factory> factories = new ArrayList<>();
 
   private final Set<WebSocketSession> sessions = new HashSet<>();
 
-  private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+  private final ScheduledExecutorService executorService = Executors
+      .newSingleThreadScheduledExecutor();
 
   @Autowired
-  public FactoryService(FactoryTemplateLoader templateLoader) {
+  public FactoryService(FactoryTemplateLoader templateLoader,
+                        FactoryConverter factoryConverter) {
     this.templateLoader = templateLoader;
+    this.factoryConverter = factoryConverter;
   }
 
   @PostConstruct
@@ -76,7 +81,8 @@ public class FactoryService {
   }
 
   private void finishProducing(Factory factory) {
-    LOG.info("Factory {} finished producing {}", factory.getId(), factory.getProducer().getResource());
+    LOG.info("Factory {} finished producing {}", factory.getId(),
+        factory.getProducer().getResource());
     Producer producer = factory.getProducer();
     Storage storage = factory.getStorage();
     producer.setProgress(0);
@@ -91,22 +97,37 @@ public class FactoryService {
 
   public void addSession(WebSocketSession session) {
     sessions.add(session);
+
+    //send back all factories to the session
+    LOG.info("Sending FactoryAdded message for {} factories", factories.size());
+    for (Factory factory : factories) {
+      FactoryAdded factoryAdded = new FactoryAdded(factoryConverter.convert(factory));
+      sendTo(factoryAdded, session);
+    }
   }
 
   public void removeSession(WebSocketSession session) {
     sessions.remove(session);
   }
 
+  private void sendTo(ServerMessage serverMessage, WebSocketSession session) {
+    TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
+    sendTo(textMessage, session);
+  }
+
+  private void sendTo(TextMessage textMessage, WebSocketSession session) {
+    try {
+      session.sendMessage(textMessage);
+    } catch (IOException e) {
+      LOG.warn("Exception when sending a server message, to session {}", session.getId(), e);
+    }
+  }
+
   private void sendToAll(ServerMessage serverMessage) {
     TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
-    try {
-      for (WebSocketSession session : sessions) {
-        session.sendMessage(textMessage);
-      }
-    } catch (IOException e) {
-      LOG.warn("Exception when sending a server message", e);
+    for (WebSocketSession session : sessions) {
+      sendTo(textMessage, session);
     }
-
   }
 
 }
