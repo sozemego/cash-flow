@@ -2,6 +2,9 @@ package com.soze.defense.game.factory;
 
 
 import com.soze.common.dto.FactoryDTO;
+import com.soze.common.ws.factory.server.FactoryAdded;
+import com.soze.common.ws.factory.server.ResourceProduced;
+import com.soze.common.ws.factory.server.ResourceProductionStarted;
 import com.soze.defense.game.ObjectFactory;
 import java.util.List;
 import org.slf4j.Logger;
@@ -25,22 +28,26 @@ public class FactoryService {
 
   public void init() {
     LOG.info("FactoryService init...");
-    try {
-      LOG.info("Connecting to websocket client");
-      webSocketClient.connectBlocking();
-    } catch (InterruptedException e) {
-      throw new IllegalStateException(e);
-    }
+
+    LOG.info("Connecting to websocket client");
+    webSocketClient.connectBlocking(this);
 
     if (!webSocketClient.isOpen()) {
       throw new IllegalStateException("websocket client is not open");
     }
 
-    LOG.info("Connected to websocket client {}", webSocketClient.isOpen());
-    List<FactoryDTO> factories = client.getFactories();
-    for (FactoryDTO factory : factories) {
-      objectFactory.createFactory(factory);
-    }
+    LOG.info("Connected to websocket client");
   }
 
+  public void handle(ResourceProduced message) {
+
+  }
+
+  public void handle(FactoryAdded message) {
+    objectFactory.createFactory(message.getFactoryDTO());
+  }
+
+  public void handle(ResourceProductionStarted message) {
+
+  }
 }
