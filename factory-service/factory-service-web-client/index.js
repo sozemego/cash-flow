@@ -72,22 +72,30 @@ function createDom(factory) {
 }
 
 function factoryTemplate(factory) {
+  const {producer} = factory;
+  const {time, progress, resource} = producer;
+  console.log(producer);
+  const timeLeft = (time - progress) / 1000;
+  const resourceCount = getAllResourceCount(factory);
   return `
-    <div style="width:100%">
+    <div class="factory-container">
       <div>
         <span class="smaller">
             ${factory.id}
         </span>
       </div>
-      <div>
-        <span>
-            ${factory.name}
-        </span>
-      
-      </div>
-      <div>
-        <span>Storage - [${getAllResourceCount(
-      factory)} / ${factory.storage.capacity}]</span>
+      <div class="factory-data-container">
+        <div>
+          <span>
+              ${factory.name}
+          </span>   
+        </div>
+        <div>
+          <span>Storage - [${resourceCount} / ${factory.storage.capacity}]</span>
+        </div>
+        <div>
+          Production - [${resource}] Time left: ${timeLeft}s
+        </div>
       </div>
    </div>
   `
