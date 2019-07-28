@@ -18,6 +18,9 @@ function start() {
       if (data.type == 'FACTORY_ADDED') {
         handleFactoryAdded(data);
       }
+      if (data.type == 'RESOURCE_PRODUCTION_STARTED') {
+        handleResourceProductionStarted(data);
+      }
       console.log(data.type);
     }
   };
@@ -77,6 +80,7 @@ function factoryTemplate(factory) {
   console.log(producer);
   const timeLeft = (time - progress) / 1000;
   const resourceCount = getAllResourceCount(factory);
+  const {producing} = producer;
   return `
     <div class="factory-container">
       <div>
@@ -94,7 +98,7 @@ function factoryTemplate(factory) {
           <span>Storage - [${resourceCount} / ${factory.storage.capacity}]</span>
         </div>
         <div>
-          Production - [${resource}] Time left: ${timeLeft}s
+          Production - [${resource} ${producing ? '🚴🏿‍♂️' : '😴'}] Time left: ${timeLeft}s
         </div>
       </div>
    </div>
@@ -116,10 +120,20 @@ function handleResourceProduced(message) {
   const count = storage.resources[resource] || 0;
   storage.resources[resource] = count + 1;
   producer.progress = 0;
+  producer.producing = false;
   updateFactory(factory);
 }
 
 function handleFactoryAdded(message) {
   const {factoryDTO} = message;
   addFactory(factoryDTO);
+}
+
+function handleResourceProductionStarted(message) {
+  const {factory} = factories[message.factoryId];
+  if (!factory) {
+    return;
+  }
+  factory.producer.producing = true;
+  updateFactory(factory);
 }
