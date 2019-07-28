@@ -138,6 +138,7 @@ public class ObjectFactory {
     ResourceProducerComponent resourceProducerComponent = factory.getComponent(ResourceProducerComponent.class);
     ProducerDTO producerDTO = factoryDTO.getProducer();
     resourceProducerComponent.setProgress(producerDTO.getProgress());
+    resourceProducerComponent.setProducing(producerDTO.isProducing());
 
     BaseStorage baseStorage = factory.getComponentByParent(BaseStorage.class);
     StorageDTO storageDTO = factoryDTO.getStorage();
