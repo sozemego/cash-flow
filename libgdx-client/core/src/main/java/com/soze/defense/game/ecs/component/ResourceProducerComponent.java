@@ -1,6 +1,6 @@
 package com.soze.defense.game.ecs.component;
 
-import com.soze.defense.game.Resource;
+import com.soze.common.dto.Resource;
 
 public class ResourceProducerComponent extends BaseComponent {
 

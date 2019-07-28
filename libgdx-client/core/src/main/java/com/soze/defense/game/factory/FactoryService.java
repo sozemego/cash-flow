@@ -1,12 +1,11 @@
 package com.soze.defense.game.factory;
 
 
-import com.soze.common.dto.FactoryDTO;
 import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ResourceProductionStarted;
 import com.soze.defense.game.ObjectFactory;
-import java.util.List;
+import com.soze.klecs.engine.Engine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,13 +16,15 @@ public class FactoryService {
   private final FactoryClient client;
   private final FactoryWebSocketClient webSocketClient;
   private final ObjectFactory objectFactory;
+  private final Engine engine;
 
   public FactoryService(FactoryClient client,
                         FactoryWebSocketClient webSocketClient,
-                        ObjectFactory objectFactory) {
+                        ObjectFactory objectFactory, Engine engine) {
     this.client = client;
     this.webSocketClient = webSocketClient;
     this.objectFactory = objectFactory;
+    this.engine = engine;
   }
 
   public void init() {

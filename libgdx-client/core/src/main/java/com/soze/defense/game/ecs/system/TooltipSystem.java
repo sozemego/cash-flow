@@ -50,7 +50,8 @@ public class TooltipSystem extends BaseRenderingSystem {
     Vector2 size = physicsComponent.getSize();
 
     Vector2 mouse = mousePointer.getMouseWorldCoordinates();
-    boolean mouseOver = physicsComponent.isPointIn(mouse);
+//    boolean mouseOver = physicsComponent.isPointIn(mouse);
+    boolean mouseOver = true;
 
     BaseStorage storageComponent = entity.getComponentByParent(BaseStorage.class);
     if (storageComponent != null && mouseOver) {

@@ -4,9 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.soze.defense.MyAssetManager;
 import com.soze.defense.game.ecs.NodeHelper;
-import com.soze.defense.game.ecs.component.BaseStorage;
 import com.soze.defense.game.ecs.component.OccupyTileComponent;
-import com.soze.defense.game.ecs.component.PathFollowerComponent;
 import com.soze.defense.game.ecs.component.PhysicsComponent;
 import com.soze.defense.game.ecs.system.GraphicsSystem;
 import com.soze.defense.game.ecs.system.PathFollowerRenderingSystem;
@@ -16,15 +14,12 @@ import com.soze.defense.game.ecs.system.TooltipSystem;
 import com.soze.defense.game.factory.FactoryClient;
 import com.soze.defense.game.factory.FactoryService;
 import com.soze.defense.game.factory.FactoryWebSocketClient;
-import com.soze.defense.game.pathfinder.Path;
 import com.soze.defense.game.pathfinder.PathFinder;
 import com.soze.defense.game.world.World;
 import com.soze.defense.input.MousePointer;
 import com.soze.klecs.engine.Engine;
 import com.soze.klecs.entity.Entity;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,7 +52,7 @@ public class GameService {
         .create("ws://localhost:9001/factory/websocket");
 
     this.factoryService = new FactoryService(new FactoryClient(), factoryWebSocketClient,
-        objectFactory);
+        objectFactory, engine);
   }
 
   public void init() {

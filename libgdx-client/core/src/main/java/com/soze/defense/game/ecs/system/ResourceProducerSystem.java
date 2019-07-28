@@ -3,8 +3,8 @@ package com.soze.defense.game.ecs.system;
 import static com.soze.defense.game.ecs.NodeHelper.ACCEPTS_RESOURCE_PREDICATE;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.soze.common.dto.Resource;
 import com.soze.defense.game.GameService;
-import com.soze.defense.game.Resource;
 import com.soze.defense.game.Tile;
 import com.soze.defense.game.ecs.NodeHelper;
 import com.soze.defense.game.ecs.component.BaseStorage;

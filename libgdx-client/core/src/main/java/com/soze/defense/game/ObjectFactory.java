@@ -4,8 +4,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.soze.common.dto.FactoryDTO;
+import com.soze.common.dto.ProducerDTO;
+import com.soze.common.dto.Resource;
+import com.soze.common.dto.StorageDTO;
 import com.soze.defense.MyAssetManager;
 import com.soze.defense.game.ecs.component.BaseComponent;
+import com.soze.defense.game.ecs.component.BaseStorage;
 import com.soze.defense.game.ecs.component.GraphicsComponent;
 import com.soze.defense.game.ecs.component.OccupyTileComponent;
 import com.soze.defense.game.ecs.component.PathFollowerComponent;
@@ -129,7 +133,19 @@ public class ObjectFactory {
     LOG.info("Creating entity from factory {}", factoryDTO.getId());
     Vector2 position = new Vector2(Tile.WIDTH * factoryDTO.getX(), Tile.HEIGHT * factoryDTO.getY());
     Tile tile = world.getTileAt(position);
-    createEntity(factoryDTO.getId(), factoryDTO.getTemplateId(), tile.getCenter());
+    Entity factory = createEntity(factoryDTO.getId(), factoryDTO.getTemplateId(), tile.getCenter());
+
+    ResourceProducerComponent resourceProducerComponent = factory.getComponent(ResourceProducerComponent.class);
+    ProducerDTO producerDTO = factoryDTO.getProducer();
+    resourceProducerComponent.setProgress(producerDTO.getProgress());
+
+    BaseStorage baseStorage = factory.getComponentByParent(BaseStorage.class);
+    StorageDTO storageDTO = factoryDTO.getStorage();
+    storageDTO.getResources().forEach((resource, count) -> {
+      for(int i = 0; i < count; i++) {
+        baseStorage.addResource(resource);
+      }
+    });
   }
 
 }
