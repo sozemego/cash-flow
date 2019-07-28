@@ -14,6 +14,7 @@ import java.util.UUID;
 )
 @JsonSubTypes(value = {
     @JsonSubTypes.Type(value = ResourceProduced.class, name = "RESOURCE_PRODUCED"),
+    @JsonSubTypes.Type(value = ResourceProductionStarted.class, name = "RESOURCE_PRODUCTION_STARTED"),
     @JsonSubTypes.Type(value = FactoryAdded.class, name = "FACTORY_ADDED"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,6 +33,6 @@ public abstract class ServerMessage {
   public abstract String getType();
 
   public enum ServerMessageType {
-    RESOURCE_PRODUCED, FACTORY_ADDED
+    RESOURCE_PRODUCED, RESOURCE_PRODUCTION_STARTED, FACTORY_ADDED
   }
 }
