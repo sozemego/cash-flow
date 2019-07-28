@@ -14,7 +14,7 @@ public class ResourceProduced extends ServerMessage {
   public ResourceProduced(@JsonProperty("messageId") UUID messageId,
                           @JsonProperty("factoryId") String factoryId,
                           @JsonProperty("resource") Resource resource) {
-    super(messageId, ServerMessageType.RESOURCE_PRODUCED.name());
+    super(messageId);
     this.factoryId = factoryId;
     this.resource = resource;
   }
@@ -29,5 +29,10 @@ public class ResourceProduced extends ServerMessage {
 
   public Resource getResource() {
     return resource;
+  }
+
+  @Override
+  public String getType() {
+    return ServerMessageType.RESOURCE_PRODUCED.name();
   }
 }

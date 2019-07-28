@@ -13,28 +13,25 @@ import java.util.UUID;
     visible = true
 )
 @JsonSubTypes(value = {
-    @JsonSubTypes.Type(value = ResourceProduced.class, name = "RESOURCE_PRODUCED")
+    @JsonSubTypes.Type(value = ResourceProduced.class, name = "RESOURCE_PRODUCED"),
+    @JsonSubTypes.Type(value = FactoryAdded.class, name = "FACTORY_ADDED"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class ServerMessage {
 
   private final UUID messageId;
-  private final String type;
 
-  public ServerMessage(UUID messageId, String type) {
+  public ServerMessage(UUID messageId) {
     Objects.requireNonNull(this.messageId = messageId);
-    Objects.requireNonNull(this.type = type);
   }
 
   public UUID getMessageId() {
     return messageId;
   }
 
-  public String getType() {
-    return type;
-  }
+  public abstract String getType();
 
   public enum ServerMessageType {
-    RESOURCE_PRODUCED
+    RESOURCE_PRODUCED, FACTORY_ADDED
   }
 }
