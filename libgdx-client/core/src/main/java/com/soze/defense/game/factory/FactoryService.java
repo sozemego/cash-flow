@@ -1,8 +1,6 @@
 package com.soze.defense.game.factory;
 
 
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ResourceProductionStarted;
@@ -55,17 +53,13 @@ public class FactoryService {
 
     Entity factory = factoryOptional.get();
 
-    Timer.post(new Task() {
-      @Override
-      public void run() {
-        ResourceProducerComponent resourceProducerComponent = factory.getComponent(ResourceProducerComponent.class);
-        resourceProducerComponent.setProducing(false);
-        resourceProducerComponent.setProgress(0);
+    ResourceProducerComponent resourceProducerComponent = factory
+        .getComponent(ResourceProducerComponent.class);
+    resourceProducerComponent.setProducing(false);
+    resourceProducerComponent.setProgress(0);
 
-        BaseStorage storage = factory.getComponentByParent(BaseStorage.class);
-        storage.addResource(message.getResource());
-      }
-    });
+    BaseStorage storage = factory.getComponentByParent(BaseStorage.class);
+    storage.addResource(message.getResource());
   }
 
   public void handle(FactoryAdded message) {
@@ -79,13 +73,9 @@ public class FactoryService {
       return;
     }
 
-    Timer.post(new Task() {
-      @Override
-      public void run() {
-        Entity factory = factoryOptional.get();
-        ResourceProducerComponent resourceProducerComponent = factory.getComponent(ResourceProducerComponent.class);
-        resourceProducerComponent.setProducing(true);
-      }
-    });
+    Entity factory = factoryOptional.get();
+    ResourceProducerComponent resourceProducerComponent = factory
+        .getComponent(ResourceProducerComponent.class);
+    resourceProducerComponent.setProducing(true);
   }
 }

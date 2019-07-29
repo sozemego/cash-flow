@@ -5,6 +5,7 @@ import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ResourceProductionStarted;
 import com.soze.common.ws.factory.server.ServerMessage;
+import com.soze.defense.game.TaskHelper;
 import java.net.URI;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -39,15 +40,17 @@ public class FactoryWebSocketClient extends WebSocketClient {
   public void onMessage(String message) {
     ServerMessage serverMessage = JsonUtils.parse(message, ServerMessage.class);
     LOG.trace("Websocket message from server, type {}", serverMessage.getType());
-    if (serverMessage instanceof ResourceProduced) {
-      factoryService.handle((ResourceProduced) serverMessage);
-    }
-    if (serverMessage instanceof FactoryAdded) {
-      factoryService.handle((FactoryAdded) serverMessage);
-    }
-    if (serverMessage instanceof ResourceProductionStarted) {
-      factoryService.handle((ResourceProductionStarted) serverMessage);
-    }
+    TaskHelper.runTask(() -> {
+      if (serverMessage instanceof ResourceProduced) {
+        factoryService.handle((ResourceProduced) serverMessage);
+      }
+      if (serverMessage instanceof FactoryAdded) {
+        factoryService.handle((FactoryAdded) serverMessage);
+      }
+      if (serverMessage instanceof ResourceProductionStarted) {
+        factoryService.handle((ResourceProductionStarted) serverMessage);
+      }
+    });
   }
 
   @Override
