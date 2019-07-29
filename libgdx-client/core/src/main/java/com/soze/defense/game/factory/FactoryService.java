@@ -77,5 +77,6 @@ public class FactoryService {
     ResourceProducerComponent resourceProducerComponent = factory
         .getComponent(ResourceProducerComponent.class);
     resourceProducerComponent.setProducing(true);
+    resourceProducerComponent.setProgress(0);
   }
 }

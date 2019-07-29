@@ -20,14 +20,14 @@ public class GameInputHandler implements InputProcessor {
   private final Set<Integer> pressedKeys = new HashSet<>();
 
   private final ScreenViewport viewport;
-  private final GameService gameService;
+  private final Game game;
   private final World world;
 
   private Tile hoveredTile;
 
-  public GameInputHandler(ScreenViewport viewport, GameService gameService, World world) {
+  public GameInputHandler(ScreenViewport viewport, Game game, World world) {
     this.viewport = viewport;
-    this.gameService = gameService;
+    this.game = game;
     this.world = world;
   }
 

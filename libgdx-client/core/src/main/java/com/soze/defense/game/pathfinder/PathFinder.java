@@ -2,7 +2,7 @@ package com.soze.defense.game.pathfinder;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.soze.defense.game.GameService;
+import com.soze.defense.game.Game;
 import com.soze.defense.game.Tile;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 public class PathFinder {
 
-  private final GameService gameService;
+  private final Game game;
   private final boolean allowDiagonals = false;
 
-  public PathFinder(GameService gameService) {
-    this.gameService = gameService;
+  public PathFinder(Game game) {
+    this.game = game;
   }
 
   public Path findPath(Tile from, Tile to) {
@@ -40,10 +40,10 @@ public class PathFinder {
         break;
       }
 
-      List<Tile> neighbors = gameService.getNeighbours(current, allowDiagonals)
-                                        .stream()
-                                        .filter(tile -> tile == to || gameService.isTileFree(tile))
-                                        .collect(Collectors.toList());
+      List<Tile> neighbors = game.getNeighbours(current, allowDiagonals)
+                                 .stream()
+                                 .filter(tile -> tile == to || game.isTileFree(tile))
+                                 .collect(Collectors.toList());
       for (Tile next : neighbors) {
         int newCost = costSoFar.getOrDefault(current, 0);
         Integer previousCost = costSoFar.get(next);

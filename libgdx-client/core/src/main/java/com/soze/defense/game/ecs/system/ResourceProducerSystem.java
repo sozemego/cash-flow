@@ -1,7 +1,7 @@
 package com.soze.defense.game.ecs.system;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.soze.defense.game.GameService;
+import com.soze.defense.game.Game;
 import com.soze.defense.game.ecs.NodeHelper;
 import com.soze.defense.game.ecs.component.ResourceProducerComponent;
 import com.soze.defense.game.pathfinder.PathFinder;
@@ -14,12 +14,12 @@ public class ResourceProducerSystem extends BaseEntitySystem {
 
   private static final Logger LOG = LoggerFactory.getLogger(ResourceProducerSystem.class);
 
-  private final GameService gameService;
+  private final Game game;
   private final PathFinder pathFinder;
 
-  public ResourceProducerSystem(Engine engine, GameService gameService, PathFinder pathFinder) {
+  public ResourceProducerSystem(Engine engine, Game game, PathFinder pathFinder) {
     super(engine);
-    this.gameService = gameService;
+    this.game = game;
     this.pathFinder = pathFinder;
   }
 

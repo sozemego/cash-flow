@@ -27,9 +27,9 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GameService {
+public class Game {
 
-  private static final Logger LOG = LoggerFactory.getLogger(GameService.class);
+  private static final Logger LOG = LoggerFactory.getLogger(Game.class);
 
   private final MyAssetManager assetManager;
 
@@ -40,8 +40,8 @@ public class GameService {
   private final SpriteBatch batch;
   private final MousePointer mousePointer;
 
-  public GameService(World world, MyAssetManager assetManager, SpriteBatch batch,
-                     MousePointer mousePointer) {
+  public Game(World world, MyAssetManager assetManager, SpriteBatch batch,
+              MousePointer mousePointer) {
     this.world = world;
     this.assetManager = assetManager;
     this.objectFactory = new ObjectFactory(assetManager, engine, world);

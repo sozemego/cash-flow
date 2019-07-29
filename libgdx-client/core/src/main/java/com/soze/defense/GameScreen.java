@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.soze.defense.game.GameInputHandler;
-import com.soze.defense.game.GameService;
+import com.soze.defense.game.Game;
 import com.soze.defense.game.world.World;
 import com.soze.defense.game.world.WorldHttpClient;
 import com.soze.defense.input.FluidCamera;
@@ -31,7 +31,7 @@ public class GameScreen implements Screen {
   private final MyAssetManager myAssetManager;
 
   private final World world;
-  private final GameService gameService;
+  private final Game game;
   private final GameInputHandler gameInputHandler;
   private final MousePointer mousePointer = new MousePointer(camera);
 
@@ -39,11 +39,11 @@ public class GameScreen implements Screen {
     this.myAssetManager = assetManager;
 
     this.world = new World(this.myAssetManager, new WorldHttpClient());
-    this.gameService = new GameService(this.world, this.myAssetManager, this.batch,
+    this.game = new Game(this.world, this.myAssetManager, this.batch,
         this.mousePointer);
-    this.gameService.init();
+    this.game.init();
 
-    this.gameInputHandler = new GameInputHandler(this.viewport, this.gameService, this.world);
+    this.gameInputHandler = new GameInputHandler(this.viewport, this.game, this.world);
 
     inputMultiplexer.addProcessor(this.gameInputHandler);
     inputMultiplexer.addProcessor(this.camera);
@@ -69,12 +69,12 @@ public class GameScreen implements Screen {
 
     batch.setProjectionMatrix(camera.combined);
 
-    gameService.update(delta);
+    game.update(delta);
 
     batch.enableBlending();
     batch.begin();
     world.render(batch, delta);
-    gameService.render(batch, delta);
+    game.render(batch, delta);
     batch.end();
   }
 
