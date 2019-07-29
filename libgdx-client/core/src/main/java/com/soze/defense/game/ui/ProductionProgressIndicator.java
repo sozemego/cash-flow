@@ -34,8 +34,8 @@ public class ProductionProgressIndicator {
     ResourceProducerComponent resourceProducerComponent = entity
         .getComponent(ResourceProducerComponent.class);
 
-    float progress = resourceProducerComponent.getProgress();
-    float time = resourceProducerComponent.getTime();
+    float progress = resourceProducerComponent.getProgress() / 1000f;
+    float time = resourceProducerComponent.getTime() / 1000f;
     float percent = progress / time;
 
     this.resourceSprite.setBounds(position.x - size.x / 2, position.y + size.y / 2, 32, 32);
