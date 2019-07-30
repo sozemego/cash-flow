@@ -2,6 +2,7 @@ package com.soze.defense;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,10 @@ public class MyAssetManager {
     } else {
       textures.add(root);
     }
+  }
+
+  public Sprite getSprite(String name) {
+    return new Sprite(getTexture(name));
   }
 
   public Texture getTexture(String name) {

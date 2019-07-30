@@ -5,22 +5,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.soze.common.dto.FactoryDTO;
 import com.soze.common.dto.ProducerDTO;
-import com.soze.common.dto.Resource;
 import com.soze.common.dto.StorageDTO;
 import com.soze.defense.MyAssetManager;
-import com.soze.defense.game.ecs.component.BaseComponent;
-import com.soze.defense.game.ecs.component.BaseStorage;
-import com.soze.defense.game.ecs.component.GraphicsComponent;
-import com.soze.defense.game.ecs.component.OccupyTileComponent;
-import com.soze.defense.game.ecs.component.PathFollowerComponent;
-import com.soze.defense.game.ecs.component.PhysicsComponent;
-import com.soze.defense.game.ecs.component.ResourceProducerComponent;
-import com.soze.defense.game.ecs.component.StorageComponent;
-import com.soze.defense.game.ecs.component.TooltipComponent;
-import com.soze.defense.game.ecs.component.WarehouseStorageComponent;
+import com.soze.defense.game.factory.Factory;
+import com.soze.defense.game.factory.Producer;
+import com.soze.defense.game.factory.Storage;
 import com.soze.defense.game.world.World;
-import com.soze.klecs.engine.Engine;
-import com.soze.klecs.entity.Entity;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -31,15 +21,13 @@ public class ObjectFactory {
   private static final Logger LOG = LoggerFactory.getLogger(ObjectFactory.class);
 
   private final MyAssetManager assetManager;
-  private final Engine engine;
   private final World world;
 
   private final Map<String, JsonNode> templates = new HashMap<>();
 
-  public ObjectFactory(MyAssetManager assetManager, Engine engine,
-      World world) {
+  public ObjectFactory(MyAssetManager assetManager,
+                       World world) {
     this.assetManager = assetManager;
-    this.engine = engine;
     this.world = world;
   }
 
@@ -50,103 +38,39 @@ public class ObjectFactory {
     LOG.info("Loaded {} entity templates", templates.size());
   }
 
-  public Entity createEntity(String id, String templateId, Vector2 position) {
-    return createEntity(id, templateId, position, new HashMap<>());
-  }
+  public Factory createFactory(FactoryDTO factoryDTO) {
+    LOG.info("Creating Factory id = {}", factoryDTO.getId());
 
-  public Entity createEntity(String id, String templateId, Vector2 position, Map<String, Object> context) {
-    LOG.info("Creating entity with templateId {} at {}", templateId, position);
-    Entity entity = engine.getEntityFactory().createEntity(id);
+    String name = factoryDTO.getName();
+    String textureName = factoryDTO.getTexture();
+    Sprite sprite = assetManager.getSprite(textureName);
 
-    JsonNode root = templates.get(templateId);
-    if (root == null) {
-      throw new IllegalArgumentException("No entity template with id " + templateId);
-    }
-
-    PhysicsComponent physicsComponent = new PhysicsComponent(position,
-        new Vector2(Tile.WIDTH, Tile.HEIGHT));
-    entity.addComponent(physicsComponent);
-
-    JsonNode texture = root.get("texture");
-    if (texture != null) {
-      String textureName = texture.asText();
-      Sprite sprite = new Sprite(assetManager.getTexture(textureName));
-      sprite.setPosition(position.x, position.y);
-      GraphicsComponent graphicsComponent = new GraphicsComponent(sprite);
-      entity.addComponent(graphicsComponent);
-    }
-
-    JsonNode storage = root.get("storage");
-    if (storage != null) {
-      int capacity = Integer.parseInt(storage.get("capacity").asText());
-      boolean warehouse = storage.get("storage") != null && Boolean.parseBoolean(storage.get("storage").asText());
-      if (warehouse) {
-        WarehouseStorageComponent warehouseStorageComponent = new WarehouseStorageComponent(
-            capacity);
-        entity.addComponent(warehouseStorageComponent);
-      } else {
-        StorageComponent storageComponent = new StorageComponent(capacity);
-        entity.addComponent(storageComponent);
-      }
-    }
-
-    JsonNode producer = root.get("producer");
-    if (producer != null) {
-      Resource resource = Resource.valueOf(producer.get("resource").asText());
-      float time = Float.parseFloat(producer.get("time").asText());
-      ResourceProducerComponent resourceProducerComponent = new ResourceProducerComponent(resource,
-          time);
-      entity.addComponent(resourceProducerComponent);
-    }
-
-    JsonNode pathFollower = root.get("pathfollower");
-    if (pathFollower != null) {
-      PathFollowerComponent pathFollowerComponent = new PathFollowerComponent();
-      entity.addComponent(pathFollowerComponent);
-    }
-
-    String textureName = (String) context.get("texture");
-    if (textureName != null) {
-      Sprite sprite = new Sprite(assetManager.getTexture(textureName));
-      sprite.setPosition(position.x, position.y);
-      GraphicsComponent graphicsComponent = new GraphicsComponent(sprite);
-      entity.addComponent(graphicsComponent);
-    }
-
-    entity.addComponent(new TooltipComponent());
-
-    JsonNode occupyTile = root.get("occupyTile");
-    if (occupyTile != null && occupyTile.isBoolean() && occupyTile.asBoolean()) {
-      OccupyTileComponent occupyTileComponent = new OccupyTileComponent();
-      Tile tile = world.getTileAt(position);
-      occupyTileComponent.setTile(tile);
-      entity.addComponent(occupyTileComponent);
-    }
-
-    LOG.info("Created entity {} at {} with {} components", id, position,
-        entity.getAllComponents(BaseComponent.class).size());
-    engine.addEntity(entity);
-    return entity;
-  }
-
-  public void createFactory(FactoryDTO factoryDTO) {
-    LOG.info("Creating entity from factory {}", factoryDTO.getId());
-    Vector2 position = new Vector2(Tile.WIDTH * factoryDTO.getX(), Tile.HEIGHT * factoryDTO.getY());
-    Tile tile = world.getTileAt(position);
-    Entity factory = createEntity(factoryDTO.getId(), factoryDTO.getTemplateId(), tile.getCenter());
-
-    ResourceProducerComponent resourceProducerComponent = factory.getComponent(ResourceProducerComponent.class);
     ProducerDTO producerDTO = factoryDTO.getProducer();
-    resourceProducerComponent.setProgress(producerDTO.getProgress());
-    resourceProducerComponent.setProducing(producerDTO.isProducing());
+    Producer producer = new Producer(producerDTO.getResource(), producerDTO.getTime());
+    producer.setProducing(producerDTO.isProducing());
+    producer.setProgress(producerDTO.getProgress());
 
-    BaseStorage baseStorage = factory.getComponentByParent(BaseStorage.class);
     StorageDTO storageDTO = factoryDTO.getStorage();
+    Storage storage = new Storage(storageDTO.getCapacity());
+
     storageDTO.getResources().forEach((resource, count) -> {
-      for(int i = 0; i < count; i++) {
-        baseStorage.addResource(resource);
+      for (int i = 0; i < count; i++) {
+        storage.addResource(resource);
       }
     });
+
+    Vector2 position = new Vector2(factoryDTO.getX() * Tile.WIDTH, factoryDTO.getY() * Tile.HEIGHT);
+    Vector2 size = new Vector2(factoryDTO.getWidth() * Tile.WIDTH, factoryDTO.getHeight() * Tile.HEIGHT);
+
+    return new Factory(
+        factoryDTO.getId(),
+        name,
+        position.add(size.x / 2, size.y / 2),
+        size,
+        sprite,
+        producer,
+        storage
+    );
   }
 
 }

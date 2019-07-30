@@ -1,15 +1,13 @@
 package com.soze.defense.game.factory;
 
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ResourceProductionStarted;
 import com.soze.defense.game.ObjectFactory;
-import com.soze.defense.game.ecs.component.BaseStorage;
-import com.soze.defense.game.ecs.component.ResourceProducerComponent;
-import com.soze.klecs.engine.Engine;
-import com.soze.klecs.entity.Entity;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,18 +15,15 @@ public class FactoryService {
 
   private static final Logger LOG = LoggerFactory.getLogger(FactoryService.class);
 
-  private final FactoryClient client;
+  private final List<Factory> factories = new ArrayList<>();
+
   private final FactoryWebSocketClient webSocketClient;
   private final ObjectFactory objectFactory;
-  private final Engine engine;
 
-  public FactoryService(FactoryClient client,
-                        FactoryWebSocketClient webSocketClient,
-                        ObjectFactory objectFactory, Engine engine) {
-    this.client = client;
+  public FactoryService(FactoryWebSocketClient webSocketClient,
+                        ObjectFactory objectFactory) {
     this.webSocketClient = webSocketClient;
     this.objectFactory = objectFactory;
-    this.engine = engine;
   }
 
   public void init() {
@@ -44,39 +39,48 @@ public class FactoryService {
     LOG.info("Connected to websocket client");
   }
 
+  public void update(float delta) {
+    factories.forEach(factory -> factory.update(delta));
+  }
+
+  public void render(SpriteBatch batch, float delta) {
+    factories.forEach(factory -> factory.render(batch, delta));
+  }
+
   public void handle(ResourceProduced message) {
-    Optional<Entity> factoryOptional = engine.getEntityById(message.getFactoryId());
-
-    if (!factoryOptional.isPresent()) {
-      return;
-    }
-
-    Entity factory = factoryOptional.get();
-
-    ResourceProducerComponent resourceProducerComponent = factory
-        .getComponent(ResourceProducerComponent.class);
-    resourceProducerComponent.setProducing(false);
-    resourceProducerComponent.setProgress(0);
-
-    BaseStorage storage = factory.getComponentByParent(BaseStorage.class);
-    storage.addResource(message.getResource());
+//    Optional<Entity> factoryOptional = engine.getEntityById(message.getFactoryId());
+//
+//    if (!factoryOptional.isPresent()) {
+//      return;
+//    }
+//
+//    Entity factory = factoryOptional.get();
+//
+//    ResourceProducerComponent resourceProducerComponent = factory
+//        .getComponent(ResourceProducerComponent.class);
+//    resourceProducerComponent.setProducing(false);
+//    resourceProducerComponent.setProgress(0);
+//
+//    BaseStorage storage = factory.getComponentByParent(BaseStorage.class);
+//    storage.addResource(message.getResource());
   }
 
   public void handle(FactoryAdded message) {
-    objectFactory.createFactory(message.getFactoryDTO());
+    Factory factory = objectFactory.createFactory(message.getFactoryDTO());
+    factories.add(factory);
   }
 
   public void handle(ResourceProductionStarted message) {
-    Optional<Entity> factoryOptional = engine.getEntityById(message.getFactoryId());
-
-    if (!factoryOptional.isPresent()) {
-      return;
-    }
-
-    Entity factory = factoryOptional.get();
-    ResourceProducerComponent resourceProducerComponent = factory
-        .getComponent(ResourceProducerComponent.class);
-    resourceProducerComponent.setProducing(true);
-    resourceProducerComponent.setProgress(0);
+//    Optional<Entity> factoryOptional = engine.getEntityById(message.getFactoryId());
+//
+//    if (!factoryOptional.isPresent()) {
+//      return;
+//    }
+//
+//    Entity factory = factoryOptional.get();
+//    ResourceProducerComponent resourceProducerComponent = factory
+//        .getComponent(ResourceProducerComponent.class);
+//    resourceProducerComponent.setProducing(true);
+//    resourceProducerComponent.setProgress(0);
   }
 }
