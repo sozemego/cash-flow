@@ -6,8 +6,8 @@ import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ResourceProductionStarted;
 import com.soze.defense.game.ObjectFactory;
 import com.soze.defense.game.Renderer;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ public class FactoryService {
 
   private static final Logger LOG = LoggerFactory.getLogger(FactoryService.class);
 
-  private final List<Factory> factories = new ArrayList<>();
+  private final Map<String, Factory> factories = new ConcurrentHashMap<>();
 
   private final FactoryWebSocketClient webSocketClient;
   private final ObjectFactory objectFactory;
@@ -40,11 +40,11 @@ public class FactoryService {
   }
 
   public void update(float delta) {
-    factories.forEach(factory -> factory.update(delta));
+    factories.values().forEach(factory -> factory.update(delta));
   }
 
   public void render(Renderer renderer) {
-    factories.forEach(factory -> factory.render(renderer));
+    factories.values().forEach(factory -> factory.render(renderer));
   }
 
   public void handle(ResourceProduced message) {
@@ -62,7 +62,7 @@ public class FactoryService {
 
   public void handle(FactoryAdded message) {
     Factory factory = objectFactory.createFactory(message.getFactoryDTO());
-    factories.add(factory);
+    factories.put(factory.getId(), factory);
   }
 
   public void handle(ResourceProductionStarted message) {
@@ -76,11 +76,6 @@ public class FactoryService {
   }
 
   private Factory getById(String id) {
-    for (Factory factory : factories) {
-      if (factory.getId().equals(id)) {
-        return factory;
-      }
-    }
-    return null;
+    return factories.get(id);
   }
 }
