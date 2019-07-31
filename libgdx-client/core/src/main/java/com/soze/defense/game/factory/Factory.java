@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.soze.defense.game.Renderer;
 import com.soze.defense.game.object.BaseObject;
 
 public class Factory extends BaseObject {
@@ -43,10 +44,7 @@ public class Factory extends BaseObject {
     }
   }
 
-  public void render(SpriteBatch batch, float delta) {
-    Vector2 position = getPosition();
-    Vector2 size = getSize();
-    sprite.setBounds(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y);
-    sprite.draw(batch);
+  public void render(Renderer renderer) {
+    renderer.render(this);
   }
 }

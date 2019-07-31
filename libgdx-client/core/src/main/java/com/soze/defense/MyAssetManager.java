@@ -3,6 +3,7 @@ package com.soze.defense;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.soze.common.dto.Resource;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,11 @@ public class MyAssetManager {
 
   public Sprite getSprite(String name) {
     return new Sprite(getTexture(name));
+  }
+
+  public Sprite getResourceSprite(Resource resource) {
+    String resourceName = resource.toString().toLowerCase();
+    return getSprite("textures/resources/" + resourceName + ".png");
   }
 
   public Texture getTexture(String name) {

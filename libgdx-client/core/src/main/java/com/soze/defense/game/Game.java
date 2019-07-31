@@ -44,7 +44,6 @@ public class Game {
     world.init();
     factoryService.init();
 //    engine.addSystem(new ResourceProducerSystem(engine, this, new PathFinder(this)));
-//    engine.addSystem(new TooltipSystem(engine, batch, assetManager, mousePointer));
 //    engine.addSystem(new PathFollowerSystem(engine));
 //    engine.addSystem(new PathFollowerRenderingSystem(engine, batch, assetManager));
 //    engine.addSystem(new GraphicsSystem(engine, batch));
@@ -55,8 +54,8 @@ public class Game {
     factoryService.update(delta);
   }
 
-  public void render(SpriteBatch batch, float delta) {
-    factoryService.render(batch, delta);
+  public void render(Renderer renderer) {
+    factoryService.render(renderer);
   }
 
 }

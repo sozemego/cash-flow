@@ -6,6 +6,7 @@ import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ResourceProductionStarted;
 import com.soze.defense.game.ObjectFactory;
+import com.soze.defense.game.Renderer;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -43,8 +44,8 @@ public class FactoryService {
     factories.forEach(factory -> factory.update(delta));
   }
 
-  public void render(SpriteBatch batch, float delta) {
-    factories.forEach(factory -> factory.render(batch, delta));
+  public void render(Renderer renderer) {
+    factories.forEach(factory -> factory.render(renderer));
   }
 
   public void handle(ResourceProduced message) {

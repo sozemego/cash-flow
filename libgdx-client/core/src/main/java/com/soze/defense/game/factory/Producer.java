@@ -9,8 +9,6 @@ public class Producer {
   private float progress;
   private boolean producing = false;
 
-  private long productionStartTime = -1L;
-
   public Producer(Resource resource, float time) {
     this.resource = resource;
     this.time = time;
@@ -25,8 +23,7 @@ public class Producer {
   }
 
   public float getProgress() {
-    long now = System.currentTimeMillis();
-    return now - productionStartTime;
+    return progress;
   }
 
   public void setProgress(float progress) {
@@ -47,7 +44,6 @@ public class Producer {
     }
     setProducing(true);
     setProgress(0);
-    setProductionStartTime(System.currentTimeMillis());
   }
 
   public void stopProduction() {
@@ -56,15 +52,6 @@ public class Producer {
     }
     setProducing(false);
     setProgress(0);
-    setProductionStartTime(-1L);
-  }
-
-  private void setProductionStartTime(long productionStartTime) {
-    this.productionStartTime = productionStartTime;
-  }
-
-  private long getProductionStartTime() {
-    return this.productionStartTime;
   }
 
   @Override

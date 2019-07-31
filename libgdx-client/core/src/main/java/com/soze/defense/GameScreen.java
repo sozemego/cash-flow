@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.soze.defense.game.GameInputHandler;
 import com.soze.defense.game.Game;
+import com.soze.defense.game.Renderer;
 import com.soze.defense.game.world.World;
 import com.soze.defense.game.world.WorldHttpClient;
 import com.soze.defense.input.FluidCamera;
@@ -35,6 +36,8 @@ public class GameScreen implements Screen {
   private final GameInputHandler gameInputHandler;
   private final MousePointer mousePointer = new MousePointer(camera);
 
+  private final Renderer renderer;
+
   public GameScreen(MyAssetManager assetManager) {
     this.myAssetManager = assetManager;
 
@@ -48,6 +51,8 @@ public class GameScreen implements Screen {
     inputMultiplexer.addProcessor(this.gameInputHandler);
     inputMultiplexer.addProcessor(this.camera);
     Gdx.input.setInputProcessor(this.inputMultiplexer);
+
+    this.renderer = new Renderer(batch, camera, mousePointer, assetManager);
   }
 
   @Override
@@ -66,7 +71,6 @@ public class GameScreen implements Screen {
     Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
     camera.update();
-
     batch.setProjectionMatrix(camera.combined);
 
     game.update(delta);
@@ -74,7 +78,7 @@ public class GameScreen implements Screen {
     batch.enableBlending();
     batch.begin();
     world.render(batch, delta);
-    game.render(batch, delta);
+    game.render(renderer);
     batch.end();
   }
 

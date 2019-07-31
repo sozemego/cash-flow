@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.soze.defense.game.ecs.component.PhysicsComponent;
 import com.soze.defense.game.ecs.component.ResourceProducerComponent;
+import com.soze.defense.game.factory.Factory;
+import com.soze.defense.game.factory.Producer;
 import com.soze.klecs.entity.Entity;
 import java.text.DecimalFormat;
 import org.slf4j.Logger;
@@ -16,26 +18,24 @@ public class ProductionProgressIndicator {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionProgressIndicator.class);
 
-  private final Entity entity;
+  private final Factory factory;
   private final Sprite resourceSprite;
   private final BitmapFont font;
 
-  public ProductionProgressIndicator(Entity entity, Sprite resourceSprite, BitmapFont font) {
-    this.entity = entity;
+  public ProductionProgressIndicator(Factory factory, Sprite resourceSprite, BitmapFont font) {
+    this.factory = factory;
     this.resourceSprite = resourceSprite;
     this.font = font;
   }
 
-  public void update(SpriteBatch batch, float delta, boolean mouseOver) {
-    PhysicsComponent physicsComponent = entity.getComponent(PhysicsComponent.class);
-    Vector2 position = physicsComponent.getPosition();
-    Vector2 size = physicsComponent.getSize();
+  public void render(SpriteBatch batch, boolean mouseOver) {
+    Vector2 position = factory.getPosition();
+    Vector2 size = factory.getSize();
 
-    ResourceProducerComponent resourceProducerComponent = entity
-        .getComponent(ResourceProducerComponent.class);
+    Producer producer = factory.getProducer();
 
-    float progress = resourceProducerComponent.getProgress() / 1000f;
-    float time = resourceProducerComponent.getTime() / 1000f;
+    float progress = producer.getProgress() / 1000f;
+    float time = producer.getTime() / 1000f;
     float percent = progress / time;
 
     this.resourceSprite.setBounds(position.x - size.x / 2, position.y + size.y / 2, 32, 32);
