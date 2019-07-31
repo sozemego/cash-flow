@@ -58,6 +58,7 @@ public class FactoryService {
     forester2.setX(6);
     forester2.setY(6);
     addFactory(forester2);
+
     LOG.info("Created {} factories", factories.size());
   }
 
@@ -67,6 +68,9 @@ public class FactoryService {
     startProducing(factory);
 
     this.factories.add(factory);
+
+    FactoryAdded factoryAdded = new FactoryAdded(factoryConverter.convert(factory));
+    sendToAll(factoryAdded);
   }
 
   private void startProducing(Factory factory) {
@@ -87,7 +91,7 @@ public class FactoryService {
   }
 
   private void finishProducing(Factory factory) {
-    LOG.info("Factory {} finished producing {}", factory.getId(),
+    LOG.trace("Factory {} finished producing {}", factory.getId(),
         factory.getProducer().getResource());
     Producer producer = factory.getProducer();
     producer.stopProduction();
