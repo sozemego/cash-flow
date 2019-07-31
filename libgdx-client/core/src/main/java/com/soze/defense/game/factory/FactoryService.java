@@ -1,7 +1,6 @@
 package com.soze.defense.game.factory;
 
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ResourceProductionStarted;
@@ -49,21 +48,16 @@ public class FactoryService {
   }
 
   public void handle(ResourceProduced message) {
-//    Optional<Entity> factoryOptional = engine.getEntityById(message.getFactoryId());
-//
-//    if (!factoryOptional.isPresent()) {
-//      return;
-//    }
-//
-//    Entity factory = factoryOptional.get();
-//
-//    ResourceProducerComponent resourceProducerComponent = factory
-//        .getComponent(ResourceProducerComponent.class);
-//    resourceProducerComponent.setProducing(false);
-//    resourceProducerComponent.setProgress(0);
-//
-//    BaseStorage storage = factory.getComponentByParent(BaseStorage.class);
-//    storage.addResource(message.getResource());
+    Factory factory = getById(message.getFactoryId());
+    if (factory == null) {
+      return;
+    }
+
+    Producer producer = factory.getProducer();
+    producer.stopProduction();
+
+    Storage storage = factory.getStorage();
+    storage.addResource(message.getResource());
   }
 
   public void handle(FactoryAdded message) {
@@ -72,16 +66,21 @@ public class FactoryService {
   }
 
   public void handle(ResourceProductionStarted message) {
-//    Optional<Entity> factoryOptional = engine.getEntityById(message.getFactoryId());
-//
-//    if (!factoryOptional.isPresent()) {
-//      return;
-//    }
-//
-//    Entity factory = factoryOptional.get();
-//    ResourceProducerComponent resourceProducerComponent = factory
-//        .getComponent(ResourceProducerComponent.class);
-//    resourceProducerComponent.setProducing(true);
-//    resourceProducerComponent.setProgress(0);
+    Factory factory = getById(message.getFactoryId());
+    if (factory == null) {
+      return;
+    }
+
+    Producer producer = factory.getProducer();
+    producer.startProduction();
+  }
+
+  private Factory getById(String id) {
+    for (Factory factory : factories) {
+      if (factory.getId().equals(id)) {
+        return factory;
+      }
+    }
+    return null;
   }
 }
