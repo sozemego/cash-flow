@@ -38,7 +38,7 @@ public class FactoryWebSocketClient extends WebSocketClient {
   @Override
   public void onMessage(String message) {
     ServerMessage serverMessage = JsonUtils.parse(message, ServerMessage.class);
-    LOG.info("Websocket message from server, type {}", serverMessage.getType());
+    LOG.trace("Websocket message from server, type {}", serverMessage.getType());
     if (serverMessage instanceof ResourceProduced) {
       factoryService.handle((ResourceProduced) serverMessage);
     }
