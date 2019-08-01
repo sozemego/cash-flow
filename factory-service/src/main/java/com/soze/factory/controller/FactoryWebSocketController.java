@@ -7,6 +7,7 @@ import com.soze.common.ws.factory.client.CreateFactory;
 import com.soze.factory.service.FactoryService;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class FactoryWebSocketController extends TextWebSocketHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(FactoryWebSocketController.class);
 
-  private final Map<String, WebSocketSession> sessions = new HashMap<>();
+  private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
   private final FactoryService factoryService;
 
