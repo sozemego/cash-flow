@@ -1,5 +1,9 @@
 package com.soze.factory.controller;
 
+import com.soze.common.json.JsonUtils;
+import com.soze.common.ws.factory.client.ClientMessage;
+import com.soze.common.ws.factory.client.ClientMessage.ClientMessageType;
+import com.soze.common.ws.factory.client.CreateFactory;
 import com.soze.factory.service.FactoryService;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
@@ -37,5 +42,15 @@ public class FactoryWebSocketController extends TextWebSocketHandler {
     LOG.info("{} disconnected", session.getId());
     sessions.remove(session.getId());
     factoryService.removeSession(session);
+  }
+
+  @Override
+  protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    LOG.trace("Received message from client id {}", session.getId());
+    ClientMessage clientMessage = JsonUtils.parse(message.getPayload(), ClientMessage.class);
+    LOG.trace("Client message type from client id{}", clientMessage.getType());
+    if (clientMessage.getType() == ClientMessageType.CREATE_FACTORY) {
+      factoryService.handleCreateFactory((CreateFactory) clientMessage);
+    }
   }
 }

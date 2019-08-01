@@ -1,6 +1,7 @@
 package com.soze.factory.service;
 
 import com.soze.common.json.JsonUtils;
+import com.soze.common.ws.factory.client.CreateFactory;
 import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ResourceProductionStarted;
@@ -138,6 +139,15 @@ public class FactoryService {
     for (WebSocketSession session : sessions) {
       sendTo(textMessage, session);
     }
+  }
+
+  public void handleCreateFactory(CreateFactory createFactory) {
+    Factory factory = templateLoader.constructFactoryByTemplateId(createFactory.getTemplateId());
+    factory.setX(createFactory.getX());
+    factory.setY(createFactory.getY());
+    executorService.schedule(() -> {
+      addFactory(factory);
+    }, 0, TimeUnit.MILLISECONDS);
   }
 
 }
