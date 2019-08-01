@@ -1,15 +1,6 @@
 package com.soze.defense.game.pathfinder;
 
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.soze.defense.game.Game;
-import com.soze.defense.game.Tile;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.stream.Collectors;
 
 public class PathFinder {
 

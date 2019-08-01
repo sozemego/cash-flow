@@ -24,7 +24,7 @@ public class PathFollowerRenderingSystem extends BaseRenderingSystem {
   private final Sprite bar;
 
   public PathFollowerRenderingSystem(Engine engine, SpriteBatch batch,
-      MyAssetManager assetManager) {
+                                     MyAssetManager assetManager) {
     super(engine);
     this.batch = batch;
     this.assetManager = assetManager;

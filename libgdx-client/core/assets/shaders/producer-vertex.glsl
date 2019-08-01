@@ -13,7 +13,7 @@ varying float v_progress;
 
 void main() {
 
-   v_progress = u_progress;
-   v_texCoords = a_texCoord0;
-   gl_Position =  u_projTrans * a_position;
+    v_progress = u_progress;
+    v_texCoords = a_texCoord0;
+    gl_Position =  u_projTrans * a_position;
 }

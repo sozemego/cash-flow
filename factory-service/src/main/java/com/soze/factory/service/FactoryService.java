@@ -86,7 +86,8 @@ public class FactoryService {
       startProducing(factory);
     }, (long) timeRemaining, TimeUnit.MILLISECONDS);
 
-    ResourceProductionStarted resourceProductionStarted = new ResourceProductionStarted(factory.getId(), factory.getProducer().getResource());
+    ResourceProductionStarted resourceProductionStarted = new ResourceProductionStarted(
+        factory.getId(), factory.getProducer().getResource());
     sendToAll(resourceProductionStarted);
   }
 

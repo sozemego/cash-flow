@@ -9,17 +9,17 @@ import org.slf4j.LoggerFactory;
 
 public class DesktopLauncher {
 
-	private final static Logger LOG = LoggerFactory.getLogger(DesktopLauncher.class);
+  private final static Logger LOG = LoggerFactory.getLogger(DesktopLauncher.class);
 
-	public static void main (String[] arg) {
-		LOG.info("Starting desktop application");
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 1920;
-		config.height = 1050;
-		config.useGL30 = true;
-		config.gles30ContextMinorVersion = 3;
+  public static void main(String[] arg) {
+    LOG.info("Starting desktop application");
+    LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+    config.width = 1920;
+    config.height = 1050;
+    config.useGL30 = true;
+    config.gles30ContextMinorVersion = 3;
 
-		LOG.info("Starting config {}", config);
+    LOG.info("Starting config {}", config);
 //
 //		TexturePacker.Settings settings = new TexturePacker.Settings();
 //		settings.maxWidth = 2048;
@@ -28,6 +28,6 @@ public class DesktopLauncher {
 //
 //		TexturePacker.process(settings, "pre-pack", "sheets", "game");
 
-		new LwjglApplication(new GreatDefense(), config);
-	}
+    new LwjglApplication(new GreatDefense(), config);
+  }
 }

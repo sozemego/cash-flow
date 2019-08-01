@@ -60,7 +60,8 @@ public class ObjectFactory {
     });
 
     Vector2 position = new Vector2(factoryDTO.getX() * Tile.WIDTH, factoryDTO.getY() * Tile.HEIGHT);
-    Vector2 size = new Vector2(factoryDTO.getWidth() * Tile.WIDTH, factoryDTO.getHeight() * Tile.HEIGHT);
+    Vector2 size = new Vector2(factoryDTO.getWidth() * Tile.WIDTH,
+        factoryDTO.getHeight() * Tile.HEIGHT);
 
     return new Factory(
         factoryDTO.getId(),
