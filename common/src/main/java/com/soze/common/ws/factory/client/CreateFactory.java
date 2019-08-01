@@ -41,4 +41,13 @@ public class CreateFactory extends ClientMessage {
   public String getType() {
     return ClientMessageType.CREATE_FACTORY.name();
   }
+
+  @Override
+  public String toString() {
+    return "CreateFactory{" +
+        "templateId='" + templateId + '\'' +
+        ", x=" + x +
+        ", y=" + y +
+        '}';
+  }
 }
