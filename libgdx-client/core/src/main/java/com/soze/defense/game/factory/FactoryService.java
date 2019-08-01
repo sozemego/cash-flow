@@ -1,6 +1,9 @@
 package com.soze.defense.game.factory;
 
 
+import com.badlogic.gdx.math.Vector2;
+import com.soze.common.json.JsonUtils;
+import com.soze.common.ws.factory.client.CreateFactory;
 import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ResourceProductionStarted;
@@ -52,6 +55,13 @@ public class FactoryService {
 
   public void render(Renderer renderer) {
     factories.values().forEach(factory -> factory.render(renderer));
+  }
+
+  public void createFactory(String templateId, Vector2 position) {
+    CreateFactory createFactory = new CreateFactory(templateId, (int) position.x, (int) position.y);
+    LOG.info("Sending CreateFactory message, {}", createFactory);
+    String payload = JsonUtils.serialize(createFactory);
+    webSocketClient.send(payload);
   }
 
   public void handle(ResourceProduced message) {

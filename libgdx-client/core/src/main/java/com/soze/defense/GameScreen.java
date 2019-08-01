@@ -46,7 +46,8 @@ public class GameScreen implements Screen {
         this.mousePointer);
     this.game.init();
 
-    this.gameInputHandler = new GameInputHandler(this.viewport, this.game, this.world);
+    this.gameInputHandler = new GameInputHandler(this.viewport, this.game, this.world,
+        game.getFactoryService());
 
     inputMultiplexer.addProcessor(this.gameInputHandler);
     inputMultiplexer.addProcessor(this.camera);

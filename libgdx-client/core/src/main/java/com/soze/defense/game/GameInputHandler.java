@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.soze.defense.game.factory.FactoryService;
 import com.soze.defense.game.world.World;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,13 +23,16 @@ public class GameInputHandler implements InputProcessor {
   private final ScreenViewport viewport;
   private final Game game;
   private final World world;
+  private final FactoryService factoryService;
 
   private Tile hoveredTile;
 
-  public GameInputHandler(ScreenViewport viewport, Game game, World world) {
+  public GameInputHandler(ScreenViewport viewport, Game game, World world,
+                          FactoryService factoryService) {
     this.viewport = viewport;
     this.game = game;
     this.world = world;
+    this.factoryService = factoryService;
   }
 
   @Override
@@ -57,7 +61,9 @@ public class GameInputHandler implements InputProcessor {
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
     if (pressedKeys.contains(Keys.L) && button == Buttons.LEFT) {
-
+      Vector2 gameCoords = getGameCoords(screenX, screenY);
+      Vector2 tileIndex = world.getTileIndexPosition(gameCoords);
+      factoryService.createFactory("FORESTER", tileIndex);
     }
     return false;
   }

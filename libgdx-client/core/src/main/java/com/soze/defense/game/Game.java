@@ -50,6 +50,10 @@ public class Game {
 
   }
 
+  public FactoryService getFactoryService() {
+    return factoryService;
+  }
+
   public void update(float delta) {
     factoryService.update(delta);
   }
