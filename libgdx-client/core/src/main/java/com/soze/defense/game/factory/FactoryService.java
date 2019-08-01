@@ -7,7 +7,9 @@ import com.soze.common.ws.factory.server.ResourceProductionStarted;
 import com.soze.defense.game.ObjectFactory;
 import com.soze.defense.game.Renderer;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,7 @@ public class FactoryService {
   private static final Logger LOG = LoggerFactory.getLogger(FactoryService.class);
 
   private final Map<String, Factory> factories = new ConcurrentHashMap<>();
+  private final Queue<Runnable> tasks = new ConcurrentLinkedQueue<>();
 
   private final FactoryWebSocketClient webSocketClient;
   private final ObjectFactory objectFactory;
@@ -40,6 +43,10 @@ public class FactoryService {
   }
 
   public void update(float delta) {
+    Runnable task;
+    while ((task = tasks.poll()) != null) {
+      task.run();
+    }
     factories.values().forEach(factory -> factory.update(delta));
   }
 
@@ -53,16 +60,20 @@ public class FactoryService {
       return;
     }
 
-    Producer producer = factory.getProducer();
-    producer.stopProduction();
+    tasks.add(() -> {
+      Producer producer = factory.getProducer();
+      producer.stopProduction();
 
-    Storage storage = factory.getStorage();
-    storage.addResource(message.getResource());
+      Storage storage = factory.getStorage();
+      storage.addResource(message.getResource());
+    });
   }
 
   public void handle(FactoryAdded message) {
     Factory factory = objectFactory.createFactory(message.getFactoryDTO());
-    factories.put(factory.getId(), factory);
+    tasks.add(() -> {
+      factories.put(factory.getId(), factory);
+    });
   }
 
   public void handle(ResourceProductionStarted message) {
@@ -71,8 +82,10 @@ public class FactoryService {
       return;
     }
 
-    Producer producer = factory.getProducer();
-    producer.startProduction();
+    tasks.add(() -> {
+      Producer producer = factory.getProducer();
+      producer.startProduction();
+    });
   }
 
   private Factory getById(String id) {
