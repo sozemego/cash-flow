@@ -3,7 +3,9 @@ package com.soze.world.service;
 import com.soze.common.dto.TileDTO;
 import com.soze.common.dto.WorldDTO;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ public class WorldService {
   private final int tileWidth = 128;
   private final int tileHeight = 128;
   private List<TileDTO> tiles = new ArrayList<>();
+  private Set<String> takenTileKeys = new HashSet<>();
 
   @PostConstruct
   public void setup() {
@@ -37,6 +40,21 @@ public class WorldService {
 
   public WorldDTO getWorld() {
     return new WorldDTO(tiles, tileWidth, tileHeight);
+  }
+
+  public boolean isTileTaken(int x, int y) {
+    String key = x + ":" + y;
+    return takenTileKeys.contains(key);
+  }
+
+  public void markAsTaken(int x, int y) {
+    String key = x + ":" + y;
+    takenTileKeys.add(key);
+  }
+
+  public void markAsFree(int x, int y) {
+    String key = x + ":" + y;
+    takenTileKeys.remove(key);
   }
 
 }
