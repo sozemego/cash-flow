@@ -4,7 +4,7 @@
     "name": "Forester",
     "texture": "textures/buildings/medieval/medieval_lumber.png",
     "storage": {
-      "capacity" : 100
+      "capacity": 100
     },
     "producer": {
       "resource": "WOOD",

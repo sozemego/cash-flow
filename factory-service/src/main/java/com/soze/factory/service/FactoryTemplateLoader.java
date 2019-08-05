@@ -75,7 +75,7 @@ public class FactoryTemplateLoader {
     return jsonEntities.get(id);
   }
 
-  public File getEntities() throws IOException  {
+  public File getEntities() throws IOException {
     return entities.getFile();
   }
 

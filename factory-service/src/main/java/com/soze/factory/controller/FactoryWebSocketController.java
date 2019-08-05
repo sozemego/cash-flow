@@ -5,7 +5,6 @@ import com.soze.common.ws.factory.client.ClientMessage;
 import com.soze.common.ws.factory.client.ClientMessage.ClientMessageType;
 import com.soze.common.ws.factory.client.CreateFactory;
 import com.soze.factory.service.FactoryService;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;

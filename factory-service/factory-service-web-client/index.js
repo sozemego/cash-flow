@@ -98,7 +98,8 @@ function factoryTemplate(factory) {
           <span>Storage - [${resourceCount} / ${factory.storage.capacity}]</span>
         </div>
         <div>
-          Production - [${resource} ${producing ? '🚴🏿‍♂️' : '😴'}] Time left: ${timeLeft}s
+          Production - [${resource} ${producing ? '🚴🏿‍♂️'
+      : '😴'}] Time left: ${timeLeft}s
         </div>
       </div>
    </div>

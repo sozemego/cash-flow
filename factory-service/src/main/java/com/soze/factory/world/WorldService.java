@@ -26,7 +26,9 @@ public class WorldService {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, new HttpHeaders());
 
-    ResponseEntity<Boolean> taken = restTemplate.exchange(url + "?x={x}&y={y}", HttpMethod.GET, request, Boolean.class, String.valueOf(x), String.valueOf(y));
+    ResponseEntity<Boolean> taken = restTemplate
+        .exchange(url + "?x={x}&y={y}", HttpMethod.GET, request, Boolean.class, String.valueOf(x),
+            String.valueOf(y));
     return taken.getBody();
   }
 
