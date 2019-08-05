@@ -29,7 +29,7 @@ public abstract class ClientMessage {
     return messageId;
   }
 
-  public abstract String getType();
+  public abstract ClientMessageType getType();
 
   public enum ClientMessageType {
     CREATE_FACTORY

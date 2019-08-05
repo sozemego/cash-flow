@@ -38,8 +38,8 @@ public class CreateFactory extends ClientMessage {
   }
 
   @Override
-  public String getType() {
-    return ClientMessageType.CREATE_FACTORY.name();
+  public ClientMessageType getType() {
+    return ClientMessageType.CREATE_FACTORY;
   }
 
   @Override
