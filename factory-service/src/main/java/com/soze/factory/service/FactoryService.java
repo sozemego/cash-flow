@@ -10,6 +10,7 @@ import com.soze.factory.FactoryConverter;
 import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.Producer;
 import com.soze.factory.domain.Storage;
+import com.soze.factory.world.WorldService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ public class FactoryService {
 
   private final FactoryTemplateLoader templateLoader;
   private final FactoryConverter factoryConverter;
+  private final WorldService worldService;
 
   private final List<Factory> factories = new ArrayList<>();
 
@@ -43,9 +45,11 @@ public class FactoryService {
 
   @Autowired
   public FactoryService(FactoryTemplateLoader templateLoader,
-                        FactoryConverter factoryConverter) {
+                        FactoryConverter factoryConverter,
+                        WorldService worldService) {
     this.templateLoader = templateLoader;
     this.factoryConverter = factoryConverter;
+    this.worldService = worldService;
   }
 
   @PostConstruct
@@ -69,6 +73,7 @@ public class FactoryService {
     startProducing(factory);
 
     this.factories.add(factory);
+    worldService.markAsTaken(factory.getX(), factory.getY());
 
     FactoryAdded factoryAdded = new FactoryAdded(factoryConverter.convert(factory));
     sendToAll(factoryAdded);
@@ -142,9 +147,17 @@ public class FactoryService {
   }
 
   public void handleCreateFactory(CreateFactory createFactory) {
+    int x = createFactory.getX();
+    int y = createFactory.getY();
+    boolean taken = worldService.isTileTaken(x, y);
+    if (taken) {
+      LOG.info("Tried to place a factory on a taken tile");
+      return;
+    }
+
     Factory factory = templateLoader.constructFactoryByTemplateId(createFactory.getTemplateId());
-    factory.setX(createFactory.getX());
-    factory.setY(createFactory.getY());
+    factory.setX(x);
+    factory.setY(y);
     executorService.schedule(() -> {
       addFactory(factory);
     }, 0, TimeUnit.MILLISECONDS);
