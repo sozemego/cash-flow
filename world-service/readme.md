@@ -3,24 +3,11 @@ World service
 
 This services stores data about the world tiles.
 
-Endpoints
+API
 ---
 
-There are currently 3 endpoints.
+After starting the project, API documentation can be accessed at:
 
 ```
-GET /world
+http://localhost:9000/world/swagger-ui.html
 ```
-Returns all tiles
-
-```
-GET /world/mark?x={x}&y={y}
-```
-
-Returns true or false based on whether a tile is occupied
-
-```
-POST /world/mark?x={x}&y={y}&mark={boolean}
-```
-
-Marks a tile as occupied or not based on 'mark' parameter.
