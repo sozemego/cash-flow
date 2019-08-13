@@ -73,10 +73,6 @@ public class Storage {
 
 	@Override
 	public String toString() {
-		return "Storage{" +
-			"capacity=" + capacity +
-			", resources=" + resources +
-			", capacityTaken=" + capacityTaken +
-			'}';
+		return "Storage{" + "capacity=" + capacity + ", resources=" + resources + ", capacityTaken=" + capacityTaken + '}';
 	}
 }

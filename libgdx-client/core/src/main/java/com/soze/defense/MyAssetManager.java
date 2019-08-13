@@ -13,8 +13,7 @@ import java.util.List;
 
 public class MyAssetManager {
 
-	private static final Logger LOG = LoggerFactory.getLogger(
-		MyAssetManager.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MyAssetManager.class);
 
 	private final AssetManager assetManager = new AssetManager();
 

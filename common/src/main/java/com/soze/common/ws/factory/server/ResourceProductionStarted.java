@@ -14,7 +14,8 @@ public class ResourceProductionStarted extends ServerMessage {
 	@JsonCreator
 	public ResourceProductionStarted(@JsonProperty("messageId") UUID messageId,
 																	 @JsonProperty("factoryId") String factoryId,
-																	 @JsonProperty("resource") Resource resource) {
+																	 @JsonProperty("resource") Resource resource
+																	) {
 		super(messageId);
 		this.factoryId = factoryId;
 		this.resource = resource;

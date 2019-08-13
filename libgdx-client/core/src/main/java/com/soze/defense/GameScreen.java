@@ -42,15 +42,10 @@ public class GameScreen implements Screen {
 		this.myAssetManager = assetManager;
 
 		this.world = new World(this.myAssetManager, new WorldHttpClient());
-		this.game = new Game(this.world, this.myAssetManager, this.batch,
-												 this.mousePointer
-		);
+		this.game = new Game(this.world, this.myAssetManager, this.batch, this.mousePointer);
 		this.game.init();
 
-		this.gameInputHandler = new GameInputHandler(this.viewport, this.game,
-																								 this.world,
-																								 game.getFactoryService()
-		);
+		this.gameInputHandler = new GameInputHandler(this.viewport, this.game, this.world, game.getFactoryService());
 
 		inputMultiplexer.addProcessor(this.gameInputHandler);
 		inputMultiplexer.addProcessor(this.camera);

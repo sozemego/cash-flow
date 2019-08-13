@@ -10,16 +10,13 @@ import java.util.List;
 
 public class FactoryClient {
 
-	private static final Logger LOG = LoggerFactory.getLogger(
-		FactoryClient.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FactoryClient.class);
 
-	private final HttpClient client = new HttpClient(
-		"http://localhost:9001/factory");
+	private final HttpClient client = new HttpClient("http://localhost:9001/factory");
 
 	public List<FactoryDTO> getFactories() {
 		String response = client.get();
-		List<FactoryDTO> factories = JsonUtils.parseList(
-			response, FactoryDTO.class);
+		List<FactoryDTO> factories = JsonUtils.parseList(response, FactoryDTO.class);
 		LOG.info("Fetched {} factories", factories.size());
 		return factories;
 	}

@@ -13,9 +13,9 @@ public class Factory extends BaseObject {
 	private final Producer producer;
 	private final Storage storage;
 
-	public Factory(String id, String name, Vector2 position,
-								 Vector2 size, Sprite sprite, Producer producer,
-								 Storage storage) {
+	public Factory(String id, String name, Vector2 position, Vector2 size, Sprite sprite, Producer producer,
+								 Storage storage
+								) {
 		super(id, name, position, size);
 		this.sprite = sprite;
 		this.producer = producer;
@@ -39,8 +39,7 @@ public class Factory extends BaseObject {
 		if (producer.isProducing()) {
 			float progress = producer.getProgress();
 			float nextProgress = progress + (delta * 1000);
-			producer.setProgress(
-				MathUtils.clamp(nextProgress, 0, producer.getTime()));
+			producer.setProgress(MathUtils.clamp(nextProgress, 0, producer.getTime()));
 		}
 	}
 

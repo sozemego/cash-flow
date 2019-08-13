@@ -58,10 +58,7 @@ public class Tile {
 
 	@Override
 	public String toString() {
-		return "Tile{" +
-			"position=" + position +
-			", hovered=" + hovered +
-			'}';
+		return "Tile{" + "position=" + position + ", hovered=" + hovered + '}';
 	}
 
 	@Override

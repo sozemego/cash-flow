@@ -7,17 +7,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.util.Objects;
 import java.util.UUID;
 
-@JsonTypeInfo(
-	use = JsonTypeInfo.Id.NAME,
-	include = JsonTypeInfo.As.EXISTING_PROPERTY,
-	property = "type",
-	visible = true
-)
-@JsonSubTypes(value = {
-	@JsonSubTypes.Type(value = ResourceProduced.class, name = "RESOURCE_PRODUCED"),
-	@JsonSubTypes.Type(value = ResourceProductionStarted.class, name = "RESOURCE_PRODUCTION_STARTED"),
-	@JsonSubTypes.Type(value = FactoryAdded.class, name = "FACTORY_ADDED"),
-})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
+@JsonSubTypes(value = {@JsonSubTypes.Type(value = ResourceProduced.class, name = "RESOURCE_PRODUCED"), @JsonSubTypes.Type(value = ResourceProductionStarted.class, name = "RESOURCE_PRODUCTION_STARTED"), @JsonSubTypes.Type(value = FactoryAdded.class, name = "FACTORY_ADDED"),})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class ServerMessage {
 

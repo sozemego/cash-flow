@@ -35,14 +35,10 @@ public class World {
 		List<TileDTO> tileDTOs = dto.getTiles();
 		for (TileDTO tileDTO : tileDTOs) {
 			Vector2 position = new Vector2(tileDTO.getX(), tileDTO.getY());
-			Sprite sprite = new Sprite(
-				assetManager.getTexture("textures/terrain/tile/medievalTile_57.png"));
+			Sprite sprite = new Sprite(assetManager.getTexture("textures/terrain/tile/medievalTile_57.png"));
 			sprite.setBounds(position.x, position.y, Tile.WIDTH, Tile.HEIGHT);
 			Tile tile = new Tile(position, sprite);
-			tiles.put(
-				getTileIndexPosition(new Vector2(tileDTO.getX(), tileDTO.getY())),
-				tile
-							 );
+			tiles.put(getTileIndexPosition(new Vector2(tileDTO.getX(), tileDTO.getY())), tile);
 		}
 		LOG.info("Fetched {} tiles", tiles.size());
 	}

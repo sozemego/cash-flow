@@ -19,16 +19,15 @@ import java.util.Map;
 
 public class ObjectFactory {
 
-	private static final Logger LOG = LoggerFactory.getLogger(
-		ObjectFactory.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ObjectFactory.class);
 
 	private final MyAssetManager assetManager;
 	private final World world;
 
 	private final Map<String, JsonNode> templates = new HashMap<>();
 
-	public ObjectFactory(MyAssetManager assetManager,
-											 World world) {
+	public ObjectFactory(MyAssetManager assetManager, World world
+											) {
 		this.assetManager = assetManager;
 		this.world = world;
 	}
@@ -48,8 +47,7 @@ public class ObjectFactory {
 		Sprite sprite = assetManager.getSprite(textureName);
 
 		ProducerDTO producerDTO = factoryDTO.getProducer();
-		Producer producer = new Producer(
-			producerDTO.getResource(), producerDTO.getTime());
+		Producer producer = new Producer(producerDTO.getResource(), producerDTO.getTime());
 		producer.setProducing(producerDTO.isProducing());
 		producer.setProgress(producerDTO.getProgress());
 
@@ -62,22 +60,10 @@ public class ObjectFactory {
 			}
 		});
 
-		Vector2 position = new Vector2(
-			factoryDTO.getX() * Tile.WIDTH, factoryDTO.getY() * Tile.HEIGHT);
-		Vector2 size = new Vector2(
-			factoryDTO.getWidth() * Tile.WIDTH,
-			factoryDTO.getHeight() * Tile.HEIGHT
-		);
+		Vector2 position = new Vector2(factoryDTO.getX() * Tile.WIDTH, factoryDTO.getY() * Tile.HEIGHT);
+		Vector2 size = new Vector2(factoryDTO.getWidth() * Tile.WIDTH, factoryDTO.getHeight() * Tile.HEIGHT);
 
-		return new Factory(
-			factoryDTO.getId(),
-			name,
-			position.add(size.x / 2, size.y / 2),
-			size,
-			sprite,
-			producer,
-			storage
-		);
+		return new Factory(factoryDTO.getId(), name, position.add(size.x / 2, size.y / 2), size, sprite, producer, storage);
 	}
 
 }

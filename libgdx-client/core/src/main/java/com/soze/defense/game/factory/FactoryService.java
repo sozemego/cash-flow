@@ -19,8 +19,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FactoryService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(
-		FactoryService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FactoryService.class);
 
 	private final Map<String, Factory> factories = new ConcurrentHashMap<>();
 	private final Queue<Runnable> tasks = new ConcurrentLinkedQueue<>();
@@ -28,8 +27,8 @@ public class FactoryService {
 	private final FactoryWebSocketClient webSocketClient;
 	private final ObjectFactory objectFactory;
 
-	public FactoryService(FactoryWebSocketClient webSocketClient,
-												ObjectFactory objectFactory) {
+	public FactoryService(FactoryWebSocketClient webSocketClient, ObjectFactory objectFactory
+											 ) {
 		this.webSocketClient = webSocketClient;
 		this.objectFactory = objectFactory;
 	}
@@ -60,8 +59,7 @@ public class FactoryService {
 	}
 
 	public void createFactory(String templateId, Vector2 position) {
-		CreateFactory createFactory = new CreateFactory(
-			templateId, (int) position.x, (int) position.y);
+		CreateFactory createFactory = new CreateFactory(templateId, (int) position.x, (int) position.y);
 		LOG.info("Sending CreateFactory message, {}", createFactory);
 		String payload = JsonUtils.serialize(createFactory);
 		webSocketClient.send(payload);

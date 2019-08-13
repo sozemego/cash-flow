@@ -12,9 +12,9 @@ public class ResourceProduced extends ServerMessage {
 	private final Resource resource;
 
 	@JsonCreator
-	public ResourceProduced(@JsonProperty("messageId") UUID messageId,
-													@JsonProperty("factoryId") String factoryId,
-													@JsonProperty("resource") Resource resource) {
+	public ResourceProduced(@JsonProperty("messageId") UUID messageId, @JsonProperty("factoryId") String factoryId,
+													@JsonProperty("resource") Resource resource
+												 ) {
 		super(messageId);
 		this.factoryId = factoryId;
 		this.resource = resource;

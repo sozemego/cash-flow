@@ -20,17 +20,16 @@ import java.util.stream.Collectors;
 @Api(value = "Factory")
 public class FactoryController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(
-		FactoryController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FactoryController.class);
 
 	private final FactoryService factoryService;
 	private final FactoryTemplateLoader factoryTemplateLoader;
 	private final FactoryConverter factoryConverter;
 
 	@Autowired
-	public FactoryController(FactoryService factoryService,
-													 FactoryTemplateLoader factoryTemplateLoader,
-													 FactoryConverter factoryConverter) {
+	public FactoryController(FactoryService factoryService, FactoryTemplateLoader factoryTemplateLoader,
+													 FactoryConverter factoryConverter
+													) {
 		this.factoryService = factoryService;
 		this.factoryTemplateLoader = factoryTemplateLoader;
 		this.factoryConverter = factoryConverter;
@@ -39,10 +38,8 @@ public class FactoryController {
 	@GetMapping(value = "/")
 	public List<FactoryDTO> getFactories() {
 		LOG.info("Calling getFactories");
-		List<FactoryDTO> factoryDTOS = factoryService.getFactories()
-																								 .stream()
-																								 .map(factoryConverter::convert)
-																								 .collect(Collectors.toList());
+		List<FactoryDTO> factoryDTOS = factoryService.getFactories().stream().map(factoryConverter::convert).collect(
+			Collectors.toList());
 		LOG.info("Returning {} factories", factoryDTOS.size());
 		return factoryDTOS;
 	}

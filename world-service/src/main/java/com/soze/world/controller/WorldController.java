@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "World")
 public class WorldController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(
-		WorldController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(WorldController.class);
 
 	private final WorldService worldService;
 
@@ -35,9 +34,8 @@ public class WorldController {
 
 	@PostMapping(value = "/mark")
 	@ApiOperation(value = "Marks a given tile (at x:y coordinates) as taken or free")
-	public void markTileAsTaken(@RequestParam("x") int x,
-															@RequestParam("y") int y,
-															@RequestParam("mark") boolean taken) {
+	public void markTileAsTaken(@RequestParam("x") int x, @RequestParam("y") int y, @RequestParam("mark") boolean taken
+														 ) {
 		if (taken) {
 			worldService.markAsTaken(x, y);
 		} else {
@@ -47,8 +45,8 @@ public class WorldController {
 
 	@GetMapping(value = "/mark")
 	@ApiOperation(value = "Checks whether a tile at given x:y coordinate is taken")
-	public boolean isTileTaken(@RequestParam("x") int x,
-														 @RequestParam("y") int y) {
+	public boolean isTileTaken(@RequestParam("x") int x, @RequestParam("y") int y
+														) {
 		return worldService.isTileTaken(x, y);
 	}
 

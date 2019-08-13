@@ -101,17 +101,6 @@ public class Factory {
 
 	@Override
 	public String toString() {
-		return "Factory{" +
-			"id='" + id + '\'' +
-			", templateId='" + templateId + '\'' +
-			", name='" + name + '\'' +
-			", texture='" + texture + '\'' +
-			", x=" + x +
-			", y=" + y +
-			", width=" + width +
-			", height=" + height +
-			", producer=" + producer +
-			", storage=" + storage +
-			'}';
+		return "Factory{" + "id='" + id + '\'' + ", templateId='" + templateId + '\'' + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", producer=" + producer + ", storage=" + storage + '}';
 	}
 }

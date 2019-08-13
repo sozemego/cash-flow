@@ -17,8 +17,7 @@ import java.util.Set;
 
 public class GameInputHandler implements InputProcessor {
 
-	private static final Logger LOG = LoggerFactory.getLogger(
-		GameInputHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GameInputHandler.class);
 
 	private final Set<Integer> pressedKeys = new HashSet<>();
 
@@ -29,8 +28,8 @@ public class GameInputHandler implements InputProcessor {
 
 	private Tile hoveredTile;
 
-	public GameInputHandler(ScreenViewport viewport, Game game, World world,
-													FactoryService factoryService) {
+	public GameInputHandler(ScreenViewport viewport, Game game, World world, FactoryService factoryService
+												 ) {
 		this.viewport = viewport;
 		this.game = game;
 		this.world = world;

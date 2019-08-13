@@ -14,8 +14,7 @@ import java.net.URI;
 
 public class FactoryWebSocketClient extends WebSocketClient {
 
-	private static final Logger LOG = LoggerFactory.getLogger(
-		FactoryWebSocketClient.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FactoryWebSocketClient.class);
 
 	private FactoryService factoryService;
 
@@ -42,15 +41,13 @@ public class FactoryWebSocketClient extends WebSocketClient {
 
 	@Override
 	public void onOpen(ServerHandshake serverHandshake) {
-		LOG.info(
-			"Connection to server opened, {}", serverHandshake.getHttpStatus());
+		LOG.info("Connection to server opened, {}", serverHandshake.getHttpStatus());
 	}
 
 	@Override
 	public void onMessage(String message) {
 		ServerMessage serverMessage = JsonUtils.parse(message, ServerMessage.class);
-		LOG.trace(
-			"Websocket message from server, type {}", serverMessage.getType());
+		LOG.trace("Websocket message from server, type {}", serverMessage.getType());
 		if (serverMessage instanceof ResourceProduced) {
 			factoryService.handle((ResourceProduced) serverMessage);
 		}

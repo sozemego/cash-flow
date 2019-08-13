@@ -23,8 +23,8 @@ public class Game {
 	//Services section
 	private final FactoryService factoryService;
 
-	public Game(World world, MyAssetManager assetManager, SpriteBatch batch,
-							MousePointer mousePointer) {
+	public Game(World world, MyAssetManager assetManager, SpriteBatch batch, MousePointer mousePointer
+						 ) {
 		this.world = world;
 		this.assetManager = assetManager;
 
@@ -32,23 +32,20 @@ public class Game {
 		this.batch = batch;
 		this.mousePointer = mousePointer;
 
-		FactoryWebSocketClient factoryWebSocketClient = FactoryWebSocketClient
-			.create("ws://localhost:9001/factory/websocket");
+		FactoryWebSocketClient factoryWebSocketClient = FactoryWebSocketClient.create(
+			"ws://localhost:9001/factory/websocket");
 
-		this.factoryService = new FactoryService(
-			factoryWebSocketClient,
-			objectFactory
-		);
+		this.factoryService = new FactoryService(factoryWebSocketClient, objectFactory);
 	}
 
 	public void init() {
 		objectFactory.loadEntityTemplates();
 		world.init();
 		factoryService.init();
-//    engine.addSystem(new ResourceProducerSystem(engine, this, new PathFinder(this)));
-//    engine.addSystem(new PathFollowerSystem(engine));
-//    engine.addSystem(new PathFollowerRenderingSystem(engine, batch, assetManager));
-//    engine.addSystem(new GraphicsSystem(engine, batch));
+		//    engine.addSystem(new ResourceProducerSystem(engine, this, new PathFinder(this)));
+		//    engine.addSystem(new PathFollowerSystem(engine));
+		//    engine.addSystem(new PathFollowerRenderingSystem(engine, batch, assetManager));
+		//    engine.addSystem(new GraphicsSystem(engine, batch));
 
 	}
 

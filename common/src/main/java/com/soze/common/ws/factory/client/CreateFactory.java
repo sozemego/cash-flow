@@ -12,10 +12,9 @@ public class CreateFactory extends ClientMessage {
 	private final int y;
 
 	@JsonCreator
-	public CreateFactory(@JsonProperty("messageId") UUID messageId,
-											 @JsonProperty("templateId") String templateId,
-											 @JsonProperty("x") int x,
-											 @JsonProperty("y") int y) {
+	public CreateFactory(@JsonProperty("messageId") UUID messageId, @JsonProperty("templateId") String templateId,
+											 @JsonProperty("x") int x, @JsonProperty("y") int y
+											) {
 		super(messageId);
 		this.templateId = templateId;
 		this.x = x;
@@ -45,10 +44,6 @@ public class CreateFactory extends ClientMessage {
 
 	@Override
 	public String toString() {
-		return "CreateFactory{" +
-			"templateId='" + templateId + '\'' +
-			", x=" + x +
-			", y=" + y +
-			'}';
+		return "CreateFactory{" + "templateId='" + templateId + '\'' + ", x=" + x + ", y=" + y + '}';
 	}
 }

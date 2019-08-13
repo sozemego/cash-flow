@@ -24,27 +24,23 @@ public class PathFollowerRenderingSystem extends BaseRenderingSystem {
 
 	private final Sprite bar;
 
-	public PathFollowerRenderingSystem(Engine engine, SpriteBatch batch,
-																		 MyAssetManager assetManager) {
+	public PathFollowerRenderingSystem(Engine engine, SpriteBatch batch, MyAssetManager assetManager
+																		) {
 		super(engine);
 		this.batch = batch;
 		this.assetManager = assetManager;
 
-		this.bar = new Sprite(
-			assetManager.getTexture("textures/ui/white_background.png"));
+		this.bar = new Sprite(assetManager.getTexture("textures/ui/white_background.png"));
 	}
 
 	@Override
 	public void update(float delta) {
-		getEngine().getEntitiesByNode(NodeHelper.PATH_FOLLOWER)
-							 .forEach(entity -> update(entity, delta));
+		getEngine().getEntitiesByNode(NodeHelper.PATH_FOLLOWER).forEach(entity -> update(entity, delta));
 	}
 
 	private void update(Entity entity, float delta) {
-		PhysicsComponent physicsComponent = entity.getComponent(
-			PhysicsComponent.class);
-		PathFollowerComponent pathFollowerComponent = entity.getComponent(
-			PathFollowerComponent.class);
+		PhysicsComponent physicsComponent = entity.getComponent(PhysicsComponent.class);
+		PathFollowerComponent pathFollowerComponent = entity.getComponent(PathFollowerComponent.class);
 
 		Vector2 position = physicsComponent.getPosition();
 
@@ -55,17 +51,16 @@ public class PathFollowerRenderingSystem extends BaseRenderingSystem {
 			return;
 		}
 
-		List<Vector2> centers = tiles.stream().map(Tile::getCenter)
-																 .collect(Collectors.toList());
+		List<Vector2> centers = tiles.stream().map(Tile::getCenter).collect(Collectors.toList());
 		centers.add(position);
 
 		Vector2 from = centers.get(centers.size() - 1);
 		Vector2 to = centers.get(0);
 
-//    if (centers.size() == 2) {
-//      drawBar(from, to);
-//      return;
-//    }
+		//    if (centers.size() == 2) {
+		//      drawBar(from, to);
+		//      return;
+		//    }
 
 		drawBars(centers);
 	}

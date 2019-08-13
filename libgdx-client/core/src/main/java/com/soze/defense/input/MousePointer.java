@@ -34,8 +34,7 @@ public class MousePointer {
 	 */
 	public Vector2 getMouseWorldCoordinates() {
 		Vector2 screenCoordinates = getRawMouseCoordinates();
-		Vector3 unprojectedCoordinates = camera
-			.unproject(new Vector3(screenCoordinates.x, screenCoordinates.y, 0f));
+		Vector3 unprojectedCoordinates = camera.unproject(new Vector3(screenCoordinates.x, screenCoordinates.y, 0f));
 		return new Vector2(unprojectedCoordinates.x, unprojectedCoordinates.y);
 	}
 

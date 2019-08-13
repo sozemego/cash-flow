@@ -25,8 +25,7 @@ public class HttpClient {
 		Request request = new Request.Builder().url(baseUrl).build();
 
 		try (Response response = client.newCall(request).execute()) {
-			LOG.info(
-				"Response to {} returned with status {}", baseUrl, response.code());
+			LOG.info("Response to {} returned with status {}", baseUrl, response.code());
 			return response.body().string();
 		} catch (IOException e) {
 			throw new IllegalStateException(e);

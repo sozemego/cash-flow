@@ -10,13 +10,8 @@ public interface NodeHelper {
 
 	Node GRAPHICS = Node.of(PhysicsComponent.class, GraphicsComponent.class);
 	Node TOOLTIP = Node.of(PhysicsComponent.class, TooltipComponent.class);
-	Node RESOURCE_PRODUCER = Node.of(
-		PhysicsComponent.class, ResourceProducerComponent.class);
-	Node PATH_FOLLOWER = Node
-		.of(
-			PhysicsComponent.class, GraphicsComponent.class,
-			PathFollowerComponent.class
-			 );
+	Node RESOURCE_PRODUCER = Node.of(PhysicsComponent.class, ResourceProducerComponent.class);
+	Node PATH_FOLLOWER = Node.of(PhysicsComponent.class, GraphicsComponent.class, PathFollowerComponent.class);
 	Node OCCUPY_TILE = Node.of(PhysicsComponent.class, OccupyTileComponent.class);
 
 	Predicate<Entity> HAS_STORAGE = entity -> {

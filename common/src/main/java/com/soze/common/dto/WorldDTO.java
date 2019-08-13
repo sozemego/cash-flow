@@ -33,10 +33,6 @@ public class WorldDTO {
 
 	@Override
 	public String toString() {
-		return "WorldDTO{" +
-			"tiles count=" + tiles.size() +
-			", tileWidth=" + tileWidth +
-			", tileHeight=" + tileHeight +
-			'}';
+		return "WorldDTO{" + "tiles count=" + tiles.size() + ", tileWidth=" + tileWidth + ", tileHeight=" + tileHeight + '}';
 	}
 }

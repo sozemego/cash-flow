@@ -13,8 +13,7 @@ import java.util.Map;
 
 public class TemplateLoader {
 
-	private static final Logger LOG = LoggerFactory.getLogger(
-		TemplateLoader.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TemplateLoader.class);
 
 	private final String factoryTemplatesUrl = "http://localhost:9001/factory/templates";
 	private final List<String> urls = Arrays.asList(factoryTemplatesUrl);

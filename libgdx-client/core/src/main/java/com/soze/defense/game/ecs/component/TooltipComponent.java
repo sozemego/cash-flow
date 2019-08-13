@@ -10,8 +10,8 @@ public class TooltipComponent extends BaseComponent {
 		return productionProgressIndicator;
 	}
 
-	public void setProductionProgressIndicator(
-		ProductionProgressIndicator productionProgressIndicator) {
+	public void setProductionProgressIndicator(ProductionProgressIndicator productionProgressIndicator
+																						) {
 		this.productionProgressIndicator = productionProgressIndicator;
 	}
 }

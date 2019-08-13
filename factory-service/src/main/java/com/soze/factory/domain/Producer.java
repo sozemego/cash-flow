@@ -72,11 +72,6 @@ public class Producer {
 
 	@Override
 	public String toString() {
-		return "Producer{" +
-			"resource=" + resource +
-			", time=" + time +
-			", progress=" + progress +
-			", producing=" + producing +
-			'}';
+		return "Producer{" + "resource=" + resource + ", time=" + time + ", progress=" + progress + ", producing=" + producing + '}';
 	}
 }

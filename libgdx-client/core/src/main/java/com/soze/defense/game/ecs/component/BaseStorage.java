@@ -69,7 +69,6 @@ public class BaseStorage extends BaseComponent {
 
 	@Override
 	public String toString() {
-		return "BaseStorage{" + "capacity=" + capacity + ", resources=" + resources + ", capacityTaken="
-			+ capacityTaken + '}';
+		return "BaseStorage{" + "capacity=" + capacity + ", resources=" + resources + ", capacityTaken=" + capacityTaken + '}';
 	}
 }

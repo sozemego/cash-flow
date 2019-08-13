@@ -22,8 +22,8 @@ public class Renderer {
 
 	private final BitmapFont font = new BitmapFont();
 
-	public Renderer(SpriteBatch spriteBatch, Camera camera,
-									MousePointer mousePointer, MyAssetManager assetManager) {
+	public Renderer(SpriteBatch spriteBatch, Camera camera, MousePointer mousePointer, MyAssetManager assetManager
+								 ) {
 		this.spriteBatch = spriteBatch;
 		this.camera = camera;
 		this.mousePointer = mousePointer;
@@ -34,8 +34,7 @@ public class Renderer {
 		Vector2 position = factory.getPosition();
 		Vector2 size = factory.getSize();
 		Sprite sprite = factory.getSprite();
-		sprite.setBounds(
-			position.x - size.x / 2, position.y - size.y / 2, size.x, size.y);
+		sprite.setBounds(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y);
 		sprite.draw(spriteBatch);
 
 		Storage storage = factory.getStorage();
@@ -43,14 +42,10 @@ public class Renderer {
 		String capacity = String.valueOf(storage.getCapacity());
 
 		font.setColor(Color.WHITE);
-		font.draw(spriteBatch, capacityTaken + "/" + capacity,
-							position.x - size.x / 2,
-							position.y - size.y / 2
-						 );
+		font.draw(spriteBatch, capacityTaken + "/" + capacity, position.x - size.x / 2, position.y - size.y / 2);
 
 		Producer producer = factory.getProducer();
-		Sprite resourceSprite = assetManager.getResourceSprite(
-			producer.getResource());
+		Sprite resourceSprite = assetManager.getResourceSprite(producer.getResource());
 		ProductionProgressIndicator productionProgressIndicator = new ProductionProgressIndicator(
 			factory, resourceSprite, font);
 		productionProgressIndicator.render(spriteBatch, true);
