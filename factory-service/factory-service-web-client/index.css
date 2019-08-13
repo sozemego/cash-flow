@@ -1,12 +1,12 @@
 .smaller {
-  font-size: 0.7em;
-  color: gray;
+    font-size: 0.7em;
+    color: gray;
 }
 
 .factory-container {
-  border-bottom: gray dotted 1px;
+    border-bottom: gray dotted 1px;
 }
 
 .factory-data-container {
-  margin: 12px;
+    margin: 12px;
 }

@@ -6,18 +6,15 @@ import com.soze.common.json.JsonUtils;
 import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.Producer;
 import com.soze.factory.domain.Storage;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Loads and holds templates for factories.
@@ -25,58 +22,56 @@ import org.springframework.stereotype.Service;
 @Service
 public class FactoryTemplateLoader {
 
-  private static final Logger LOG = LoggerFactory.getLogger(FactoryTemplateLoader.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FactoryTemplateLoader.class);
+	private final Map<String, JsonNode> jsonEntities = new HashMap<>();
+	@Value("classpath:factories.json")
+	private org.springframework.core.io.Resource entities;
 
-  @Value("classpath:factories.json")
-  private org.springframework.core.io.Resource entities;
+	@PostConstruct
+	public void setup() throws Exception {
+		LOG.info("Factory templates init...");
+		List<JsonNode> objects = JsonUtils.parseList(getEntities(), JsonNode.class);
+		for (JsonNode object : objects) {
+			jsonEntities.put(object.get("id").asText(), object);
+		}
+		LOG.info("Loaded {} entities", jsonEntities.size());
+	}
 
-  private final Map<String, JsonNode> jsonEntities = new HashMap<>();
+	public Factory constructFactoryByTemplateId(String id) {
+		JsonNode root = findRootById(Objects.requireNonNull(id));
+		if (root == null) {
+			throw new IllegalArgumentException("Did not find template by id " + id);
+		}
 
-  @PostConstruct
-  public void setup() throws Exception {
-    LOG.info("Factory templates init...");
-    List<JsonNode> objects = JsonUtils.parseList(getEntities(), JsonNode.class);
-    for (JsonNode object : objects) {
-      jsonEntities.put(object.get("id").asText(), object);
-    }
-    LOG.info("Loaded {} entities", jsonEntities.size());
-  }
+		Factory factory = new Factory();
+		factory.setId(UUID.randomUUID().toString());
+		factory.setWidth(root.get("width").asInt());
+		factory.setHeight(root.get("height").asInt());
 
-  public Factory constructFactoryByTemplateId(String id) {
-    JsonNode root = findRootById(Objects.requireNonNull(id));
-    if (root == null) {
-      throw new IllegalArgumentException("Did not find template by id " + id);
-    }
+		factory.setTemplateId(root.get("id").asText());
+		factory.setName(root.get("name").asText());
+		factory.setTexture(root.get("texture").asText());
 
-    Factory factory = new Factory();
-    factory.setId(UUID.randomUUID().toString());
-    factory.setWidth(root.get("width").asInt());
-    factory.setHeight(root.get("height").asInt());
+		JsonNode storageNode = root.get("storage");
+		Storage storage = new Storage(storageNode.get("capacity").asInt());
+		factory.setStorage(storage);
 
-    factory.setTemplateId(root.get("id").asText());
-    factory.setName(root.get("name").asText());
-    factory.setTexture(root.get("texture").asText());
+		JsonNode producerNode = root.get("producer");
+		Producer producer = new Producer();
+		producer.stopProduction();
+		producer.setTime((float) producerNode.get("time").asDouble());
+		producer.setResource(Resource.valueOf(producerNode.get("resource").asText()));
+		factory.setProducer(producer);
 
-    JsonNode storageNode = root.get("storage");
-    Storage storage = new Storage(storageNode.get("capacity").asInt());
-    factory.setStorage(storage);
+		return factory;
+	}
 
-    JsonNode producerNode = root.get("producer");
-    Producer producer = new Producer();
-    producer.stopProduction();
-    producer.setTime((float) producerNode.get("time").asDouble());
-    producer.setResource(Resource.valueOf(producerNode.get("resource").asText()));
-    factory.setProducer(producer);
+	private JsonNode findRootById(String id) {
+		return jsonEntities.get(id);
+	}
 
-    return factory;
-  }
-
-  private JsonNode findRootById(String id) {
-    return jsonEntities.get(id);
-  }
-
-  public File getEntities() throws IOException {
-    return entities.getFile();
-  }
+	public File getEntities() throws IOException {
+		return entities.getFile();
+	}
 
 }

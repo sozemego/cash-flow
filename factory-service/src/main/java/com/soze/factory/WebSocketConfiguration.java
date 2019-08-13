@@ -11,18 +11,18 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
-  private final FactoryWebSocketController factoryWebSocketController;
+	private final FactoryWebSocketController factoryWebSocketController;
 
-  @Autowired
-  public WebSocketConfiguration(
-      FactoryWebSocketController factoryWebSocketController) {
-    this.factoryWebSocketController = factoryWebSocketController;
-  }
+	@Autowired
+	public WebSocketConfiguration(
+		FactoryWebSocketController factoryWebSocketController) {
+		this.factoryWebSocketController = factoryWebSocketController;
+	}
 
-  @Override
-  public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-    webSocketHandlerRegistry.addHandler(factoryWebSocketController, "/websocket")
-                            .setAllowedOrigins("*");
-  }
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
+		webSocketHandlerRegistry.addHandler(factoryWebSocketController, "/websocket")
+														.setAllowedOrigins("*");
+	}
 
 }

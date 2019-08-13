@@ -15,38 +15,38 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "World")
 public class WorldController {
 
-  private static final Logger LOG = LoggerFactory.getLogger(WorldController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(WorldController.class);
 
-  private final WorldService worldService;
+	private final WorldService worldService;
 
-  public WorldController(WorldService worldService) {
-    this.worldService = worldService;
-  }
+	public WorldController(WorldService worldService) {
+		this.worldService = worldService;
+	}
 
-  @GetMapping(value = "/")
-  @ApiOperation(value = "Retrieves the entire world")
-  public WorldDTO getWorld() {
-    LOG.info("Calling getWorld");
-    WorldDTO worldDTO = worldService.getWorld();
-    LOG.info("Returning world {}", worldDTO);
-    return worldDTO;
-  }
+	@GetMapping(value = "/")
+	@ApiOperation(value = "Retrieves the entire world")
+	public WorldDTO getWorld() {
+		LOG.info("Calling getWorld");
+		WorldDTO worldDTO = worldService.getWorld();
+		LOG.info("Returning world {}", worldDTO);
+		return worldDTO;
+	}
 
-  @PostMapping(value = "/mark")
-  @ApiOperation(value = "Marks a given tile (at x:y coordinates) as taken or free")
-  public void markTileAsTaken(@RequestParam("x") int x, @RequestParam("y") int y,
-                              @RequestParam("mark") boolean taken) {
-    if (taken) {
-      worldService.markAsTaken(x, y);
-    } else {
-      worldService.markAsFree(x, y);
-    }
-  }
+	@PostMapping(value = "/mark")
+	@ApiOperation(value = "Marks a given tile (at x:y coordinates) as taken or free")
+	public void markTileAsTaken(@RequestParam("x") int x, @RequestParam("y") int y,
+															@RequestParam("mark") boolean taken) {
+		if (taken) {
+			worldService.markAsTaken(x, y);
+		} else {
+			worldService.markAsFree(x, y);
+		}
+	}
 
-  @GetMapping(value = "/mark")
-  @ApiOperation(value = "Checks whether a tile at given x:y coordinate is taken")
-  public boolean isTileTaken(@RequestParam("x") int x, @RequestParam("y") int y) {
-    return worldService.isTileTaken(x, y);
-  }
+	@GetMapping(value = "/mark")
+	@ApiOperation(value = "Checks whether a tile at given x:y coordinate is taken")
+	public boolean isTileTaken(@RequestParam("x") int x, @RequestParam("y") int y) {
+		return worldService.isTileTaken(x, y);
+	}
 
 }

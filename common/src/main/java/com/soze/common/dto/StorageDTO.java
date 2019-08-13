@@ -5,18 +5,18 @@ import java.util.Map;
 
 public class StorageDTO {
 
-  private int capacity;
-  private final Map<Resource, Integer> resources = new HashMap<>();
+	private final Map<Resource, Integer> resources = new HashMap<>();
+	private int capacity;
 
-  public int getCapacity() {
-    return capacity;
-  }
+	public int getCapacity() {
+		return capacity;
+	}
 
-  public void setCapacity(int capacity) {
-    this.capacity = capacity;
-  }
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
 
-  public Map<Resource, Integer> getResources() {
-    return resources;
-  }
+	public Map<Resource, Integer> getResources() {
+		return resources;
+	}
 }
