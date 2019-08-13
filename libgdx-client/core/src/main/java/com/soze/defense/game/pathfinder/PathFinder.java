@@ -4,12 +4,12 @@ import com.soze.defense.game.Game;
 
 public class PathFinder {
 
-  private final Game game;
-  private final boolean allowDiagonals = false;
+	private final Game game;
+	private final boolean allowDiagonals = false;
 
-  public PathFinder(Game game) {
-    this.game = game;
-  }
+	public PathFinder(Game game) {
+		this.game = game;
+	}
 
 //  public Path findPath(Tile from, Tile to) {
 //    PriorityQueue<TileCost> frontier = new PriorityQueue<>();

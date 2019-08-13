@@ -22,7 +22,8 @@ import java.util.*;
 @Service
 public class FactoryTemplateLoader {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FactoryTemplateLoader.class);
+	private static final Logger LOG = LoggerFactory.getLogger(
+		FactoryTemplateLoader.class);
 	private final Map<String, JsonNode> jsonEntities = new HashMap<>();
 	@Value("classpath:factories.json")
 	private org.springframework.core.io.Resource entities;
@@ -60,7 +61,8 @@ public class FactoryTemplateLoader {
 		Producer producer = new Producer();
 		producer.stopProduction();
 		producer.setTime((float) producerNode.get("time").asDouble());
-		producer.setResource(Resource.valueOf(producerNode.get("resource").asText()));
+		producer.setResource(
+			Resource.valueOf(producerNode.get("resource").asText()));
 		factory.setProducer(producer);
 
 		return factory;

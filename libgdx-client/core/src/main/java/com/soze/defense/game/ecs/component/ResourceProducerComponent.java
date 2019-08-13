@@ -4,37 +4,37 @@ import com.soze.common.dto.Resource;
 
 public class ResourceProducerComponent extends BaseComponent {
 
-  private final Resource resource;
-  private final float time;
-  private float progress;
-  private boolean producing;
+	private final Resource resource;
+	private final float time;
+	private float progress;
+	private boolean producing;
 
-  public ResourceProducerComponent(Resource resource, float time) {
-    this.resource = resource;
-    this.time = time;
-  }
+	public ResourceProducerComponent(Resource resource, float time) {
+		this.resource = resource;
+		this.time = time;
+	}
 
-  public Resource getResource() {
-    return resource;
-  }
+	public Resource getResource() {
+		return resource;
+	}
 
-  public float getTime() {
-    return time;
-  }
+	public float getTime() {
+		return time;
+	}
 
-  public float getProgress() {
-    return progress;
-  }
+	public float getProgress() {
+		return progress;
+	}
 
-  public void setProgress(float progress) {
-    this.progress = progress;
-  }
+	public void setProgress(float progress) {
+		this.progress = progress;
+	}
 
-  public boolean isProducing() {
-    return producing;
-  }
+	public boolean isProducing() {
+		return producing;
+	}
 
-  public void setProducing(boolean producing) {
-    this.producing = producing;
-  }
+	public void setProducing(boolean producing) {
+		this.producing = producing;
+	}
 }

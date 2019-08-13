@@ -5,19 +5,19 @@ import com.soze.klecs.system.EntitySystem;
 
 public abstract class BaseEntitySystem implements EntitySystem {
 
-  private final Engine engine;
+	private final Engine engine;
 
-  protected BaseEntitySystem(Engine engine) {
-    this.engine = engine;
-  }
+	protected BaseEntitySystem(Engine engine) {
+		this.engine = engine;
+	}
 
-  @Override
-  public Engine getEngine() {
-    return engine;
-  }
+	@Override
+	public Engine getEngine() {
+		return engine;
+	}
 
-  @Override
-  public boolean isRenderer() {
-    return false;
-  }
+	@Override
+	public boolean isRenderer() {
+		return false;
+	}
 }

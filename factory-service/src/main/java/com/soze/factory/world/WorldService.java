@@ -25,11 +25,13 @@ public class WorldService {
 	public boolean isTileTaken(int x, int y) {
 		LOG.trace("Checking if tile is taken [{}:{}]", x, y);
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, new HttpHeaders());
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(
+			params, new HttpHeaders());
 
 		ResponseEntity<Boolean> taken = restTemplate
-			.exchange(url + "?x={x}&y={y}", HttpMethod.GET, request, Boolean.class, String.valueOf(x),
-								String.valueOf(y)
+			.exchange(
+				url + "?x={x}&y={y}", HttpMethod.GET, request, Boolean.class,
+				String.valueOf(x), String.valueOf(y)
 							 );
 		return taken.getBody();
 	}
@@ -40,7 +42,8 @@ public class WorldService {
 		params.add("x", String.valueOf(x));
 		params.add("y", String.valueOf(y));
 		params.add("mark", "true");
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, new HttpHeaders());
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(
+			params, new HttpHeaders());
 
 		restTemplate.postForEntity(url, request, Void.class);
 	}

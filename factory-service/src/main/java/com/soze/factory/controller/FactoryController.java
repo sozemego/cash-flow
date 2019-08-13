@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
 @Api(value = "Factory")
 public class FactoryController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FactoryController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(
+		FactoryController.class);
 
 	private final FactoryService factoryService;
 	private final FactoryTemplateLoader factoryTemplateLoader;

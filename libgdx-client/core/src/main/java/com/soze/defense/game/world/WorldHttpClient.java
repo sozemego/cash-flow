@@ -8,15 +8,17 @@ import org.slf4j.LoggerFactory;
 
 public class WorldHttpClient {
 
-  private static final Logger LOG = LoggerFactory.getLogger(WorldHttpClient.class);
+	private static final Logger LOG = LoggerFactory.getLogger(
+		WorldHttpClient.class);
 
-  private final HttpClient client = new HttpClient("http://localhost:9000/world");
+	private final HttpClient client = new HttpClient(
+		"http://localhost:9000/world");
 
-  public WorldDTO getWorld() {
-    String response = client.get();
-    WorldDTO world = JsonUtils.parse(response, WorldDTO.class);
-    LOG.info("Fetched {}", world);
-    return world;
-  }
+	public WorldDTO getWorld() {
+		String response = client.get();
+		WorldDTO world = JsonUtils.parse(response, WorldDTO.class);
+		LOG.info("Fetched {}", world);
+		return world;
+	}
 
 }

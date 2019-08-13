@@ -4,21 +4,21 @@ import com.soze.defense.game.pathfinder.Path;
 
 public class PathFollowerComponent extends BaseComponent {
 
-  private Path path;
+	private Path path;
 
-  public PathFollowerComponent() {
+	public PathFollowerComponent() {
 
-  }
+	}
 
-  public PathFollowerComponent(Path path) {
-    this.path = path;
-  }
+	public PathFollowerComponent(Path path) {
+		this.path = path;
+	}
 
-  public Path getPath() {
-    return path;
-  }
+	public Path getPath() {
+		return path;
+	}
 
-  public void setPath(Path path) {
-    this.path = path;
-  }
+	public void setPath(Path path) {
+		this.path = path;
+	}
 }

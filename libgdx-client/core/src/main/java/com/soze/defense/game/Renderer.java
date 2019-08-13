@@ -15,41 +15,45 @@ import com.soze.defense.input.MousePointer;
 
 public class Renderer {
 
-  private final SpriteBatch spriteBatch;
-  private final Camera camera;
-  private final MousePointer mousePointer;
-  private final MyAssetManager assetManager;
+	private final SpriteBatch spriteBatch;
+	private final Camera camera;
+	private final MousePointer mousePointer;
+	private final MyAssetManager assetManager;
 
-  private final BitmapFont font = new BitmapFont();
+	private final BitmapFont font = new BitmapFont();
 
-  public Renderer(SpriteBatch spriteBatch, Camera camera,
-                  MousePointer mousePointer, MyAssetManager assetManager) {
-    this.spriteBatch = spriteBatch;
-    this.camera = camera;
-    this.mousePointer = mousePointer;
-    this.assetManager = assetManager;
-  }
+	public Renderer(SpriteBatch spriteBatch, Camera camera,
+									MousePointer mousePointer, MyAssetManager assetManager) {
+		this.spriteBatch = spriteBatch;
+		this.camera = camera;
+		this.mousePointer = mousePointer;
+		this.assetManager = assetManager;
+	}
 
-  public void render(Factory factory) {
-    Vector2 position = factory.getPosition();
-    Vector2 size = factory.getSize();
-    Sprite sprite = factory.getSprite();
-    sprite.setBounds(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y);
-    sprite.draw(spriteBatch);
+	public void render(Factory factory) {
+		Vector2 position = factory.getPosition();
+		Vector2 size = factory.getSize();
+		Sprite sprite = factory.getSprite();
+		sprite.setBounds(
+			position.x - size.x / 2, position.y - size.y / 2, size.x, size.y);
+		sprite.draw(spriteBatch);
 
-    Storage storage = factory.getStorage();
-    String capacityTaken = String.valueOf(storage.getCapacityTaken());
-    String capacity = String.valueOf(storage.getCapacity());
+		Storage storage = factory.getStorage();
+		String capacityTaken = String.valueOf(storage.getCapacityTaken());
+		String capacity = String.valueOf(storage.getCapacity());
 
-    font.setColor(Color.WHITE);
-    font.draw(spriteBatch, capacityTaken + "/" + capacity, position.x - size.x / 2,
-        position.y - size.y / 2);
+		font.setColor(Color.WHITE);
+		font.draw(spriteBatch, capacityTaken + "/" + capacity,
+							position.x - size.x / 2,
+							position.y - size.y / 2
+						 );
 
-    Producer producer = factory.getProducer();
-    Sprite resourceSprite = assetManager.getResourceSprite(producer.getResource());
-    ProductionProgressIndicator productionProgressIndicator = new ProductionProgressIndicator(
-        factory, resourceSprite, font);
-    productionProgressIndicator.render(spriteBatch, true);
-  }
+		Producer producer = factory.getProducer();
+		Sprite resourceSprite = assetManager.getResourceSprite(
+			producer.getResource());
+		ProductionProgressIndicator productionProgressIndicator = new ProductionProgressIndicator(
+			factory, resourceSprite, font);
+		productionProgressIndicator.render(spriteBatch, true);
+	}
 
 }

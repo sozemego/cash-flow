@@ -4,21 +4,21 @@ import com.soze.defense.game.Tile;
 
 public class OccupyTileComponent extends BaseComponent {
 
-  private Tile tile;
+	private Tile tile;
 
-  public OccupyTileComponent() {
+	public OccupyTileComponent() {
 
-  }
+	}
 
-  public OccupyTileComponent(Tile tile) {
-    this.tile = tile;
-  }
+	public OccupyTileComponent(Tile tile) {
+		this.tile = tile;
+	}
 
-  public Tile getTile() {
-    return tile;
-  }
+	public Tile getTile() {
+		return tile;
+	}
 
-  public void setTile(Tile tile) {
-    this.tile = tile;
-  }
+	public void setTile(Tile tile) {
+		this.tile = tile;
+	}
 }

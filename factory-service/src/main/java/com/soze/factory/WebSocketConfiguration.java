@@ -20,8 +20,10 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
 	}
 
 	@Override
-	public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-		webSocketHandlerRegistry.addHandler(factoryWebSocketController, "/websocket")
+	public void registerWebSocketHandlers(
+		WebSocketHandlerRegistry webSocketHandlerRegistry) {
+		webSocketHandlerRegistry.addHandler(
+			factoryWebSocketController, "/websocket")
 														.setAllowedOrigins("*");
 	}
 

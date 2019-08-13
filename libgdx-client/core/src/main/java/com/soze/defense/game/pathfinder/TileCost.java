@@ -4,24 +4,24 @@ import com.soze.defense.game.Tile;
 
 public class TileCost implements Comparable<TileCost> {
 
-  private final Tile tile;
-  private final int cost;
+	private final Tile tile;
+	private final int cost;
 
-  public TileCost(Tile tile, int cost) {
-    this.tile = tile;
-    this.cost = cost;
-  }
+	public TileCost(Tile tile, int cost) {
+		this.tile = tile;
+		this.cost = cost;
+	}
 
-  public Tile getTile() {
-    return tile;
-  }
+	public Tile getTile() {
+		return tile;
+	}
 
-  public int getCost() {
-    return cost;
-  }
+	public int getCost() {
+		return cost;
+	}
 
-  @Override
-  public int compareTo(TileCost o) {
-    return getCost() - o.getCost();
-  }
+	@Override
+	public int compareTo(TileCost o) {
+		return getCost() - o.getCost();
+	}
 }

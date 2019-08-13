@@ -36,7 +36,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class FactoryService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FactoryService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(
+		FactoryService.class);
 
 	private final FactoryTemplateLoader templateLoader;
 	private final FactoryConverter factoryConverter;
@@ -81,13 +82,15 @@ public class FactoryService {
 		this.factories.add(factory);
 		this.markAsTaken(factory.getX(), factory.getY());
 
-		FactoryAdded factoryAdded = new FactoryAdded(factoryConverter.convert(factory));
+		FactoryAdded factoryAdded = new FactoryAdded(
+			factoryConverter.convert(factory));
 		sendToAll(factoryAdded);
 	}
 
 	private void markAsTaken(int x, int y) {
 		executorService.schedule(() -> {
-			CircuitBreaker worldServiceBreaker = CircuitBreaker.ofDefaults("worldService");
+			CircuitBreaker worldServiceBreaker = CircuitBreaker.ofDefaults(
+				"worldService");
 			RetryConfig retryConfig = RetryConfig.custom()
 																					 .maxAttempts(25)
 																					 .waitDuration(Duration.ofMillis(500))
@@ -98,7 +101,8 @@ public class FactoryService {
 				worldService.markAsTaken(x, y);
 			});
 
-			Runnable runnable = CircuitBreaker.decorateRunnable(worldServiceBreaker, retryableRunnable);
+			Runnable runnable = CircuitBreaker.decorateRunnable(
+				worldServiceBreaker, retryableRunnable);
 
 			Try.runRunnable(runnable);
 		}, 0, TimeUnit.MILLISECONDS);
@@ -143,7 +147,8 @@ public class FactoryService {
 		//send back all factories to the session
 		LOG.info("Sending FactoryAdded message for {} factories", factories.size());
 		for (Factory factory : factories) {
-			FactoryAdded factoryAdded = new FactoryAdded(factoryConverter.convert(factory));
+			FactoryAdded factoryAdded = new FactoryAdded(
+				factoryConverter.convert(factory));
 			sendTo(factoryAdded, session);
 		}
 	}
@@ -153,7 +158,8 @@ public class FactoryService {
 	}
 
 	private void sendTo(ServerMessage serverMessage, WebSocketSession session) {
-		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
+		TextMessage textMessage = new TextMessage(
+			JsonUtils.serialize(serverMessage));
 		sendTo(textMessage, session);
 	}
 
@@ -161,12 +167,16 @@ public class FactoryService {
 		try {
 			session.sendMessage(textMessage);
 		} catch (IOException e) {
-			LOG.warn("Exception when sending a server message, to session {}", session.getId(), e);
+			LOG.warn(
+				"Exception when sending a server message, to session {}",
+				session.getId(), e
+							);
 		}
 	}
 
 	private void sendToAll(ServerMessage serverMessage) {
-		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
+		TextMessage textMessage = new TextMessage(
+			JsonUtils.serialize(serverMessage));
 		for (WebSocketSession session : sessions) {
 			sendTo(textMessage, session);
 		}
@@ -181,7 +191,8 @@ public class FactoryService {
 			return;
 		}
 
-		Factory factory = templateLoader.constructFactoryByTemplateId(createFactory.getTemplateId());
+		Factory factory = templateLoader.constructFactoryByTemplateId(
+			createFactory.getTemplateId());
 		factory.setX(x);
 		factory.setY(y);
 		executorService.schedule(() -> {
