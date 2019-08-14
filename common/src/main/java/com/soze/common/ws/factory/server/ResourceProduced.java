@@ -12,7 +12,8 @@ public class ResourceProduced extends ServerMessage {
 	private final Resource resource;
 
 	@JsonCreator
-	public ResourceProduced(@JsonProperty("messageId") UUID messageId, @JsonProperty("factoryId") String factoryId,
+	public ResourceProduced(@JsonProperty("messageId") UUID messageId,
+													@JsonProperty("factoryId") String factoryId,
 													@JsonProperty("resource") Resource resource
 												 ) {
 		super(messageId);

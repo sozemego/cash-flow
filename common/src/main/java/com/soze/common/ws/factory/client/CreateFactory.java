@@ -12,8 +12,10 @@ public class CreateFactory extends ClientMessage {
 	private final int y;
 
 	@JsonCreator
-	public CreateFactory(@JsonProperty("messageId") UUID messageId, @JsonProperty("templateId") String templateId,
-											 @JsonProperty("x") int x, @JsonProperty("y") int y
+	public CreateFactory(@JsonProperty("messageId") UUID messageId,
+											 @JsonProperty("templateId") String templateId,
+											 @JsonProperty("x") int x,
+											 @JsonProperty("y") int y
 											) {
 		super(messageId);
 		this.templateId = templateId;

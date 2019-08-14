@@ -38,8 +38,10 @@ public class FactoryController {
 	@GetMapping(value = "/")
 	public List<FactoryDTO> getFactories() {
 		LOG.info("Calling getFactories");
-		List<FactoryDTO> factoryDTOS = factoryService.getFactories().stream().map(factoryConverter::convert).collect(
-			Collectors.toList());
+		List<FactoryDTO> factoryDTOS = factoryService.getFactories()
+																								 .stream()
+																								 .map(factoryConverter::convert)
+																								 .collect(Collectors.toList());
 		LOG.info("Returning {} factories", factoryDTOS.size());
 		return factoryDTOS;
 	}

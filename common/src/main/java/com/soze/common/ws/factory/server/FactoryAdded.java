@@ -11,7 +11,8 @@ public class FactoryAdded extends ServerMessage {
 	private final FactoryDTO factoryDTO;
 
 	@JsonCreator
-	public FactoryAdded(@JsonProperty("messageId") UUID messageId, @JsonProperty("factoryDTO") FactoryDTO factoryDTO
+	public FactoryAdded(@JsonProperty("messageId") UUID messageId,
+											@JsonProperty("factoryDTO") FactoryDTO factoryDTO
 										 ) {
 		super(messageId);
 		this.factoryDTO = factoryDTO;

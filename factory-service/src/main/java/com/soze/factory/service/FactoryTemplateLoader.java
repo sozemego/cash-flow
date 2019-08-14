@@ -24,6 +24,7 @@ public class FactoryTemplateLoader {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FactoryTemplateLoader.class);
 	private final Map<String, JsonNode> jsonEntities = new HashMap<>();
+
 	@Value("classpath:factories.json")
 	private org.springframework.core.io.Resource entities;
 

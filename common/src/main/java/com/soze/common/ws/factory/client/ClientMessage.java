@@ -9,7 +9,9 @@ import java.util.Objects;
 import java.util.UUID;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
-@JsonSubTypes(value = {@JsonSubTypes.Type(value = CreateFactory.class, name = "CREATE_FACTORY")})
+@JsonSubTypes(value = {
+	@JsonSubTypes.Type(value = CreateFactory.class, name = "CREATE_FACTORY")
+})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class ClientMessage {
 
