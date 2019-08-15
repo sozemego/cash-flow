@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./factory.css";
+import styled from "styled-components";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { useClock } from "../hooks/clock";
 
@@ -11,6 +11,33 @@ function capacityTaken(storage) {
   });
   return capacityTaken;
 }
+
+const Container = styled.div`
+  margin: 2px;
+  padding: 12px;
+  border: dotted gray 1px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const Id = styled.div`
+  color: gray;
+  font-size: 0.75rem;
+`;
+
+const Divider = styled.div`
+  width: 25%;
+  opacity: 0.25;
+  margin-left: 0;
+`;
+
+const Producer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 export function Factory({ factory }) {
   const [debug, setDebug] = useState(false);
@@ -25,27 +52,26 @@ export function Factory({ factory }) {
   }
 
   return (
-    <div
-      className={"factory-container"}
-      onMouseEnter={() => setDebug(true)}
-      onMouseLeave={() => setDebug(false)}
-    >
-      <div className={"factory-id-container"}>{id}</div>
+    <Container>
+      <Header>
+        <Id>{id}</Id>
+        <div>+</div>
+      </Header>
       <div>{name}</div>
-      <hr className={"factory-name-divider"} />
+      <Divider />
       <div>
         Storage - [{capacityTaken(storage)} / {storage.capacity}]
       </div>
       <div>
-        <div className={"factory-producer-container"}>
+        <Producer>
           <div>
             Producer [{producer.resource}] - {productionTimePassed} /{" "}
             {producer.time}
           </div>
           <ProgressBar current={productionTimePassed} time={producer.time} />
-        </div>
+        </Producer>
       </div>
       {debug && <div>{JSON.stringify(factory, null, 2)}</div>}
-    </div>
+    </Container>
   );
 }
