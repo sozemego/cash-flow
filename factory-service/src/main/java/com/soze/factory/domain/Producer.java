@@ -62,7 +62,7 @@ public class Producer {
 		setProductionStartTime(-1L);
 	}
 
-	private long getProductionStartTime() {
+	public long getProductionStartTime() {
 		return this.productionStartTime;
 	}
 

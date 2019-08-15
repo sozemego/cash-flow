@@ -6,6 +6,7 @@ public class ProducerDTO {
 	private float time;
 	private float progress;
 	private boolean producing = false;
+	private long productionStartTime = -1L;
 
 	public Resource getResource() {
 		return resource;
@@ -37,5 +38,13 @@ public class ProducerDTO {
 
 	public void setProducing(boolean producing) {
 		this.producing = producing;
+	}
+
+	public long getProductionStartTime() {
+		return productionStartTime;
+	}
+
+	public void setProductionStartTime(long productionStartTime) {
+		this.productionStartTime = productionStartTime;
 	}
 }

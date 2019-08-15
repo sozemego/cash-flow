@@ -32,6 +32,7 @@ public class FactoryConverter {
 		producerDTO.setProgress(producer.getProgress());
 		producerDTO.setTime(producer.getTime());
 		producerDTO.setResource(producer.getResource());
+		producerDTO.setProductionStartTime(producer.getProductionStartTime());
 		factoryDTO.setProducer(producerDTO);
 
 		return factoryDTO;
