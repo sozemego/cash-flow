@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./factory.css";
+import { ProgressBar } from "../components/progressBar/ProgressBar";
+import { useClock } from "../hooks/clock";
 
 function capacityTaken(storage) {
   const { resources } = storage;
@@ -15,6 +17,13 @@ export function Factory({ factory }) {
 
   const { id, name, storage, producer } = factory;
 
+  const { time } = useClock({ interval: 500 });
+
+  let productionTimePassed = time - producer.productionStartTime;
+  if (productionTimePassed >= producer.time) {
+    productionTimePassed = producer.time;
+  }
+
   return (
     <div
       className={"factory-container"}
@@ -28,7 +37,13 @@ export function Factory({ factory }) {
         Storage - [{capacityTaken(storage)} / {storage.capacity}]
       </div>
       <div>
-        Producer [{producer.resource}] - {producer.progress} / {producer.time}
+        <div className={"factory-producer-container"}>
+          <div>
+            Producer [{producer.resource}] - {productionTimePassed} /{" "}
+            {producer.time}
+          </div>
+          <ProgressBar current={productionTimePassed} time={producer.time} />
+        </div>
       </div>
       {debug && <div>{JSON.stringify(factory, null, 2)}</div>}
     </div>

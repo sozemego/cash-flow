@@ -18,3 +18,8 @@
     opacity: 0.25;
     margin-left: 0;
 }
+
+.factory-producer-container {
+    display: flex;
+    flex-direction: row;
+}
