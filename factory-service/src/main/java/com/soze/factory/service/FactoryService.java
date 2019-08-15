@@ -115,7 +115,9 @@ public class FactoryService {
 
 		ResourceProductionStarted resourceProductionStarted = new ResourceProductionStarted(factory.getId(),
 																																												factory.getProducer()
-																																															 .getResource()
+																																															 .getResource(),
+																																												factory.getProducer()
+																																															 .getProductionStartTime()
 		);
 		sendToAll(resourceProductionStarted);
 	}

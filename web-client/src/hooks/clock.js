@@ -10,5 +10,5 @@ export function useClock({interval}) {
     return () => clearInterval(intervalId);
   }, [time, interval]);
 
-  return { time };
+  return { time: Date.now() };
 }

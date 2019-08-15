@@ -10,19 +10,22 @@ public class ResourceProductionStarted extends ServerMessage {
 
 	private final String factoryId;
 	private final Resource resource;
+	private final long productionStartTime;
 
 	@JsonCreator
 	public ResourceProductionStarted(@JsonProperty("messageId") UUID messageId,
 																	 @JsonProperty("factoryId") String factoryId,
-																	 @JsonProperty("resource") Resource resource
+																	 @JsonProperty("resource") Resource resource,
+																	 @JsonProperty("productionStartTime") long productionStartTime
 																	) {
 		super(messageId);
 		this.factoryId = factoryId;
 		this.resource = resource;
+		this.productionStartTime = productionStartTime;
 	}
 
-	public ResourceProductionStarted(String factoryId, Resource resource) {
-		this(UUID.randomUUID(), factoryId, resource);
+	public ResourceProductionStarted(String factoryId, Resource resource, long productionStartTime) {
+		this(UUID.randomUUID(), factoryId, resource, productionStartTime);
 	}
 
 	public String getFactoryId() {
@@ -31,6 +34,10 @@ public class ResourceProductionStarted extends ServerMessage {
 
 	public Resource getResource() {
 		return resource;
+	}
+
+	public long getProductionStartTime() {
+		return productionStartTime;
 	}
 
 	@Override

@@ -1,4 +1,8 @@
-import {FACTORY_ADDED, RESOURCE_PRODUCED, RESOURCE_PRODUCTION_STARTED} from "./actions";
+import {
+  FACTORY_ADDED,
+  RESOURCE_PRODUCED,
+  RESOURCE_PRODUCTION_STARTED
+} from "./actions";
 
 const initialState = {
   factories: []
@@ -10,6 +14,8 @@ export function reducer(state = initialState, action) {
       return factoryAdded(state, action);
     case RESOURCE_PRODUCED:
       return resourceProduced(state, action);
+    case RESOURCE_PRODUCTION_STARTED:
+      return resourceProductionStarted(state, action);
     default:
       return state;
   }
@@ -35,7 +41,7 @@ function resourceProduced(state, action) {
     factory.storage = storage;
     resources[resource] = count + 1;
 
-    const producer = {...factory.producer};
+    const producer = { ...factory.producer };
     producer.progress = 0;
     producer.productionStartTime = -1;
     factory.producer = producer;
@@ -43,5 +49,20 @@ function resourceProduced(state, action) {
     factories[index] = factory;
   }
 
+  return { ...state, factories };
+}
+
+function resourceProductionStarted(state, action) {
+  const { factoryId, resource, productionStartTime } = action;
+  const factories = [...state.factories];
+  const index = factories.findIndex(factory => factory.id == factoryId);
+  if (index > -1) {
+    const factory = { ...factories[index] };
+    const producer = { ...factory.producer };
+    producer.productionStartTime = productionStartTime;
+    producer.progress = 0;
+    factory.producer = producer;
+    factories[index] = factory;
+  }
   return { ...state, factories };
 }
