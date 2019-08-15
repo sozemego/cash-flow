@@ -21,6 +21,7 @@ const Container = styled.div`
 const Header = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
 `;
 
 const Id = styled.div`
@@ -39,6 +40,11 @@ const Producer = styled.div`
   flex-direction: row;
 `;
 
+const Debug = styled.div`
+  cursor: pointer;
+  border: 1px solid black;
+`;
+
 export function Factory({ factory }) {
   const [debug, setDebug] = useState(false);
 
@@ -55,7 +61,7 @@ export function Factory({ factory }) {
     <Container>
       <Header>
         <Id>{id}</Id>
-        <div>+</div>
+        <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
       </Header>
       <div>{name}</div>
       <Divider />
