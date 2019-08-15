@@ -56,6 +56,9 @@ export function Factory({ factory }) {
   if (productionTimePassed >= producer.time) {
     productionTimePassed = producer.time;
   }
+  if (producer.productionStartTime == -1) {
+    productionTimePassed = 0;
+  }
 
   return (
     <Container>

@@ -1,4 +1,4 @@
-import { FACTORY_ADDED, RESOURCE_PRODUCED } from "./actions";
+import {FACTORY_ADDED, RESOURCE_PRODUCED, RESOURCE_PRODUCTION_STARTED} from "./actions";
 
 const initialState = {
   factories: []
@@ -34,6 +34,12 @@ function resourceProduced(state, action) {
     storage.resources = resources;
     factory.storage = storage;
     resources[resource] = count + 1;
+
+    const producer = {...factory.producer};
+    producer.progress = 0;
+    producer.productionStartTime = -1;
+    factory.producer = producer;
+
     factories[index] = factory;
   }
 
