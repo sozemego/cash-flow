@@ -15,7 +15,7 @@ export function reducer(state = initialState, action) {
 
 function factoryAdded(state, action) {
   const previousFactories = state.factories;
-  const { factory } = action;
+  const { factoryDTO } = action;
 
-  return { ...state, factories: [...previousFactories, factory] };
+  return { ...state, factories: [...previousFactories, factoryDTO] };
 }
