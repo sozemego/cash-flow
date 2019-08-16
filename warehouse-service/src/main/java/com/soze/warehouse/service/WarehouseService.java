@@ -27,9 +27,14 @@ public class WarehouseService {
 	@PostConstruct
 	public void setup() {
 		Warehouse warehouse1 = warehouseTemplateLoader.constructWarehouseByTemplateId("WAREHOUSE");
-		warehouses.add(warehouse1);
+		addWarehouse(warehouse1);
 		Warehouse warehouse2 = warehouseTemplateLoader.constructWarehouseByTemplateId("WAREHOUSE");
-		warehouses.add(warehouse2);
+		addWarehouse(warehouse2);
+	}
+
+	public void addWarehouse(Warehouse warehouse) {
+		LOG.info("Adding warehouse = {} with templateId = {}", warehouse.getId(), warehouse.getTemplateId());
+		warehouses.add(warehouse);
 	}
 
 }
