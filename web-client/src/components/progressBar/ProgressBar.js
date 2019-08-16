@@ -8,7 +8,7 @@ export function ProgressBar({current = 0, time = 0}) {
 	}
 
 	const style =
-		percent == 0
+		percent === 0
 			? {display: "none"}
 			: {
 				width: `${percent}%`,

@@ -9,7 +9,7 @@ const Container = styled.div`
 `;
 
 export function FactoryList({ factories }) {
-  const { socket, readyState } = useFactorySocket();
+  const { readyState } = useFactorySocket();
 
   return (
     <Container>

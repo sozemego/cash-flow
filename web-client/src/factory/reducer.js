@@ -31,7 +31,7 @@ function factoryAdded(state, action) {
 function resourceProduced(state, action) {
   const { factoryId, resource } = action;
   const factories = [...state.factories];
-  const index = factories.findIndex(factory => factory.id == factoryId);
+  const index = factories.findIndex(factory => factory.id === factoryId);
   if (index > -1) {
     const factory = { ...factories[index] };
     const storage = { ...factory.storage };
@@ -53,9 +53,9 @@ function resourceProduced(state, action) {
 }
 
 function resourceProductionStarted(state, action) {
-  const { factoryId, resource, productionStartTime } = action;
+  const { factoryId, productionStartTime } = action;
   const factories = [...state.factories];
-  const index = factories.findIndex(factory => factory.id == factoryId);
+  const index = factories.findIndex(factory => factory.id === factoryId);
   if (index > -1) {
     const factory = { ...factories[index] };
     const producer = { ...factory.producer };

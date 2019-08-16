@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { useClock } from "../hooks/clock";
@@ -56,7 +56,7 @@ export function Factory({ factory }) {
   if (productionTimePassed >= producer.time) {
     productionTimePassed = producer.time;
   }
-  if (producer.productionStartTime == -1) {
+  if (producer.productionStartTime === -1) {
     productionTimePassed = 0;
   }
 
