@@ -19,7 +19,7 @@ export function useWebsocket(url, dispatch) {
         setReadyState(WebSocket.OPEN);
       };
     }
-  }, []);
+  }, [url, dispatch]);
 
   const socket = getSocket(url);
 
