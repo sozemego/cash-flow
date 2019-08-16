@@ -1,0 +1,11 @@
+[
+  {
+    "id": "BASIC_TRUCK",
+    "name": "Basic truck",
+    "texture": "some.png",
+    "storage": {
+      "capacity": 10
+    },
+    "speed": 10
+  }
+]
