@@ -14,14 +14,12 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
 	private final FactoryWebSocketController factoryWebSocketController;
 
 	@Autowired
-	public WebSocketConfiguration(FactoryWebSocketController factoryWebSocketController
-															 ) {
+	public WebSocketConfiguration(FactoryWebSocketController factoryWebSocketController) {
 		this.factoryWebSocketController = factoryWebSocketController;
 	}
 
 	@Override
-	public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry
-																			 ) {
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
 		webSocketHandlerRegistry.addHandler(factoryWebSocketController, "/websocket").setAllowedOrigins("*");
 	}
 
