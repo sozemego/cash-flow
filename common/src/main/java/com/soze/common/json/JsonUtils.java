@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class JsonUtils {
@@ -31,6 +32,14 @@ public class JsonUtils {
 	public static <T> List<T> parseList(File json, Class<T> clazz) {
 		try {
 			return MAPPER.readValue(json, MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	public static <T> List<T> parseList(InputStream is, Class<T> clazz) {
+		try {
+			return MAPPER.readValue(is, MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
