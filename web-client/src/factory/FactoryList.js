@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Factory } from "./Factory";
-import { useFactorySocket } from "./factoryService";
+import { useFactorySocket } from "./useFactorySocket";
 import { READY_STATE_TABLE } from "../websocket/hook";
 
 const Container = styled.div`
