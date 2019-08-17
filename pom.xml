@@ -2,7 +2,26 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <artifactId>Cash flow</artifactId>
+
+    <groupId>com.soze</groupId>
+    <artifactId>cashflow</artifactId>
+    <version>0.1.0</version>
+
+    <packaging>pom</packaging>
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <modules>
+        <module>common</module>
+        <module>world-service</module>
+        <module>factory-service</module>
+        <module>truck-service</module>
+        <module>warehouse-service</module>
+    </modules>
 
     <dependencies>
 
@@ -27,16 +46,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <groupId>com.soze</groupId>
-
-    <modelVersion>4.0.0</modelVersion>
-
-    <packaging>pom</packaging>
-
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
 
     <repositories>
         <repository>
@@ -46,6 +55,5 @@
         </repository>
     </repositories>
 
-    <version>0.1.0</version>
 
 </project>
