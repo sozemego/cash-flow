@@ -2,15 +2,26 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <relativePath/>
+        <version>2.1.7.RELEASE</version> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.soze</groupId>
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>world-service</artifactId>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <groupId>org.springframework.boot</groupId>
-            </plugin>
-        </plugins>
-    </build>
+    <version>0.1.0</version>
+    <name>world-service</name>
+
+    <description>REST Service for the world</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -70,17 +81,15 @@
             <version>0.1.0</version>
         </dependency>
     </dependencies>
-    <description>REST Service for the world</description>
-    <groupId>com.soze</groupId>
-    <modelVersion>4.0.0</modelVersion>
-    <name>world-service</name>
 
-    <parent>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <groupId>org.springframework.boot</groupId>
-        <relativePath/>
-        <version>2.1.7.RELEASE</version> <!-- lookup parent from repository -->
-    </parent>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.springframework.boot</groupId>
+            </plugin>
+        </plugins>
+    </build>
 
     <pluginRepositories>
         <pluginRepository>
@@ -93,10 +102,6 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
-
     <repositories>
         <repository>
             <id>spring-snapshots</id>
@@ -107,6 +112,5 @@
             <url>https://repo.spring.io/snapshot</url>
         </repository>
     </repositories>
-    <version>0.0.1-SNAPSHOT</version>
 
 </project>
