@@ -4,7 +4,7 @@ import { Game } from "./game/Game";
 function App() {
   return (
     <div>
-      <h2 style={{ textAlign: "center" }}>Great defense</h2>
+      <h2 style={{ textAlign: "center" }}>Cash flow</h2>
       <Game />
     </div>
   );
