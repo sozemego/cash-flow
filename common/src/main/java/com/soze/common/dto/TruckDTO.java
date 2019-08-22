@@ -11,6 +11,8 @@ public class TruckDTO {
 
 	private int speed;
 
+	private String currentCityId;
+
 	public TruckDTO() {
 
 	}
@@ -61,6 +63,14 @@ public class TruckDTO {
 
 	public void setSpeed(int speed) {
 		this.speed = speed;
+	}
+
+	public String getCurrentCityId() {
+		return currentCityId;
+	}
+
+	public void setCurrentCityId(String currentCityId) {
+		this.currentCityId = currentCityId;
 	}
 
 	@Override
