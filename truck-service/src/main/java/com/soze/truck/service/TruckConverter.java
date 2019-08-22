@@ -3,10 +3,18 @@ package com.soze.truck.service;
 import com.soze.common.dto.StorageDTO;
 import com.soze.common.dto.TruckDTO;
 import com.soze.truck.domain.Truck;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TruckConverter {
+
+	private final TruckNavigationService truckNavigationService;
+
+	@Autowired
+	public TruckConverter(TruckNavigationService truckNavigationService) {
+		this.truckNavigationService = truckNavigationService;
+	}
 
 	public TruckDTO convert(Truck truck) {
 		TruckDTO truckDTO = new TruckDTO();
@@ -20,6 +28,9 @@ public class TruckConverter {
 		storageDTO.setCapacity(truck.getStorage().getCapacity());
 		storageDTO.getResources().putAll(truck.getStorage().getResources());
 		truckDTO.setStorage(storageDTO);
+
+		TruckNavigation navigation = truckNavigationService.getTruckNavigation(truck.getId());
+		truckDTO.setCurrentCityId(navigation.getCurrentCityId());
 
 		return truckDTO;
 	}

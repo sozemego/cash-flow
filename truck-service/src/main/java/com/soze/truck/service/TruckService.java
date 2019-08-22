@@ -1,9 +1,11 @@
 package com.soze.truck.service;
 
+import com.soze.common.dto.CityDTO;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.ws.factory.server.ServerMessage;
 import com.soze.common.ws.factory.server.TruckAdded;
 import com.soze.truck.domain.Truck;
+import com.soze.truck.world.RemoteWorldService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,21 +27,30 @@ public class TruckService {
 
 	private final TruckTemplateLoader truckTemplateLoader;
 	private final TruckConverter truckConverter;
+	private final TruckNavigationService truckNavigationService;
+	private final RemoteWorldService remoteWorldService;
 
 	private final List<Truck> trucks = new ArrayList<>();
 	private final Set<WebSocketSession> sessions = new HashSet<>();
 
 	@Autowired
-	public TruckService(TruckTemplateLoader truckTemplateLoader, TruckConverter truckConverter) {
+	public TruckService(TruckTemplateLoader truckTemplateLoader, TruckConverter truckConverter,
+											TruckNavigationService truckNavigationService, RemoteWorldService remoteWorldService
+										 ) {
 		this.truckTemplateLoader = truckTemplateLoader;
 		this.truckConverter = truckConverter;
+		this.truckNavigationService = truckNavigationService;
+		this.remoteWorldService = remoteWorldService;
 	}
 
 	@PostConstruct
 	public void setup() {
+		CityDTO city = remoteWorldService.getCityByName("Wroclaw");
 		Truck truck1 = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		this.truckNavigationService.setCityId(truck1.getId(), city.id);
 		addTruck(truck1);
 		Truck truck2 = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		this.truckNavigationService.setCityId(truck2.getId(), city.id);
 		addTruck(truck2);
 	}
 
