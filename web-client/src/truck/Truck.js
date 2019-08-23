@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useGetCities } from "../city/selectors";
 
 const Container = styled.div`
   margin: 2px;
@@ -29,10 +30,18 @@ const Debug = styled.div`
   border: 1px solid black;
 `;
 
+const FactoryName = styled.span`
+  color: #eeb012;
+`;
+
 export function Truck({ truck }) {
   const [debug, setDebug] = useState(false);
+  const cities = useGetCities();
 
-  const { id, name } = truck;
+  const { id, name, currentCityId } = truck;
+
+  const city = cities[currentCityId];
+  const cityName = city ? city.name : currentCityId;
 
   return (
     <Container>
@@ -40,9 +49,11 @@ export function Truck({ truck }) {
         <Id>{id}</Id>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
       </Header>
-      <div>{name} at {}</div>
+      <span>
+        {name} at <FactoryName>{cityName}</FactoryName>
+      </span>
       <Divider />
-			{debug && <div>{JSON.stringify(truck, null, 2)}</div>}
+      {debug && <div>{JSON.stringify(truck, null, 2)}</div>}
     </Container>
   );
 }
