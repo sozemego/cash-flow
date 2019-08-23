@@ -29,10 +29,10 @@ const Debug = styled.div`
   border: 1px solid black;
 `;
 
-export function Truck({ truck }) {
+export function City({ city }) {
   const [debug, setDebug] = useState(false);
 
-  const { id, name } = truck;
+  const { id, name, factorySlots } = city;
 
   return (
     <Container>
@@ -40,9 +40,10 @@ export function Truck({ truck }) {
         <Id>{id}</Id>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
       </Header>
-      <div>{name} at {}</div>
+      <div>{name}</div>
       <Divider />
-			{debug && <div>{JSON.stringify(truck, null, 2)}</div>}
+      <div>Factory slots - {factorySlots}</div>
+      {debug && <div>{JSON.stringify(city, null, 2)}</div>}
     </Container>
   );
 }
