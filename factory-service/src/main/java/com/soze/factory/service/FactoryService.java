@@ -78,26 +78,9 @@ public class FactoryService {
 		startProducing(factory);
 
 		this.factories.add(factory);
-		this.markAsTaken(factory.getX(), factory.getY());
 
 		FactoryAdded factoryAdded = new FactoryAdded(factoryConverter.convert(factory));
 		sendToAll(factoryAdded);
-	}
-
-	private void markAsTaken(int x, int y) {
-		executorService.schedule(() -> {
-			CircuitBreaker worldServiceBreaker = CircuitBreaker.ofDefaults("worldService");
-			RetryConfig retryConfig = RetryConfig.custom().maxAttempts(25).waitDuration(Duration.ofMillis(500)).build();
-			Retry retry = Retry.of("worldService", retryConfig);
-
-			Runnable retryableRunnable = Retry.decorateRunnable(retry, () -> {
-				worldService.markAsTaken(x, y);
-			});
-
-			Runnable runnable = CircuitBreaker.decorateRunnable(worldServiceBreaker, retryableRunnable);
-
-			Try.runRunnable(runnable);
-		}, 0, TimeUnit.MILLISECONDS);
 	}
 
 	private void startProducing(Factory factory) {
@@ -173,11 +156,6 @@ public class FactoryService {
 	public void handleCreateFactory(CreateFactory createFactory) {
 		int x = createFactory.getX();
 		int y = createFactory.getY();
-		boolean taken = worldService.isTileTaken(x, y);
-		if (taken) {
-			LOG.info("Tried to place a factory on a taken tile");
-			return;
-		}
 
 		Factory factory = templateLoader.constructFactoryByTemplateId(createFactory.getTemplateId());
 		factory.setX(x);
