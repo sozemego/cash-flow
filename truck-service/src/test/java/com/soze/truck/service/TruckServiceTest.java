@@ -5,7 +5,6 @@ import com.soze.common.json.JsonUtils;
 import com.soze.common.ws.factory.server.ServerMessage;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.world.RemoteWorldService;
-import com.soze.truck.world.WorldServiceClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

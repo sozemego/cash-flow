@@ -1,4 +1,4 @@
-package com.soze.truck.world;
+package com.soze.common.client;
 
 import com.soze.common.dto.CityDTO;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
@@ -21,8 +21,6 @@ public interface WorldServiceClient {
 	static WorldServiceClient createClient() {
 		ResteasyClient client = (ResteasyClient) ResteasyClientBuilder.newClient();
 		ResteasyWebTarget target = client.target(WORLD_SERVICE_URL);
-		WorldServiceClient proxy = target.proxy(WorldServiceClient.class);
-		return proxy;
+		return target.proxy(WorldServiceClient.class);
 	}
-
 }

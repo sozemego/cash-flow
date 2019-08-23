@@ -1,7 +1,7 @@
 package com.soze.truck.service;
 
+import com.soze.common.client.WorldServiceClient;
 import com.soze.common.dto.CityDTO;
-import com.soze.truck.world.WorldServiceClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
