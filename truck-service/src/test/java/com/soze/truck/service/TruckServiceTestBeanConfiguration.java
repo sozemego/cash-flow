@@ -21,6 +21,16 @@ public class TruckServiceTestBeanConfiguration {
 				wroclaw.name = "Wroclaw";
 				return Arrays.asList(wroclaw);
 			}
+
+			@Override
+			public CityDTO getCityByName(String name) {
+				return null;
+			}
+
+			@Override
+			public CityDTO getCityById(String cityId) {
+				return null;
+			}
 		};
 		return worldServiceClient;
 	}
