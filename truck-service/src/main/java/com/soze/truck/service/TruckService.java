@@ -43,17 +43,11 @@ public class TruckService {
 		this.remoteWorldService = remoteWorldService;
 	}
 
-	@PostConstruct
-	public void setup() {
-		CityDTO city = remoteWorldService.getCityByName("Wroclaw");
-		Truck truck1 = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
-		this.truckNavigationService.setCityId(truck1.getId(), city.id);
-		addTruck(truck1);
-		Truck truck2 = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
-		this.truckNavigationService.setCityId(truck2.getId(), city.id);
-		addTruck(truck2);
-	}
-
+	/**
+	 * Adds a truck to the world.
+	 *
+	 * Sends out {@link TruckAdded} message to all connected sessions.
+	 */
 	public void addTruck(Truck truck) {
 		LOG.info("Adding truck = {}", truck);
 		trucks.add(truck);
@@ -72,6 +66,10 @@ public class TruckService {
 
 	public void removeSession(WebSocketSession session) {
 		sessions.remove(session);
+	}
+
+	public List<Truck> getTrucks() {
+		return trucks;
 	}
 
 	private void sendTo(WebSocketSession session, ServerMessage serverMessage) {
