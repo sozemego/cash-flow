@@ -46,31 +46,33 @@ public class RemoteWorldService {
 	}
 
 	private List<CityDTO> getAllCities() {
-		LOG.info("Fetching all cities");
+		LOG.info("Getting all cities");
 		CircuitBreaker circuitBreaker = CircuitBreaker.ofDefaults("RemoteWorldService");
-		RetryConfig retryConfig = RetryConfig.custom().maxAttempts(25).waitDuration(Duration.ofMillis(500)).build();
+		RetryConfig retryConfig = RetryConfig.custom()
+																				 .maxAttempts(25)
+																				 .waitDuration(Duration.ofMillis(500))
+																				 .build();
 
 		Retry retry = Retry.of("RemoteWorldService", retryConfig);
+		Callable<List<CityDTO>> callable = circuitBreaker.decorateCallable(Retry.decorateCallable(retry, this::fetchAllCities));
 
-		Callable<List<CityDTO>> callable = Retry.decorateCallable(retry, () -> {
-			try {
-				LOG.info("Fetching all cities from = {}", WORLD_SERVICE_URL);
-				ResponseEntity<String> responseEntity = restTemplate.getForEntity(WORLD_SERVICE_URL, String.class);
-				String payload = responseEntity.getBody();
-				List<CityDTO> cities = JsonUtils.parseList(payload, CityDTO.class);
-				LOG.info("Fetched {}", cities);
-				return cities;
-			} catch (Exception e) {
-				LOG.error("Exception when fetching all cities", e);
-				throw e;
-			}
-		});
+		return Try.ofCallable(callable)
+							.onFailure(t -> LOG.info("Problem getting all cities", t))
+							.get();
+	}
 
-		callable = circuitBreaker.decorateCallable(callable);
-
-		return Try.ofCallable(callable).onFailure(t -> {
-			LOG.info("Problem getting all cities", t);
-		}).get();
+	private List<CityDTO> fetchAllCities() {
+		try {
+			LOG.info("Fetching all cities from = {}", WORLD_SERVICE_URL);
+			ResponseEntity<String> responseEntity = restTemplate.getForEntity(WORLD_SERVICE_URL, String.class);
+			String payload = responseEntity.getBody();
+			List<CityDTO> cities = JsonUtils.parseList(payload, CityDTO.class);
+			LOG.info("Fetched {}", cities);
+			return cities;
+		} catch (Exception e) {
+			LOG.error("Exception when fetching all cities", e);
+			throw e;
+		}
 	}
 
 }
