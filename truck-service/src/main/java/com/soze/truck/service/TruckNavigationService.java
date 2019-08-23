@@ -38,4 +38,9 @@ public class TruckNavigationService {
 		return navigations.computeIfAbsent(truckId, TruckNavigation::new);
 	}
 
+	public String getCityIdForTruck(String truckId) {
+		TruckNavigation navigation = getOrCreateTruckNavigation(truckId);
+		return navigation.getCurrentCityId();
+	}
+
 }
