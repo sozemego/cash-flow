@@ -1,0 +1,59 @@
+package com.soze.truck.service;
+
+
+import com.soze.common.json.JsonUtils;
+import com.soze.common.ws.factory.server.ServerMessage;
+import com.soze.truck.domain.Truck;
+import com.soze.truck.world.RemoteWorldService;
+import com.soze.truck.world.WorldServiceClient;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.web.socket.WebSocketMessage;
+
+import java.util.List;
+
+@SpringBootTest
+@Import(TruckServiceTestBeanConfiguration.class)
+class TruckServiceTest {
+
+	@Autowired
+	private TruckService truckService;
+
+	@Autowired
+	private TruckTemplateLoader truckTemplateLoader;
+
+	@Autowired
+	private TruckConverter truckConverter;
+
+	@Autowired
+	private TruckNavigationService truckNavigationService;
+
+	@Autowired
+	private RemoteWorldService remoteWorldService;
+
+	private TestWebSocketSession testWebSocketSession;
+
+	@BeforeEach
+	public void setup() {
+		testWebSocketSession = new TestWebSocketSession();
+		truckService = new TruckService(truckTemplateLoader, truckConverter, truckNavigationService, remoteWorldService);
+	}
+
+	@Test
+	void test_addTruck() {
+		truckService.addSession(testWebSocketSession);
+
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truckService.addTruck(truck);
+
+		List<WebSocketMessage> messages = testWebSocketSession.getAllMessages();
+		Assertions.assertEquals(1, messages.size());
+		ServerMessage serverMessage = JsonUtils.parse((String) messages.get(0).getPayload(), ServerMessage.class);
+		Assertions.assertEquals(ServerMessage.ServerMessageType.TRUCK_ADDED.name(), serverMessage.getType());
+	}
+
+}
