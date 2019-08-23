@@ -8,9 +8,8 @@ import io.github.resilience4j.retry.RetryConfig;
 import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
@@ -24,11 +23,14 @@ public class RemoteWorldService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RemoteWorldService.class);
 
-	private static final String WORLD_SERVICE_URL = "http://localhost:9000/world";
-
-	private final RestTemplate restTemplate = new RestTemplate();
-
 	private final Map<String, CityDTO> cities = new HashMap<>();
+
+	private final WorldServiceClient client;
+
+	@Autowired
+	public RemoteWorldService(WorldServiceClient client) {
+		this.client = client;
+	}
 
 	@PostConstruct
 	public void setup() {
@@ -63,10 +65,8 @@ public class RemoteWorldService {
 
 	private List<CityDTO> fetchAllCities() {
 		try {
-			LOG.info("Fetching all cities from = {}", WORLD_SERVICE_URL);
-			ResponseEntity<String> responseEntity = restTemplate.getForEntity(WORLD_SERVICE_URL, String.class);
-			String payload = responseEntity.getBody();
-			List<CityDTO> cities = JsonUtils.parseList(payload, CityDTO.class);
+			LOG.info("Fetching all cities");
+			List<CityDTO> cities = client.getAllCities();
 			LOG.info("Fetched {}", cities);
 			return cities;
 		} catch (Exception e) {
