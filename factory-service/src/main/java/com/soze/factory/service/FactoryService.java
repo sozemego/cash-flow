@@ -1,5 +1,6 @@
 package com.soze.factory.service;
 
+import com.soze.common.dto.CityDTO;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
@@ -9,7 +10,7 @@ import com.soze.factory.FactoryConverter;
 import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.Producer;
 import com.soze.factory.domain.Storage;
-import com.soze.factory.world.WorldService;
+import com.soze.factory.world.RemoteWorldService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class FactoryService {
 
 	private final FactoryTemplateLoader templateLoader;
 	private final FactoryConverter factoryConverter;
-	private final WorldService worldService;
+	private final RemoteWorldService remoteWorldService;
 
 	private final List<Factory> factories = new ArrayList<>();
 
@@ -44,26 +45,30 @@ public class FactoryService {
 
 	@Autowired
 	public FactoryService(FactoryTemplateLoader templateLoader, FactoryConverter factoryConverter,
-												WorldService worldService
+												RemoteWorldService remoteWorldService
 											 ) {
 		this.templateLoader = templateLoader;
 		this.factoryConverter = factoryConverter;
-		this.worldService = worldService;
+		this.remoteWorldService = remoteWorldService;
 	}
 
 	@PostConstruct
 	public void setup() {
+		CityDTO city = remoteWorldService.getCityByName("Wroclaw");
+
 		Factory forester1 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		addFactory(forester1);
+		addFactory(forester1, city.id);
 
 		Factory forester2 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		addFactory(forester2);
+		addFactory(forester2, city.id);
 
 		LOG.info("Created {} factories", factories.size());
 	}
 
-	public void addFactory(Factory factory) {
-		LOG.info("Adding factory {}", factory);
+	public void addFactory(Factory factory, String cityId) {
+		LOG.info("Adding factory {} in cityId = {}", factory, cityId);
+
+		factory.setCityId(cityId);
 
 		startProducing(factory);
 

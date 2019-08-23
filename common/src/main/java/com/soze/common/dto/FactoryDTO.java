@@ -11,6 +11,7 @@ public class FactoryDTO {
 	private ProducerDTO producer;
 	private StorageDTO storage;
 
+	private String cityId;
 
 	public FactoryDTO() {
 
@@ -64,8 +65,16 @@ public class FactoryDTO {
 		this.storage = storage;
 	}
 
+	public String getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(String cityId) {
+		this.cityId = cityId;
+	}
+
 	@Override
 	public String toString() {
-		return "FactoryDTO{" + "id='" + id + '\'' + ", templateId='" + templateId + '\'' + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", producer=" + producer + ", storage=" + storage + '}';
+		return "FactoryDTO{" + "id='" + id + '\'' + ", templateId='" + templateId + '\'' + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", producer=" + producer + ", storage=" + storage + ", cityId='" + cityId + '\'' + '}';
 	}
 }
