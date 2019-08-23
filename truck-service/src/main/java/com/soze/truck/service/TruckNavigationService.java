@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class TruckNavigationService {
@@ -24,9 +25,9 @@ public class TruckNavigationService {
 	}
 
 	public void setCityId(String truckId, String cityId) {
+		LOG.info("Setting cityId for truckId = {} to cityId = {}", truckId, cityId);
 		TruckNavigation navigation = getOrCreateTruckNavigation(truckId);
-		navigation.setCurrentCityId(cityId);
-		navigations.put(truckId, navigation);
+		navigation.setCurrentCityId(Objects.requireNonNull(cityId));
 	}
 
 	/**
