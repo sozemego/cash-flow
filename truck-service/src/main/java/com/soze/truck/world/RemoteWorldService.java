@@ -1,7 +1,6 @@
 package com.soze.truck.world;
 
 import com.soze.common.dto.CityDTO;
-import com.soze.common.json.JsonUtils;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
