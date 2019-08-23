@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class WorldService {
@@ -31,5 +33,22 @@ public class WorldService {
 
 	public List<City> getCities() {
 		return cities;
+	}
+
+	public Optional<City> getCityById(String cityId) {
+		LOG.debug("Called getCityById with id = {}", cityId);
+		Objects.requireNonNull(cityId);
+		return cities.stream()
+								 .filter(city -> cityId.equals(city.id))
+								 .findFirst();
+	}
+
+	public Optional<City> getCityByName(String name) {
+		LOG.debug("called getCityByName with name = {}", name);
+		Objects.requireNonNull(name);
+		return cities.stream()
+								 .filter(city -> name.equals(city.name))
+								 .findFirst();
+
 	}
 }
