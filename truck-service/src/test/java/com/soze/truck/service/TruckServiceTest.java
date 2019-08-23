@@ -48,12 +48,26 @@ class TruckServiceTest {
 		truckService.addSession(testWebSocketSession);
 
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
-		truckService.addTruck(truck);
+		String cityId = "CityID";
+		truckService.addTruck(truck, cityId);
 
 		List<WebSocketMessage> messages = testWebSocketSession.getAllMessages();
 		Assertions.assertEquals(1, messages.size());
 		ServerMessage serverMessage = JsonUtils.parse((String) messages.get(0).getPayload(), ServerMessage.class);
 		Assertions.assertEquals(ServerMessage.ServerMessageType.TRUCK_ADDED.name(), serverMessage.getType());
+		Assertions.assertEquals(cityId, truckNavigationService.getCityIdForTruck(truck.getId()));
+	}
+
+	@Test
+	public void test_addTruck_TruckIsNull() {
+		String cityId = "CityID";
+		Assertions.assertThrows(NullPointerException.class, () -> truckService.addTruck(null, cityId));
+	}
+
+	@Test
+	public void test_addTruck_cityIdIsNull() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		Assertions.assertThrows(NullPointerException.class, () -> truckService.addTruck(truck, null));
 	}
 
 }

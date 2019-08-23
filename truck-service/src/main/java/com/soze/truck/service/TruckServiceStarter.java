@@ -11,16 +11,14 @@ public class TruckServiceStarter {
 
 	private final TruckService truckService;
 	private final TruckTemplateLoader truckTemplateLoader;
-	private final TruckNavigationService truckNavigationService;
 	private final RemoteWorldService remoteWorldService;
 
 	@Autowired
 	public TruckServiceStarter(TruckService truckService, TruckTemplateLoader truckTemplateLoader,
-														 TruckNavigationService truckNavigationService, RemoteWorldService remoteWorldService
+														 RemoteWorldService remoteWorldService
 														) {
 		this.truckService = truckService;
 		this.truckTemplateLoader = truckTemplateLoader;
-		this.truckNavigationService = truckNavigationService;
 		this.remoteWorldService = remoteWorldService;
 	}
 
@@ -29,10 +27,8 @@ public class TruckServiceStarter {
 		CityDTO city = remoteWorldService.getCityByName("Wroclaw");
 
 		Truck truck1 = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
-		this.truckNavigationService.setCityId(truck1.getId(), city.id);
-		truckService.addTruck(truck1);
+		truckService.addTruck(truck1, city.id);
 		Truck truck2 = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
-		this.truckNavigationService.setCityId(truck2.getId(), city.id);
-		truckService.addTruck(truck2);
+		truckService.addTruck(truck2, city.id);
 	}
 }

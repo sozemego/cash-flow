@@ -44,13 +44,15 @@ public class TruckService {
 	}
 
 	/**
-	 * Adds a truck to the world.
+	 * Adds a truck to the world in a certain cityId.
 	 *
 	 * Sends out {@link TruckAdded} message to all connected sessions.
 	 */
-	public void addTruck(Truck truck) {
+	public void addTruck(Truck truck, String cityId) {
 		LOG.info("Adding truck = {}", truck);
 		trucks.add(truck);
+
+		truckNavigationService.setCityId(truck.getId(), cityId);
 
 		TruckAdded truckAdded = new TruckAdded(truckConverter.convert(truck));
 		sendToAll(truckAdded);
