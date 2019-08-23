@@ -1,7 +1,6 @@
 package com.soze.factory.service;
 
 import com.soze.common.json.JsonUtils;
-import com.soze.common.ws.factory.client.CreateFactory;
 import com.soze.common.ws.factory.server.FactoryAdded;
 import com.soze.common.ws.factory.server.ResourceProduced;
 import com.soze.common.ws.factory.server.ResourceProductionStarted;
@@ -11,10 +10,6 @@ import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.Producer;
 import com.soze.factory.domain.Storage;
 import com.soze.factory.world.WorldService;
-import io.github.resilience4j.circuitbreaker.CircuitBreaker;
-import io.github.resilience4j.retry.Retry;
-import io.github.resilience4j.retry.RetryConfig;
-import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +19,6 @@ import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -60,13 +54,9 @@ public class FactoryService {
 	@PostConstruct
 	public void setup() {
 		Factory forester1 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		forester1.setX(4);
-		forester1.setY(4);
 		addFactory(forester1);
 
 		Factory forester2 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		forester2.setX(6);
-		forester2.setY(6);
 		addFactory(forester2);
 
 		LOG.info("Created {} factories", factories.size());
@@ -151,18 +141,6 @@ public class FactoryService {
 		for (WebSocketSession session : sessions) {
 			sendTo(textMessage, session);
 		}
-	}
-
-	public void handleCreateFactory(CreateFactory createFactory) {
-		int x = createFactory.getX();
-		int y = createFactory.getY();
-
-		Factory factory = templateLoader.constructFactoryByTemplateId(createFactory.getTemplateId());
-		factory.setX(x);
-		factory.setY(y);
-		executorService.schedule(() -> {
-			addFactory(factory);
-		}, 0, TimeUnit.MILLISECONDS);
 	}
 
 }

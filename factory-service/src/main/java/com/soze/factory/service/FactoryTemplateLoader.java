@@ -46,8 +46,6 @@ public class FactoryTemplateLoader {
 
 		Factory factory = new Factory();
 		factory.setId(UUID.randomUUID().toString());
-		factory.setWidth(root.get("width").asInt());
-		factory.setHeight(root.get("height").asInt());
 
 		factory.setTemplateId(root.get("id").asText());
 		factory.setName(root.get("name").asText());

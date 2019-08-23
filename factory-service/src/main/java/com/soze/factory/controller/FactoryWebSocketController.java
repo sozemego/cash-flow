@@ -3,7 +3,6 @@ package com.soze.factory.controller;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.ws.factory.client.ClientMessage;
 import com.soze.common.ws.factory.client.ClientMessage.ClientMessageType;
-import com.soze.common.ws.factory.client.CreateFactory;
 import com.soze.factory.service.FactoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +52,5 @@ public class FactoryWebSocketController extends TextWebSocketHandler {
 		LOG.trace("Received message from client id {}", session.getId());
 		ClientMessage clientMessage = JsonUtils.parse(message.getPayload(), ClientMessage.class);
 		LOG.trace("Client message type from client id{}", clientMessage.getType());
-		if (clientMessage.getType() == ClientMessageType.CREATE_FACTORY) {
-			factoryService.handleCreateFactory((CreateFactory) clientMessage);
-		}
 	}
 }

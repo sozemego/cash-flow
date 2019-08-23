@@ -8,11 +8,6 @@ public class FactoryDTO {
 	private String name;
 	private String texture;
 
-	private int x;
-	private int y;
-	private int width;
-	private int height;
-
 	private ProducerDTO producer;
 	private StorageDTO storage;
 
@@ -53,38 +48,6 @@ public class FactoryDTO {
 		this.texture = texture;
 	}
 
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
 	public ProducerDTO getProducer() {
 		return producer;
 	}
@@ -99,5 +62,10 @@ public class FactoryDTO {
 
 	public void setStorage(StorageDTO storage) {
 		this.storage = storage;
+	}
+
+	@Override
+	public String toString() {
+		return "FactoryDTO{" + "id='" + id + '\'' + ", templateId='" + templateId + '\'' + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", producer=" + producer + ", storage=" + storage + '}';
 	}
 }

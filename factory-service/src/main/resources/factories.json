@@ -9,9 +9,6 @@
     "producer": {
       "resource": "WOOD",
       "time": 10000
-    },
-    "occupyTile": true,
-    "width": 1,
-    "height": 1
+    }
   }
 ]

@@ -16,10 +16,6 @@ public class FactoryConverter {
 		factoryDTO.setTemplateId(factory.getTemplateId());
 		factoryDTO.setName(factory.getName());
 		factoryDTO.setTexture(factory.getTexture());
-		factoryDTO.setWidth(factory.getWidth());
-		factoryDTO.setHeight(factory.getHeight());
-		factoryDTO.setX(factory.getX());
-		factoryDTO.setY(factory.getY());
 
 		StorageDTO storageDTO = new StorageDTO();
 		storageDTO.setCapacity(factory.getStorage().getCapacity());
