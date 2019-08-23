@@ -70,4 +70,33 @@ class TruckServiceTest {
 		Assertions.assertThrows(NullPointerException.class, () -> truckService.addTruck(truck, null));
 	}
 
+	@Test
+	public void test_addTruck_truckWithoutId() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setId(null);
+		String cityId = "CityID";
+		Assertions.assertThrows(IllegalStateException.class, () -> truckService.addTruck(truck, cityId));
+	}
+
+	@Test
+	public void test_addTruck_nullStorage() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setStorage(null);
+		String cityId = "CityID";
+		Assertions.assertThrows(IllegalStateException.class, () -> truckService.addTruck(truck, cityId));
+	}
+
+	@Test
+	public void test_addSession() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		String cityId = "CityID";
+		truckService.addTruck(truck, cityId);
+
+		truckService.addSession(testWebSocketSession);
+		List<WebSocketMessage> messages = testWebSocketSession.getAllMessages();
+		Assertions.assertEquals(1, messages.size());
+		ServerMessage serverMessage = JsonUtils.parse((String) messages.get(0).getPayload(), ServerMessage.class);
+		Assertions.assertEquals(ServerMessage.ServerMessageType.TRUCK_ADDED.name(), serverMessage.getType());
+	}
+
 }

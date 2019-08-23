@@ -1,6 +1,5 @@
 package com.soze.truck.service;
 
-import com.soze.common.dto.CityDTO;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.ws.factory.server.ServerMessage;
 import com.soze.common.ws.factory.server.TruckAdded;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,11 +43,13 @@ public class TruckService {
 
 	/**
 	 * Adds a truck to the world in a certain cityId.
-	 *
+	 * <p>
 	 * Sends out {@link TruckAdded} message to all connected sessions.
 	 */
 	public void addTruck(Truck truck, String cityId) {
 		LOG.info("Adding truck = {}", truck);
+		validateTruck(truck);
+
 		trucks.add(truck);
 
 		truckNavigationService.setCityId(truck.getId(), cityId);
@@ -58,6 +58,10 @@ public class TruckService {
 		sendToAll(truckAdded);
 	}
 
+	/**
+	 * Adds a session to active sessions.
+	 * Sends {@link TruckAdded} message for each current truck.
+	 */
 	public void addSession(WebSocketSession session) {
 		sessions.add(session);
 
@@ -91,6 +95,15 @@ public class TruckService {
 		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
 		for (WebSocketSession session : sessions) {
 			sendTo(textMessage, session);
+		}
+	}
+
+	private void validateTruck(Truck truck) {
+		if (truck.getId() == null) {
+			throw new IllegalStateException("id cannot be null");
+		}
+		if (truck.getStorage() == null) {
+			throw new IllegalStateException("storage cannot be null");
 		}
 	}
 
