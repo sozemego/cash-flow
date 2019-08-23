@@ -24,16 +24,17 @@ public class TruckNavigationService {
 	}
 
 	public void setCityId(String truckId, String cityId) {
-		TruckNavigation navigation = getTruckNavigation(truckId);
-		if (navigation == null) {
-			navigation = new TruckNavigation(truckId);
-		}
+		TruckNavigation navigation = getOrCreateTruckNavigation(truckId);
 		navigation.setCurrentCityId(cityId);
 		navigations.put(truckId, navigation);
 	}
 
-	public TruckNavigation getTruckNavigation(String truckId) {
-		return navigations.get(truckId);
+	/**
+	 * Gets {@link TruckNavigation} for a given truck.
+	 * If this truck does not have TruckNavigation, creates a new one.
+	 */
+	public TruckNavigation getOrCreateTruckNavigation(String truckId) {
+		return navigations.computeIfAbsent(truckId, TruckNavigation::new);
 	}
 
 }
