@@ -4,9 +4,11 @@ import com.soze.common.dto.CityDTO;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.world.RemoteWorldService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 
+@Service
 public class TruckServiceStarter {
 
 	private final TruckService truckService;

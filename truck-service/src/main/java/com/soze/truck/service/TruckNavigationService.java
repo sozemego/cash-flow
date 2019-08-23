@@ -24,9 +24,9 @@ public class TruckNavigationService {
 		this.remoteWorldService = remoteWorldService;
 	}
 
-	public void setCityId(String truckId, String cityId) {
+	void setCityId(String truckId, String cityId) {
 		LOG.info("Setting cityId for truckId = {} to cityId = {}", truckId, cityId);
-		TruckNavigation navigation = getOrCreateTruckNavigation(truckId);
+		TruckNavigation navigation = getOrCreateTruckNavigation(Objects.requireNonNull(truckId));
 		navigation.setCurrentCityId(Objects.requireNonNull(cityId));
 	}
 
@@ -34,11 +34,11 @@ public class TruckNavigationService {
 	 * Gets {@link TruckNavigation} for a given truck.
 	 * If this truck does not have TruckNavigation, creates a new one.
 	 */
-	public TruckNavigation getOrCreateTruckNavigation(String truckId) {
+	TruckNavigation getOrCreateTruckNavigation(String truckId) {
 		return navigations.computeIfAbsent(truckId, TruckNavigation::new);
 	}
 
-	public String getCityIdForTruck(String truckId) {
+	String getCityIdForTruck(String truckId) {
 		TruckNavigation navigation = getOrCreateTruckNavigation(truckId);
 		return navigation.getCurrentCityId();
 	}
