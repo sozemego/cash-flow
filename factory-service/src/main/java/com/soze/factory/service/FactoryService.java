@@ -57,25 +57,41 @@ public class FactoryService {
 		CityDTO city = remoteWorldService.getCityByName("Wroclaw");
 
 		Factory forester1 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		addFactory(forester1, city.id);
+		forester1.setCityId(city.id);
+		addFactory(forester1);
 
 		Factory forester2 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		addFactory(forester2, city.id);
+		forester2.setCityId(city.id);
+		addFactory(forester2);
 
 		LOG.info("Created {} factories", factories.size());
 	}
 
-	public void addFactory(Factory factory, String cityId) {
-		LOG.info("Adding factory {} in cityId = {}", factory, cityId);
-
-		factory.setCityId(cityId);
-
-		startProducing(factory);
+	public void addFactory(Factory factory) {
+		LOG.info("Adding factory {}", factory);
+		validateFactory(factory);
 
 		this.factories.add(factory);
 
-		FactoryAdded factoryAdded = new FactoryAdded(factoryConverter.convert(factory));
+		FactoryAdded factoryAdded = new FactoryAdded(this.factoryConverter.convert(factory));
 		sendToAll(factoryAdded);
+
+		startProducing(factory);
+	}
+
+	private void validateFactory(Factory factory) {
+		if (factory.getId() == null) {
+			throw new IllegalStateException("Factory cannot have null id");
+		}
+		if (factory.getCityId() == null) {
+			throw new IllegalStateException("Factory cannot have null cityId");
+		}
+		if (factory.getProducer() == null) {
+			throw new IllegalStateException("Factory cannot have null producer");
+		}
+		if (factory.getStorage() == null) {
+			throw new IllegalStateException("Factory cannot have null storage");
+		}
 	}
 
 	private void startProducing(Factory factory) {
@@ -86,6 +102,7 @@ public class FactoryService {
 
 		producer.startProduction();
 		float timeRemaining = producer.getTime() - producer.getProgress();
+		LOG.debug("Starting production, it will finish in {} ms", timeRemaining);
 		executorService.schedule(() -> {
 			finishProducing(factory);
 			startProducing(factory);
