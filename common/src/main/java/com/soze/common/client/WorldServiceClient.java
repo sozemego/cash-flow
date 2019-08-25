@@ -5,10 +5,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -23,12 +20,12 @@ public interface WorldServiceClient {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/name/{name}")
-	CityDTO getCityByName(@QueryParam("name") String name);
+	CityDTO getCityByName(@PathParam("name") String name);
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/id/{cityId}")
-	CityDTO getCityById(@QueryParam("cityId") String cityId);
+	CityDTO getCityById(@PathParam("cityId") String cityId);
 
 	static WorldServiceClient createClient() {
 		ResteasyClient client = (ResteasyClient) ResteasyClientBuilder.newClient();
