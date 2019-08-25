@@ -24,14 +24,17 @@ public class RemoteWorldService {
 	}
 
 	public List<CityDTO> getAllCities() {
+		LOG.info("Called getAllCities");
 		return RetryUtils.retry(25, Duration.ofMillis(500), client::getAllCities);
 	}
 
 	public CityDTO getCityByName(String name) {
+		LOG.info("Called getCityByName, name = {}", name);
 		return RetryUtils.retry(25, Duration.ofMillis(500), () -> client.getCityByName(name));
 	}
 
 	public CityDTO getCityById(String cityId) {
+		LOG.info("Called getCityById, cityId = {}", cityId);
 		return RetryUtils.retry(25, Duration.ofMillis(500), () -> client.getCityById(cityId));
 	}
 }
