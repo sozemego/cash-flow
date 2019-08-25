@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FactoryList } from "../factory/FactoryList";
+import { FactoryGroup } from "../factory/FactoryGroup";
 import { useGetFactories } from "../factory/selectors";
 import { TruckList } from "../truck/TruckList";
 import { useGetTrucks } from "../truck/selectors";
@@ -23,7 +23,7 @@ export function Game() {
   return (
     <div style={{ display: "flex", flexDirection: "row" }}>
       <div style={{ width: "25%" }}>
-        <FactoryList factories={factories} />
+        <FactoryGroup factories={factories} />
       </div>
       <div style={{ width: "25%" }}>
         <TruckList trucks={trucks} />
