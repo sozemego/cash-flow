@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { useClock } from "../hooks/clock";
+import { useGetCities } from "../city/selectors";
+import { CityInline } from "../city/CityInline";
 
 function capacityTaken(storage) {
   const { resources } = storage;
@@ -47,8 +49,9 @@ const Debug = styled.div`
 
 export function Factory({ factory }) {
   const [debug, setDebug] = useState(false);
+  const cities = useGetCities();
 
-  const { id, name, storage, producer } = factory;
+  const { id, name, storage, producer, cityId } = factory;
 
   const { time } = useClock({ interval: 500 });
 
@@ -66,7 +69,7 @@ export function Factory({ factory }) {
         <Id>{id}</Id>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
       </Header>
-      <div>{name}</div>
+      <div>{name} at <CityInline cityId={cityId}/></div>
       <Divider />
       <div>
         Storage - [{capacityTaken(storage)} / {storage.capacity}]
