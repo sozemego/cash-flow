@@ -72,15 +72,13 @@ export function FactoryByType({ factories }) {
 
   const types = [...new Set(factories.map(factory => factory.templateId))];
 
-  return types.map(type => {
-    return (
-      <div>
-        <div>{type}</div>
-        <hr style={{ width: "25%", margin: "auto" }} />
-        <FactoryList factories={factoryByType[type]} />
-      </div>
-    );
-  });
+  return types.map(type => (
+    <div key={type}>
+      <div>{type}</div>
+      <hr style={{ width: "25%", margin: "auto" }} />
+      <FactoryList factories={factoryByType[type]} />
+    </div>
+  ));
 }
 
 const FactoryByCityContainer = styled.div`
