@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useGetCities } from "../city/selectors";
 import { CityInline } from "../city/CityInline";
 
 const Container = styled.div`

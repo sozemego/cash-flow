@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { useClock } from "../hooks/clock";
-import { useGetCities } from "../city/selectors";
 import { CityInline } from "../city/CityInline";
 
 function capacityTaken(storage) {
@@ -49,7 +48,6 @@ const Debug = styled.div`
 
 export function Factory({ factory }) {
   const [debug, setDebug] = useState(false);
-  const cities = useGetCities();
 
   const { id, name, storage, producer, cityId } = factory;
 
