@@ -9,6 +9,10 @@ const Container = styled.div`
   margin-left: 12px;
 `;
 
+const Header = styled.div`
+  min-height: 50px;
+`;
+
 const GroupButton = styled.button`
   display: inline-block;
   margin-left: 4px;
@@ -34,18 +38,20 @@ export function FactoryGroup({ factories }) {
 
   return (
     <Container>
-      <div>Factories - state [{READY_STATE_TABLE[readyState]}]</div>
-      <div>
-        Group by:
-        {Object.values(GROUP_BY).map(val => (
-          <GroupButton
-            onClick={() => setGroupBy(val)}
-            selected={val === groupBy}
-          >
-            {val.toUpperCase()}
-          </GroupButton>
-        ))}
-      </div>
+      <Header>
+        <div>Factories - state [{READY_STATE_TABLE[readyState]}]</div>
+        <div>
+          Group by:
+          {Object.values(GROUP_BY).map(val => (
+            <GroupButton
+              onClick={() => setGroupBy(val)}
+              selected={val === groupBy}
+            >
+              {val.toUpperCase()}
+            </GroupButton>
+          ))}
+        </div>
+      </Header>
       <hr />
       {groupBy === GROUP_BY.DEFAULT && <FactoryList factories={factories} />}
       {groupBy === GROUP_BY.TYPE && <FactoryByType factories={factories} />}

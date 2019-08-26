@@ -8,12 +8,16 @@ const Container = styled.div`
   margin-left: 12px;
 `;
 
+const Header = styled.div`
+  min-height: 50px;
+`;
+
 export function TruckList({ trucks }) {
   const { readyState } = useTruckSocket();
 
   return (
     <Container>
-      <div>Trucks - state [{READY_STATE_TABLE[readyState]}]</div>
+      <Header>Trucks - state [{READY_STATE_TABLE[readyState]}]</Header>
       <hr />
       {trucks.map(truck => (
         <Truck key={truck.id} truck={truck} />
