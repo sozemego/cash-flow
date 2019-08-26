@@ -74,7 +74,7 @@ class TruckServiceTest {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
 		truck.setId(null);
 		String cityId = "CityID";
-		Assertions.assertThrows(IllegalStateException.class, () -> truckService.addTruck(truck, cityId));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> truckService.addTruck(truck, cityId));
 	}
 
 	@Test
@@ -82,7 +82,7 @@ class TruckServiceTest {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
 		truck.setStorage(null);
 		String cityId = "CityID";
-		Assertions.assertThrows(IllegalStateException.class, () -> truckService.addTruck(truck, cityId));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> truckService.addTruck(truck, cityId));
 	}
 
 	@Test

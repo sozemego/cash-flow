@@ -13,10 +13,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class TruckService {
@@ -100,11 +97,12 @@ public class TruckService {
 
 	private void validateTruck(Truck truck) {
 		if (truck.getId() == null) {
-			throw new IllegalStateException("id cannot be null");
+			throw new IllegalArgumentException("id cannot be null");
 		}
 		if (truck.getStorage() == null) {
-			throw new IllegalStateException("storage cannot be null");
+			throw new IllegalArgumentException("storage cannot be null");
 		}
+//		Optional<Truck> previousTruck = this.trucks.stream().filter()
 	}
 
 }
