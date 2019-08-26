@@ -102,7 +102,12 @@ public class TruckService {
 		if (truck.getStorage() == null) {
 			throw new IllegalArgumentException("storage cannot be null");
 		}
-//		Optional<Truck> previousTruck = this.trucks.stream().filter()
+		Optional<Truck> previousTruck = this.trucks.stream()
+																							 .filter(filteredTruck -> filteredTruck.getId().equals(truck.getId()))
+																							 .findFirst();
+		if (previousTruck.isPresent()) {
+			throw new IllegalArgumentException("Truck with id = " + truck.getId() + " already exists");
+		}
 	}
 
 }

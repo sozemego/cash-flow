@@ -86,6 +86,13 @@ class TruckServiceTest {
 	}
 
 	@Test
+	public void test_addTruck_alreadyAdded() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truckService.addTruck(truck, "cityId");
+		Assertions.assertThrows(IllegalArgumentException.class, () -> truckService.addTruck(truck, "cityId"));
+	}
+
+	@Test
 	public void test_addSession() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
 		String cityId = "CityID";
