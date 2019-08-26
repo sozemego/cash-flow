@@ -49,7 +49,9 @@ export function FactoryGroup({ factories }) {
       <hr />
       {groupBy === GROUP_BY.DEFAULT && <FactoryList factories={factories} />}
       {groupBy === GROUP_BY.TYPE && <FactoryByType factories={factories} />}
-      {groupBy === GROUP_BY.CITY && <FactoryByCity factories={factories} cities={Object.values(cities)}/>}
+      {groupBy === GROUP_BY.CITY && (
+        <FactoryByCity factories={factories} cities={Object.values(cities)} />
+      )}
     </Container>
   );
 }
@@ -63,50 +65,45 @@ export function FactoryList({ factories }) {
 export function FactoryByType({ factories }) {
   const factoryByType = {};
   factories.forEach(factory => {
-  	const factories = factoryByType[factory.templateId] || [];
-  	factories.push(factory);
+    const factories = factoryByType[factory.templateId] || [];
+    factories.push(factory);
     factoryByType[factory.templateId] = factories;
   });
+
   const types = [...new Set(factories.map(factory => factory.templateId))];
 
-  return (
-    <>
-      {types.map(type => {
-        return (
-          <div>
-            <div>{type}</div>
-            <hr style={{ width: "25%", margin: "auto" }} />
-            <FactoryList factories={factoryByType[type]} />
-          </div>
-        );
-      })}
-    </>
-  );
+  return types.map(type => {
+    return (
+      <div>
+        <div>{type}</div>
+        <hr style={{ width: "25%", margin: "auto" }} />
+        <FactoryList factories={factoryByType[type]} />
+      </div>
+    );
+  });
 }
 
 export function FactoryByCity({ factories, cities }) {
   const factoryByCity = {};
-	factories.forEach(factory => {
-		const factories = factoryByCity[factory.cityId] || [];
-		factories.push(factory);
-		factoryByCity[factory.cityId] = factories;
-	});
+  factories.forEach(factory => {
+    const factories = factoryByCity[factory.cityId] || [];
+    factories.push(factory);
+    factoryByCity[factory.cityId] = factories;
+  });
 
-	return (
-		<>
-			{cities.map(city => {
-				const factories = factoryByCity[city.id] || [];
-				if (factories.length === 0) {
-					return null
-				}
-				return (
-					<div>
-						<div>{city.name} [{factories.length}]</div>
-						<hr style={{ width: "25%", margin: "auto" }} />
-						<FactoryList factories={factories} />
-					</div>
-				);
-			})}
-		</>
-	);
+  return cities.map(city => {
+    const factories = factoryByCity[city.id] || [];
+    if (factories.length === 0) {
+      return null;
+    }
+    return (
+      <div>
+        <div>
+          {city.name} [{factories.length}]
+        </div>
+        <hr style={{ width: "25%", margin: "auto" }} />
+        <FactoryList factories={factories} />
+      </div>
+    );
+  });
 }
