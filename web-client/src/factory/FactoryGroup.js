@@ -92,9 +92,6 @@ export function FactoryByCity({ factories, cities }) {
 		factoryByCity[factory.cityId] = factories;
 	});
 
-	console.log(factoryByCity);
-	console.log(cities);
-
 	return (
 		<>
 			{cities.map(city => {
