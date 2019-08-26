@@ -83,16 +83,16 @@ public class FactoryService {
 
 	private void validateFactory(Factory factory) {
 		if (factory.getId() == null) {
-			throw new IllegalStateException("Factory cannot have null id");
+			throw new IllegalArgumentException("Factory cannot have null id");
 		}
 		if (factory.getCityId() == null) {
-			throw new IllegalStateException("Factory cannot have null cityId");
+			throw new IllegalArgumentException("Factory cannot have null cityId");
 		}
 		if (factory.getProducer() == null) {
-			throw new IllegalStateException("Factory cannot have null producer");
+			throw new IllegalArgumentException("Factory cannot have null producer");
 		}
 		if (factory.getStorage() == null) {
-			throw new IllegalStateException("Factory cannot have null storage");
+			throw new IllegalArgumentException("Factory cannot have null storage");
 		}
 		Optional<Factory> previousFactory = this.factories.stream()
 																											.filter(filteredFactory -> factory.getId().equals(filteredFactory.getId()))

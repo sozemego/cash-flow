@@ -48,7 +48,7 @@ class FactoryServiceTest {
 	@Test
 	public void addFactory_cityIdNull() {
 		Factory factory = this.factoryTemplateLoader.constructFactoryByTemplateId("FORESTER");
-		Assertions.assertThrows(IllegalStateException.class, () -> this.factoryService.addFactory(factory));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.factoryService.addFactory(factory));
 	}
 
 	@Test
@@ -63,21 +63,21 @@ class FactoryServiceTest {
 	public void addFactory_storageNull() {
 		Factory factory = this.factoryTemplateLoader.constructFactoryByTemplateId("FORESTER");
 		factory.setStorage(null);
-		Assertions.assertThrows(IllegalStateException.class, () -> this.factoryService.addFactory(factory));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.factoryService.addFactory(factory));
 	}
 
 	@Test
 	public void addFactory_idNull() {
 		Factory factory = this.factoryTemplateLoader.constructFactoryByTemplateId("FORESTER");
 		factory.setId(null);
-		Assertions.assertThrows(IllegalStateException.class, () -> this.factoryService.addFactory(factory));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.factoryService.addFactory(factory));
 	}
 
 	@Test
 	public void addFactory_producerNull() {
 		Factory factory = this.factoryTemplateLoader.constructFactoryByTemplateId("FORESTER");
 		factory.setProducer(null);
-		Assertions.assertThrows(IllegalStateException.class, () -> this.factoryService.addFactory(factory));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.factoryService.addFactory(factory));
 	}
 
 	@Test
