@@ -20,10 +20,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -54,15 +51,20 @@ public class FactoryService {
 
 	@PostConstruct
 	public void setup() {
-		CityDTO city = remoteWorldService.getCityByName("Wroclaw");
+		CityDTO wroclaw = remoteWorldService.getCityByName("Wroclaw");
+		CityDTO warsaw = remoteWorldService.getCityByName("Warsaw");
 
 		Factory forester1 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		forester1.setCityId(city.id);
+		forester1.setCityId(wroclaw.id);
 		addFactory(forester1);
 
 		Factory forester2 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		forester2.setCityId(city.id);
+		forester2.setCityId(wroclaw.id);
 		addFactory(forester2);
+
+		Factory forester3 = templateLoader.constructFactoryByTemplateId("FORESTER");
+		forester3.setCityId(warsaw.id);
+		addFactory(forester3);
 
 		LOG.info("Created {} factories", factories.size());
 	}
@@ -91,6 +93,13 @@ public class FactoryService {
 		}
 		if (factory.getStorage() == null) {
 			throw new IllegalStateException("Factory cannot have null storage");
+		}
+		Optional<Factory> previousFactory = this.factories.stream()
+																											.filter(filteredFactory -> factory.getId().equals(filteredFactory.getId()))
+																											.findFirst();
+
+		if (previousFactory.isPresent()) {
+			throw new IllegalArgumentException("Factory with id = " + factory.getId() + " already exists");
 		}
 	}
 

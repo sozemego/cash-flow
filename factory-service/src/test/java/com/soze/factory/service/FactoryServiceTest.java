@@ -52,6 +52,14 @@ class FactoryServiceTest {
 	}
 
 	@Test
+	public void addFactory_alreadyAdded() {
+		Factory factory = this.factoryTemplateLoader.constructFactoryByTemplateId("FORESTER");
+		factory.setCityId("CityID");
+		this.factoryService.addFactory(factory);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.factoryService.addFactory(factory));
+	}
+
+	@Test
 	public void addFactory_storageNull() {
 		Factory factory = this.factoryTemplateLoader.constructFactoryByTemplateId("FORESTER");
 		factory.setStorage(null);
