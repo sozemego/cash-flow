@@ -5,8 +5,8 @@ import { TruckList } from "../truck/TruckList";
 import { useGetTrucks } from "../truck/selectors";
 import { CityList } from "../city/CityList";
 import { useGetCities } from "../city/selectors";
-import {useDispatch} from "react-redux";
-import {cityAdded} from "../city/actions";
+import { useDispatch } from "react-redux";
+import { cityAdded } from "../city/actions";
 
 export function Game() {
   const factories = useGetFactories();
