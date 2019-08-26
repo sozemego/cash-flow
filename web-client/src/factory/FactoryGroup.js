@@ -24,7 +24,7 @@ const GroupButton = styled.button`
 const GROUP_BY = {
   CITY: "CITY",
   DEFAULT: "DEFAULT",
-  TYPE: "TYPE",
+  TYPE: "TYPE"
 };
 
 export function FactoryGroup({ factories }) {
@@ -83,6 +83,14 @@ export function FactoryByType({ factories }) {
   });
 }
 
+const FactoryByCityContainer = styled.div`
+  padding-left: 2px;
+  ${props =>
+    css`
+      border-left: 2px solid ${props.even ? "#D3D3D3" : "#9e9e9e"};
+    `}}
+`;
+
 export function FactoryByCity({ factories, cities }) {
   const factoryByCity = {};
   factories.forEach(factory => {
@@ -91,19 +99,19 @@ export function FactoryByCity({ factories, cities }) {
     factoryByCity[factory.cityId] = factories;
   });
 
-  return cities.map(city => {
+  return cities.map((city, index) => {
     const factories = factoryByCity[city.id] || [];
     if (factories.length === 0) {
       return null;
     }
+    const even = index % 2 === 0;
     return (
-      <div key={city.id}>
+      <FactoryByCityContainer key={city.id} even={even}>
         <div>
           {city.name} [{factories.length}]
         </div>
-        <hr style={{ width: "25%", margin: "auto" }} />
         <FactoryList factories={factories} />
-      </div>
+      </FactoryByCityContainer>
     );
   });
 }
