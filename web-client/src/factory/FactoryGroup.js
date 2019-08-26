@@ -22,13 +22,13 @@ const GroupButton = styled.button`
 `;
 
 const GROUP_BY = {
+  CITY: "CITY",
   DEFAULT: "DEFAULT",
   TYPE: "TYPE",
-  CITY: "CITY"
 };
 
 export function FactoryGroup({ factories }) {
-  const [groupBy, setGroupBy] = useState(GROUP_BY.TYPE);
+  const [groupBy, setGroupBy] = useState(GROUP_BY.CITY);
   const { readyState } = useFactorySocket();
   const cities = useGetCities();
 
