@@ -97,7 +97,7 @@ export function FactoryByCity({ factories, cities }) {
       return null;
     }
     return (
-      <div>
+      <div key={city.id}>
         <div>
           {city.name} [{factories.length}]
         </div>
