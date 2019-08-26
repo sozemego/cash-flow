@@ -97,7 +97,7 @@ class FactoryServiceTest {
 
 		Factory factory = this.factoryTemplateLoader.constructFactoryByTemplateId("FORESTER");
 		factory.setCityId("cityId");
-		factory.getProducer().setTime(500f);
+		factory.getProducer().setTime(500L);
 		this.factoryService.addFactory(factory);
 
 		sleep(500);

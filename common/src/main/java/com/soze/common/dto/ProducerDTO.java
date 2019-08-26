@@ -3,8 +3,8 @@ package com.soze.common.dto;
 public class ProducerDTO {
 
 	private Resource resource;
-	private float time;
-	private float progress;
+	private long time;
+	private long progress;
 	private boolean producing = false;
 	private long productionStartTime = -1L;
 
@@ -16,19 +16,19 @@ public class ProducerDTO {
 		this.resource = resource;
 	}
 
-	public float getTime() {
+	public long getTime() {
 		return time;
 	}
 
-	public void setTime(float time) {
+	public void setTime(long time) {
 		this.time = time;
 	}
 
-	public float getProgress() {
+	public long getProgress() {
 		return progress;
 	}
 
-	public void setProgress(float progress) {
+	public void setProgress(long progress) {
 		this.progress = progress;
 	}
 

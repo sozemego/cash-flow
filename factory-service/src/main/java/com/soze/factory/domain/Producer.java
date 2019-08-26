@@ -5,8 +5,8 @@ import com.soze.common.dto.Resource;
 public class Producer {
 
 	private Resource resource;
-	private float time;
-	private float progress;
+	private long time;
+	private long progress;
 	private boolean producing = false;
 
 	private long productionStartTime = -1L;
@@ -19,20 +19,20 @@ public class Producer {
 		this.resource = resource;
 	}
 
-	public float getTime() {
+	public long getTime() {
 		return time;
 	}
 
-	public void setTime(float time) {
+	public void setTime(long time) {
 		this.time = time;
 	}
 
-	public float getProgress() {
+	public long getProgress() {
 		long now = System.currentTimeMillis();
 		return now - productionStartTime;
 	}
 
-	public void setProgress(float progress) {
+	public void setProgress(long progress) {
 		this.progress = progress;
 	}
 
@@ -49,7 +49,7 @@ public class Producer {
 			return;
 		}
 		setProducing(true);
-		setProgress(0);
+		setProgress(0L);
 		setProductionStartTime(System.currentTimeMillis());
 	}
 
@@ -58,7 +58,7 @@ public class Producer {
 			return;
 		}
 		setProducing(false);
-		setProgress(0);
+		setProgress(0L);
 		setProductionStartTime(-1L);
 	}
 
