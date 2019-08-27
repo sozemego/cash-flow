@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { CityInline } from "../city/CityInline";
 import { useGetCities } from "../city/selectors";
@@ -20,7 +20,7 @@ const Id = styled.div`
   font-size: 0.75rem;
 `;
 
-const Divider = styled.div`
+const Divider = styled.hr`
   width: 25%;
   opacity: 0.25;
   margin-left: 0;
@@ -33,13 +33,8 @@ const Debug = styled.div`
 
 export function Truck({ truck }) {
   const [debug, setDebug] = useState(false);
-  const [cityToTravelTo, setCityToTravelTo] = useState(null);
 
   const { id, name, currentCityId } = truck;
-  const allCities = useGetCities();
-  const cities = Object.values(allCities).filter(
-    city => city.id !== currentCityId
-  );
 
   return (
     <Container>
@@ -51,22 +46,71 @@ export function Truck({ truck }) {
         {name} at <CityInline cityId={currentCityId} />
       </span>
       <Divider />
-      <div>
-        Travel to{" "}
-        <select>
-          {cities.map(city => (
-            <option
-              key={city.id}
-              onClick={() => setCityToTravelTo(city.id)}
-              value={city.id}
-              selected={city.id === cityToTravelTo}
-            >
-              {city.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <TravelTo truck={truck} />
       {debug && <div>{JSON.stringify(truck, null, 2)}</div>}
     </Container>
+  );
+}
+
+function distance(from, to) {
+  if (!from || !to) {
+    return -1;
+  }
+  const R = 6371e3; // metres
+  const { latitude: fromLat, longitude: fromLong } = from;
+  const { latitude: toLat, longitude: toLong } = to;
+  const φ1 = (fromLat * Math.PI) / 180;
+  const φ2 = (toLat * Math.PI) / 180;
+  const Δφ = ((toLat - fromLat) * Math.PI) / 180;
+  const Δλ = ((toLong - fromLong) * Math.PI) / 180;
+
+  const a =
+    Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+    Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const d = R * c;
+  return Number((d / 1000).toFixed(0));
+}
+
+export function TravelTo({ truck }) {
+  const { id, name, speed, currentCityId } = truck;
+  const allCities = useGetCities();
+  const [cityToTravelToId, setCityToTravelToId] = useState("null");
+
+  useEffect(() => {
+    const cityArray = Object.values(allCities);
+    if (cityArray.length > 0) {
+      setCityToTravelToId(cityArray[0].id);
+    }
+  }, [allCities]);
+
+  const cities = Object.values(allCities).filter(
+    city => city.id !== currentCityId
+  );
+  const currentCity = allCities[currentCityId];
+  const cityToTravelTo = allCities[cityToTravelToId];
+
+  return (
+    <div>
+      <div>Speed {speed} km/h</div>
+      <span>Travel to </span>
+      <select
+        value={cityToTravelToId}
+        onChange={e => setCityToTravelToId(e.target.value)}
+      >
+        {cities.map(city => (
+          <option
+            key={city.id}
+            onClick={() => setCityToTravelToId(city.id)}
+            value={city.id}
+          >
+            {city.name}
+          </option>
+        ))}
+      </select>
+      <span>Distance: {distance(currentCity, cityToTravelTo)} km</span>
+      <button>GO</button>
+    </div>
   );
 }
