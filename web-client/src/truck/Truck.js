@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { CityInline } from "../city/CityInline";
+import { useGetCities } from "../city/selectors";
 
 const Container = styled.div`
   margin: 2px;
@@ -32,8 +33,13 @@ const Debug = styled.div`
 
 export function Truck({ truck }) {
   const [debug, setDebug] = useState(false);
+  const [cityToTravelTo, setCityToTravelTo] = useState(null);
 
   const { id, name, currentCityId } = truck;
+  const allCities = useGetCities();
+  const cities = Object.values(allCities).filter(
+    city => city.id !== currentCityId
+  );
 
   return (
     <Container>
@@ -42,9 +48,24 @@ export function Truck({ truck }) {
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
       </Header>
       <span>
-        {name} at <CityInline cityId={currentCityId}/>
+        {name} at <CityInline cityId={currentCityId} />
       </span>
       <Divider />
+      <div>
+        Travel to{" "}
+        <select>
+          {cities.map(city => (
+            <option
+              key={city.id}
+              onClick={() => setCityToTravelTo(city.id)}
+              value={city.id}
+              selected={city.id === cityToTravelTo}
+            >
+              {city.name}
+            </option>
+          ))}
+        </select>
+      </div>
       {debug && <div>{JSON.stringify(truck, null, 2)}</div>}
     </Container>
   );
