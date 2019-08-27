@@ -1,7 +1,7 @@
 package com.soze.truck.ws;
 
 import com.soze.common.json.JsonUtils;
-import com.soze.common.ws.factory.client.ClientMessage;
+import com.soze.common.message.client.ClientMessage;
 import com.soze.truck.service.TruckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

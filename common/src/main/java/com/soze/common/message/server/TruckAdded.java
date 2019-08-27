@@ -1,4 +1,4 @@
-package com.soze.common.ws.factory.server;
+package com.soze.common.message.server;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

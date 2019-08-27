@@ -1,4 +1,4 @@
-package com.soze.common.ws.factory.client;
+package com.soze.common.message.client;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

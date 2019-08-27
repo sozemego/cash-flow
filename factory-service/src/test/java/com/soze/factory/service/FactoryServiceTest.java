@@ -1,8 +1,8 @@
 package com.soze.factory.service;
 
-import com.soze.common.ws.factory.server.FactoryAdded;
-import com.soze.common.ws.factory.server.ResourceProductionStarted;
-import com.soze.common.ws.factory.server.ServerMessage;
+import com.soze.common.message.server.FactoryAdded;
+import com.soze.common.message.server.ResourceProductionStarted;
+import com.soze.common.message.server.ServerMessage;
 import com.soze.factory.FactoryConverter;
 import com.soze.factory.domain.Factory;
 import com.soze.factory.world.RemoteWorldService;

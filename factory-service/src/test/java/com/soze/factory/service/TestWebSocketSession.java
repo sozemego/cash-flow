@@ -1,7 +1,7 @@
 package com.soze.factory.service;
 
 import com.soze.common.json.JsonUtils;
-import com.soze.common.ws.factory.server.ServerMessage;
+import com.soze.common.message.server.ServerMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketExtension;

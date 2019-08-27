@@ -1,6 +1,5 @@
 package com.soze.truck.service;
 
-import com.soze.common.ws.factory.server.ServerMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketExtension;

@@ -1,8 +1,8 @@
 package com.soze.truck.service;
 
 import com.soze.common.json.JsonUtils;
-import com.soze.common.ws.factory.server.ServerMessage;
-import com.soze.common.ws.factory.server.TruckAdded;
+import com.soze.common.message.server.ServerMessage;
+import com.soze.common.message.server.TruckAdded;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.world.RemoteWorldService;
 import org.slf4j.Logger;

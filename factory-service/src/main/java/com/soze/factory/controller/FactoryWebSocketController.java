@@ -1,8 +1,7 @@
 package com.soze.factory.controller;
 
 import com.soze.common.json.JsonUtils;
-import com.soze.common.ws.factory.client.ClientMessage;
-import com.soze.common.ws.factory.client.ClientMessage.ClientMessageType;
+import com.soze.common.message.client.ClientMessage;
 import com.soze.factory.service.FactoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
