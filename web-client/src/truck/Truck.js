@@ -52,7 +52,7 @@ export function Truck({ truck }) {
   );
 }
 
-function distance(from, to) {
+function calculateDistance(from, to) {
   if (!from || !to) {
     return -1;
   }
@@ -91,6 +91,9 @@ export function TravelTo({ truck }) {
   const currentCity = allCities[currentCityId];
   const cityToTravelTo = allCities[cityToTravelToId];
 
+  const distance = calculateDistance(currentCity, cityToTravelTo);
+  const travelTime = distance / speed;
+
   return (
     <div>
       <div>Speed {speed} km/h</div>
@@ -109,7 +112,7 @@ export function TravelTo({ truck }) {
           </option>
         ))}
       </select>
-      <span>Distance: {distance(currentCity, cityToTravelTo)} km</span>
+      <span>Distance: {distance} km. {travelTime}h</span>
       <button>GO</button>
     </div>
   );
