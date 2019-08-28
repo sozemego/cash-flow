@@ -8,6 +8,12 @@ export const READY_STATE_TABLE = {
   [WebSocket.CONNECTING]: "connecting"
 };
 
+/**
+ *
+ * @param url
+ * @param dispatch
+ * @returns {{readyState: number socket: WebSocket}}
+ */
 export function useWebsocket(url, dispatch) {
   const [readyState, setReadyState] = useState(WebSocket.CLOSED);
 

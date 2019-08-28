@@ -105,4 +105,35 @@ class TruckServiceTest {
 		Assertions.assertEquals(ServerMessage.ServerMessageType.TRUCK_ADDED.name(), serverMessage.getType());
 	}
 
+	@Test
+	public void travel_truckDoesNotExist() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel("someTruck", "cityId"));
+	}
+
+	@Test
+	public void travel_cityDoesNotExist() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		String cityId = "cityId";
+		this.truckService.addTruck(truck, cityId);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(truck.getId(), cityId));
+	}
+
+	@Test
+	public void travel_alreadyAtCity() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		String cityId = "Warsaw";
+		this.truckService.addTruck(truck, cityId);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(truck.getId(), cityId));
+	}
+
+
+	@Test
+	public void travel() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		String currentCityId = "Warsaw";
+		this.truckService.addTruck(truck, currentCityId);
+		String toCityId = "Wro";
+		this.truckService.travel(truck.getId(), toCityId);
+	}
+
 }

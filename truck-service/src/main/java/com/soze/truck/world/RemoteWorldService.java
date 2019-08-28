@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 @Service
@@ -23,7 +24,8 @@ public class RemoteWorldService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RemoteWorldService.class);
 
-	private final Map<String, CityDTO> cities = new HashMap<>();
+	private final Map<String, CityDTO> cityByName = new HashMap<>();
+	private final Map<String, CityDTO> cityById = new HashMap<>();
 
 	private final WorldServiceClient client;
 
@@ -38,13 +40,18 @@ public class RemoteWorldService {
 		List<CityDTO> cities = getAllCities();
 		for (CityDTO city : cities) {
 			LOG.info("Loaded {}.", city);
-			this.cities.put(city.name, city);
+			this.cityByName.put(city.name, city);
+			this.cityById.put(city.id, city);
 		}
 		LOG.info("Loaded {} cities from world service", cities.size());
 	}
 
 	public CityDTO getCityByName(String name) {
-		return cities.get(name);
+		return cityByName.get(name);
+	}
+
+	public Optional<CityDTO> getCityById(String id) {
+		return Optional.ofNullable(cityById.get(id));
 	}
 
 	private List<CityDTO> getAllCities() {

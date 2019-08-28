@@ -19,7 +19,14 @@ public class TruckServiceTestBeanConfiguration {
 				CityDTO wroclaw = new CityDTO();
 				wroclaw.id = "Wro";
 				wroclaw.name = "Wroclaw";
-				return Arrays.asList(wroclaw);
+				wroclaw.longitude = 25;
+				wroclaw.latitude = 25;
+				CityDTO warsaw = new CityDTO();
+				warsaw.id = "Warsaw";
+				warsaw.name = "Warsaw";
+				warsaw.longitude = 26;
+				warsaw.latitude = 26;
+				return Arrays.asList(wroclaw, warsaw);
 			}
 
 			@Override

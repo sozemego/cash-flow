@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { CityInline } from "../city/CityInline";
 import { useGetCities } from "../city/selectors";
+import { useFactorySocket } from "../factory/useFactorySocket";
+import { createTruckTravelMessage } from "./message";
+import { useTruckSocket } from "./useTruckSocket";
 
 const Container = styled.div`
   margin: 2px;
@@ -76,7 +79,8 @@ function calculateDistance(from, to) {
 export function TravelTo({ truck }) {
   const { id, name, speed, currentCityId } = truck;
   const allCities = useGetCities();
-  const [cityToTravelToId, setCityToTravelToId] = useState("null");
+  const [cityToTravelToId, setCityToTravelToId] = useState("");
+  const { socket } = useTruckSocket();
 
   useEffect(() => {
     const cityArray = Object.values(allCities);
@@ -112,8 +116,19 @@ export function TravelTo({ truck }) {
           </option>
         ))}
       </select>
-      <span>Distance: {distance} km. {travelTime}h</span>
-      <button>GO</button>
+      <span>
+        Distance: {distance} km. {travelTime}h
+      </span>
+      <button
+        onClick={() => {
+					const message = createTruckTravelMessage(id, cityToTravelToId);
+					console.log(message);
+          socket.send(message);
+        }}
+        disabled={cityToTravelToId === ""}
+      >
+        GO
+      </button>
     </div>
   );
 }

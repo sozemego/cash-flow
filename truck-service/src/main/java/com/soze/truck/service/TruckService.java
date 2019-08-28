@@ -1,5 +1,6 @@
 package com.soze.truck.service;
 
+import com.soze.common.dto.CityDTO;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.server.ServerMessage;
 import com.soze.common.message.server.TruckAdded;
@@ -14,6 +15,9 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TruckService {
@@ -27,6 +31,8 @@ public class TruckService {
 
 	private final List<Truck> trucks = new ArrayList<>();
 	private final Set<WebSocketSession> sessions = new HashSet<>();
+
+	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
 	@Autowired
 	public TruckService(TruckTemplateLoader truckTemplateLoader, TruckConverter truckConverter,
@@ -102,12 +108,39 @@ public class TruckService {
 		if (truck.getStorage() == null) {
 			throw new IllegalArgumentException("storage cannot be null");
 		}
-		Optional<Truck> previousTruck = this.trucks.stream()
-																							 .filter(filteredTruck -> filteredTruck.getId().equals(truck.getId()))
-																							 .findFirst();
+		Optional<Truck> previousTruck = getTruck(truck.getId());
 		if (previousTruck.isPresent()) {
 			throw new IllegalArgumentException("Truck with id = " + truck.getId() + " already exists");
 		}
+	}
+
+	/**
+	 * Sends a given truck to a given city.
+	 */
+	public void travel(String truckId, String cityId) {
+		LOG.info("Truck {} wants to travel to {}", truckId, cityId);
+		Truck truck = getTruck(truckId).orElseThrow(
+			() -> new IllegalArgumentException("Truck with id = " + truckId + " does not exist"));
+		CityDTO city = remoteWorldService.getCityById(cityId).orElseThrow(
+			() -> new IllegalArgumentException("City with id = " + cityId + " does not exist"));
+
+		TruckNavigation currentNavigation = truckNavigationService.getOrCreateTruckNavigation(truckId);
+		if (currentNavigation.getCurrentCityId().equals(cityId)) {
+			throw new IllegalArgumentException("Truck with id = " + truckId + " is already at city id = " + cityId);
+		}
+
+		TruckNavigation navigation = truckNavigationService.travel(truckId, cityId, truck.getSpeed());
+		long time = navigation.getArrivalTime() - navigation.getTravelStartTime();
+		LOG.info("Truck {} will arrive at {} in {} ms, hours = {}", truckId, cityId, time, TimeUnit.MILLISECONDS.toHours(time));
+		executorService.schedule(() -> {
+
+		}, time, TimeUnit.MILLISECONDS);
+	}
+
+	public Optional<Truck> getTruck(String truckId) {
+		Objects.requireNonNull(truckId);
+
+		return this.trucks.stream().filter(truck -> truck.getId().equals(truckId)).findFirst();
 	}
 
 }
