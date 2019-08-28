@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { CityInline } from "../city/CityInline";
 import { useGetCities } from "../city/selectors";
-import { useFactorySocket } from "../factory/useFactorySocket";
 import { createTruckTravelMessage } from "./message";
 import { useTruckSocket } from "./useTruckSocket";
 
@@ -77,7 +76,7 @@ function calculateDistance(from, to) {
 }
 
 export function TravelTo({ truck }) {
-  const { id, name, speed, currentCityId } = truck;
+  const { id, speed, currentCityId } = truck;
   const allCities = useGetCities();
   const [cityToTravelToId, setCityToTravelToId] = useState("");
   const { socket } = useTruckSocket();
