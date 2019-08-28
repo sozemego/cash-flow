@@ -28,7 +28,7 @@ public class TruckNavigationService {
 
 	void setCityId(String truckId, String cityId) {
 		LOG.info("Setting cityId for truckId = {} to cityId = {}", truckId, cityId);
-		TruckNavigation navigation = getOrCreateTruckNavigation(Objects.requireNonNull(truckId));
+		TruckNavigation navigation = getTruckNavigation(Objects.requireNonNull(truckId));
 		navigation.setCurrentCityId(Objects.requireNonNull(cityId));
 	}
 
@@ -36,29 +36,33 @@ public class TruckNavigationService {
 	 * Gets {@link TruckNavigation} for a given truck.
 	 * If this truck does not have TruckNavigation, creates a new one.
 	 */
-	TruckNavigation getOrCreateTruckNavigation(String truckId) {
+	TruckNavigation getTruckNavigation(String truckId) {
 		return navigations.computeIfAbsent(truckId, TruckNavigation::new);
 	}
 
 	String getCityIdForTruck(String truckId) {
-		TruckNavigation navigation = getOrCreateTruckNavigation(truckId);
+		TruckNavigation navigation = getTruckNavigation(truckId);
 		return navigation.getCurrentCityId();
 	}
 
-	TruckNavigation travel(String truckId, String cityId, int speed) {
-		TruckNavigation navigation = getOrCreateTruckNavigation(truckId);
+	TruckNavigation travel(String truckId, String cityId, int kilometersPerHour) {
+		TruckNavigation navigation = getTruckNavigation(truckId);
 		if (navigation.getNextCityId() != null) {
 			throw new IllegalStateException(truckId + " is already travelling!");
 		}
 		navigation.setNextCityId(cityId);
 		navigation.setTravelStartTime(System.currentTimeMillis());
 		long distance = calculateDistance(navigation.getCurrentCityId(), cityId);
-		long time = distance / speed;
-		long timeMs = TimeUnit.HOURS.toMillis(time);
+		long metersPerMinute = (kilometersPerHour * 1000) / 60;
+		long timeMinutes = distance / metersPerMinute;
+		long timeMs = TimeUnit.MINUTES.toMillis(timeMinutes);
 		navigation.setArrivalTime(navigation.getTravelStartTime() + timeMs);
 		return navigation;
 	}
 
+	/**
+	 * Calculates distance in meters between two cities.
+	 */
 	private long calculateDistance(String fromCityId, String toCityId) {
 		double R = 6371e3;
 		CityDTO fromCity = remoteWorldService.getCityById(fromCityId).get();
@@ -72,7 +76,7 @@ public class TruckNavigationService {
 		double a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
 		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-		double d = (R * c) / 1000;
+		double d = R * c;
 		return (long) d;
 	}
 

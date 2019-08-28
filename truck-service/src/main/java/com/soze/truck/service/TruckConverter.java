@@ -29,7 +29,7 @@ public class TruckConverter {
 		storageDTO.getResources().putAll(truck.getStorage().getResources());
 		truckDTO.setStorage(storageDTO);
 
-		TruckNavigation navigation = truckNavigationService.getOrCreateTruckNavigation(truck.getId());
+		TruckNavigation navigation = truckNavigationService.getTruckNavigation(truck.getId());
 		truckDTO.setCurrentCityId(navigation.getCurrentCityId());
 
 		return truckDTO;

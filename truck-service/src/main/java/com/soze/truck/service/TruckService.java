@@ -124,14 +124,14 @@ public class TruckService {
 		CityDTO city = remoteWorldService.getCityById(cityId).orElseThrow(
 			() -> new IllegalArgumentException("City with id = " + cityId + " does not exist"));
 
-		TruckNavigation currentNavigation = truckNavigationService.getOrCreateTruckNavigation(truckId);
+		TruckNavigation currentNavigation = truckNavigationService.getTruckNavigation(truckId);
 		if (currentNavigation.getCurrentCityId().equals(cityId)) {
 			throw new IllegalArgumentException("Truck with id = " + truckId + " is already at city id = " + cityId);
 		}
 
 		TruckNavigation navigation = truckNavigationService.travel(truckId, cityId, truck.getSpeed());
 		long time = navigation.getArrivalTime() - navigation.getTravelStartTime();
-		LOG.info("Truck {} will arrive at {} in {} ms, hours = {}", truckId, cityId, time, TimeUnit.MILLISECONDS.toHours(time));
+		LOG.info("Truck {} will arrive at {} in {} ms, minutes = {}", truckId, cityId, time, TimeUnit.MILLISECONDS.toMinutes(time));
 		executorService.schedule(() -> {
 
 		}, time, TimeUnit.MILLISECONDS);
@@ -139,8 +139,9 @@ public class TruckService {
 
 	public Optional<Truck> getTruck(String truckId) {
 		Objects.requireNonNull(truckId);
-
-		return this.trucks.stream().filter(truck -> truck.getId().equals(truckId)).findFirst();
+		return this.trucks.stream()
+											.filter(truck -> truck.getId().equals(truckId))
+											.findFirst();
 	}
 
 }

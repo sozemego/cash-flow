@@ -130,10 +130,15 @@ class TruckServiceTest {
 	@Test
 	public void travel() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setSpeed(500);
 		String currentCityId = "Warsaw";
 		this.truckService.addTruck(truck, currentCityId);
 		String toCityId = "Wro";
 		this.truckService.travel(truck.getId(), toCityId);
+
+		TruckNavigation navigation = truckNavigationService.getTruckNavigation(truck.getId());
+		Assertions.assertEquals(toCityId, navigation.getNextCityId());
+		System.out.println(navigation.getArrivalTime());
 	}
 
 }
