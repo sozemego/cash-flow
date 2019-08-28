@@ -120,8 +120,8 @@ export function TravelTo({ truck }) {
       </span>
       <button
         onClick={() => {
-					const message = createTruckTravelMessage(id, cityToTravelToId);
-					console.log(message);
+          const message = createTruckTravelMessage(id, cityToTravelToId);
+          console.log(message);
           socket.send(message);
         }}
         disabled={cityToTravelToId === ""}
