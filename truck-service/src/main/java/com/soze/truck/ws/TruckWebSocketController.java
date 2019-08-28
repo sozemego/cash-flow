@@ -2,7 +2,7 @@ package com.soze.truck.ws;
 
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.client.ClientMessage;
-import com.soze.common.message.client.TruckTravelMessage;
+import com.soze.common.message.client.TruckTravelRequest;
 import com.soze.truck.service.TruckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +53,8 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 		ClientMessage clientMessage = JsonUtils.parse(message.getPayload(), ClientMessage.class);
 		LOG.trace("Client message type from client id{}", clientMessage.getType());
 		if (clientMessage.getType() == ClientMessage.ClientMessageType.TRUCK_TRAVEL) {
-			TruckTravelMessage truckTravelMessage = (TruckTravelMessage) clientMessage;
-			truckService.travel(truckTravelMessage.getTruckId(), truckTravelMessage.getDestinationCityId());
+			TruckTravelRequest truckTravelRequest = (TruckTravelRequest) clientMessage;
+			truckService.travel(truckTravelRequest.getTruckId(), truckTravelRequest.getDestinationCityId());
 		}
 	}
 }

@@ -8,13 +8,13 @@ import java.util.UUID;
 /**
  * Sent when the client wishes for a Truck to travel from one city to another.
  */
-public class TruckTravelMessage extends ClientMessage {
+public class TruckTravelRequest extends ClientMessage {
 
 	private final String truckId;
 	private final String destinationCityId;
 
 	@JsonCreator
-	public TruckTravelMessage(@JsonProperty("messageId") UUID messageId,
+	public TruckTravelRequest(@JsonProperty("messageId") UUID messageId,
 														@JsonProperty("truckId") String truckId,
 														@JsonProperty("destinationCityId") String destinationCityId
 													 ) {
@@ -23,7 +23,7 @@ public class TruckTravelMessage extends ClientMessage {
 		this.destinationCityId = destinationCityId;
 	}
 
-	public TruckTravelMessage(String truckId, String destinationCityId) {
+	public TruckTravelRequest(String truckId, String destinationCityId) {
 		this(UUID.randomUUID(), truckId, destinationCityId);
 	}
 
