@@ -36,7 +36,11 @@ const Debug = styled.div`
 export function Truck({ truck }) {
   const [debug, setDebug] = useState(false);
 
-  const { id, name, currentCityId } = truck;
+  const {
+    id,
+    name,
+    navigation: { currentCityId }
+  } = truck;
 
   return (
     <Container>
@@ -76,7 +80,13 @@ function calculateDistance(from, to) {
 }
 
 export function TravelTo({ truck }) {
-  const { id, speed, currentCityId } = truck;
+  const { id, speed, navigation } = truck;
+  const {
+    currentCityId,
+    travelStartTime,
+    arrivalTime,
+    nextCityId
+  } = navigation;
   const allCities = useGetCities();
   const [cityToTravelToId, setCityToTravelToId] = useState("");
   const { socket } = useTruckSocket();
@@ -121,7 +131,6 @@ export function TravelTo({ truck }) {
       <button
         onClick={() => {
           const message = createTruckTravelMessage(id, cityToTravelToId);
-          console.log(message);
           socket.send(message);
         }}
         disabled={cityToTravelToId === ""}

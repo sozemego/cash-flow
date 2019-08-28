@@ -26,7 +26,7 @@ export function Game() {
         <FactoryGroup factories={factories} />
       </div>
       <div style={{ width: "25%" }}>
-        <TruckList trucks={trucks} />
+        <TruckList trucks={Object.values(trucks)} />
       </div>
       <div style={{ width: "25%" }}>
         <CityList cities={cities} />

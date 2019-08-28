@@ -11,7 +11,7 @@ public class TruckDTO {
 
 	private int speed;
 
-	private String currentCityId;
+	private TruckNavigationDTO navigation;
 
 	public TruckDTO() {
 
@@ -65,12 +65,12 @@ public class TruckDTO {
 		this.speed = speed;
 	}
 
-	public String getCurrentCityId() {
-		return currentCityId;
+	public TruckNavigationDTO getNavigation() {
+		return navigation;
 	}
 
-	public void setCurrentCityId(String currentCityId) {
-		this.currentCityId = currentCityId;
+	public void setNavigation(TruckNavigationDTO navigation) {
+		this.navigation = navigation;
 	}
 
 	@Override

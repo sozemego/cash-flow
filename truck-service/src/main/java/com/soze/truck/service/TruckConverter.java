@@ -2,6 +2,7 @@ package com.soze.truck.service;
 
 import com.soze.common.dto.StorageDTO;
 import com.soze.common.dto.TruckDTO;
+import com.soze.common.dto.TruckNavigationDTO;
 import com.soze.truck.domain.Truck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,9 +31,19 @@ public class TruckConverter {
 		truckDTO.setStorage(storageDTO);
 
 		TruckNavigation navigation = truckNavigationService.getTruckNavigation(truck.getId());
-		truckDTO.setCurrentCityId(navigation.getCurrentCityId());
+		TruckNavigationDTO navigationDTO = convert(navigation);
+		truckDTO.setNavigation(navigationDTO);
 
 		return truckDTO;
+	}
+
+	public TruckNavigationDTO convert(TruckNavigation navigation) {
+		TruckNavigationDTO truckNavigationDTO = new TruckNavigationDTO();
+		truckNavigationDTO.setArrivalTime(navigation.getArrivalTime());
+		truckNavigationDTO.setCurrentCityId(navigation.getCurrentCityId());
+		truckNavigationDTO.setNextCityId(navigation.getNextCityId());
+		truckNavigationDTO.setTravelStartTime(navigation.getTravelStartTime());
+		return truckNavigationDTO;
 	}
 
 }
