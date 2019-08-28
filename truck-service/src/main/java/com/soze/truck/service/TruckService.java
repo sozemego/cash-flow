@@ -4,6 +4,7 @@ import com.soze.common.dto.CityDTO;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.server.ServerMessage;
 import com.soze.common.message.server.TruckAdded;
+import com.soze.common.message.server.TruckTravelStarted;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.world.RemoteWorldService;
 import org.slf4j.Logger;
@@ -132,6 +133,11 @@ public class TruckService {
 		TruckNavigation navigation = truckNavigationService.travel(truckId, cityId, truck.getSpeed());
 		long time = navigation.getArrivalTime() - navigation.getTravelStartTime();
 		LOG.info("Truck {} will arrive at {} in {} ms, minutes = {}", truckId, cityId, time, TimeUnit.MILLISECONDS.toMinutes(time));
+
+		TruckTravelStarted truckTravelStarted = new TruckTravelStarted(
+			truckId, cityId, navigation.getTravelStartTime(), navigation.getArrivalTime());
+		sendToAll(truckTravelStarted);
+
 		executorService.schedule(() -> {
 
 		}, time, TimeUnit.MILLISECONDS);

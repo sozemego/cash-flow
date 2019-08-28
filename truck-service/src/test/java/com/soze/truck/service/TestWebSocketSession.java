@@ -1,5 +1,7 @@
 package com.soze.truck.service;
 
+import com.soze.common.json.JsonUtils;
+import com.soze.common.message.server.ServerMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketExtension;
@@ -16,7 +18,7 @@ import java.util.Map;
 
 public class TestWebSocketSession implements WebSocketSession {
 
-	private final List<WebSocketMessage> messages = new ArrayList<>();
+	private final List<ServerMessage> messages = new ArrayList<>();
 
 	@Override
 	public String getId() {
@@ -85,7 +87,7 @@ public class TestWebSocketSession implements WebSocketSession {
 
 	@Override
 	public void sendMessage(WebSocketMessage<?> message) throws IOException {
-		this.messages.add(message);
+		this.messages.add(JsonUtils.parse((String) message.getPayload(), ServerMessage.class));
 	}
 
 	@Override
@@ -103,7 +105,7 @@ public class TestWebSocketSession implements WebSocketSession {
 
 	}
 
-	public List<WebSocketMessage> getAllMessages() {
+	public List<ServerMessage> getAllMessages() {
 		return this.messages;
 	}
 }

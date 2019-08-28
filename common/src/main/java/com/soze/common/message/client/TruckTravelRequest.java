@@ -37,6 +37,6 @@ public class TruckTravelRequest extends ClientMessage {
 
 	@Override
 	public ClientMessageType getType() {
-		return ClientMessageType.TRUCK_TRAVEL;
+		return ClientMessageType.TRUCK_TRAVEL_REQUEST;
 	}
 }

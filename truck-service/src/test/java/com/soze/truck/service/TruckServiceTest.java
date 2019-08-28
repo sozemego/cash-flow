@@ -1,8 +1,8 @@
 package com.soze.truck.service;
 
 
-import com.soze.common.json.JsonUtils;
 import com.soze.common.message.server.ServerMessage;
+import com.soze.common.message.server.TruckTravelStarted;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.world.RemoteWorldService;
 import org.junit.jupiter.api.Assertions;
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.socket.WebSocketMessage;
 
 import java.util.List;
 
@@ -50,9 +49,9 @@ class TruckServiceTest {
 		String cityId = "CityID";
 		truckService.addTruck(truck, cityId);
 
-		List<WebSocketMessage> messages = testWebSocketSession.getAllMessages();
+		List<ServerMessage> messages = testWebSocketSession.getAllMessages();
 		Assertions.assertEquals(1, messages.size());
-		ServerMessage serverMessage = JsonUtils.parse((String) messages.get(0).getPayload(), ServerMessage.class);
+		ServerMessage serverMessage = messages.get(0);
 		Assertions.assertEquals(ServerMessage.ServerMessageType.TRUCK_ADDED.name(), serverMessage.getType());
 		Assertions.assertEquals(cityId, truckNavigationService.getCityIdForTruck(truck.getId()));
 	}
@@ -99,9 +98,9 @@ class TruckServiceTest {
 		truckService.addTruck(truck, cityId);
 
 		truckService.addSession(testWebSocketSession);
-		List<WebSocketMessage> messages = testWebSocketSession.getAllMessages();
+		List<ServerMessage> messages = testWebSocketSession.getAllMessages();
 		Assertions.assertEquals(1, messages.size());
-		ServerMessage serverMessage = JsonUtils.parse((String) messages.get(0).getPayload(), ServerMessage.class);
+		ServerMessage serverMessage = messages.get(0);
 		Assertions.assertEquals(ServerMessage.ServerMessageType.TRUCK_ADDED.name(), serverMessage.getType());
 	}
 
@@ -134,11 +133,15 @@ class TruckServiceTest {
 		String currentCityId = "Warsaw";
 		this.truckService.addTruck(truck, currentCityId);
 		String toCityId = "Wro";
+
+		TestWebSocketSession session = new TestWebSocketSession();
+		this.truckService.addSession(session);
 		this.truckService.travel(truck.getId(), toCityId);
 
 		TruckNavigation navigation = truckNavigationService.getTruckNavigation(truck.getId());
 		Assertions.assertEquals(toCityId, navigation.getNextCityId());
-		System.out.println(navigation.getArrivalTime());
+		Assertions.assertEquals(2, session.getAllMessages().size());
+		Assertions.assertEquals(TruckTravelStarted.class, session.getAllMessages().get(1).getClass());
 	}
 
 }
