@@ -4,6 +4,8 @@ import { CityInline } from "../city/CityInline";
 import { useGetCities } from "../city/selectors";
 import { createTruckTravelMessage } from "./message";
 import { useTruckSocket } from "./useTruckSocket";
+import { ProgressBar } from "../components/progressBar/ProgressBar";
+import { useClock } from "../hooks/clock";
 
 const Container = styled.div`
   margin: 2px;
@@ -36,11 +38,8 @@ const Debug = styled.div`
 export function Truck({ truck }) {
   const [debug, setDebug] = useState(false);
 
-  const {
-    id,
-    name,
-    navigation: { currentCityId }
-  } = truck;
+  const { id, name, navigation } = truck;
+  const { currentCityId, nextCityId } = navigation;
 
   return (
     <Container>
@@ -52,7 +51,8 @@ export function Truck({ truck }) {
         {name} at <CityInline cityId={currentCityId} />
       </span>
       <Divider />
-      <TravelTo truck={truck} />
+      {!nextCityId && <TravelTo truck={truck} />}
+      {nextCityId && <Traveling truck={truck} />}
       {debug && <div>{JSON.stringify(truck, null, 2)}</div>}
     </Container>
   );
@@ -105,7 +105,7 @@ export function TravelTo({ truck }) {
   const cityToTravelTo = allCities[cityToTravelToId];
 
   const distance = calculateDistance(currentCity, cityToTravelTo);
-  const travelTime = distance / speed;
+  const travelTime = (distance / speed).toFixed(1);
 
   return (
     <div>
@@ -137,6 +137,32 @@ export function TravelTo({ truck }) {
       >
         GO
       </button>
+    </div>
+  );
+}
+
+function Traveling({ truck }) {
+  const { navigation, speed } = truck;
+  const { currentCityId, nextCityId, arrivalTime, startTime } = navigation;
+
+  const { time } = useClock({ interval: 5000 });
+  let travelTimePassed = time - startTime;
+  const totalTime = arrivalTime - startTime;
+
+  const cities = useGetCities();
+  const distance = calculateDistance(cities[currentCityId], cities[nextCityId]);
+  const distanceCovered = (distance * (travelTimePassed / totalTime)).toFixed(1);
+
+  return (
+    <div>
+      <div>I am currently travelling at {speed}km/h. {distanceCovered} / {distance} km</div>
+      <div
+        style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+      >
+        <CityInline cityId={currentCityId} />
+        <ProgressBar time={totalTime} current={travelTimePassed} />
+        <CityInline cityId={nextCityId} />
+      </div>
     </div>
   );
 }
