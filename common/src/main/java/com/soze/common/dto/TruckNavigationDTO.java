@@ -3,7 +3,7 @@ package com.soze.common.dto;
 public class TruckNavigationDTO {
 
 	private String currentCityId;
-	private long travelStartTime;
+	private long startTime;
 	private long arrivalTime;
 	private String nextCityId;
 
@@ -15,12 +15,12 @@ public class TruckNavigationDTO {
 		this.currentCityId = currentCityId;
 	}
 
-	public long getTravelStartTime() {
-		return travelStartTime;
+	public long getStartTime() {
+		return startTime;
 	}
 
-	public void setTravelStartTime(long travelStartTime) {
-		this.travelStartTime = travelStartTime;
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
 	}
 
 	public long getArrivalTime() {

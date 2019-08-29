@@ -51,12 +51,12 @@ public class TruckNavigationService {
 			throw new IllegalStateException(truckId + " is already travelling!");
 		}
 		navigation.setNextCityId(cityId);
-		navigation.setTravelStartTime(System.currentTimeMillis());
+		navigation.setStartTime(System.currentTimeMillis());
 		long distance = calculateDistance(navigation.getCurrentCityId(), cityId);
 		long metersPerMinute = (kilometersPerHour * 1000) / 60;
 		long timeMinutes = distance / metersPerMinute;
 		long timeMs = TimeUnit.MINUTES.toMillis(timeMinutes);
-		navigation.setArrivalTime(navigation.getTravelStartTime() + timeMs);
+		navigation.setArrivalTime(navigation.getStartTime() + timeMs);
 		return navigation;
 	}
 

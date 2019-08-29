@@ -22,9 +22,10 @@ function truckAdded(state, action) {
 }
 
 function truckTravelStarted(state, action) {
-  const { truckId, targetCityId, travelStartTime, travelArrivalTime } = action;
+  const { truckId, nextCityId, startTime, arrivalTime } = action;
   const trucks = { ...state.trucks };
   const truck = { ...trucks[truckId] };
-
+  truck.navigation = { ...truck.navigation, nextCityId, startTime, arrivalTime };
+  trucks[truck.id] = truck;
   return { ...state, trucks };
 }

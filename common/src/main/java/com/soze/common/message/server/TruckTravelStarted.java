@@ -8,42 +8,42 @@ import java.util.UUID;
 public class TruckTravelStarted extends ServerMessage {
 
 	private final String truckId;
-	private final String targetCityId;
-	private final long travelStartTime;
-	private final long travelArrivalTime;
+	private final String nextCityId;
+	private final long startTime;
+	private final long arrivalTime;
 
 	@JsonCreator
 	public TruckTravelStarted(@JsonProperty("messageId") UUID messageId,
 														@JsonProperty("truckId") String truckId,
-														@JsonProperty("targetCityId") String targetCityId,
-														@JsonProperty("travelStartTime") long travelStartTime,
-														@JsonProperty("travelArrivalTime") long travelArrivalTime
+														@JsonProperty("nextCityId") String nextCityId,
+														@JsonProperty("startTime") long startTime,
+														@JsonProperty("arrivalTime") long arrivalTime
 													 ) {
 		super(messageId);
 		this.truckId = truckId;
-		this.targetCityId = targetCityId;
-		this.travelStartTime = travelStartTime;
-		this.travelArrivalTime = travelArrivalTime;
+		this.nextCityId = nextCityId;
+		this.startTime = startTime;
+		this.arrivalTime = arrivalTime;
 	}
 
-	public TruckTravelStarted(String truckId, String targetCityId, long travelStartTime, long travelArrivalTime) {
-		this(UUID.randomUUID(), truckId, targetCityId, travelStartTime, travelArrivalTime);
+	public TruckTravelStarted(String truckId, String nextCityId, long startTime, long arrivalTime) {
+		this(UUID.randomUUID(), truckId, nextCityId, startTime, arrivalTime);
 	}
 
 	public String getTruckId() {
 		return truckId;
 	}
 
-	public String getTargetCityId() {
-		return targetCityId;
+	public String getNextCityId() {
+		return nextCityId;
 	}
 
-	public long getTravelStartTime() {
-		return travelStartTime;
+	public long getStartTime() {
+		return startTime;
 	}
 
-	public long getTravelArrivalTime() {
-		return travelArrivalTime;
+	public long getArrivalTime() {
+		return arrivalTime;
 	}
 
 	@Override

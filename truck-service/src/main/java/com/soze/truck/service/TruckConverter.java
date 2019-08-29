@@ -42,7 +42,7 @@ public class TruckConverter {
 		truckNavigationDTO.setArrivalTime(navigation.getArrivalTime());
 		truckNavigationDTO.setCurrentCityId(navigation.getCurrentCityId());
 		truckNavigationDTO.setNextCityId(navigation.getNextCityId());
-		truckNavigationDTO.setTravelStartTime(navigation.getTravelStartTime());
+		truckNavigationDTO.setStartTime(navigation.getStartTime());
 		return truckNavigationDTO;
 	}
 

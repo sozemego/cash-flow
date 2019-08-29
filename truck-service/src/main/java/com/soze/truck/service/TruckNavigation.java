@@ -6,7 +6,7 @@ public class TruckNavigation {
 
 	private String currentCityId = null;
 
-	private long travelStartTime = -1L;
+	private long startTime = -1L;
 	private long arrivalTime = -1L;
 	private String nextCityId;
 
@@ -26,12 +26,12 @@ public class TruckNavigation {
 		this.currentCityId = currentCityId;
 	}
 
-	public long getTravelStartTime() {
-		return travelStartTime;
+	public long getStartTime() {
+		return startTime;
 	}
 
-	public void setTravelStartTime(long travelStartTime) {
-		this.travelStartTime = travelStartTime;
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
 	}
 
 	public String getNextCityId() {

@@ -131,11 +131,11 @@ public class TruckService {
 		}
 
 		TruckNavigation navigation = truckNavigationService.travel(truckId, cityId, truck.getSpeed());
-		long time = navigation.getArrivalTime() - navigation.getTravelStartTime();
+		long time = navigation.getArrivalTime() - navigation.getStartTime();
 		LOG.info("Truck {} will arrive at {} in {} ms, minutes = {}", truckId, cityId, time, TimeUnit.MILLISECONDS.toMinutes(time));
 
 		TruckTravelStarted truckTravelStarted = new TruckTravelStarted(
-			truckId, cityId, navigation.getTravelStartTime(), navigation.getArrivalTime());
+			truckId, cityId, navigation.getStartTime(), navigation.getArrivalTime());
 		sendToAll(truckTravelStarted);
 
 		executorService.schedule(() -> {
