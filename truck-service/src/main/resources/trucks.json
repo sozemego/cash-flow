@@ -7,5 +7,14 @@
       "capacity": 10
     },
     "speed": 120
+  },
+  {
+    "id": "FAST_TRUCK",
+    "name": "Fast truck",
+    "texture": "some.png",
+    "storage": {
+      "capacity": 10
+    },
+    "speed": 5000
   }
 ]

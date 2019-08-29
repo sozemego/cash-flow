@@ -4,6 +4,7 @@ import com.soze.common.dto.CityDTO;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.server.ServerMessage;
 import com.soze.common.message.server.TruckAdded;
+import com.soze.common.message.server.TruckArrived;
 import com.soze.common.message.server.TruckTravelStarted;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.world.RemoteWorldService;
@@ -139,7 +140,8 @@ public class TruckService {
 		sendToAll(truckTravelStarted);
 
 		executorService.schedule(() -> {
-
+			truckNavigationService.finishTravel(truckId);
+			sendToAll(new TruckArrived(truckId));
 		}, time, TimeUnit.MILLISECONDS);
 	}
 

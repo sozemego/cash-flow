@@ -32,5 +32,7 @@ public class TruckServiceStarter {
 		truckService.addTruck(truck1, city.id);
 		Truck truck2 = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
 		truckService.addTruck(truck2, city.id);
+		Truck truck3 = truckTemplateLoader.constructTruckByTemplateId("FAST_TRUCK");
+		truckService.addTruck(truck3, city.id);
 	}
 }

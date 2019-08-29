@@ -98,6 +98,13 @@ export function TravelTo({ truck }) {
     }
   }, [allCities]);
 
+  useEffect(() => {
+    const cityArray = Object.values(allCities);
+    if (!nextCityId && cityArray.length > 0) {
+      setCityToTravelToId(cityArray[0].id);
+    }
+  }, [nextCityId]);
+
   const cities = Object.values(allCities).filter(
     city => city.id !== currentCityId
   );
@@ -130,8 +137,7 @@ export function TravelTo({ truck }) {
       </span>
       <button
         onClick={() => {
-          const message = createTruckTravelMessage(id, cityToTravelToId);
-          socket.send(message);
+          socket.send(createTruckTravelMessage(id, cityToTravelToId));
         }}
         disabled={cityToTravelToId === ""}
       >
@@ -151,11 +157,16 @@ function Traveling({ truck }) {
 
   const cities = useGetCities();
   const distance = calculateDistance(cities[currentCityId], cities[nextCityId]);
-  const distanceCovered = (distance * (travelTimePassed / totalTime)).toFixed(1);
+  const distanceCovered = (distance * (travelTimePassed / totalTime)).toFixed(
+    1
+  );
 
   return (
     <div>
-      <div>I am currently travelling at {speed}km/h. {distanceCovered} / {distance} km</div>
+      <div>
+        I am currently travelling at {speed}km/h. {distanceCovered} / {distance}{" "}
+        km
+      </div>
       <div
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
       >

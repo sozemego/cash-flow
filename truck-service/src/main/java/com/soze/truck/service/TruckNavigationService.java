@@ -60,6 +60,17 @@ public class TruckNavigationService {
 		return navigation;
 	}
 
+	void finishTravel(String truckId) {
+		TruckNavigation navigation = getTruckNavigation(truckId);
+		if (navigation.getNextCityId() == null) {
+			throw new IllegalStateException("Cannot finish travel, truck with id = " + truckId + " is not travelling");
+		}
+		setCityId(truckId, navigation.getNextCityId());
+		navigation.setNextCityId(null);
+		navigation.setArrivalTime(-1);
+		navigation.setStartTime(-1);
+	}
+
 	/**
 	 * Calculates distance in meters between two cities.
 	 */
