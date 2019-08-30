@@ -17,7 +17,7 @@ public interface ClockServiceClient {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Clock getClock();
 
-	default ClockServiceClient createClient() {
+	static ClockServiceClient createClient() {
 		ResteasyClient client = (ResteasyClient) ResteasyClientBuilder.newClient();
 		ResteasyWebTarget target = client.target(CLOCK_SERVICE_URL);
 		return target.proxy(ClockServiceClient.class);

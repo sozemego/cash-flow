@@ -1,5 +1,6 @@
 package com.soze.factory.service;
 
+import com.soze.clock.domain.Clock;
 import com.soze.common.dto.CityDTO;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.server.FactoryAdded;
@@ -33,6 +34,7 @@ public class FactoryService {
 	private final FactoryTemplateLoader templateLoader;
 	private final FactoryConverter factoryConverter;
 	private final RemoteWorldService remoteWorldService;
+	private final Clock clock;
 
 	private final List<Factory> factories = new ArrayList<>();
 
@@ -42,11 +44,12 @@ public class FactoryService {
 
 	@Autowired
 	public FactoryService(FactoryTemplateLoader templateLoader, FactoryConverter factoryConverter,
-												RemoteWorldService remoteWorldService
+												RemoteWorldService remoteWorldService, Clock clock
 											 ) {
 		this.templateLoader = templateLoader;
 		this.factoryConverter = factoryConverter;
 		this.remoteWorldService = remoteWorldService;
+		this.clock = clock;
 	}
 
 	@PostConstruct

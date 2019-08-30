@@ -1,5 +1,6 @@
 package com.soze.factory.service;
 
+import com.soze.clock.domain.Clock;
 import com.soze.common.message.server.FactoryAdded;
 import com.soze.common.message.server.ResourceProductionStarted;
 import com.soze.common.message.server.ServerMessage;
@@ -32,7 +33,8 @@ class FactoryServiceTest {
 
 	@BeforeEach
 	public void setup() {
-		this.factoryService = new FactoryService(factoryTemplateLoader, factoryConverter, remoteWorldService);
+		this.factoryService = new FactoryService(
+			factoryTemplateLoader, factoryConverter, remoteWorldService, new Clock(60, System.currentTimeMillis(), "12:00"));
 	}
 
 	@Test
@@ -113,9 +115,11 @@ class FactoryServiceTest {
 		List<ServerMessage> messages = session.getMessages();
 		Assertions.assertEquals(4, messages.size());
 		Assertions.assertEquals(messages.get(0).getType(), ServerMessage.ServerMessageType.FACTORY_ADDED.name());
-		Assertions.assertEquals(messages.get(1).getType(), ServerMessage.ServerMessageType.RESOURCE_PRODUCTION_STARTED.name());
+		Assertions.assertEquals(
+			messages.get(1).getType(), ServerMessage.ServerMessageType.RESOURCE_PRODUCTION_STARTED.name());
 		Assertions.assertEquals(messages.get(2).getType(), ServerMessage.ServerMessageType.RESOURCE_PRODUCED.name());
-		Assertions.assertEquals(messages.get(3).getType(), ServerMessage.ServerMessageType.RESOURCE_PRODUCTION_STARTED.name());
+		Assertions.assertEquals(
+			messages.get(3).getType(), ServerMessage.ServerMessageType.RESOURCE_PRODUCTION_STARTED.name());
 	}
 
 	@Test
