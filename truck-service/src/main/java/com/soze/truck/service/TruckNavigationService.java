@@ -1,5 +1,6 @@
 package com.soze.truck.service;
 
+import com.soze.clock.domain.Clock;
 import com.soze.common.dto.CityDTO;
 import com.soze.truck.world.RemoteWorldService;
 import org.slf4j.Logger;
@@ -18,12 +19,14 @@ public class TruckNavigationService {
 	private static final Logger LOG = LoggerFactory.getLogger(TruckNavigationService.class);
 
 	private final RemoteWorldService remoteWorldService;
+	private final Clock clock;
 
 	private final Map<String, TruckNavigation> navigations = new HashMap<>();
 
 	@Autowired
-	public TruckNavigationService(RemoteWorldService remoteWorldService) {
+	public TruckNavigationService(RemoteWorldService remoteWorldService, Clock clock) {
 		this.remoteWorldService = remoteWorldService;
+		this.clock = clock;
 	}
 
 	void setCityId(String truckId, String cityId) {
@@ -55,7 +58,7 @@ public class TruckNavigationService {
 		long distance = calculateDistance(navigation.getCurrentCityId(), cityId);
 		long metersPerMinute = (kilometersPerHour * 1000) / 60;
 		long timeMinutes = distance / metersPerMinute;
-		long timeMs = TimeUnit.MINUTES.toMillis(timeMinutes);
+		long timeMs = TimeUnit.MINUTES.toMillis(timeMinutes) / clock.getMultiplier();
 		navigation.setArrivalTime(navigation.getStartTime() + timeMs);
 		return navigation;
 	}

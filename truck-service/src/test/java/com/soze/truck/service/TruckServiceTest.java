@@ -1,6 +1,7 @@
 package com.soze.truck.service;
 
 
+import com.soze.clock.domain.Clock;
 import com.soze.common.message.server.ServerMessage;
 import com.soze.common.message.server.TruckTravelStarted;
 import com.soze.truck.domain.Truck;
@@ -11,11 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 @SpringBootTest
 @Import(TruckServiceTestBeanConfiguration.class)
+@ActiveProfiles("test")
 class TruckServiceTest {
 
 	@Autowired
@@ -38,7 +41,9 @@ class TruckServiceTest {
 	@BeforeEach
 	public void setup() {
 		testWebSocketSession = new TestWebSocketSession();
-		truckService = new TruckService(truckTemplateLoader, truckConverter, truckNavigationService, remoteWorldService);
+		truckService = new TruckService(truckTemplateLoader, truckConverter, truckNavigationService, remoteWorldService,
+																		new Clock(60, System.currentTimeMillis(), "12:00")
+		);
 	}
 
 	@Test

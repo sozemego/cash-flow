@@ -1,5 +1,6 @@
 package com.soze.truck.service;
 
+import com.soze.clock.domain.Clock;
 import com.soze.common.dto.CityDTO;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.server.ServerMessage;
@@ -30,6 +31,7 @@ public class TruckService {
 	private final TruckConverter truckConverter;
 	private final TruckNavigationService truckNavigationService;
 	private final RemoteWorldService remoteWorldService;
+	private final Clock clock;
 
 	private final List<Truck> trucks = new ArrayList<>();
 	private final Set<WebSocketSession> sessions = new HashSet<>();
@@ -38,12 +40,13 @@ public class TruckService {
 
 	@Autowired
 	public TruckService(TruckTemplateLoader truckTemplateLoader, TruckConverter truckConverter,
-											TruckNavigationService truckNavigationService, RemoteWorldService remoteWorldService
+											TruckNavigationService truckNavigationService, RemoteWorldService remoteWorldService, Clock clock
 										 ) {
 		this.truckTemplateLoader = truckTemplateLoader;
 		this.truckConverter = truckConverter;
 		this.truckNavigationService = truckNavigationService;
 		this.remoteWorldService = remoteWorldService;
+		this.clock = clock;
 	}
 
 	/**
