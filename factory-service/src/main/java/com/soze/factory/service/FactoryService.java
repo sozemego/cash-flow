@@ -113,12 +113,13 @@ public class FactoryService {
 		}
 
 		producer.startProduction();
-		float timeRemaining = producer.getTime() - producer.getProgress();
-		LOG.debug("Starting production, it will finish in {} ms", timeRemaining);
+		long minutes = producer.getTime();
+		long timeRemaining = TimeUnit.MINUTES.toMillis(minutes) / clock.getMultiplier();
+		LOG.info("Starting production of {} at factory = {}, it will finish in {} ms", timeRemaining, producer.getResource(), factory.getId());
 		executorService.schedule(() -> {
 			finishProducing(factory);
 			startProducing(factory);
-		}, (long) timeRemaining, TimeUnit.MILLISECONDS);
+		}, timeRemaining, TimeUnit.MILLISECONDS);
 
 		ResourceProductionStarted resourceProductionStarted = new ResourceProductionStarted(factory.getId(),
 																																												factory.getProducer()

@@ -52,10 +52,12 @@ export function Factory({ factory }) {
   const { id, name, storage, producer, cityId } = factory;
 
   const { time } = useClock({ interval: 500 });
+  const minutes = producer.time;
+  const ms = minutes * 1000;
 
   let productionTimePassed = time - producer.productionStartTime;
-  if (productionTimePassed >= producer.time) {
-    productionTimePassed = producer.time;
+  if (productionTimePassed >= ms) {
+    productionTimePassed = ms;
   }
   if (producer.productionStartTime === -1) {
     productionTimePassed = 0;
@@ -67,7 +69,9 @@ export function Factory({ factory }) {
         <Id>{id}</Id>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
       </Header>
-      <div>{name} at <CityInline cityId={cityId}/></div>
+      <div>
+        {name} at <CityInline cityId={cityId} />
+      </div>
       <Divider />
       <div>
         Storage - [{capacityTaken(storage)} / {storage.capacity}]
@@ -75,10 +79,12 @@ export function Factory({ factory }) {
       <div>
         <Producer>
           <div>
-            Producer [{producer.resource}] - {productionTimePassed} /{" "}
-            {producer.time}
+            <span> Producer [{producer.resource}] </span>
+            <span>{(productionTimePassed / 1000).toFixed(0)} / {minutes}</span>
           </div>
-          <ProgressBar current={productionTimePassed} time={producer.time} />
+          <div style={{width: "100%", margin: "auto"}}>
+            <ProgressBar current={productionTimePassed} time={ms} />
+          </div>
         </Producer>
       </div>
       {debug && <div>{JSON.stringify(factory, null, 2)}</div>}
