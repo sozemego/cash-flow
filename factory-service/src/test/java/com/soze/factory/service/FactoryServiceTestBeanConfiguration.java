@@ -1,14 +1,17 @@
 package com.soze.factory.service;
 
+import com.soze.clock.domain.Clock;
 import com.soze.common.client.WorldServiceClient;
 import com.soze.common.dto.CityDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Configuration
+@Profile("test")
 public class FactoryServiceTestBeanConfiguration {
 
 	@Bean
@@ -37,6 +40,11 @@ public class FactoryServiceTestBeanConfiguration {
 				return cities.stream().filter(city -> cityId.equals(city.id)).findFirst().orElse(null);
 			}
 		};
+	}
+
+	@Bean
+	public Clock clock() {
+		return new Clock(60, System.currentTimeMillis(), "12:00");
 	}
 
 
