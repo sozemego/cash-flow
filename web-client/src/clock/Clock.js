@@ -3,7 +3,7 @@ import { useClock } from "../hooks/clock";
 import { useGetClock } from "./selectors";
 import { useDispatch } from "react-redux";
 import { CLOCK_FETCHED } from "./actions";
-import { getCurrentGameDate } from "./business";
+import { getCurrentGameDate, getFormattedDateTime } from "./business";
 
 function format(num) {
   if (num > 9) {
@@ -28,16 +28,10 @@ export function Clock() {
   const { time } = useClock({ interval: 1000 });
 
   const date = getCurrentGameDate(clock);
-  const hour = date.getHours();
-  const minute = date.getMinutes();
-
-  const dayOfMonth = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
 
   return (
     <div>
-      {`${format(dayOfMonth)}-${format(month)}-${format(year)} ${format(hour)}:${format(minute)}`}
+      {getFormattedDateTime(date)}
     </div>
   );
 }

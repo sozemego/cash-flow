@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { useClock } from "../hooks/clock";
 import { CityInline } from "../city/CityInline";
+import { getFormattedDate, getFormattedTime } from "../clock/business";
 
 function capacityTaken(storage) {
   const { resources } = storage;
@@ -30,15 +31,15 @@ const Id = styled.div`
   font-size: 0.75rem;
 `;
 
-const Divider = styled.div`
+const Divider = styled.hr`
   width: 25%;
   opacity: 0.25;
-  margin-left: 0;
+  margin-left: -12px;
 `;
 
 const Producer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `;
 
 const Debug = styled.div`
@@ -63,6 +64,10 @@ export function Factory({ factory }) {
     productionTimePassed = 0;
   }
 
+  const productionEndTime = new Date(
+    producer.productionStartTime + productionTimePassed
+  );
+
   return (
     <Container>
       <Header>
@@ -77,14 +82,32 @@ export function Factory({ factory }) {
         Storage - [{capacityTaken(storage)} / {storage.capacity}]
       </div>
       <div>
+        <Divider />
         <Producer>
           <div>
             <span> Producer [{producer.resource}] </span>
-            <span>{(productionTimePassed / 1000).toFixed(0)} / {minutes}</span>
+            <span>
+              {(productionTimePassed / 1000).toFixed(0)} / {minutes}
+            </span>
           </div>
-          <div style={{width: "100%", margin: "auto"}}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center"
+            }}
+          >
+            <div style={{ margin: 4 }}>
+              {getFormattedTime(new Date(producer.productionStartTime))}
+            </div>
             <ProgressBar current={productionTimePassed} time={ms} />
+            <div style={{ margin: 4 }}>
+              {getFormattedTime(productionEndTime)}
+            </div>
           </div>
+          {/*<div style={{width: "100%", margin: "auto"}}>*/}
+          {/*  <ProgressBar current={productionTimePassed} time={ms} />*/}
+          {/*</div>*/}
         </Producer>
       </div>
       {debug && <div>{JSON.stringify(factory, null, 2)}</div>}
