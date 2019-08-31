@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useClock } from "../hooks/clock";
 import { useGetClock } from "./selectors";
 import { useDispatch } from "react-redux";
