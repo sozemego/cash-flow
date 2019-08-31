@@ -1,6 +1,6 @@
 import React from "react";
 import { Game } from "./game/Game";
-import { Clock } from "./Clock";
+import { Clock } from "./clock/Clock";
 
 function App() {
   return (

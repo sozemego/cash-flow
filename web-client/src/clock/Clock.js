@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useClock } from "./hooks/clock";
+import { useClock } from "../hooks/clock";
+import { useGetClock } from "./selectors";
+import { useDispatch } from "react-redux";
+import { CLOCK_FETCHED } from "./actions";
 
 function format(num) {
   if (num > 9) {
@@ -11,13 +14,14 @@ function format(num) {
 }
 
 export function Clock() {
-  const [clock, setClock] = useState({ multiplier: 1, startTime: Date.now() });
+  const clock = useGetClock();
+  const dispatch = useDispatch();
   const { multiplier, startTime } = clock;
 
   useEffect(() => {
     fetch("http://localhost:9004/clock/")
       .then(result => result.json())
-      .then(json => setClock(json));
+      .then(json => dispatch({type: CLOCK_FETCHED, clock: json}));
   }, []);
 
   const { time } = useClock({ interval: 1000 });
