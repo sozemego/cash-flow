@@ -3,6 +3,7 @@ import { useGetGameClock } from "./selectors";
 import { useRealClock } from "./realClock";
 import { CLOCK_FETCHED } from "./actions";
 import { useDispatch } from "react-redux";
+import { getCurrentGameDate } from "./business";
 
 export function useGameClock({ interval }) {
 	const clock = useGetGameClock();
@@ -16,8 +17,6 @@ export function useGameClock({ interval }) {
 		}
 	}, [ clock.multiplier ]);
 
-	const { time } = useRealClock({ interval });
-	const realTimePassed = time - clock.startTime;
-	const gameTimePassed = realTimePassed * clock.multiplier;
-	return { clock, time: clock.startTime + gameTimePassed };
+	useRealClock({ interval });
+	return { clock, time: getCurrentGameDate(clock) };
 }

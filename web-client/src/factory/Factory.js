@@ -64,6 +64,7 @@ export function Factory({ factory }) {
   if (producer.productionStartTime === -1) {
     productionTimePassed = 0;
   }
+  // console.log(productionTimePassed);
 
   const productionEndTime = new Date(
     producer.productionStartTime + productionTimePassed
