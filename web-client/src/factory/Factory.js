@@ -4,6 +4,7 @@ import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { useRealClock } from "../clock/realClock";
 import { CityInline } from "../city/CityInline";
 import { getFormattedDate, getFormattedTime } from "../clock/business";
+import { useGameClock } from "../clock/gameClock";
 
 function capacityTaken(storage) {
   const { resources } = storage;
@@ -52,7 +53,7 @@ export function Factory({ factory }) {
 
   const { id, name, storage, producer, cityId } = factory;
 
-  const { time } = useRealClock({ interval: 500 });
+  const { time } = useGameClock({ interval: 500 });
   const minutes = producer.time;
   const ms = minutes * 1000;
 

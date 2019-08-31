@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 export function useGameClock({ interval }) {
 	const clock = useGetGameClock();
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		if (!clock.multiplier) {
 			fetch("http://localhost:9004/clock/")
@@ -14,8 +15,9 @@ export function useGameClock({ interval }) {
 				.then(json => dispatch({ type: CLOCK_FETCHED, clock: json }));
 		}
 	}, [ clock.multiplier ]);
+
 	const { time } = useRealClock({ interval });
 	const realTimePassed = time - clock.startTime;
 	const gameTimePassed = realTimePassed * clock.multiplier;
-	return { clock };
+	return { clock, time: clock.startTime + gameTimePassed };
 }
