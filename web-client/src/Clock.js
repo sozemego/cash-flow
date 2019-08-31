@@ -12,7 +12,7 @@ function format(num) {
 
 export function Clock() {
   const [clock, setClock] = useState({ multiplier: 1, startTime: Date.now() });
-  const { multiplier, startTime, clockStart } = clock;
+  const { multiplier, startTime } = clock;
 
   useEffect(() => {
     fetch("http://localhost:9004/clock/")
