@@ -42,7 +42,6 @@ function resourceProduced(state, action) {
     resources[resource] = count + 1;
 
     const producer = { ...factory.producer };
-    producer.progress = 0;
     producer.productionStartTime = -1;
     factory.producer = producer;
 
@@ -60,7 +59,6 @@ function resourceProductionStarted(state, action) {
     const factory = { ...factories[index] };
     const producer = { ...factory.producer };
     producer.productionStartTime = productionStartTime;
-    producer.progress = 0;
     factory.producer = producer;
     factories[index] = factory;
   }
