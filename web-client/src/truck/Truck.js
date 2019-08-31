@@ -5,7 +5,7 @@ import { useGetCities } from "../city/selectors";
 import { createTruckTravelMessage } from "./message";
 import { useTruckSocket } from "./useTruckSocket";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
-import { useClock } from "../hooks/clock";
+import { useRealClock } from "../clock/realClock";
 
 const Container = styled.div`
   margin: 2px;
@@ -151,7 +151,7 @@ function Traveling({ truck }) {
   const { navigation, speed } = truck;
   const { currentCityId, nextCityId, arrivalTime, startTime } = navigation;
 
-  const { time } = useClock({ interval: 5000 });
+  const { time } = useRealClock({ interval: 5000 });
   let travelTimePassed = time - startTime;
   const totalTime = arrivalTime - startTime;
 

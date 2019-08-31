@@ -1,7 +1,7 @@
 import { CLOCK_FETCHED } from "./actions";
 
 const initialState = {
-  multiplier: 1,
+  multiplier: 0,
   startTime: Date.now()
 };
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export function useClock({interval}) {
+export function useRealClock({interval}) {
   const [time, setTime] = useState(Date.now());
 
   useEffect(() => {

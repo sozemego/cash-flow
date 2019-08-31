@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
-import { useClock } from "../hooks/clock";
+import { useRealClock } from "../clock/realClock";
 import { CityInline } from "../city/CityInline";
 import { getFormattedDate, getFormattedTime } from "../clock/business";
 
@@ -52,7 +52,7 @@ export function Factory({ factory }) {
 
   const { id, name, storage, producer, cityId } = factory;
 
-  const { time } = useClock({ interval: 500 });
+  const { time } = useRealClock({ interval: 500 });
   const minutes = producer.time;
   const ms = minutes * 1000;
 
