@@ -107,10 +107,10 @@ class FactoryServiceTest {
 
 		Factory factory = this.factoryTemplateLoader.constructFactoryByTemplateId("FORESTER");
 		factory.setCityId("cityId");
-		factory.getProducer().setTime(500L);
+		factory.getProducer().setTime(2);
 		this.factoryService.addFactory(factory);
 
-		sleep(500);
+		sleep(2000);
 
 		List<ServerMessage> messages = session.getMessages();
 		Assertions.assertEquals(4, messages.size());
