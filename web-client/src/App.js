@@ -8,6 +8,7 @@ function App() {
       <h2 style={{ textAlign: "center" }}>Cash flow</h2>
       <div style={{ textAlign: "center" }}>
         <Clock />
+        <hr />
       </div>
       <Game />
     </div>

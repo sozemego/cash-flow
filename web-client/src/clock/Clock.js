@@ -39,7 +39,6 @@ export function Clock() {
   return (
     <div>
       {`${format(dayOfMonth)}-${format(month)}-${format(year)} ${format(hour)}:${format(minute)}`}
-      <hr />
     </div>
   );
 }
