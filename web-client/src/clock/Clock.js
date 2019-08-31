@@ -1,14 +1,11 @@
 import React from "react";
-import { useRealClock } from "./realClock";
-import { useGetGameClock } from "./selectors";
 import { getCurrentGameDate, getFormattedDateTime } from "./business";
+import { useGameClock } from "./gameClock";
 
 export function Clock() {
-  const clock = useGetGameClock();
+	const {clock} = useGameClock({interval: 1000});
 
-  useRealClock({ interval: 1000 });
-
-  const date = getCurrentGameDate(clock);
+	const date = getCurrentGameDate(clock);
 
   return <div>{getFormattedDateTime(date)}</div>;
 }
