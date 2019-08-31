@@ -115,7 +115,7 @@ public class FactoryService {
 		producer.startProduction(clock);
 		long minutes = producer.getTime();
 		long timeRemaining = TimeUnit.MINUTES.toMillis(minutes) / clock.getMultiplier();
-		LOG.info("Starting production of {} at factory = {}, it will finish in {} ms", timeRemaining, producer.getResource(), factory.getId());
+		LOG.info("Starting production of {} at factory = {}, it will finish in {} ms", producer.getResource(), factory.getId(), timeRemaining);
 		executorService.schedule(() -> {
 			finishProducing(factory);
 			startProducing(factory);
