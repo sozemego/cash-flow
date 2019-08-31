@@ -3,6 +3,7 @@ import { useClock } from "../hooks/clock";
 import { useGetClock } from "./selectors";
 import { useDispatch } from "react-redux";
 import { CLOCK_FETCHED } from "./actions";
+import { getCurrentGameDate } from "./business";
 
 function format(num) {
   if (num > 9) {
@@ -25,10 +26,8 @@ export function Clock() {
   }, []);
 
   const { time } = useClock({ interval: 1000 });
-  const timePassed = time - startTime;
-  const currentTime = time + (timePassed * multiplier);
 
-  const date = new Date(currentTime);
+  const date = getCurrentGameDate(clock);
   const hour = date.getHours();
   const minute = date.getMinutes();
 
