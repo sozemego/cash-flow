@@ -42,7 +42,7 @@ class TruckServiceTest {
 	public void setup() {
 		testWebSocketSession = new TestWebSocketSession();
 		truckService = new TruckService(truckTemplateLoader, truckConverter, truckNavigationService, remoteWorldService,
-																		new Clock(60, System.currentTimeMillis(), "12:00")
+																		new Clock(60, System.currentTimeMillis())
 		);
 	}
 

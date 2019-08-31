@@ -34,7 +34,7 @@ class FactoryServiceTest {
 	@BeforeEach
 	public void setup() {
 		this.factoryService = new FactoryService(
-			factoryTemplateLoader, factoryConverter, remoteWorldService, new Clock(60, System.currentTimeMillis(), "12:00"));
+			factoryTemplateLoader, factoryConverter, remoteWorldService, new Clock(60, System.currentTimeMillis()));
 	}
 
 	@Test

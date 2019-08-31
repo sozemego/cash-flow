@@ -25,8 +25,7 @@ public class ClockController {
 		LOG.info("Called getClock");
 		Clock clock = new Clock(
 			clockService.getTimeMultiplier(),
-			clockService.getStartTime(),
-			clockService.getClockStart().toString()
+			clockService.getStartTime()
 		);
 		LOG.info("Returning = {}", clock);
 		return clock;

@@ -45,7 +45,7 @@ public class TruckServiceTestBeanConfiguration {
 
 	@Bean
 	public Clock clock() {
-		return new Clock(60, System.currentTimeMillis(), "12:00");
+		return new Clock(60, System.currentTimeMillis());
 	}
 
 
