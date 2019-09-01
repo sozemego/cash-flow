@@ -135,8 +135,12 @@ public class TruckService {
 		}
 
 		TruckNavigation navigation = truckNavigationService.travel(truckId, cityId, truck.getSpeed());
-		long time = navigation.getArrivalTime() - navigation.getStartTime();
-		LOG.info("Truck {} will arrive at {} in {} ms, minutes = {}", truckId, cityId, time, TimeUnit.MILLISECONDS.toMinutes(time));
+		long gameTimeTravelDuration = navigation.getArrivalTime() - navigation.getStartTime();
+		long realTimeTravelDuration = (navigation.getArrivalTime() - navigation.getStartTime()) / clock.getMultiplier();
+		LOG.info("Truck {} will arrive at {} in [game - {} ms, {} minutes], [real - {} ms, {} minutes]", truckId, cityId,
+						 gameTimeTravelDuration, TimeUnit.MILLISECONDS.toMinutes(gameTimeTravelDuration), realTimeTravelDuration,
+						 TimeUnit.MILLISECONDS.toMinutes(realTimeTravelDuration)
+						);
 
 		TruckTravelStarted truckTravelStarted = new TruckTravelStarted(
 			truckId, cityId, navigation.getStartTime(), navigation.getArrivalTime());
@@ -145,14 +149,12 @@ public class TruckService {
 		executorService.schedule(() -> {
 			truckNavigationService.finishTravel(truckId);
 			sendToAll(new TruckArrived(truckId));
-		}, time, TimeUnit.MILLISECONDS);
+		}, realTimeTravelDuration, TimeUnit.MILLISECONDS);
 	}
 
 	public Optional<Truck> getTruck(String truckId) {
 		Objects.requireNonNull(truckId);
-		return this.trucks.stream()
-											.filter(truck -> truck.getId().equals(truckId))
-											.findFirst();
+		return this.trucks.stream().filter(truck -> truck.getId().equals(truckId)).findFirst();
 	}
 
 }

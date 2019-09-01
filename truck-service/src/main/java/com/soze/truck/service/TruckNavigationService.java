@@ -54,11 +54,12 @@ public class TruckNavigationService {
 			throw new IllegalStateException(truckId + " is already travelling!");
 		}
 		navigation.setNextCityId(cityId);
-		navigation.setStartTime(System.currentTimeMillis());
+		navigation.setStartTime(clock.getCurrentGameTime());
 		long distance = calculateDistance(navigation.getCurrentCityId(), cityId);
+		LOG.info("Distance between {} and {} is {}m or {}km", navigation.getCurrentCityId(), cityId, distance, distance / 1000);
 		long metersPerMinute = (kilometersPerHour * 1000) / 60;
 		long timeMinutes = distance / metersPerMinute;
-		long timeMs = TimeUnit.MINUTES.toMillis(timeMinutes) / clock.getMultiplier();
+		long timeMs = TimeUnit.MINUTES.toMillis(timeMinutes);
 		navigation.setArrivalTime(navigation.getStartTime() + timeMs);
 		return navigation;
 	}
