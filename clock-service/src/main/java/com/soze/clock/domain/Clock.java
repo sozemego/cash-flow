@@ -10,8 +10,7 @@ public class Clock {
 	private final long startTime;
 
 	@JsonCreator
-	public Clock(@JsonProperty("multiplier") long multiplier,
-							 @JsonProperty("startTime") long startTime
+	public Clock(@JsonProperty("multiplier") long multiplier, @JsonProperty("startTime") long startTime
 							) {
 		this.multiplier = multiplier;
 		this.startTime = startTime;
@@ -36,6 +35,6 @@ public class Clock {
 
 	@Override
 	public String toString() {
-		return "Clock{" + "multiplier=" + multiplier + ", startTime=" + startTime + '}';
+		return "Clock{" + "multiplier=" + multiplier + ", startTime=" + startTime + ", currentGameTime = " + getCurrentGameTime() + "}";
 	}
 }
