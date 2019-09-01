@@ -5,7 +5,8 @@ import { useGetCities } from "../city/selectors";
 import { createTruckTravelMessage } from "./message";
 import { useTruckSocket } from "./useTruckSocket";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
-import { useRealClock } from "../clock/realClock";
+import { getFormattedTime } from "../clock/business";
+import { useGameClock } from "../clock/gameClock";
 
 const Container = styled.div`
   margin: 2px;
@@ -151,7 +152,7 @@ function Traveling({ truck }) {
   const { navigation, speed } = truck;
   const { currentCityId, nextCityId, arrivalTime, startTime } = navigation;
 
-  const { time } = useRealClock({ interval: 5000 });
+  const { time } = useGameClock({ interval: 5000 });
   let travelTimePassed = time - startTime;
   const totalTime = arrivalTime - startTime;
 
@@ -164,15 +165,21 @@ function Traveling({ truck }) {
   return (
     <div>
       <div>
-        I am currently travelling at {speed}km/h. {distanceCovered} / {distance}{" "}
+        Travelling at {speed}km/h. {distanceCovered} / {distance}{" "}
         km
       </div>
       <div
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
       >
-        <CityInline cityId={currentCityId} />
-        <ProgressBar time={totalTime} current={travelTimePassed} />
-        <CityInline cityId={nextCityId} />
+        <div>
+          <div>{getFormattedTime(new Date(startTime))}</div>
+          <CityInline cityId={currentCityId}/>
+        </div>
+        <ProgressBar time={totalTime} current={travelTimePassed} height={6}/>
+        <div>
+          <div>{getFormattedTime(new Date(arrivalTime))}</div>
+          <CityInline cityId={nextCityId}/>
+        </div>
       </div>
     </div>
   );
