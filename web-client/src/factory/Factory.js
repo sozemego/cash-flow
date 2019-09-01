@@ -43,6 +43,16 @@ const Producer = styled.div`
   flex-direction: column;
 `;
 
+const ProducerProgress = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ProductionDate = styled.div`
+  margin: 4px;
+`;
+
 const Debug = styled.div`
   cursor: pointer;
   border: 1px solid black;
@@ -53,21 +63,15 @@ export function Factory({ factory }) {
 
   const { id, name, storage, producer, cityId } = factory;
 
-  const { time } = useGameClock({ interval: 500 });
+  const { time, clock } = useGameClock({ interval: 500 });
   const minutes = producer.time;
   const ms = minutes * 1000;
 
-  let productionTimePassed = time - producer.productionStartTime;
-  if (productionTimePassed >= ms) {
-    productionTimePassed = ms;
-  }
-  if (producer.productionStartTime === -1) {
-    productionTimePassed = 0;
-  }
-  // console.log(productionTimePassed);
+  let productionTimePassed =
+    (time - producer.productionStartTime) / clock.multiplier;
 
   const productionEndTime = new Date(
-    producer.productionStartTime + productionTimePassed
+    producer.productionStartTime + ms * clock.multiplier
   );
 
   return (
@@ -88,28 +92,17 @@ export function Factory({ factory }) {
         <Producer>
           <div>
             <span> Producer [{producer.resource}] </span>
-            <span>
-              {(productionTimePassed / 1000).toFixed(0)} / {minutes}
-            </span>
+            <span>{minutes}m</span>
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-            <div style={{ margin: 4 }}>
+          <ProducerProgress>
+            <ProductionDate>
               {getFormattedTime(new Date(producer.productionStartTime))}
-            </div>
+            </ProductionDate>
             <ProgressBar current={productionTimePassed} time={ms} />
-            <div style={{ margin: 4 }}>
+            <ProductionDate>
               {getFormattedTime(productionEndTime)}
-            </div>
-          </div>
-          {/*<div style={{width: "100%", margin: "auto"}}>*/}
-          {/*  <ProgressBar current={productionTimePassed} time={ms} />*/}
-          {/*</div>*/}
+            </ProductionDate>
+          </ProducerProgress>
         </Producer>
       </div>
       {debug && <div>{JSON.stringify(factory, null, 2)}</div>}
