@@ -111,7 +111,6 @@ export function Factory({ factory }) {
         <Producer>
           <div>
             <span>
-              {" "}
               Production of 1 {producer.resource} takes {formatDuration(minutes)}
             </span>
           </div>
@@ -119,7 +118,7 @@ export function Factory({ factory }) {
             <ProductionDate>
               {getFormattedTime(new Date(producer.productionStartTime))}
             </ProductionDate>
-            <ProgressBar current={productionTimePassed} time={ms} />
+            <ProgressBar current={productionTimePassed} time={ms} height={6}/>
             <ProductionDate>
               {getFormattedTime(productionEndTime)}
             </ProductionDate>

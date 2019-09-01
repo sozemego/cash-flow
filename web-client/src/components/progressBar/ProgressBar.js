@@ -1,6 +1,6 @@
 import React from "react";
 
-export function ProgressBar({current = 0, time = 0}) {
+export function ProgressBar({current = 0, time = 0, height = 2}) {
 
 	let percent = (current / time) * 100;
 	if (isNaN(percent)) {
@@ -12,11 +12,11 @@ export function ProgressBar({current = 0, time = 0}) {
 			? {display: "none"}
 			: {
 				width: `${percent}%`,
-				border: "1px solid red"
+				border: `${height / 2}px solid red`,
 			};
 
 	return (
-		<div style={{border: "1px solid gray", height: "2px", width: "100%"}}>
+		<div style={{border: "1px solid gray", height, width: "100%"}}>
 			<div style={style}/>
 		</div>
 	);
