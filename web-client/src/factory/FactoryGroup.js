@@ -46,6 +46,7 @@ export function FactoryGroup({ factories }) {
             <GroupButton
               onClick={() => setGroupBy(val)}
               selected={val === groupBy}
+              key={val}
             >
               {val.toUpperCase()}
             </GroupButton>
