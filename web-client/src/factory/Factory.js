@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
-import { useRealClock } from "../clock/realClock";
 import { CityInline } from "../city/CityInline";
-import { getFormattedDate, getFormattedTime } from "../clock/business";
+import { getFormattedTime } from "../clock/business";
 import { useGameClock } from "../clock/gameClock";
 
 function capacityTaken(storage) {
@@ -88,6 +87,9 @@ export function Factory({ factory }) {
 
   let productionTimePassed =
     (time - producer.productionStartTime) / clock.multiplier;
+  if (productionTimePassed >= ms) {
+    productionTimePassed = ms;
+  }
 
   const productionEndTime = new Date(
     producer.productionStartTime + ms * clock.multiplier
@@ -111,14 +113,15 @@ export function Factory({ factory }) {
         <Producer>
           <div>
             <span>
-              Production of 1 {producer.resource} takes {formatDuration(minutes)}
+              Production of 1 {producer.resource} takes{" "}
+              {formatDuration(minutes)}
             </span>
           </div>
           <ProducerProgress>
             <ProductionDate>
               {getFormattedTime(new Date(producer.productionStartTime))}
             </ProductionDate>
-            <ProgressBar current={productionTimePassed} time={ms} height={6}/>
+            <ProgressBar current={productionTimePassed} time={ms} height={6} />
             <ProductionDate>
               {getFormattedTime(productionEndTime)}
             </ProductionDate>
