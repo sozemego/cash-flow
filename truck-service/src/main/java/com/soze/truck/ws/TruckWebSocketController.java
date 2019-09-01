@@ -49,12 +49,17 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message
 																	) throws Exception {
-		LOG.trace("Received message from client id {}", session.getId());
-		ClientMessage clientMessage = JsonUtils.parse(message.getPayload(), ClientMessage.class);
-		LOG.trace("Client message type = {} from client id = {}", clientMessage.getType(), session.getId());
-		if (clientMessage.getType() == ClientMessage.ClientMessageType.TRUCK_TRAVEL_REQUEST) {
-			TruckTravelRequest truckTravelRequest = (TruckTravelRequest) clientMessage;
-			truckService.travel(truckTravelRequest.getTruckId(), truckTravelRequest.getDestinationCityId());
+		try {
+			LOG.trace("Received message from client id {}", session.getId());
+			ClientMessage clientMessage = JsonUtils.parse(message.getPayload(), ClientMessage.class);
+			LOG.trace("Client message type = {} from client id = {}", clientMessage.getType(), session.getId());
+			if (clientMessage.getType() == ClientMessage.ClientMessageType.TRUCK_TRAVEL_REQUEST) {
+				TruckTravelRequest truckTravelRequest = (TruckTravelRequest) clientMessage;
+				truckService.travel(truckTravelRequest.getTruckId(), truckTravelRequest.getDestinationCityId());
+			}
+		} catch (Exception e) {
+			LOG.info("Exception during message handling", e);
 		}
+
 	}
 }
