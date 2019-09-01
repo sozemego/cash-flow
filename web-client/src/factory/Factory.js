@@ -58,6 +58,25 @@ const Debug = styled.div`
   border: 1px solid black;
 `;
 
+function formatDuration(minutes) {
+  let hours = 0;
+  while (minutes >= 60) {
+    hours += 1;
+    minutes -= 60;
+  }
+
+  const pluralHours = hours === 0 || hours > 1;
+  const pluralMinutes = minutes === 0 || minutes > 1;
+
+  if (minutes === 0) {
+    return `${hours} hour${pluralHours ? "s" : ""}`;
+  }
+
+  return `${hours} hour${pluralHours ? "s" : ""} and ${minutes} minute${
+    pluralMinutes ? "s" : ""
+  }`;
+}
+
 export function Factory({ factory }) {
   const [debug, setDebug] = useState(false);
 
@@ -91,8 +110,10 @@ export function Factory({ factory }) {
         <Divider />
         <Producer>
           <div>
-            <span> Producer [{producer.resource}] </span>
-            <span>{minutes}m</span>
+            <span>
+              {" "}
+              Production of 1 {producer.resource} takes {formatDuration(minutes)}
+            </span>
           </div>
           <ProducerProgress>
             <ProductionDate>
