@@ -17,6 +17,7 @@ export function useGameClock({ interval }) {
 		}
 	}, [ clock.multiplier ]);
 
-	useRealClock({ interval });
-	return { clock, time: getCurrentGameDate(clock) };
+	const { time } = useRealClock({ interval });
+	const gameDate = getCurrentGameDate(clock);
+	return { clock, date: gameDate, time: gameDate.getTime(),  realTime: time };
 }
