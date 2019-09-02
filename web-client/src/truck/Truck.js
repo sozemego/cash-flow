@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled, {css} from "styled-components";
+import styled, { css } from "styled-components";
 import { CityInline } from "../city/CityInline";
 import { useGetCities, useGetHighlightedCity } from "../city/selectors";
 import { createTruckTravelMessage } from "./message";
@@ -12,8 +12,16 @@ const Container = styled.div`
   margin: 2px;
   padding: 12px;
   border: dotted gray 1px;
-  ${props => props.highlighted && css`background: #E0E0E0;`}
-  ${props => props.next && css`background: #CCFFFF;`}
+  ${props =>
+    props.highlighted &&
+    css`
+      background: #e0e0e0;
+    `}
+  ${props =>
+    props.next &&
+    css`
+      background: #ccffff;
+    `}
 `;
 
 const Header = styled.div`
@@ -46,13 +54,17 @@ export function Truck({ truck }) {
   const { currentCityId, nextCityId } = navigation;
 
   return (
-    <Container highlighted={highlightedCityId === currentCityId} next={nextCityId && nextCityId === highlightedCityId}>
+    <Container
+      highlighted={highlightedCityId === currentCityId}
+      next={nextCityId && nextCityId === highlightedCityId}
+    >
       <Header>
         <Id>{id}</Id>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
       </Header>
       <span>
-				{name} {nextCityId ? "travelling to " : "in "}<CityInline cityId={nextCityId || currentCityId}/>
+        {name} {nextCityId ? "travelling to " : "in "}
+        <CityInline cityId={nextCityId || currentCityId} />
       </span>
       <Divider />
       {!nextCityId && <TravelTo truck={truck} />}

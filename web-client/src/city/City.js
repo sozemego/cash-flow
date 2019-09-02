@@ -38,7 +38,10 @@ export function City({ city }) {
   const { id, name, factorySlots } = city;
 
   return (
-    <Container onMouseEnter={() => dispatch(cityHighlighted(id))} onMouseLeave={() => dispatch(cityHighlighted(null))}>
+    <Container
+      onMouseEnter={() => dispatch(cityHighlighted(id))}
+      onMouseLeave={() => dispatch(cityHighlighted(null))}
+    >
       <Header>
         <Id>{id}</Id>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
