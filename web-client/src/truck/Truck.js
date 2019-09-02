@@ -84,8 +84,6 @@ export function TravelTo({ truck }) {
   const { id, speed, navigation } = truck;
   const {
     currentCityId,
-    travelStartTime,
-    arrivalTime,
     nextCityId
   } = navigation;
   const allCities = useGetCities();
@@ -104,9 +102,9 @@ export function TravelTo({ truck }) {
     if (!nextCityId && cityArray.length > 0) {
       setCityToTravelToId(cityArray[0].id);
     }
-  }, [nextCityId]);
+  }, [nextCityId, allCities]);
 
-  const cities = Object.values(allCities).filter(
+  const citiesToTravelTo = Object.values(allCities).filter(
     city => city.id !== currentCityId
   );
   const currentCity = allCities[currentCityId];
@@ -123,7 +121,7 @@ export function TravelTo({ truck }) {
         value={cityToTravelToId}
         onChange={e => setCityToTravelToId(e.target.value)}
       >
-        {cities.map(city => (
+        {citiesToTravelTo.map(city => (
           <option
             key={city.id}
             onClick={() => setCityToTravelToId(city.id)}

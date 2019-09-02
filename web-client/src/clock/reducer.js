@@ -8,6 +8,8 @@ const initialState = {
 export function reducer(state = initialState, action) {
 	switch (action.type) {
 		case CLOCK_FETCHED: return clockFetched(state, action);
+		default:
+			break;
 	}
 	return state;
 }
