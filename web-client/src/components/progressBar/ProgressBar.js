@@ -12,7 +12,8 @@ export function ProgressBar({current = 0, time = 0, height = 2}) {
 			? {display: "none"}
 			: {
 				width: `${percent}%`,
-				border: `${height / 2}px solid red`,
+				borderTop: `${height / 2}px solid red`,
+				borderBottom: `${height / 2}px solid red`,
 			};
 
 	return (
