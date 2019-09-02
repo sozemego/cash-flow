@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled, {css} from "styled-components";
+import styled, { css } from "styled-components";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { CityInline } from "../city/CityInline";
 import { getFormattedTime } from "../clock/business";
@@ -21,6 +21,11 @@ const Container = styled.div`
   margin: 2px;
   padding: 12px;
   border: dotted gray 1px;
+  ${props =>
+    props.highlighted &&
+    css`
+      background: #E0E0E0;
+    `}
 `;
 
 const Header = styled.div`
@@ -82,6 +87,7 @@ function formatDuration(minutes) {
 export function Factory({ factory }) {
   const [debug, setDebug] = useState(false);
   const dispatch = useDispatch();
+  const highlightedCityId = useGetHighlightedCity();
   const { id, name, storage, producer, cityId } = factory;
 
   const { time, clock } = useGameClock({ interval: 500 });
@@ -99,7 +105,11 @@ export function Factory({ factory }) {
   );
 
   return (
-    <Container onMouseEnter={() => dispatch(cityHighlighted(cityId))} onMouseLeave={() => dispatch(cityHighlighted(null))}>
+    <Container
+      onMouseEnter={() => dispatch(cityHighlighted(cityId))}
+      onMouseLeave={() => dispatch(cityHighlighted(null))}
+      highlighted={highlightedCityId === cityId}
+    >
       <Header>
         <Id>{id}</Id>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>

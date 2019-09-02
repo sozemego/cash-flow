@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { cityHighlighted } from "./actions";
 
 const Container = styled.div`
   margin: 2px;
@@ -31,11 +33,12 @@ const Debug = styled.div`
 
 export function City({ city }) {
   const [debug, setDebug] = useState(false);
+  const dispatch = useDispatch();
 
   const { id, name, factorySlots } = city;
 
   return (
-    <Container>
+    <Container onMouseEnter={() => dispatch(cityHighlighted(id))} onMouseLeave={() => dispatch(cityHighlighted(null))}>
       <Header>
         <Id>{id}</Id>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
