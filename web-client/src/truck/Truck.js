@@ -49,7 +49,7 @@ export function Truck({ truck }) {
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
       </Header>
       <span>
-        {name} at <CityInline cityId={currentCityId} />
+				{name} {nextCityId ? "travelling to " : "in "}<CityInline cityId={nextCityId || currentCityId}/>
       </span>
       <Divider />
       {!nextCityId && <TravelTo truck={truck} />}
@@ -82,31 +82,21 @@ function calculateDistance(from, to) {
 
 export function TravelTo({ truck }) {
   const { id, speed, navigation } = truck;
-  const {
-    currentCityId,
-    nextCityId
-  } = navigation;
-  const allCities = useGetCities();
-  const [cityToTravelToId, setCityToTravelToId] = useState("");
+  const { currentCityId, nextCityId } = navigation;
   const { socket } = useTruckSocket();
 
-  useEffect(() => {
-    const cityArray = Object.values(allCities);
-    if (cityArray.length > 0) {
-      setCityToTravelToId(cityArray[0].id);
-    }
-  }, [allCities]);
-
-  useEffect(() => {
-    const cityArray = Object.values(allCities);
-    if (!nextCityId && cityArray.length > 0) {
-      setCityToTravelToId(cityArray[0].id);
-    }
-  }, [nextCityId, allCities]);
-
+  const allCities = useGetCities();
+  const [cityToTravelToId, setCityToTravelToId] = useState("");
   const citiesToTravelTo = Object.values(allCities).filter(
     city => city.id !== currentCityId
   );
+
+  useEffect(() => {
+    if (!cityToTravelToId && !nextCityId && citiesToTravelTo.length > 0) {
+      setCityToTravelToId(citiesToTravelTo[0].id);
+    }
+  }, [cityToTravelToId, citiesToTravelTo, nextCityId]);
+
   const currentCity = allCities[currentCityId];
   const cityToTravelTo = allCities[cityToTravelToId];
 
@@ -163,20 +153,19 @@ function Traveling({ truck }) {
   return (
     <div>
       <div>
-        Travelling at {speed}km/h. {distanceCovered} / {distance}{" "}
-        km
+        Travelling at {speed}km/h. {distanceCovered} / {distance} km
       </div>
       <div
         style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
       >
         <div>
           <div>{getFormattedTime(new Date(startTime))}</div>
-          <CityInline cityId={currentCityId}/>
+          <CityInline cityId={currentCityId} />
         </div>
-        <ProgressBar time={totalTime} current={travelTimePassed} height={6}/>
+        <ProgressBar time={totalTime} current={travelTimePassed} height={6} />
         <div>
           <div>{getFormattedTime(new Date(arrivalTime))}</div>
-          <CityInline cityId={nextCityId}/>
+          <CityInline cityId={nextCityId} />
         </div>
       </div>
     </div>
