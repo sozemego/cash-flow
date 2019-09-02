@@ -155,7 +155,7 @@ function Traveling({ truck }) {
   const { navigation, speed } = truck;
   const { currentCityId, nextCityId, arrivalTime, startTime } = navigation;
 
-  const { time } = useGameClock({ interval: 5000 });
+  const { time } = useGameClock({ interval: 1000 });
   let travelTimePassed = time - startTime;
   const totalTime = arrivalTime - startTime;
 
