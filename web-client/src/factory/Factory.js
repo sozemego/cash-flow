@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { CityInline } from "../city/CityInline";
 import { getFormattedTime } from "../clock/business";
 import { useGameClock } from "../clock/gameClock";
+import { useGetHighlightedCity } from "../city/selectors";
+import { useDispatch } from "react-redux";
+import { cityHighlighted } from "../city/actions";
 
 function capacityTaken(storage) {
   const { resources } = storage;
@@ -78,7 +81,7 @@ function formatDuration(minutes) {
 
 export function Factory({ factory }) {
   const [debug, setDebug] = useState(false);
-
+  const dispatch = useDispatch();
   const { id, name, storage, producer, cityId } = factory;
 
   const { time, clock } = useGameClock({ interval: 500 });
@@ -96,7 +99,7 @@ export function Factory({ factory }) {
   );
 
   return (
-    <Container>
+    <Container onMouseEnter={() => dispatch(cityHighlighted(cityId))} onMouseLeave={() => dispatch(cityHighlighted(null))}>
       <Header>
         <Id>{id}</Id>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>

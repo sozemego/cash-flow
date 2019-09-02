@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import { CityInline } from "../city/CityInline";
-import { useGetCities } from "../city/selectors";
+import { useGetCities, useGetHighlightedCity } from "../city/selectors";
 import { createTruckTravelMessage } from "./message";
 import { useTruckSocket } from "./useTruckSocket";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
@@ -12,6 +12,8 @@ const Container = styled.div`
   margin: 2px;
   padding: 12px;
   border: dotted gray 1px;
+  ${props => props.highlighted && css`background: #E0E0E0;`}
+  ${props => props.next && css`background: #CCFFFF;`}
 `;
 
 const Header = styled.div`
@@ -38,12 +40,13 @@ const Debug = styled.div`
 
 export function Truck({ truck }) {
   const [debug, setDebug] = useState(false);
+  const highlightedCityId = useGetHighlightedCity();
 
   const { id, name, navigation } = truck;
   const { currentCityId, nextCityId } = navigation;
 
   return (
-    <Container>
+    <Container highlighted={highlightedCityId === currentCityId} next={nextCityId && nextCityId === highlightedCityId}>
       <Header>
         <Id>{id}</Id>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
