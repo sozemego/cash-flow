@@ -7,7 +7,9 @@ import { useTruckSocket } from "./useTruckSocket";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { getFormattedTime } from "../clock/business";
 import { useGameClock } from "../clock/gameClock";
-import { Storage } from "../components/storage";
+import { calculateCapacityTaken, Storage } from "../components/Storage";
+import { useGetFactories } from "../factory/selectors";
+import { ResourceIcon } from "../components/ResourceIcon";
 
 const Container = styled.div`
   margin: 2px;
@@ -68,8 +70,14 @@ export function Truck({ truck }) {
         <CityInline cityId={nextCityId || currentCityId} />
       </span>
       <Divider />
-      <Storage storage={storage}/>
-      <Divider/>
+      <Storage storage={storage} />
+      <Divider />
+      {!nextCityId && (
+        <>
+          <Buy truck={truck} cityId={currentCityId} />
+          <Divider />
+        </>
+      )}
       {!nextCityId && <TravelTo truck={truck} />}
       {nextCityId && <Traveling truck={truck} />}
       {debug && <div>{JSON.stringify(truck, null, 2)}</div>}
@@ -187,5 +195,60 @@ function Traveling({ truck }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function aggregateResources(factories) {
+  const resources = {};
+  factories.forEach(factory => {
+    const { storage } = factory;
+    Object.entries(storage.resources).forEach(([resource, count]) => {
+      const previousCount = resources[resource] || 0;
+      resources[resource] = previousCount + count;
+    });
+  });
+  return Object.entries(resources).map(([resource, count]) => ({
+    resource,
+    count
+  }));
+}
+
+const BuyContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const BuyableResourceContainer = styled.div`
+  display: flex;
+  align-items: center;
+  border-right: 1px dashed gray;
+`;
+
+export function Buy({ truck, cityId }) {
+  const allFactories = Object.values(useGetFactories());
+  const factoriesInCity = allFactories.filter(
+    factory => factory.cityId === cityId
+  );
+
+  const aggregatedResources = aggregateResources(factoriesInCity);
+  const capacity = truck.storage.capacity;
+  const capacityTaken = calculateCapacityTaken(truck.storage);
+
+  return (
+    <BuyContainer>
+      {aggregatedResources.map(({ resource, count }) => (
+        <BuyableResourceContainer key={resource}>
+          <span>{count}</span>
+          <ResourceIcon resource={resource} />
+          <input
+            type={"number"}
+            max={Math.min(capacity - capacityTaken, count)}
+            min={0}
+            style={{ width: "48px" }}
+          />
+          <button>BUY!</button>
+        </BuyableResourceContainer>
+      ))}
+    </BuyContainer>
   );
 }

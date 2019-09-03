@@ -7,7 +7,7 @@ import { useGameClock } from "../clock/gameClock";
 import { useGetHighlightedCity } from "../city/selectors";
 import { useDispatch } from "react-redux";
 import { cityHighlighted } from "../city/actions";
-import { Storage } from "../components/storage";
+import { Storage } from "../components/Storage";
 
 const Container = styled.div`
   margin: 2px;

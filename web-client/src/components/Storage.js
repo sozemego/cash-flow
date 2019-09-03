@@ -1,5 +1,6 @@
 import React from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
+import { ResourceIcon } from "./ResourceIcon";
 
 const Container = styled.div`
   color: gray;
@@ -18,12 +19,12 @@ const Empty = styled.div`
 `;
 
 const Resource = styled.div`
-border: 1px dotted gray;
-              display: flex;
-              align-items: center;
+  border: 1px dotted gray;
+  display: flex;
+  align-items: center;
 `;
 
-function capacityTaken(storage) {
+export function calculateCapacityTaken(storage) {
   const { resources } = storage;
   let capacityTaken = 0;
   Object.values(resources).forEach(taken => {
@@ -43,18 +44,13 @@ export function Storage({ storage }) {
     <div>
       <Container>Storage</Container>
       <div>
-        Capacity {capacityTaken(storage)} / {storage.capacity}
+        Capacity {calculateCapacityTaken(storage)} / {storage.capacity}
       </div>
       <ResourcesContainer>
-        {resourceCounts.length === 0 && (
-          <Empty>Empty</Empty>
-        )}
+        {resourceCounts.length === 0 && <Empty>Empty</Empty>}
         {resourceCounts.map(({ resource, count }) => (
           <Resource key={resource}>
-            <img
-              src={`/img/resources/${resource}.png`} alt={resource}
-              style={{ width: "48px" }}
-            />
+            <ResourceIcon resource={resource} />
             <span>{count}</span>
           </Resource>
         ))}
