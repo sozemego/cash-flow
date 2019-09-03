@@ -1,4 +1,27 @@
 import React from "react";
+import styled from 'styled-components';
+
+const Container = styled.div`
+  color: gray;
+  font-size: 0.85rem;
+`;
+
+const ResourcesContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  min-height: 60px;
+`;
+
+const Empty = styled.div`
+  color: gray;
+  font-size: 0.75rem;
+`;
+
+const Resource = styled.div`
+border: 1px dotted gray;
+              display: flex;
+              align-items: center;
+`;
 
 function capacityTaken(storage) {
   const { resources } = storage;
@@ -18,31 +41,24 @@ export function Storage({ storage }) {
 
   return (
     <div>
-      <div style={{ color: "gray", fontSize: "0.85rem" }}>Storage</div>
+      <Container>Storage</Container>
       <div>
         Capacity {capacityTaken(storage)} / {storage.capacity}
       </div>
-      <div style={{ display: "flex", flexDirection: "row", minHeight: "64px" }}>
+      <ResourcesContainer>
         {resourceCounts.length === 0 && (
-          <div style={{ color: "gray", fontSize: "0.75rem" }}>Empty</div>
+          <Empty>Empty</Empty>
         )}
         {resourceCounts.map(({ resource, count }) => (
-          <div
-            style={{
-              border: "1px dotted gray",
-              display: "flex",
-              alignItems: "center"
-            }}
-						key={resource}
-          >
+          <Resource key={resource}>
             <img
               src={`/img/resources/${resource}.png`} alt={resource}
               style={{ width: "48px" }}
             />
             <span>{count}</span>
-          </div>
+          </Resource>
         ))}
-      </div>
+      </ResourcesContainer>
     </div>
   );
 }
