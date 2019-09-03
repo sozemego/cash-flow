@@ -7,6 +7,7 @@ import { useTruckSocket } from "./useTruckSocket";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { getFormattedTime } from "../clock/business";
 import { useGameClock } from "../clock/gameClock";
+import { Storage } from "../components/storage";
 
 const Container = styled.div`
   margin: 2px;
@@ -50,7 +51,7 @@ export function Truck({ truck }) {
   const [debug, setDebug] = useState(false);
   const highlightedCityId = useGetHighlightedCity();
 
-  const { id, name, navigation } = truck;
+  const { id, name, navigation, storage } = truck;
   const { currentCityId, nextCityId } = navigation;
 
   return (
@@ -67,6 +68,8 @@ export function Truck({ truck }) {
         <CityInline cityId={nextCityId || currentCityId} />
       </span>
       <Divider />
+      <Storage storage={storage}/>
+      <Divider/>
       {!nextCityId && <TravelTo truck={truck} />}
       {nextCityId && <Traveling truck={truck} />}
       {debug && <div>{JSON.stringify(truck, null, 2)}</div>}

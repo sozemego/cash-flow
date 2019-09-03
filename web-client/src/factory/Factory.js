@@ -7,15 +7,7 @@ import { useGameClock } from "../clock/gameClock";
 import { useGetHighlightedCity } from "../city/selectors";
 import { useDispatch } from "react-redux";
 import { cityHighlighted } from "../city/actions";
-
-function capacityTaken(storage) {
-  const { resources } = storage;
-  let capacityTaken = 0;
-  Object.values(resources).forEach(taken => {
-    capacityTaken += taken;
-  });
-  return capacityTaken;
-}
+import { Storage } from "../components/storage";
 
 const Container = styled.div`
   margin: 2px;
@@ -24,7 +16,7 @@ const Container = styled.div`
   ${props =>
     props.highlighted &&
     css`
-      background: #E0E0E0;
+      background: #e0e0e0;
     `}
 `;
 
@@ -118,11 +110,9 @@ export function Factory({ factory }) {
         {name} at <CityInline cityId={cityId} />
       </div>
       <Divider />
+      <Storage storage={storage} />
+      <Divider />
       <div>
-        Storage - [{capacityTaken(storage)} / {storage.capacity}]
-      </div>
-      <div>
-        <Divider />
         <Producer>
           <div>
             <span>
