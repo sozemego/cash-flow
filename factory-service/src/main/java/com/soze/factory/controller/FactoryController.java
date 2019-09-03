@@ -1,7 +1,9 @@
 package com.soze.factory.controller;
 
 import com.soze.common.dto.FactoryDTO;
+import com.soze.common.dto.Resource;
 import com.soze.factory.FactoryConverter;
+import com.soze.factory.domain.SellResult;
 import com.soze.factory.service.FactoryService;
 import com.soze.factory.service.FactoryTemplateLoader;
 import io.swagger.annotations.Api;
@@ -9,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
@@ -38,10 +42,8 @@ public class FactoryController {
 	@GetMapping(value = "/")
 	public List<FactoryDTO> getFactories() {
 		LOG.info("Calling getFactories");
-		List<FactoryDTO> factoryDTOS = factoryService.getFactories()
-																								 .stream()
-																								 .map(factoryConverter::convert)
-																								 .collect(Collectors.toList());
+		List<FactoryDTO> factoryDTOS = factoryService.getFactories().stream().map(factoryConverter::convert).collect(
+			Collectors.toList());
 		LOG.info("Returning {} factories", factoryDTOS.size());
 		return factoryDTOS;
 	}
@@ -52,6 +54,22 @@ public class FactoryController {
 		File entities = factoryTemplateLoader.getEntities();
 		List<String> list = Files.readAllLines(entities.toPath());
 		return String.join("\n", list);
+	}
+
+	@PostMapping(value = "/sell")
+	public SellResult sell(@RequestParam("factoryId") String factoryId, @RequestParam("resource") String resourceStr,
+												 @RequestParam("count") Integer count
+												) {
+		LOG.info("Called /sell endpoint, factoryId = {}, resource = {}, count = {}", factoryId, resourceStr, count);
+		Resource resource = Resource.valueOf(resourceStr);
+		try {
+			factoryService.sell(factoryId, resource, count);
+			return new SellResult(factoryId, resource, count);
+		} catch (Exception e) {
+			LOG.warn("Exception when trying to sell resource", e);
+			return new SellResult(factoryId, resource, 0);
+		}
+
 	}
 
 }

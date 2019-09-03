@@ -34,21 +34,29 @@ public class Storage {
 	}
 
 	public void removeResource(Resource resource) {
-		if (!hasResource(resource)) {
+		removeResource(resource, 1);
+	}
+
+	public void removeResource(Resource resource, final int count) {
+		if (!hasResource(resource, count)) {
 			return;
 		}
 
-		resources.compute(resource, (res, count) -> {
-			if (count > 0) {
-				return --count;
+		resources.compute(resource, (res, actualCount) -> {
+			if (actualCount >= count) {
+				return actualCount - count;
 			}
 			return count;
 		});
-		capacityTaken -= 1;
+		capacityTaken -= count;
 	}
 
 	public boolean hasResource(Resource resource) {
-		return resources.getOrDefault(resource, 0) > 0;
+		return hasResource(resource, 1);
+	}
+
+	public boolean hasResource(Resource resource, int count) {
+		return resources.getOrDefault(resource, 0) >= count;
 	}
 
 	public int getCapacity() {

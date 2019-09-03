@@ -2,6 +2,7 @@ package com.soze.factory.service;
 
 import com.soze.clock.domain.Clock;
 import com.soze.common.dto.CityDTO;
+import com.soze.common.dto.Resource;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.server.FactoryAdded;
 import com.soze.common.message.server.ResourceProduced;
@@ -97,9 +98,8 @@ public class FactoryService {
 		if (factory.getStorage() == null) {
 			throw new IllegalArgumentException("Factory cannot have null storage");
 		}
-		Optional<Factory> previousFactory = this.factories.stream()
-																											.filter(filteredFactory -> factory.getId().equals(filteredFactory.getId()))
-																											.findFirst();
+		Optional<Factory> previousFactory = this.factories.stream().filter(
+			filteredFactory -> factory.getId().equals(filteredFactory.getId())).findFirst();
 
 		if (previousFactory.isPresent()) {
 			throw new IllegalArgumentException("Factory with id = " + factory.getId() + " already exists");
@@ -115,7 +115,9 @@ public class FactoryService {
 		producer.startProduction(clock);
 		long minutes = producer.getTime();
 		long timeRemaining = TimeUnit.MINUTES.toMillis(minutes) / clock.getMultiplier();
-		LOG.info("Starting production of {} at factory = {}, it will finish in {} ms", producer.getResource(), factory.getId(), timeRemaining);
+		LOG.info("Starting production of {} at factory = {}, it will finish in {} ms", producer.getResource(),
+						 factory.getId(), timeRemaining
+						);
 		executorService.schedule(() -> {
 			finishProducing(factory);
 			startProducing(factory);
@@ -176,6 +178,26 @@ public class FactoryService {
 		for (WebSocketSession session : sessions) {
 			sendTo(textMessage, session);
 		}
+	}
+
+	public Optional<Factory> getFactoryById(String factoryId) {
+		Objects.requireNonNull(factoryId);
+		return factories.stream().filter(factory -> factory.getId().equals(factoryId)).findFirst();
+	}
+
+	public void sell(String factoryId, Resource resource, int count) {
+		LOG.info("Attempting to sell {} of {} from factoryId = {}", count, resource, factoryId);
+		Factory factory = getFactoryById(factoryId).orElseThrow(
+			() -> new IllegalStateException("Factory with id " + factoryId + " does not exist"));
+
+		Storage storage = factory.getStorage();
+		boolean hasResource = storage.hasResource(resource, count);
+		if (!hasResource) {
+			throw new IllegalStateException(
+				"Factory with id = " + factoryId + ", does not have " + count + " of " + resource);
+		}
+		storage.removeResource(resource, count);
+		LOG.info("Removed {} of {} from factoryId = {}", count, resource, factory.getId());
 	}
 
 }

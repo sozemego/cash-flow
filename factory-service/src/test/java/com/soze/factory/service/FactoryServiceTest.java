@@ -1,6 +1,7 @@
 package com.soze.factory.service;
 
 import com.soze.clock.domain.Clock;
+import com.soze.common.dto.Resource;
 import com.soze.common.message.server.FactoryAdded;
 import com.soze.common.message.server.ResourceProductionStarted;
 import com.soze.common.message.server.ServerMessage;
@@ -125,6 +126,19 @@ class FactoryServiceTest {
 	@Test
 	public void addFactory_nullFactory() {
 		Assertions.assertThrows(NullPointerException.class, () -> this.factoryService.addFactory(null));
+	}
+
+	@Test
+	public void sell_factoryMustExist() {
+		Assertions.assertThrows(IllegalStateException.class, () -> this.factoryService.sell("factoryId", Resource.WOOD, 1));
+	}
+
+	@Test
+	public void sell_factoryMustHaveEnoughResources() {
+		Factory factory = this.factoryTemplateLoader.constructFactoryByTemplateId("FORESTER");
+		factory.setCityId("cityId");
+		factory.setId("factoryId");
+		Assertions.assertThrows(IllegalStateException.class, () -> this.factoryService.sell(factory.getId(), Resource.WOOD, 1));
 	}
 
 	private void sleep(long ms) throws InterruptedException {
