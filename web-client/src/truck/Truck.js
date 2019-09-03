@@ -198,19 +198,15 @@ function Traveling({ truck }) {
   );
 }
 
-function aggregateResources(factories) {
-  const resources = {};
-  factories.forEach(factory => {
-    const { storage } = factory;
-    Object.entries(storage.resources).forEach(([resource, count]) => {
-      const previousCount = resources[resource] || 0;
-      resources[resource] = previousCount + count;
-    });
-  });
-  return Object.entries(resources).map(([resource, count]) => ({
-    resource,
-    count
-  }));
+function getResourceList(factories) {
+	const resources = [];
+	factories.forEach(factory => {
+		const { storage } = factory;
+		Object.entries(storage.resources).forEach(([resource, count]) => {
+			resources.push({factoryId: factory.id, resource, count});
+		});
+	});
+	return resources;
 }
 
 const BuyContainer = styled.div`
@@ -230,14 +226,14 @@ export function Buy({ truck, cityId }) {
     factory => factory.cityId === cityId
   );
 
-  const aggregatedResources = aggregateResources(factoriesInCity);
+  const resources = getResourceList(factoriesInCity);
   const capacity = truck.storage.capacity;
   const capacityTaken = calculateCapacityTaken(truck.storage);
 
   return (
     <BuyContainer>
-      {aggregatedResources.map(({ resource, count }) => (
-        <BuyableResourceContainer key={resource}>
+      {resources.map(({ factoryId, resource, count }) => (
+        <BuyableResourceContainer key={factoryId}>
           <span>{count}</span>
           <ResourceIcon resource={resource} />
           <input
