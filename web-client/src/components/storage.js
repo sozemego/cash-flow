@@ -33,6 +33,7 @@ export function Storage({ storage }) {
               display: "flex",
               alignItems: "center"
             }}
+						key={resource}
           >
             <img
               src={`/img/resources/${resource}.png`} alt={resource}
