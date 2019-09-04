@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { CityInline } from "../city/CityInline";
 import { useGetCities, useGetHighlightedCity } from "../city/selectors";
-import { createTruckTravelMessage } from "./message";
+import {
+  createBuyResourceRequestMessage,
+  createTruckTravelMessage
+} from "./message";
 import { useTruckSocket } from "./useTruckSocket";
 import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { getFormattedTime } from "../clock/business";
@@ -199,14 +202,14 @@ function Traveling({ truck }) {
 }
 
 function getResourceList(factories) {
-	const resources = [];
-	factories.forEach(factory => {
-		const { storage } = factory;
-		Object.entries(storage.resources).forEach(([resource, count]) => {
-			resources.push({factoryId: factory.id, resource, count});
-		});
-	});
-	return resources;
+  const resources = [];
+  factories.forEach(factory => {
+    const { storage } = factory;
+    Object.entries(storage.resources).forEach(([resource, count]) => {
+      resources.push({ factoryId: factory.id, resource, count });
+    });
+  });
+  return resources;
 }
 
 const BuyContainer = styled.div`
@@ -227,24 +230,57 @@ export function Buy({ truck, cityId }) {
   );
 
   const resources = getResourceList(factoriesInCity);
+
+  return (
+    <BuyContainer>
+      {resources.map(({ factoryId, resource, count }) => {
+        return (
+          <FactoryResource
+            key={factoryId}
+            factoryId={factoryId}
+            resource={resource}
+            truck={truck}
+            count={count}
+          />
+        );
+      })}
+    </BuyContainer>
+  );
+}
+
+export function FactoryResource({ truck, resource, count, factoryId }) {
+  const { socket } = useTruckSocket();
+  const [selectedCount, setSelectedCount] = useState(0);
+
   const capacity = truck.storage.capacity;
   const capacityTaken = calculateCapacityTaken(truck.storage);
 
   return (
-    <BuyContainer>
-      {resources.map(({ factoryId, resource, count }) => (
-        <BuyableResourceContainer key={factoryId}>
-          <span>{count}</span>
-          <ResourceIcon resource={resource} />
-          <input
-            type={"number"}
-            max={Math.min(capacity - capacityTaken, count)}
-            min={0}
-            style={{ width: "48px" }}
-          />
-          <button>BUY!</button>
-        </BuyableResourceContainer>
-      ))}
-    </BuyContainer>
+    <BuyableResourceContainer>
+      <span>{count}</span>
+      <ResourceIcon resource={resource} />
+      <input
+        type={"number"}
+        max={Math.min(capacity - capacityTaken, count)}
+        min={0}
+        style={{ width: "48px" }}
+        value={selectedCount}
+        onChange={e => setSelectedCount(e.target.value)}
+      />
+      <button
+        onClick={() =>
+          socket.send(
+            createBuyResourceRequestMessage(
+              truck.id,
+              factoryId,
+              resource,
+              selectedCount
+            )
+          )
+        }
+      >
+        BUY!
+      </button>
+    </BuyableResourceContainer>
   );
 }

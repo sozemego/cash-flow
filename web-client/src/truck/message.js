@@ -4,3 +4,8 @@ export function createTruckTravelMessage(truckId, destinationCityId) {
   const messageId = uuid();
   return JSON.stringify({ messageId, truckId, destinationCityId, type: "TRUCK_TRAVEL_REQUEST" });
 }
+
+export function createBuyResourceRequestMessage(truckId, factoryId, resource, count) {
+  const messageId = uuid();
+  return JSON.stringify({ messageId, truckId, factoryId, resource, count, type: "BUY_RESOURCE_REQUEST" });
+}
