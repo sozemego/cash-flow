@@ -28,7 +28,7 @@ public abstract class ClientMessage {
 	public abstract ClientMessageType getType();
 
 	public enum ClientMessageType {
-		TRUCK_TRAVEL_REQUEST
+		TRUCK_TRAVEL_REQUEST, BUY_RESOURCE_REQUEST
 	}
 
 }
