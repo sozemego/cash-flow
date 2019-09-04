@@ -1,6 +1,7 @@
 package com.soze.truck.ws;
 
 import com.soze.common.json.JsonUtils;
+import com.soze.common.message.client.BuyResourceRequest;
 import com.soze.common.message.client.ClientMessage;
 import com.soze.common.message.client.TruckTravelRequest;
 import com.soze.truck.service.TruckService;
@@ -53,9 +54,18 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 			LOG.trace("Received message from client id {}", session.getId());
 			ClientMessage clientMessage = JsonUtils.parse(message.getPayload(), ClientMessage.class);
 			LOG.trace("Client message type = {} from client id = {}", clientMessage.getType(), session.getId());
+
 			if (clientMessage.getType() == ClientMessage.ClientMessageType.TRUCK_TRAVEL_REQUEST) {
 				TruckTravelRequest truckTravelRequest = (TruckTravelRequest) clientMessage;
 				truckService.travel(truckTravelRequest.getTruckId(), truckTravelRequest.getDestinationCityId());
+			}
+
+			if (clientMessage.getType() == ClientMessage.ClientMessageType.BUY_RESOURCE_REQUEST) {
+				BuyResourceRequest buyResourceRequest = (BuyResourceRequest) clientMessage;
+				truckService.buyResource(
+					buyResourceRequest.getTruckId(), buyResourceRequest.getFactoryId(), buyResourceRequest.getResource(),
+					buyResourceRequest.getCount()
+																);
 			}
 		} catch (Exception e) {
 			LOG.info("Exception during message handling", e);
