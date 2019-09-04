@@ -10,7 +10,8 @@ import java.util.UUID;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
 @JsonSubTypes(value = {
-	@JsonSubTypes.Type(value = TruckTravelRequest.class, name = "TRUCK_TRAVEL_REQUEST")
+	@JsonSubTypes.Type(value = TruckTravelRequest.class, name = "TRUCK_TRAVEL_REQUEST"),
+	@JsonSubTypes.Type(value = BuyResourceRequest.class, name = "BUY_RESOURCE_REQUEST")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class ClientMessage {
