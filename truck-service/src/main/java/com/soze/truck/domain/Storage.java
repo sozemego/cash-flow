@@ -17,38 +17,54 @@ public class Storage {
 	}
 
 	public void addResource(Resource resource) {
-		if (!canFit(resource)) {
+		addResource(resource, 1);
+	}
+
+	public void addResource(Resource resource, final int count) {
+		if (!canFit(resource, count)) {
 			return;
 		}
-		resources.compute(resource, (res, count) -> {
-			if (count == null) {
-				return 1;
+		resources.compute(resource, (res, actualCount) -> {
+			if (actualCount == null) {
+				return count;
 			}
-			return ++count;
+			return actualCount + count;
 		});
-		capacityTaken += 1;
+		capacityTaken += count;
 	}
 
 	public boolean canFit(Resource resource) {
-		return capacityTaken < capacity;
+		return canFit(resource, 1);
+	}
+
+	public boolean canFit(Resource resource, int count) {
+		return capacityTaken + count <= capacity;
 	}
 
 	public void removeResource(Resource resource) {
-		if (!hasResource(resource)) {
+		removeResource(resource, 1);
+	}
+
+	public void removeResource(Resource resource, final int count) {
+		if (!hasResource(resource, count)) {
 			return;
 		}
 
-		resources.compute(resource, (res, count) -> {
-			if (count > 0) {
-				return --count;
+		resources.compute(resource, (res, actualCount) -> {
+			if (actualCount >= count) {
+				return actualCount - count;
 			}
 			return count;
 		});
-		capacityTaken -= 1;
+		capacityTaken -= count;
 	}
 
 	public boolean hasResource(Resource resource) {
-		return resources.getOrDefault(resource, 0) > 0;
+		return hasResource(resource, 1);
+	}
+
+	public boolean hasResource(Resource resource, int count) {
+		return resources.getOrDefault(resource, 0) >= count;
 	}
 
 	public int getCapacity() {

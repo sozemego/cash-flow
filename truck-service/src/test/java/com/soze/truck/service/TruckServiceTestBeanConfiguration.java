@@ -3,6 +3,9 @@ package com.soze.truck.service;
 import com.soze.clock.domain.Clock;
 import com.soze.common.client.WorldServiceClient;
 import com.soze.common.dto.CityDTO;
+import com.soze.common.dto.FactoryDTO;
+import com.soze.factory.client.FactoryServiceClient;
+import com.soze.factory.domain.SellResult;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -47,6 +50,5 @@ public class TruckServiceTestBeanConfiguration {
 	public Clock clock() {
 		return new Clock(60, System.currentTimeMillis());
 	}
-
 
 }

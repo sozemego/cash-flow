@@ -3,6 +3,7 @@ package com.soze.truck;
 import com.soze.clock.client.ClockServiceClient;
 import com.soze.clock.domain.Clock;
 import com.soze.common.resilience.RetryUtils;
+import com.soze.factory.client.FactoryServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -35,6 +36,11 @@ public class TruckServiceApplication {
 				throw e;
 			}
 		});
+	}
+
+	@Bean
+	public FactoryServiceClient factoryServiceClient() {
+		return FactoryServiceClient.createClient();
 	}
 
 }

@@ -2,17 +2,30 @@ package com.soze.truck.service;
 
 
 import com.soze.clock.domain.Clock;
+import com.soze.common.dto.FactoryDTO;
+import com.soze.common.dto.Resource;
+import com.soze.common.dto.StorageDTO;
 import com.soze.common.message.server.ServerMessage;
 import com.soze.common.message.server.TruckTravelStarted;
+import com.soze.factory.client.FactoryServiceClient;
+import com.soze.factory.domain.SellResult;
+import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
+import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.world.RemoteWorldService;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestClientException;
 
 import java.util.List;
 
@@ -36,13 +49,19 @@ class TruckServiceTest {
 	@Autowired
 	private RemoteWorldService remoteWorldService;
 
+	@Autowired
+	private RemoteFactoryService remoteFactoryService;
+
+	@MockBean
+	private FactoryServiceClient factoryServiceClient;
+
 	private TestWebSocketSession testWebSocketSession;
 
 	@BeforeEach
 	public void setup() {
 		testWebSocketSession = new TestWebSocketSession();
 		truckService = new TruckService(truckTemplateLoader, truckConverter, truckNavigationService, remoteWorldService,
-																		new Clock(60, System.currentTimeMillis())
+																		remoteFactoryService, new Clock(60, System.currentTimeMillis())
 		);
 	}
 
@@ -147,6 +166,86 @@ class TruckServiceTest {
 		Assertions.assertEquals(toCityId, navigation.getNextCityId());
 		Assertions.assertEquals(2, session.getAllMessages().size());
 		Assertions.assertEquals(TruckTravelStarted.class, session.getAllMessages().get(1).getClass());
+	}
+
+	@Test
+	public void buyResource_truckDoesNotExist() {
+		truckService.buyResource("someTruck", "Warsaw", Resource.WOOD, 1);
+	}
+
+	@Test
+	public void buyResource_truckDoesNotHaveEnoughStorage() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		Storage truckStorage = new Storage(1);
+		truck.setStorage(truckStorage);
+
+		this.truckService.addTruck(truck, "Warsaw");
+		truckService.buyResource(truck.getId(), "Warsaw", Resource.WOOD, 5);
+
+		Assertions.assertEquals(0, truckStorage.getCapacityTaken());
+	}
+
+	@Test
+	public void buyResource_factoryDoesNotExist() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		Storage truckStorage = new Storage(10);
+		truck.setStorage(truckStorage);
+
+		this.truckService.addTruck(truck, "Warsaw");
+
+		String factoryId = "factoryId";
+		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenThrow(new RestClientException("Not found!"));
+
+		truckService.buyResource(truck.getId(), "factoryId", Resource.WOOD, 5);
+
+		Assertions.assertEquals(0, truckStorage.getCapacityTaken());
+	}
+
+	@Test
+	public void buyResource_factoryDoesNotHaveEnoughResources() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		Storage truckStorage = new Storage(10);
+		truck.setStorage(truckStorage);
+
+		this.truckService.addTruck(truck, "Warsaw");
+
+		String factoryId = "factoryId";
+		FactoryDTO factory = new FactoryDTO();
+		StorageDTO factoryStorage = new StorageDTO();
+		factoryStorage.setCapacity(10);
+		factoryStorage.getResources().put(Resource.WOOD, 2);
+		factory.setStorage(factoryStorage);
+		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
+
+		truckService.buyResource(truck.getId(), "factoryId", Resource.WOOD, 5);
+
+		Assertions.assertEquals(0, truckStorage.getCapacityTaken());
+	}
+
+	@Test
+	public void buyResource() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		Storage truckStorage = new Storage(10);
+		truck.setStorage(truckStorage);
+
+		this.truckService.addTruck(truck, "Warsaw");
+
+		String factoryId = "factoryId";
+		int count = 5;
+		FactoryDTO factory = new FactoryDTO();
+		StorageDTO factoryStorage = new StorageDTO();
+		factoryStorage.setCapacity(10);
+		factoryStorage.getResources().put(Resource.WOOD, 5);
+		factory.setStorage(factoryStorage);
+
+		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
+		SellResult sellResult = new SellResult(factoryId, Resource.WOOD, count);
+		Mockito.when(factoryServiceClient.sell(factoryId, Resource.WOOD.name(), count)).thenReturn(sellResult);
+
+		truckService.buyResource(truck.getId(), factoryId, Resource.WOOD, count);
+
+		Mockito.verify(factoryServiceClient, Mockito.times(1)).sell(factoryId, Resource.WOOD.name(), count);
+		Assertions.assertEquals(5, truckStorage.getCapacityTaken());
 	}
 
 }

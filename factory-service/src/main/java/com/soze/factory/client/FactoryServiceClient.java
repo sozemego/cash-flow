@@ -1,14 +1,12 @@
 package com.soze.factory.client;
 
+import com.soze.common.dto.FactoryDTO;
 import com.soze.factory.domain.SellResult;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 public interface FactoryServiceClient {
@@ -28,4 +26,8 @@ public interface FactoryServiceClient {
 									@QueryParam("count") int count
 								 );
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/single/{factoryId}")
+	FactoryDTO getFactory(@PathParam("factoryId") String factoryId);
 }

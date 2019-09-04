@@ -7,9 +7,9 @@ import com.soze.common.dto.Resource;
 
 public class SellResult {
 
-	public final String factoryId;
-	public final Resource resource;
-	public final int count;
+	private final String factoryId;
+	private final Resource resource;
+	private final int count;
 
 	@JsonCreator
 	public SellResult(@JsonProperty("factoryId") String factoryId,

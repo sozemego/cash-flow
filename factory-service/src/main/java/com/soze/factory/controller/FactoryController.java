@@ -3,6 +3,7 @@ package com.soze.factory.controller;
 import com.soze.common.dto.FactoryDTO;
 import com.soze.common.dto.Resource;
 import com.soze.factory.FactoryConverter;
+import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.SellResult;
 import com.soze.factory.service.FactoryService;
 import com.soze.factory.service.FactoryTemplateLoader;
@@ -10,14 +11,15 @@ import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.PathParam;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -46,6 +48,17 @@ public class FactoryController {
 			Collectors.toList());
 		LOG.info("Returning {} factories", factoryDTOS.size());
 		return factoryDTOS;
+	}
+
+	@GetMapping(value = "/single/{factoryId}")
+	public FactoryDTO getFactory(@PathVariable("factoryId") String factoryId, HttpServletResponse response) {
+		LOG.info("called /getFactory, factoryId = {}", factoryId);
+		Optional<Factory> factoryOptional = factoryService.getFactoryById(factoryId);
+		if (!factoryOptional.isPresent()) {
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+			return null;
+		}
+		return factoryConverter.convert(factoryOptional.get());
 	}
 
 	@GetMapping(value = "/templates")
