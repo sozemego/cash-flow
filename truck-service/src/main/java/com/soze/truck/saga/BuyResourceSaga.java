@@ -84,5 +84,7 @@ public class BuyResourceSaga {
 			reverseAddResource.run();
 		}
 
+		LOG.info("Successfully bought {} of {} from {} for truck {}", count, resource, factoryId, truck.getId());
+
 	}
 }
