@@ -3,6 +3,7 @@ package com.soze.truck.saga;
 import com.soze.common.dto.FactoryDTO;
 import com.soze.common.dto.Resource;
 import com.soze.common.dto.StorageDTO;
+import com.soze.common.message.server.StorageContentChanged;
 import com.soze.factory.domain.SellResult;
 import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
@@ -86,5 +87,7 @@ public class BuyResourceSaga {
 
 		LOG.info("Successfully bought {} of {} from {} for truck {}", count, resource, factoryId, truck.getId());
 
+		StorageContentChanged storageContentChanged = new StorageContentChanged(truckId, resource, count);
+		truckService.sendToAll(storageContentChanged);
 	}
 }

@@ -4,10 +4,7 @@ import com.soze.clock.domain.Clock;
 import com.soze.common.dto.CityDTO;
 import com.soze.common.dto.Resource;
 import com.soze.common.json.JsonUtils;
-import com.soze.common.message.server.FactoryAdded;
-import com.soze.common.message.server.ResourceProduced;
-import com.soze.common.message.server.ResourceProductionStarted;
-import com.soze.common.message.server.ServerMessage;
+import com.soze.common.message.server.*;
 import com.soze.factory.FactoryConverter;
 import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.Producer;
@@ -198,6 +195,8 @@ public class FactoryService {
 		}
 		storage.removeResource(resource, count);
 		LOG.info("Removed {} of {} from factoryId = {}", count, resource, factory.getId());
+
+		sendToAll(new StorageContentChanged(factoryId, resource, -count));
 	}
 
 }

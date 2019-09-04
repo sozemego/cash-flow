@@ -105,7 +105,7 @@ public class TruckService {
 		}
 	}
 
-	private void sendToAll(ServerMessage serverMessage) {
+	public void sendToAll(ServerMessage serverMessage) {
 		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
 		for (WebSocketSession session : sessions) {
 			sendTo(textMessage, session);
