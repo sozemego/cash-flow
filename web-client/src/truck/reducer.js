@@ -1,4 +1,9 @@
-import { TRUCK_ADDED, TRUCK_ARRIVED, TRUCK_TRAVEL_STARTED } from "./actions";
+import {
+  STORAGE_CONTENT_CHANGED,
+  TRUCK_ADDED,
+  TRUCK_ARRIVED,
+  TRUCK_TRAVEL_STARTED
+} from "./actions";
 
 const initialState = {
   trucks: {}
@@ -12,6 +17,8 @@ export function reducer(state = initialState, action) {
       return truckTravelStarted(state, action);
     case TRUCK_ARRIVED:
       return truckArrived(state, action);
+    case STORAGE_CONTENT_CHANGED:
+      return storageContentChanged(state, action);
     default:
       return state;
   }
@@ -48,5 +55,24 @@ function truckArrived(state, action) {
   navigation.nextCityId = null;
   truck.navigation = navigation;
   trucks[truckId] = truck;
+  return { ...state, trucks };
+}
+
+function storageContentChanged(state, action) {
+  const { entityId, resource, change } = action;
+  const trucks = { ...state.trucks };
+  const hasTruck = !!trucks[entityId];
+  if (!hasTruck) {
+    return state;
+  }
+  const truck = { ...trucks[entityId] };
+  const storage = { ...truck.storage };
+  const resources = { ...storage.resources };
+  const actualCount = resources[resource];
+  resources[resource] = actualCount + change;
+  storage.resources = resources;
+  truck.storage = storage;
+  trucks[entityId] = truck;
+
   return { ...state, trucks };
 }

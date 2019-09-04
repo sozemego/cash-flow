@@ -1,7 +1,8 @@
 import {
   FACTORY_ADDED,
   RESOURCE_PRODUCED,
-  RESOURCE_PRODUCTION_STARTED
+  RESOURCE_PRODUCTION_STARTED,
+  STORAGE_CONTENT_CHANGED
 } from "./actions";
 
 const initialState = {
@@ -16,6 +17,8 @@ export function reducer(state = initialState, action) {
       return resourceProduced(state, action);
     case RESOURCE_PRODUCTION_STARTED:
       return resourceProductionStarted(state, action);
+    case STORAGE_CONTENT_CHANGED:
+      return storageContentChanged(state, action);
     default:
       return state;
   }
@@ -62,5 +65,24 @@ function resourceProductionStarted(state, action) {
     factory.producer = producer;
     factories[index] = factory;
   }
+  return { ...state, factories };
+}
+
+function storageContentChanged(state, action) {
+  const { entityId, resource, change } = action;
+  const factories = [...state.factories];
+  const index = factories.findIndex(factory => factory.id === entityId);
+  if (index === -1) {
+    return state;
+  }
+  const factory = {...factories[index]};
+  const storage = { ...factory.storage };
+  const resources = { ...storage.resources };
+  const currentCount = resources[resource] || 0;
+  resources[resource] = currentCount + change;
+  storage.resources = resources;
+  factory.storage = storage;
+  factories[index] = factory;
+
   return { ...state, factories };
 }
