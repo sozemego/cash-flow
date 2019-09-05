@@ -1,3 +1,4 @@
+import { produce } from "immer";
 import {
   FACTORY_ADDED,
   RESOURCE_PRODUCED,
@@ -24,65 +25,35 @@ export function reducer(state = initialState, action) {
   }
 }
 
-function factoryAdded(state, action) {
-  const previousFactories = state.factories;
+const factoryAdded = produce((state, action) => {
   const { factoryDTO } = action;
+  state.factories.push(factoryDTO);
+});
 
-  return { ...state, factories: [...previousFactories, factoryDTO] };
-}
-
-function resourceProduced(state, action) {
+const resourceProduced = produce((state, action) => {
   const { factoryId, resource } = action;
-  const factories = [...state.factories];
-  const index = factories.findIndex(factory => factory.id === factoryId);
-  if (index > -1) {
-    const factory = { ...factories[index] };
-    const storage = { ...factory.storage };
-    const resources = { ...storage.resources };
-    const count = resources[resource] || 0;
-    storage.resources = resources;
-    factory.storage = storage;
-    resources[resource] = count + 1;
+  const factory = findFactory(state, factoryId);
+  const { storage } = factory;
+  const count = storage.resources[resource] || 0;
+  storage.resources[resource] = count + 1;
+});
 
-    const producer = { ...factory.producer };
-    producer.productionStartTime = -1;
-    factory.producer = producer;
-
-    factories[index] = factory;
-  }
-
-  return { ...state, factories };
-}
-
-function resourceProductionStarted(state, action) {
+const resourceProductionStarted = produce((state, action) => {
   const { factoryId, productionStartTime } = action;
-  const factories = [...state.factories];
-  const index = factories.findIndex(factory => factory.id === factoryId);
-  if (index > -1) {
-    const factory = { ...factories[index] };
-    const producer = { ...factory.producer };
-    producer.productionStartTime = productionStartTime;
-    factory.producer = producer;
-    factories[index] = factory;
-  }
-  return { ...state, factories };
-}
+  const factory = findFactory(state, factoryId);
+  factory.producer.productionStartTime = productionStartTime;
+});
 
-function storageContentChanged(state, action) {
+const storageContentChanged = produce((state, action) => {
   const { entityId, resource, change } = action;
-  const factories = [...state.factories];
-  const index = factories.findIndex(factory => factory.id === entityId);
-  if (index === -1) {
-    return state;
+  const factory = findFactory(state, entityId);
+  if (!factory) {
+    return;
   }
-  const factory = {...factories[index]};
-  const storage = { ...factory.storage };
-  const resources = { ...storage.resources };
-  const currentCount = resources[resource] || 0;
-  resources[resource] = currentCount + change;
-  storage.resources = resources;
-  factory.storage = storage;
-  factories[index] = factory;
+  const currentCount = factory.storage.resources[resource] || 0;
+  factory.storage.resources[resource] = currentCount + change;
+});
 
-  return { ...state, factories };
+function findFactory(state, factoryId) {
+  return state.factories.find(factory => factory.id === factoryId);
 }
