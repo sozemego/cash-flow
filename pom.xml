@@ -22,6 +22,7 @@
         <module>truck-service</module>
         <module>warehouse-service</module>
         <module>clock-service</module>
+        <module>service-discovery</module>
     </modules>
 
     <dependencies>
