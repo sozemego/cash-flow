@@ -1,3 +1,4 @@
+import { produce } from "immer";
 import { CLOCK_FETCHED } from "./actions";
 
 const initialState = {
@@ -6,16 +7,18 @@ const initialState = {
 };
 
 export function reducer(state = initialState, action) {
-	switch (action.type) {
-		case CLOCK_FETCHED: return clockFetched(state, action);
-		default:
-			break;
-	}
-	return state;
+  switch (action.type) {
+    case CLOCK_FETCHED:
+      return clockFetched(state, action);
+    default:
+      break;
+  }
+  return state;
 }
 
-function clockFetched(state, action) {
+const clockFetched = produce((state, action) => {
   const { clock } = action;
   const { multiplier, startTime } = clock;
-  return { ...state, multiplier, startTime };
-}
+  state.multiplier = multiplier;
+  state.startTime = startTime;
+});
