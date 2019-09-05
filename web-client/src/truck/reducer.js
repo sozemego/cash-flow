@@ -25,44 +25,36 @@ export function reducer(state = initialState, action) {
   }
 }
 
-function truckAdded(state, action) {
-  return produce(state, draft => {
-    draft.trucks[action.truck.id] = action.truck;
-  });
-}
+const truckAdded = produce((state, action) => {
+	state.trucks[action.truck.id] = action.truck;
+});
 
-function truckTravelStarted(state, action) {
-  return produce(state, draft => {
-    const { truckId, nextCityId, startTime, arrivalTime } = action;
-    const truck = draft.trucks[truckId];
-    truck.navigation = {
-      ...truck.navigation,
-      nextCityId,
-      startTime,
-      arrivalTime
-    };
-  });
-}
+const truckTravelStarted = produce((state, action) => {
+	const { truckId, nextCityId, startTime, arrivalTime } = action;
+	const truck = state.trucks[truckId];
+	truck.navigation = {
+		...truck.navigation,
+		nextCityId,
+		startTime,
+		arrivalTime
+	};
+});
 
-function truckArrived(state, action) {
-  return produce(state, draft => {
-    const { truckId } = action;
-    const { navigation } = draft.trucks[truckId];
-    navigation.currentCityId = navigation.nextCityId;
-    navigation.startTime = -1;
-    navigation.arrivalTime = -1;
-    navigation.nextCityId = null;
-  });
-}
+const truckArrived = produce((state, action) => {
+	const { truckId } = action;
+	const { navigation } = state.trucks[truckId];
+	navigation.currentCityId = navigation.nextCityId;
+	navigation.startTime = -1;
+	navigation.arrivalTime = -1;
+	navigation.nextCityId = null;
+});
 
-function storageContentChanged(state, action) {
-  return produce(state, draft => {
-    const { entityId, resource, change } = action;
-    const truck = draft.trucks[entityId];
-    if (!truck) {
-      return;
-    }
-    const actualCount = truck.storage.resources[resource] || 0;
-    truck.storage.resources[resource] = actualCount + change;
-  });
-}
+const storageContentChanged = produce((state, action) => {
+	const { entityId, resource, change } = action;
+	const truck = state.trucks[entityId];
+	if (!truck) {
+		return;
+	}
+	const actualCount = truck.storage.resources[resource] || 0;
+	truck.storage.resources[resource] = actualCount + change;
+});
