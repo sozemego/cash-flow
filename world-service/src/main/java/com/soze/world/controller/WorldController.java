@@ -1,5 +1,6 @@
 package com.soze.world.controller;
 
+import com.soze.common.client.WorldServiceClient;
 import com.soze.common.dto.CityDTO;
 import com.soze.world.domain.City;
 import com.soze.world.service.WorldService;
@@ -18,30 +19,31 @@ import java.util.List;
 
 @RestController
 @Api(value = "World")
-public class WorldController {
+public class WorldController implements WorldServiceClient {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WorldController.class);
 
 	private final WorldService worldService;
 	private final CityConverter cityConverter;
+	private final HttpServletResponse response;
 
 	@Autowired
-	public WorldController(WorldService worldService, CityConverter cityConverter) {
+	public WorldController(WorldService worldService, CityConverter cityConverter, HttpServletResponse response
+												) {
 		this.worldService = worldService;
 		this.cityConverter = cityConverter;
+		this.response = response;
 	}
 
-	@GetMapping(value = "/")
 	@ApiOperation(value = "Retrieves list of all cities")
-	public List<CityDTO> getCities() {
+	public List<CityDTO> getAllCities() {
 		LOG.info("Calling getCities");
 		List<City> cities = worldService.getCities();
 		LOG.info("Returning {} cities", cities.size());
 		return cityConverter.convert(cities);
 	}
 
-	@GetMapping(value = "/id/{cityId}")
-	public CityDTO getCityById(@PathVariable("cityId") String cityId, HttpServletResponse response) {
+	public CityDTO getCityById(String cityId) {
 		LOG.info("Called getCityById with id = {}", cityId);
 		return worldService.getCityById(cityId)
 											 .map(cityConverter::convert)
@@ -51,8 +53,7 @@ public class WorldController {
 											 });
 	}
 
-	@GetMapping(value = "/name/{name}")
-	public CityDTO getCityByName(@PathVariable("name") String name, HttpServletResponse response) {
+	public CityDTO getCityByName(String name) {
 		LOG.info("Called getCityByName with name = {}", name);
 		return worldService.getCityByName(name)
 											 .map(cityConverter::convert)
