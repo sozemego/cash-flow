@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 
 import java.time.Duration;
@@ -20,7 +20,6 @@ import java.time.Duration;
 @SpringBootApplication
 @Configuration
 @EnableDiscoveryClient
-@EnableFeignClients("com.soze.clock.client")
 public class FactoryServiceApplication {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FactoryServiceApplication.class);
@@ -35,6 +34,7 @@ public class FactoryServiceApplication {
 	}
 
 	@Autowired
+	@Lazy
 	private ClockServiceClient clockServiceClient;
 
 	@Bean

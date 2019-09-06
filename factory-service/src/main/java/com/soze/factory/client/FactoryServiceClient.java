@@ -2,32 +2,22 @@ package com.soze.factory.client;
 
 import com.soze.common.dto.FactoryDTO;
 import com.soze.factory.domain.SellResult;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.QueryParam;
 
+@FeignClient(name = "factory-service")
 public interface FactoryServiceClient {
 
-	String FACTORY_SERVICE_URL = "http://localhost:9001/factory/";
-
-	static FactoryServiceClient createClient() {
-		ResteasyClient client = (ResteasyClient) ResteasyClientBuilder.newClient();
-		ResteasyWebTarget target = client.target(FACTORY_SERVICE_URL);
-		return target.proxy(FactoryServiceClient.class);
-	}
-
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/sell")
+	@PostMapping(path = "/factory/sell", produces = MediaType.APPLICATION_JSON_VALUE)
 	SellResult sell(@QueryParam("factoryId") String factoryId, @QueryParam("resource") String resource,
 									@QueryParam("count") int count
 								 );
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/single/{factoryId}")
-	FactoryDTO getFactory(@PathParam("factoryId") String factoryId);
+	@GetMapping(path = "/factory/single/{factoryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	FactoryDTO getFactory(@PathVariable("factoryId") String factoryId);
 }
