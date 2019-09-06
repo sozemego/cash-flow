@@ -15,7 +15,7 @@ public interface FactoryServiceClient {
 
 	@PostMapping(path = "/factory/sell", produces = MediaType.APPLICATION_JSON_VALUE)
 	SellResult sell(@QueryParam("factoryId") String factoryId, @QueryParam("resource") String resource,
-									@QueryParam("count") int count
+									@QueryParam("count") Integer count
 								 );
 
 	@GetMapping(path = "/factory/single/{factoryId}", produces = MediaType.APPLICATION_JSON_VALUE)

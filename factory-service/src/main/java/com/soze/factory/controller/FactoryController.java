@@ -3,6 +3,7 @@ package com.soze.factory.controller;
 import com.soze.common.dto.FactoryDTO;
 import com.soze.common.dto.Resource;
 import com.soze.factory.FactoryConverter;
+import com.soze.factory.client.FactoryServiceClient;
 import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.SellResult;
 import com.soze.factory.service.FactoryService;
@@ -15,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.PathParam;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
@@ -24,21 +24,23 @@ import java.util.stream.Collectors;
 
 @RestController
 @Api(value = "Factory")
-public class FactoryController {
+public class FactoryController implements FactoryServiceClient {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FactoryController.class);
 
 	private final FactoryService factoryService;
 	private final FactoryTemplateLoader factoryTemplateLoader;
 	private final FactoryConverter factoryConverter;
+	private final HttpServletResponse response;
 
 	@Autowired
 	public FactoryController(FactoryService factoryService, FactoryTemplateLoader factoryTemplateLoader,
-													 FactoryConverter factoryConverter
+													 FactoryConverter factoryConverter, HttpServletResponse response
 													) {
 		this.factoryService = factoryService;
 		this.factoryTemplateLoader = factoryTemplateLoader;
 		this.factoryConverter = factoryConverter;
+		this.response = response;
 	}
 
 	@GetMapping(value = "/")
@@ -50,8 +52,15 @@ public class FactoryController {
 		return factoryDTOS;
 	}
 
-	@GetMapping(value = "/single/{factoryId}")
-	public FactoryDTO getFactory(@PathVariable("factoryId") String factoryId, HttpServletResponse response) {
+	@GetMapping(value = "/templates")
+	public String getTemplates() throws Exception {
+		LOG.info("Calling getTemplates");
+		File entities = factoryTemplateLoader.getEntities();
+		List<String> list = Files.readAllLines(entities.toPath());
+		return String.join("\n", list);
+	}
+
+	public FactoryDTO getFactory(String factoryId) {
 		LOG.info("called /getFactory, factoryId = {}", factoryId);
 		Optional<Factory> factoryOptional = factoryService.getFactoryById(factoryId);
 		if (!factoryOptional.isPresent()) {
@@ -61,15 +70,6 @@ public class FactoryController {
 		return factoryConverter.convert(factoryOptional.get());
 	}
 
-	@GetMapping(value = "/templates")
-	public String getTemplates() throws Exception {
-		LOG.info("Calling getTemplates");
-		File entities = factoryTemplateLoader.getEntities();
-		List<String> list = Files.readAllLines(entities.toPath());
-		return String.join("\n", list);
-	}
-
-	@PostMapping(value = "/sell")
 	public SellResult sell(@RequestParam("factoryId") String factoryId, @RequestParam("resource") String resourceStr,
 												 @RequestParam("count") Integer count
 												) {
