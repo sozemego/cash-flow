@@ -3,12 +3,12 @@ package com.soze.truck;
 import com.soze.clock.client.ClockServiceClient;
 import com.soze.clock.domain.Clock;
 import com.soze.common.resilience.RetryUtils;
-import com.soze.factory.client.FactoryServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
@@ -17,7 +17,8 @@ import java.time.Duration;
 
 
 @SpringBootApplication
-@EnableFeignClients("com.soze.clock.client")
+@EnableFeignClients({"com.soze.clock.client", "com.soze.factory.client"})
+@EnableDiscoveryClient
 public class TruckServiceApplication {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TruckServiceApplication.class);
@@ -41,11 +42,6 @@ public class TruckServiceApplication {
 				throw e;
 			}
 		});
-	}
-
-	@Bean
-	public FactoryServiceClient factoryServiceClient() {
-		return FactoryServiceClient.createClient();
 	}
 
 }
