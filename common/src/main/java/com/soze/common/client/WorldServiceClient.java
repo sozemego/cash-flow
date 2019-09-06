@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface WorldServiceClient {
 
-	String WORLD_SERVICE_URL = "http://localhost:9000/world/";
+	String WORLD_SERVICE_URL = "http://localhost:9000/";
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
