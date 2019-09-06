@@ -28,11 +28,6 @@ public class FactoryServiceApplication {
 		SpringApplication.run(FactoryServiceApplication.class, args);
 	}
 
-	@Bean
-	public WorldServiceClient worldServiceClient() {
-		return WorldServiceClient.createClient();
-	}
-
 	@Autowired
 	@Lazy
 	private ClockServiceClient clockServiceClient;
