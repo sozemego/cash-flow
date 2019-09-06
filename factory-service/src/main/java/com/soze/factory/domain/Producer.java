@@ -1,6 +1,6 @@
 package com.soze.factory.domain;
 
-import com.soze.clock.domain.Clock;
+import com.soze.common.dto.Clock;
 import com.soze.common.dto.Resource;
 
 public class Producer {

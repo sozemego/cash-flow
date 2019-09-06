@@ -1,7 +1,7 @@
 package com.soze.truck.service;
 
-import com.soze.clock.domain.Clock;
 import com.soze.common.dto.CityDTO;
+import com.soze.common.dto.Clock;
 import com.soze.truck.world.RemoteWorldService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

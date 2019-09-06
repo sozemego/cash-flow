@@ -1,7 +1,7 @@
 package com.soze.truck;
 
-import com.soze.clock.client.ClockServiceClient;
-import com.soze.clock.domain.Clock;
+import com.soze.common.client.ClockServiceClient;
+import com.soze.common.dto.Clock;
 import com.soze.common.resilience.RetryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.time.Duration;
 
 
 @SpringBootApplication
-@EnableFeignClients({"com.soze.clock.client", "com.soze.factory.client"})
+@EnableFeignClients({"com.soze.factory.client", "com.soze.common.client"})
 @EnableDiscoveryClient
 public class TruckServiceApplication {
 

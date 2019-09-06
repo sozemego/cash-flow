@@ -1,8 +1,8 @@
 package com.soze.factory.service;
 
-import com.soze.clock.domain.Clock;
 import com.soze.common.client.WorldServiceClient;
 import com.soze.common.dto.CityDTO;
+import com.soze.common.dto.Clock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

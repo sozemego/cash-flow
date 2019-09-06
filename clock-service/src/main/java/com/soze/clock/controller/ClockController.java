@@ -1,8 +1,8 @@
 package com.soze.clock.controller;
 
-import com.soze.clock.client.ClockServiceClient;
-import com.soze.clock.domain.Clock;
 import com.soze.clock.service.ClockService;
+import com.soze.common.client.ClockServiceClient;
+import com.soze.common.dto.Clock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

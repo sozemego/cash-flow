@@ -1,8 +1,7 @@
 package com.soze.factory;
 
-import com.soze.clock.client.ClockServiceClient;
-import com.soze.clock.domain.Clock;
-import com.soze.common.client.WorldServiceClient;
+import com.soze.common.client.ClockServiceClient;
+import com.soze.common.dto.Clock;
 import com.soze.common.resilience.RetryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

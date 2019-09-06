@@ -1,6 +1,6 @@
 package com.soze.factory.service;
 
-import com.soze.clock.domain.Clock;
+import com.soze.common.dto.Clock;
 import com.soze.common.dto.Resource;
 import com.soze.common.message.server.FactoryAdded;
 import com.soze.common.message.server.ResourceProductionStarted;
