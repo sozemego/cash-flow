@@ -1,24 +1,17 @@
 package com.soze.truck.service;
 
 
-import com.soze.clock.domain.Clock;
-import com.soze.common.dto.FactoryDTO;
-import com.soze.common.dto.Resource;
-import com.soze.common.dto.StorageDTO;
+import com.soze.common.dto.*;
 import com.soze.common.message.server.ServerMessage;
 import com.soze.common.message.server.TruckTravelStarted;
-import com.soze.factory.client.FactoryServiceClient;
-import com.soze.factory.domain.SellResult;
+import com.soze.common.client.FactoryServiceClient;
 import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.world.RemoteWorldService;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InOrder;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -239,7 +232,7 @@ class TruckServiceTest {
 		factory.setStorage(factoryStorage);
 
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
-		SellResult sellResult = new SellResult(factoryId, Resource.WOOD, count);
+		SellResultDTO sellResult = new SellResultDTO(factoryId, Resource.WOOD, count);
 		Mockito.when(factoryServiceClient.sell(factoryId, Resource.WOOD.name(), count)).thenReturn(sellResult);
 
 		truckService.buyResource(truck.getId(), factoryId, Resource.WOOD, count);

@@ -17,7 +17,6 @@ import java.time.Duration;
 
 
 @SpringBootApplication
-@EnableFeignClients({"com.soze.factory.client", "com.soze.common.client"})
 @EnableDiscoveryClient
 public class TruckServiceApplication {
 

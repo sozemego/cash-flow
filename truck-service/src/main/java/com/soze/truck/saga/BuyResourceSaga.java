@@ -2,9 +2,9 @@ package com.soze.truck.saga;
 
 import com.soze.common.dto.FactoryDTO;
 import com.soze.common.dto.Resource;
+import com.soze.common.dto.SellResultDTO;
 import com.soze.common.dto.StorageDTO;
 import com.soze.common.message.server.StorageContentChanged;
-import com.soze.factory.domain.SellResult;
 import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
@@ -74,7 +74,7 @@ public class BuyResourceSaga {
 		};
 
 		try {
-			SellResult sellResult = factoryService.sell(factoryId, resource.name(), count);
+			SellResultDTO sellResult = factoryService.sell(factoryId, resource.name(), count);
 			if (sellResult.getCount() != count) {
 				reverseAddResource.run();
 				LOG.info("Factory = {} was unable to sell {} of {}", factoryId, count, resource);

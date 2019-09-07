@@ -1,21 +1,19 @@
-package com.soze.factory.domain;
-
+package com.soze.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.soze.common.dto.Resource;
 
-public class SellResult {
+public class SellResultDTO {
 
 	private final String factoryId;
 	private final Resource resource;
 	private final int count;
 
 	@JsonCreator
-	public SellResult(@JsonProperty("factoryId") String factoryId,
-										@JsonProperty("resource") Resource resource,
-										@JsonProperty("count") int count
-									 ) {
+	public SellResultDTO(@JsonProperty("factoryId") String factoryId,
+											 @JsonProperty("resource") Resource resource,
+											 @JsonProperty("count") int count
+											) {
 		this.factoryId = factoryId;
 		this.resource = resource;
 		this.count = count;
@@ -32,4 +30,5 @@ public class SellResult {
 	public int getCount() {
 		return count;
 	}
+
 }

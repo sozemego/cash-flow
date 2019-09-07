@@ -2,10 +2,10 @@ package com.soze.factory.controller;
 
 import com.soze.common.dto.FactoryDTO;
 import com.soze.common.dto.Resource;
+import com.soze.common.dto.SellResultDTO;
 import com.soze.factory.FactoryConverter;
-import com.soze.factory.client.FactoryServiceClient;
+import com.soze.common.client.FactoryServiceClient;
 import com.soze.factory.domain.Factory;
-import com.soze.factory.domain.SellResult;
 import com.soze.factory.service.FactoryService;
 import com.soze.factory.service.FactoryTemplateLoader;
 import io.swagger.annotations.Api;
@@ -70,17 +70,15 @@ public class FactoryController implements FactoryServiceClient {
 		return factoryConverter.convert(factoryOptional.get());
 	}
 
-	public SellResult sell(@RequestParam("factoryId") String factoryId, @RequestParam("resource") String resourceStr,
-												 @RequestParam("count") Integer count
-												) {
+	public SellResultDTO sell(String factoryId, String resourceStr, Integer count) {
 		LOG.info("Called /sell endpoint, factoryId = {}, resource = {}, count = {}", factoryId, resourceStr, count);
 		Resource resource = Resource.valueOf(resourceStr);
 		try {
 			factoryService.sell(factoryId, resource, count);
-			return new SellResult(factoryId, resource, count);
+			return new SellResultDTO(factoryId, resource, count);
 		} catch (Exception e) {
 			LOG.warn("Exception when trying to sell resource", e);
-			return new SellResult(factoryId, resource, 0);
+			return new SellResultDTO(factoryId, resource, 0);
 		}
 
 	}

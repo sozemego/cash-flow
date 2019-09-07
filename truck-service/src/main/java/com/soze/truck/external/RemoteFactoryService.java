@@ -1,8 +1,8 @@
 package com.soze.truck.external;
 
 import com.soze.common.dto.FactoryDTO;
-import com.soze.factory.client.FactoryServiceClient;
-import com.soze.factory.domain.SellResult;
+import com.soze.common.client.FactoryServiceClient;
+import com.soze.common.dto.SellResultDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class RemoteFactoryService {
 		this.client = client;
 	}
 
-	public SellResult sell(String factoryId, String resource, int count) {
+	public SellResultDTO sell(String factoryId, String resource, int count) {
 		LOG.info("calling /sell, factoryId = {}, resource = {}, count = {}", factoryId, resource, count);
 		return client.sell(factoryId, resource, count);
 	}

@@ -1,7 +1,7 @@
-package com.soze.factory.client;
+package com.soze.common.client;
 
 import com.soze.common.dto.FactoryDTO;
-import com.soze.factory.domain.SellResult;
+import com.soze.common.dto.SellResultDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +16,9 @@ public interface FactoryServiceClient {
 		path = "/factory/sell",
 		produces = MediaType.APPLICATION_JSON_VALUE
 	)
-	SellResult sell(@RequestParam("factoryId") String factoryId, @RequestParam("resource") String resource,
-									@RequestParam("count") Integer count
-								 );
+	SellResultDTO sell(@RequestParam("factoryId") String factoryId, @RequestParam("resource") String resource,
+										 @RequestParam("count") Integer count
+										);
 
 	@GetMapping(
 		path = "/factory/single/{factoryId}",
