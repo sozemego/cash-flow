@@ -7,12 +7,12 @@ import { useDispatch } from "react-redux";
  * @returns {{readyState: *, socket: WebSocket}}
  */
 export function usePlayerSocket() {
-	const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-	const { socket, readyState } = useWebsocket(
-		PLAYER_SERVICE_SOCKET_URL,
-		dispatch
-	);
+  const { socket, readyState } = useWebsocket(
+    PLAYER_SERVICE_SOCKET_URL,
+    dispatch
+  );
 
-	return { socket, readyState };
+  return { socket, readyState };
 }

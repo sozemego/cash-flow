@@ -1,5 +1,5 @@
 export function makeActionCreator(type, ...fields) {
-	return (...args) => {
+	const actionCreator = function(...args) {
 		const action = {
 			type,
 		};
@@ -9,5 +9,10 @@ export function makeActionCreator(type, ...fields) {
 		});
 
 		return action;
-	}
+	};
+	actionCreator.type = type;
+	actionCreator.toString = function() {
+		return type;
+	};
+	return actionCreator;
 }
