@@ -36,6 +36,7 @@ const resourceProduced = produce((state, action) => {
   const { storage } = factory;
   const count = storage.resources[resource] || 0;
   storage.resources[resource] = count + 1;
+  factory.producer.productionStartTime = -1;
 });
 
 const resourceProductionStarted = produce((state, action) => {

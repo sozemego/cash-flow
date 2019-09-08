@@ -128,7 +128,7 @@ export function Factory({ factory }) {
             <ProductionDate>
               {getFormattedTime(new Date(producer.productionStartTime))}
             </ProductionDate>
-            <ProgressBar current={productionTimePassed} time={ms} height={6} />
+            <ProgressBar current={productionTimePassed} time={ms} height={6} disabled={producer.productionStartTime === -1}/>
             <ProductionDate>
               {getFormattedTime(productionEndTime)}
             </ProductionDate>
