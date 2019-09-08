@@ -71,6 +71,10 @@ function formatDuration(minutes) {
     return `${hours} hour${pluralHours ? "s" : ""}`;
   }
 
+  if (hours === 0) {
+    return `${minutes} minute${pluralMinutes ? "s" : ""}`;
+  }
+
   return `${hours} hour${pluralHours ? "s" : ""} and ${minutes} minute${
     pluralMinutes ? "s" : ""
   }`;
