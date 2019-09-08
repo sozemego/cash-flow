@@ -39,6 +39,10 @@ public class BuyResourceSaga {
 
 	public void run() {
 		LOG.info("Truck with id = {} wants to buy {} {} from factoryId = {}", truckId, resource, count, factoryId);
+		if (count == 0) {
+			LOG.info("Cannot buy 0 of any resource");
+			return;
+		}
 		Optional<Truck> truckOptional = this.truckService.getTruck(truckId);
 		if (!truckOptional.isPresent()) {
 			LOG.info("Truck with id = {} does not exist, stopping.", truckId);
