@@ -108,6 +108,11 @@ public class FactoryService {
 		if (producer.isProducing()) {
 			return;
 		}
+		Storage storage = factory.getStorage();
+		if (storage.isFull()) {
+			LOG.info("Factory {} is full", factory.getId());
+			return;
+		}
 
 		producer.startProduction(clock);
 		long minutes = producer.getTime();
@@ -197,6 +202,7 @@ public class FactoryService {
 		LOG.info("Removed {} of {} from factoryId = {}", count, resource, factory.getId());
 
 		sendToAll(new StorageContentChanged(factoryId, resource, -count));
+		startProducing(factory);
 	}
 
 }
