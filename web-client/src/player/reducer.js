@@ -10,8 +10,9 @@ export function reducer(state = initialState, action) {
     case playerAdded.type: {
       return _playerAdded(state, action);
     }
+    default:
+      return state;
   }
-  return state;
 }
 
 const _playerAdded = produce((state, action) => {
