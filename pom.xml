@@ -23,6 +23,7 @@
         <module>warehouse-service</module>
         <module>clock-service</module>
         <module>service-discovery</module>
+        <module>player-service</module>
     </modules>
 
     <dependencies>
