@@ -1,6 +1,7 @@
 package com.soze.truck.service;
 
 
+import com.soze.common.client.PlayerServiceClient;
 import com.soze.common.dto.*;
 import com.soze.common.message.server.ServerMessage;
 import com.soze.common.message.server.TruckTravelStarted;
@@ -8,6 +9,7 @@ import com.soze.common.client.FactoryServiceClient;
 import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
+import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.world.RemoteWorldService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,8 +47,14 @@ class TruckServiceTest {
 	@Autowired
 	private RemoteFactoryService remoteFactoryService;
 
+	@Autowired
+	private RemotePlayerService playerService;
+
 	@MockBean
 	private FactoryServiceClient factoryServiceClient;
+
+	@MockBean
+	private PlayerServiceClient playerServiceClient;
 
 	private TestWebSocketSession testWebSocketSession;
 
@@ -54,7 +62,7 @@ class TruckServiceTest {
 	public void setup() {
 		testWebSocketSession = new TestWebSocketSession();
 		truckService = new TruckService(truckTemplateLoader, truckConverter, truckNavigationService, remoteWorldService,
-																		remoteFactoryService, new Clock(60, System.currentTimeMillis())
+																		remoteFactoryService, playerService, new Clock(60, System.currentTimeMillis())
 		);
 	}
 
@@ -235,10 +243,43 @@ class TruckServiceTest {
 		SellResultDTO sellResult = new SellResultDTO(factoryId, Resource.WOOD, count);
 		Mockito.when(factoryServiceClient.sell(factoryId, Resource.WOOD.name(), count)).thenReturn(sellResult);
 
+		PlayerDTO playerDTO = new PlayerDTO("id", "name", 500);
+		Mockito.when(playerServiceClient.getPlayer()).thenReturn(playerDTO);
+
+		TransferResultDTO transferResultDTO = new TransferResultDTO(-25);
+		Mockito.when(playerServiceClient.transfer(-25)).thenReturn(transferResultDTO);
+
 		truckService.buyResource(truck.getId(), factoryId, Resource.WOOD, count);
 
 		Mockito.verify(factoryServiceClient, Mockito.times(1)).sell(factoryId, Resource.WOOD.name(), count);
 		Assertions.assertEquals(5, truckStorage.getCapacityTaken());
+	}
+
+	@Test
+	public void buyResource_notEnoughCash() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		Storage truckStorage = new Storage(10);
+		truck.setStorage(truckStorage);
+
+		this.truckService.addTruck(truck, "Warsaw");
+
+		String factoryId = "factoryId";
+		int count = 5;
+		FactoryDTO factory = new FactoryDTO();
+		StorageDTO factoryStorage = new StorageDTO();
+		factoryStorage.setCapacity(10);
+		factoryStorage.getResources().put(Resource.WOOD, 5);
+		factory.setStorage(factoryStorage);
+
+		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
+		SellResultDTO sellResult = new SellResultDTO(factoryId, Resource.WOOD, count);
+		Mockito.when(factoryServiceClient.sell(factoryId, Resource.WOOD.name(), count)).thenReturn(sellResult);
+
+		PlayerDTO playerDTO = new PlayerDTO("id", "name", 0);
+		Mockito.when(playerServiceClient.getPlayer()).thenReturn(playerDTO);
+
+		truckService.buyResource(truck.getId(), factoryId, Resource.WOOD, count);
+		Assertions.assertEquals(0, truckStorage.getCapacityTaken());
 	}
 
 }

@@ -2,6 +2,7 @@ package com.soze.player.controller;
 
 import com.soze.common.client.PlayerServiceClient;
 import com.soze.common.dto.PlayerDTO;
+import com.soze.common.dto.TransferResultDTO;
 import com.soze.player.domain.Player;
 import com.soze.player.service.PlayerService;
 import org.slf4j.Logger;
@@ -28,5 +29,12 @@ public class PlayerController implements PlayerServiceClient {
 		PlayerDTO playerDTO = new PlayerDTO(player.getId(), player.getName(), player.getCash());
 		LOG.info("returning player {}", playerDTO);
 		return playerDTO;
+	}
+
+	@Override
+	public TransferResultDTO transfer(long amount) {
+		LOG.info("called transfer, amount = {}", amount);
+		long transferred = playerService.transfer(amount);
+		return new TransferResultDTO(transferred);
 	}
 }

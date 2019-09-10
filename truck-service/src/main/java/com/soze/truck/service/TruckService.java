@@ -10,6 +10,7 @@ import com.soze.common.message.server.TruckArrived;
 import com.soze.common.message.server.TruckTravelStarted;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
+import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.saga.BuyResourceSaga;
 import com.soze.truck.world.RemoteWorldService;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ public class TruckService {
 	private final TruckNavigationService truckNavigationService;
 	private final RemoteWorldService remoteWorldService;
 	private final RemoteFactoryService remoteFactoryService;
+	private final RemotePlayerService playerService;
 	private final Clock clock;
 
 	private final List<Truck> trucks = new ArrayList<>();
@@ -45,13 +47,14 @@ public class TruckService {
 	@Autowired
 	public TruckService(TruckTemplateLoader truckTemplateLoader, TruckConverter truckConverter,
 											TruckNavigationService truckNavigationService, RemoteWorldService remoteWorldService,
-											RemoteFactoryService remoteFactoryService, Clock clock
+											RemoteFactoryService remoteFactoryService, RemotePlayerService playerService, Clock clock
 										 ) {
 		this.truckTemplateLoader = truckTemplateLoader;
 		this.truckConverter = truckConverter;
 		this.truckNavigationService = truckNavigationService;
 		this.remoteWorldService = remoteWorldService;
 		this.remoteFactoryService = remoteFactoryService;
+		this.playerService = playerService;
 		this.clock = clock;
 	}
 
@@ -167,7 +170,7 @@ public class TruckService {
 	 * <code>TruckId</code> buys <code>count</code> resources from factory with id <code>factoryId</code>.
 	 */
 	public void buyResource(String truckId, String factoryId, Resource resource, int count) {
-		new BuyResourceSaga(this, remoteFactoryService, truckId, factoryId, resource, count).run();
+		new BuyResourceSaga(this, remoteFactoryService, playerService, truckId, factoryId, resource, count).run();
 	}
 
 }

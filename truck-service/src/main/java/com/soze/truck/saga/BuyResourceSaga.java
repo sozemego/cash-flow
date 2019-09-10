@@ -1,13 +1,11 @@
 package com.soze.truck.saga;
 
-import com.soze.common.dto.FactoryDTO;
-import com.soze.common.dto.Resource;
-import com.soze.common.dto.SellResultDTO;
-import com.soze.common.dto.StorageDTO;
+import com.soze.common.dto.*;
 import com.soze.common.message.server.StorageContentChanged;
 import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
+import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.service.TruckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,17 +18,19 @@ public class BuyResourceSaga {
 
 	private final TruckService truckService;
 	private final RemoteFactoryService factoryService;
+	private final RemotePlayerService playerService;
 
 	private final String truckId;
 	private final String factoryId;
 	private final Resource resource;
 	private final int count;
 
-	public BuyResourceSaga(TruckService truckService, RemoteFactoryService factoryService, String truckId,
-												 String factoryId, Resource resource, int count
+	public BuyResourceSaga(TruckService truckService, RemoteFactoryService factoryService,
+												 RemotePlayerService playerService, String truckId, String factoryId, Resource resource, int count
 												) {
 		this.truckService = truckService;
 		this.factoryService = factoryService;
+		this.playerService = playerService;
 		this.truckId = truckId;
 		this.factoryId = factoryId;
 		this.resource = resource;
@@ -71,6 +71,24 @@ public class BuyResourceSaga {
 			return;
 		}
 
+		long cost = count * 5; // for now assume static cost
+		PlayerDTO playerDTO = playerService.getPlayer();
+		if (playerDTO.getCash() < cost) {
+			LOG.info("Player {}-{} does not have enough cash [required - {}, actual - {}]!", playerDTO.getId(), playerDTO.getName(), cost, playerDTO.getCash());
+			return;
+		}
+
+		TransferResultDTO transferResultDTO = playerService.transfer(-cost);
+		if (transferResultDTO.getAmountTransferred() != -cost) {
+			LOG.info("Could not transfer required amount from player, transferred = {}", transferResultDTO.getAmountTransferred());
+			return;
+		}
+
+		Runnable reverseTransfer = () -> {
+			LOG.info("Reverse transferring amount = {} from player", cost);
+			playerService.transfer(cost);
+		};
+
 		truckStorage.addResource(resource, count);
 		Runnable reverseAddResource = () -> {
 			LOG.info("Reverse adding {} of resource {} to truck {}", count, resource, truck.getId());
@@ -81,12 +99,14 @@ public class BuyResourceSaga {
 			SellResultDTO sellResult = factoryService.sell(factoryId, resource.name(), count);
 			if (sellResult.getCount() != count) {
 				reverseAddResource.run();
+				reverseTransfer.run();
 				LOG.info("Factory = {} was unable to sell {} of {}", factoryId, count, resource);
 				return;
 			}
 		} catch (Exception e) {
 			LOG.info("Exception when getting factory = {} to sell {} of {}", factoryId, count, resource, e);
 			reverseAddResource.run();
+			reverseTransfer.run();
 		}
 
 		LOG.info("Successfully bought {} of {} from {} for truck {}", count, resource, factoryId, truck.getId());

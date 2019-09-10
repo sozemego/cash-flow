@@ -2,11 +2,9 @@ package com.soze.truck.service;
 
 import com.soze.common.client.ClockServiceClient;
 import com.soze.common.client.FactoryServiceClient;
+import com.soze.common.client.PlayerServiceClient;
 import com.soze.common.client.WorldServiceClient;
-import com.soze.common.dto.CityDTO;
-import com.soze.common.dto.Clock;
-import com.soze.common.dto.FactoryDTO;
-import com.soze.common.dto.SellResultDTO;
+import com.soze.common.dto.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -76,6 +74,21 @@ public class TruckServiceTestBeanConfiguration {
 			@Override
 			public FactoryDTO getFactory(String factoryId) {
 				return null;
+			}
+		};
+	}
+
+	@Bean
+	public PlayerServiceClient playerServiceClient() {
+		return new PlayerServiceClient() {
+			@Override
+			public PlayerDTO getPlayer() {
+				return new PlayerDTO("playerId", "player", 500);
+			}
+
+			@Override
+			public TransferResultDTO transfer(long amount) {
+				return new TransferResultDTO(amount);
 			}
 		};
 	}

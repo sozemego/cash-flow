@@ -13,6 +13,7 @@ import { useGameClock } from "../clock/gameClock";
 import { calculateCapacityTaken, Storage } from "../components/Storage";
 import { useGetFactories } from "../factory/selectors";
 import { ResourceIcon } from "../components/ResourceIcon";
+import { useGetPlayer } from "../player/selectors";
 
 const Container = styled.div`
   margin: 2px;
@@ -251,9 +252,11 @@ export function Buy({ truck, cityId }) {
 export function FactoryResource({ truck, resource, count, factoryId }) {
   const { socket } = useTruckSocket();
   const [selectedCount, setSelectedCount] = useState(0);
+  const { cash } = useGetPlayer();
 
   const capacity = truck.storage.capacity;
   const capacityTaken = calculateCapacityTaken(truck.storage);
+  const canAffordAmount = Number((cash / 5).toFixed(0));
 
   return (
     <BuyableResourceContainer>
@@ -261,7 +264,7 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
       <ResourceIcon resource={resource} />
       <input
         type={"number"}
-        max={Math.min(capacity - capacityTaken, count)}
+        max={Math.min(canAffordAmount, Math.min(capacity - capacityTaken, count))}
         min={0}
         style={{ width: "48px" }}
         value={selectedCount}
