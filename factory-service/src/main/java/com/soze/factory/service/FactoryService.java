@@ -50,26 +50,6 @@ public class FactoryService {
 		this.clock = clock;
 	}
 
-	@PostConstruct
-	public void setup() {
-		CityDTO wroclaw = remoteWorldService.getCityByName("Wroclaw");
-		CityDTO warsaw = remoteWorldService.getCityByName("Warsaw");
-
-		Factory forester1 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		forester1.setCityId(wroclaw.id);
-		addFactory(forester1);
-
-		Factory forester2 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		forester2.setCityId(wroclaw.id);
-		addFactory(forester2);
-
-		Factory forester3 = templateLoader.constructFactoryByTemplateId("FORESTER");
-		forester3.setCityId(warsaw.id);
-		addFactory(forester3);
-
-		LOG.info("Created {} factories", factories.size());
-	}
-
 	public void addFactory(Factory factory) {
 		LOG.info("Adding factory {}", factory);
 		validateFactory(factory);
