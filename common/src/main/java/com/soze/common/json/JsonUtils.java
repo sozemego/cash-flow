@@ -47,7 +47,7 @@ public class JsonUtils {
 
 	public static String serialize(Object object) {
 		try {
-			return MAPPER.writeValueAsString(object);
+			return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(object);
 		} catch (JsonProcessingException e) {
 			throw new IllegalArgumentException(e);
 		}
