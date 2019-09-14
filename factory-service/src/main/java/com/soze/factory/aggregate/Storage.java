@@ -1,4 +1,4 @@
-package com.soze.factory.domain;
+package com.soze.factory.aggregate;
 
 import com.soze.common.dto.Resource;
 

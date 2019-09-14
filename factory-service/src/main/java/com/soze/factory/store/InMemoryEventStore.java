@@ -34,4 +34,8 @@ public class InMemoryEventStore implements EventStore {
 		return events.keySet().size();
 	}
 
+	@Override
+	public List<String> getAllIds() {
+		return new ArrayList<>(events.keySet());
+	}
 }

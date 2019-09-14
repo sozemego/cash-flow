@@ -55,6 +55,11 @@ public class FileEventStore implements EventStore {
 	}
 
 	@Override
+	public List<String> getAllIds() {
+		return new ArrayList<>(events.keySet());
+	}
+
+	@Override
 	public int count() {
 		return events.keySet().size();
 	}

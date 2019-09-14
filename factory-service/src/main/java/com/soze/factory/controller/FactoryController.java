@@ -5,7 +5,8 @@ import com.soze.common.dto.Resource;
 import com.soze.common.dto.SellResultDTO;
 import com.soze.factory.FactoryConverter;
 import com.soze.common.client.FactoryServiceClient;
-import com.soze.factory.domain.Factory;
+import com.soze.factory.aggregate.Factory;
+import com.soze.factory.repository.FactoryRepository;
 import com.soze.factory.service.FactoryService;
 import com.soze.factory.service.FactoryTemplateLoader;
 import io.swagger.annotations.Api;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -31,22 +33,25 @@ public class FactoryController implements FactoryServiceClient {
 	private final FactoryService factoryService;
 	private final FactoryTemplateLoader factoryTemplateLoader;
 	private final FactoryConverter factoryConverter;
+	private final FactoryRepository factoryRepository;
 	private final HttpServletResponse response;
 
 	@Autowired
 	public FactoryController(FactoryService factoryService, FactoryTemplateLoader factoryTemplateLoader,
-													 FactoryConverter factoryConverter, HttpServletResponse response
+													 FactoryConverter factoryConverter, FactoryRepository factoryRepository, HttpServletResponse response
 													) {
 		this.factoryService = factoryService;
 		this.factoryTemplateLoader = factoryTemplateLoader;
 		this.factoryConverter = factoryConverter;
+		this.factoryRepository = factoryRepository;
 		this.response = response;
 	}
 
 	@GetMapping(value = "/")
 	public List<FactoryDTO> getFactories() {
 		LOG.info("Calling getFactories");
-		List<FactoryDTO> factoryDTOS = factoryService.getFactories().stream().map(factoryConverter::convert).collect(
+		List<Factory> factories = factoryRepository.getAll();
+		List<FactoryDTO> factoryDTOS = factories.stream().map(factoryConverter::convert).collect(
 			Collectors.toList());
 		LOG.info("Returning {} factories", factoryDTOS.size());
 		return factoryDTOS;
@@ -62,7 +67,7 @@ public class FactoryController implements FactoryServiceClient {
 
 	public FactoryDTO getFactory(String factoryId) {
 		LOG.info("called /getFactory, factoryId = {}", factoryId);
-		Optional<Factory> factoryOptional = factoryService.getFactoryById(factoryId);
+		Optional<Factory> factoryOptional = factoryRepository.findById(UUID.fromString(factoryId));
 		if (!factoryOptional.isPresent()) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
 			return null;

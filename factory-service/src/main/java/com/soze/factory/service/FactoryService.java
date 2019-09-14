@@ -1,14 +1,13 @@
 package com.soze.factory.service;
 
-import com.soze.common.dto.CityDTO;
 import com.soze.common.dto.Clock;
 import com.soze.common.dto.Resource;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.server.*;
 import com.soze.factory.FactoryConverter;
-import com.soze.factory.domain.Factory;
-import com.soze.factory.domain.Producer;
-import com.soze.factory.domain.Storage;
+import com.soze.factory.aggregate.Factory;
+import com.soze.factory.aggregate.Producer;
+import com.soze.factory.aggregate.Storage;
 import com.soze.factory.world.RemoteWorldService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -48,39 +46,6 @@ public class FactoryService {
 		this.factoryConverter = factoryConverter;
 		this.remoteWorldService = remoteWorldService;
 		this.clock = clock;
-	}
-
-	public void addFactory(Factory factory) {
-		LOG.info("Adding factory {}", factory);
-		validateFactory(factory);
-
-		this.factories.add(factory);
-
-		FactoryAdded factoryAdded = new FactoryAdded(this.factoryConverter.convert(factory));
-		sendToAll(factoryAdded);
-
-		startProducing(factory);
-	}
-
-	private void validateFactory(Factory factory) {
-		if (factory.getId() == null) {
-			throw new IllegalArgumentException("Factory cannot have null id");
-		}
-		if (factory.getCityId() == null) {
-			throw new IllegalArgumentException("Factory cannot have null cityId");
-		}
-		if (factory.getProducer() == null) {
-			throw new IllegalArgumentException("Factory cannot have null producer");
-		}
-		if (factory.getStorage() == null) {
-			throw new IllegalArgumentException("Factory cannot have null storage");
-		}
-		Optional<Factory> previousFactory = this.factories.stream().filter(
-			filteredFactory -> factory.getId().equals(filteredFactory.getId())).findFirst();
-
-		if (previousFactory.isPresent()) {
-			throw new IllegalArgumentException("Factory with id = " + factory.getId() + " already exists");
-		}
 	}
 
 	private void startProducing(Factory factory) {

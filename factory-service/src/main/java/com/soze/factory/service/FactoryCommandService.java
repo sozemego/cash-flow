@@ -2,7 +2,7 @@ package com.soze.factory.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.soze.common.dto.CityDTO;
-import com.soze.factory.FactoryRepository;
+import com.soze.factory.repository.FactoryRepository;
 import com.soze.factory.command.CommandVisitor;
 import com.soze.factory.command.CreateFactory;
 import com.soze.factory.event.FactoryCreated;
@@ -58,7 +58,7 @@ public class FactoryCommandService implements CommandVisitor {
 		String texture = template.get("texture").asText();
 		eventPublisher.publishEvent(
 			new FactoryCreated(createFactory.getFactoryId().toString(), LocalDateTime.now(), 1, name, texture,
-												 createFactory.getTemplateId()
+												 createFactory.getTemplateId(), createFactory.getCityId()
 			));
 	}
 

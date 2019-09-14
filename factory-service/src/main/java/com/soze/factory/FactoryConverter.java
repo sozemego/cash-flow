@@ -3,8 +3,8 @@ package com.soze.factory;
 import com.soze.common.dto.FactoryDTO;
 import com.soze.common.dto.ProducerDTO;
 import com.soze.common.dto.StorageDTO;
-import com.soze.factory.domain.Factory;
-import com.soze.factory.domain.Producer;
+import com.soze.factory.aggregate.Factory;
+import com.soze.factory.aggregate.Producer;
 import org.springframework.stereotype.Service;
 
 @Service

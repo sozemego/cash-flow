@@ -4,6 +4,7 @@ import com.soze.factory.event.Event;
 import org.springframework.context.event.EventListener;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Event store for factory service.
@@ -15,6 +16,8 @@ public interface EventStore {
 	void handleEvent(Event event);
 
 	List<Event> getEventsForEntity(String entityId);
+
+	List<String> getAllIds();
 
 	int count();
 

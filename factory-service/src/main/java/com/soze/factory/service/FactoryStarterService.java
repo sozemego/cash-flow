@@ -1,7 +1,7 @@
 package com.soze.factory.service;
 
 import com.soze.common.dto.CityDTO;
-import com.soze.factory.FactoryRepository;
+import com.soze.factory.repository.FactoryRepository;
 import com.soze.factory.command.Command;
 import com.soze.factory.world.RemoteWorldService;
 import org.slf4j.Logger;
