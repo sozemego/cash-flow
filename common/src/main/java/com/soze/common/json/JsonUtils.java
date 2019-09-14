@@ -2,6 +2,7 @@ package com.soze.common.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +12,10 @@ import java.util.List;
 public class JsonUtils {
 
 	private static final ObjectMapper MAPPER = new ObjectMapper();
+
+	static {
+		MAPPER.registerModule(new JavaTimeModule());
+	}
 
 	public static <T> T parse(String json, Class<T> clazz) {
 		try {
