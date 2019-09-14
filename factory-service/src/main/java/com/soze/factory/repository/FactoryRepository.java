@@ -1,4 +1,4 @@
-package com.soze.factory;
+package com.soze.factory.repository;
 
 import com.soze.factory.aggregate.Factory;
 import com.soze.factory.event.Event;
