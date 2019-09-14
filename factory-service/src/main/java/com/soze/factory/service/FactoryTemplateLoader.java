@@ -3,6 +3,8 @@ package com.soze.factory.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.soze.common.dto.Resource;
 import com.soze.common.json.JsonUtils;
+import com.soze.factory.command.Command;
+import com.soze.factory.command.CreateFactory;
 import com.soze.factory.domain.Factory;
 import com.soze.factory.domain.Producer;
 import com.soze.factory.domain.Storage;
@@ -38,6 +40,26 @@ public class FactoryTemplateLoader {
 		LOG.info("Loaded {} entities", jsonEntities.size());
 	}
 
+	/**
+	 * Returns a list of {@link Command} objects which need to be handled
+	 * in order to create a initial version of factory with this templateId.
+	 * Since factory cannot exist without a city, it is required for its creation.
+	 */
+	public List<Command> getFactoryCommandsByTemplateId(String id, String cityId) {
+		JsonNode root = findRootById(Objects.requireNonNull(id));
+		if (root == null) {
+			throw new IllegalArgumentException("Did not find template by id " + id);
+		}
+
+		List<Command> commands = new ArrayList<>();
+		commands.add(new CreateFactory(UUID.randomUUID(), id, cityId));
+
+		//TODO storage
+		//TODO producer
+
+		return commands;
+	}
+
 	public Factory constructFactoryByTemplateId(String id) {
 		JsonNode root = findRootById(Objects.requireNonNull(id));
 		if (root == null) {
@@ -65,12 +87,16 @@ public class FactoryTemplateLoader {
 		return factory;
 	}
 
-	private JsonNode findRootById(String id) {
+	public JsonNode findRootById(String id) {
 		return jsonEntities.get(id);
 	}
 
 	public File getEntities() throws IOException {
 		return entities.getFile();
+	}
+
+	public boolean exists(String id) {
+		return findRootById(id) != null;
 	}
 
 }
