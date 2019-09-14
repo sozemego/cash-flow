@@ -8,7 +8,7 @@ import com.soze.factory.FactoryConverter;
 import com.soze.factory.aggregate.Factory;
 import com.soze.factory.aggregate.Producer;
 import com.soze.factory.aggregate.Storage;
-import com.soze.factory.world.RemoteWorldService;
+import com.soze.factory.repository.FactoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,24 +27,21 @@ public class FactoryService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FactoryService.class);
 
-	private final FactoryTemplateLoader templateLoader;
 	private final FactoryConverter factoryConverter;
-	private final RemoteWorldService remoteWorldService;
+	private final FactoryRepository repository;
 	private final Clock clock;
-
-	private final List<Factory> factories = new ArrayList<>();
 
 	private final Set<WebSocketSession> sessions = new HashSet<>();
 
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
 	@Autowired
-	public FactoryService(FactoryTemplateLoader templateLoader, FactoryConverter factoryConverter,
-												RemoteWorldService remoteWorldService, Clock clock
+	public FactoryService(FactoryConverter factoryConverter,
+												FactoryRepository repository,
+												Clock clock
 											 ) {
-		this.templateLoader = templateLoader;
 		this.factoryConverter = factoryConverter;
-		this.remoteWorldService = remoteWorldService;
+		this.repository = repository;
 		this.clock = clock;
 	}
 
@@ -88,14 +85,11 @@ public class FactoryService {
 		sendToAll(new ResourceProduced(factory.getId(), producer.getResource()));
 	}
 
-	public List<Factory> getFactories() {
-		return factories;
-	}
-
 	public void addSession(WebSocketSession session) {
 		sessions.add(session);
 
 		//send back all factories to the session
+		List<Factory> factories = repository.getAll();
 		LOG.info("Sending FactoryAdded message for {} factories", factories.size());
 		for (Factory factory : factories) {
 			FactoryAdded factoryAdded = new FactoryAdded(factoryConverter.convert(factory));
@@ -127,14 +121,9 @@ public class FactoryService {
 		}
 	}
 
-	public Optional<Factory> getFactoryById(String factoryId) {
-		Objects.requireNonNull(factoryId);
-		return factories.stream().filter(factory -> factory.getId().equals(factoryId)).findFirst();
-	}
-
 	public void sell(String factoryId, Resource resource, int count) {
 		LOG.info("Attempting to sell {} of {} from factoryId = {}", count, resource, factoryId);
-		Factory factory = getFactoryById(factoryId).orElseThrow(
+		Factory factory = repository.findById(UUID.fromString(factoryId)).orElseThrow(
 			() -> new IllegalStateException("Factory with id " + factoryId + " does not exist"));
 
 		Storage storage = factory.getStorage();
