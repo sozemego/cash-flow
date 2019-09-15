@@ -22,7 +22,7 @@ public class TestWebSocketSession implements WebSocketSession {
 
 	@Override
 	public String getId() {
-		return null;
+		return "session";
 	}
 
 	@Override
