@@ -3,8 +3,10 @@ import {
   FACTORY_ADDED,
   RESOURCE_PRODUCED,
   RESOURCE_PRODUCTION_STARTED,
+  STORAGE_CAPACITY_CHANGED,
   STORAGE_CONTENT_CHANGED
 } from "./actions";
+import { transfer } from "../storage/business";
 
 const initialState = {
   factories: []
@@ -20,6 +22,8 @@ export function reducer(state = initialState, action) {
       return resourceProductionStarted(state, action);
     case STORAGE_CONTENT_CHANGED:
       return storageContentChanged(state, action);
+    case STORAGE_CAPACITY_CHANGED:
+      return storageCapacityChanged(state, action);
     default:
       return state;
   }
@@ -53,6 +57,19 @@ const storageContentChanged = produce((state, action) => {
   }
   const currentCount = factory.storage.resources[resource] || 0;
   factory.storage.resources[resource] = currentCount + change;
+});
+
+const storageCapacityChanged = produce((state, action) => {
+  const { factoryId, change } = action;
+  const factory = findFactory(state, factoryId);
+  if (!factory) {
+    return;
+  }
+  const oldStorage = factory.storage;
+  const nextStorage = { ...factory.storage };
+  nextStorage.capacity = oldStorage.capacity + change;
+  transfer(oldStorage, nextStorage);
+  factory.storage = nextStorage;
 });
 
 function findFactory(state, factoryId) {

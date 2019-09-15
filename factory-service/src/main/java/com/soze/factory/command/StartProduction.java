@@ -1,16 +1,18 @@
 package com.soze.factory.command;
 
+import java.util.UUID;
+
 public class StartProduction implements Command {
 
-	private final String factoryId;
+	private final UUID factoryId;
 	private final long currentGameTime;
 
-	public StartProduction(String factoryId, long currentGameTime) {
+	public StartProduction(UUID factoryId, long currentGameTime) {
 		this.factoryId = factoryId;
 		this.currentGameTime = currentGameTime;
 	}
 
-	public String getFactoryId() {
+	public UUID getFactoryId() {
 		return factoryId;
 	}
 

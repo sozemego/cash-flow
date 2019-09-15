@@ -6,13 +6,14 @@ import com.soze.factory.event.*;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Aggregate root for the factory.
  */
 public class Factory implements EventVisitor, CommandVisitor {
 
-	private String id;
+	private UUID id;
 	private String name;
 	private String texture;
 	private String cityId;
@@ -28,7 +29,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 		visit(factoryCreated);
 	}
 
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
@@ -76,7 +77,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 		}
 
 		return Collections.singletonList(
-			new ProductionStarted(startProduction.getFactoryId(), LocalDateTime.now(), 1, producer.getResource(),
+			new ProductionStarted(startProduction.getFactoryId().toString(), LocalDateTime.now(), 1, producer.getResource(),
 														startProduction.getCurrentGameTime()
 			));
 	}
@@ -96,7 +97,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public void visit(FactoryCreated factoryCreated) {
-		this.id = factoryCreated.getEntityId();
+		this.id = UUID.fromString(factoryCreated.getEntityId());
 		this.name = factoryCreated.getName();
 		this.texture = factoryCreated.getTexture();
 		this.cityId = factoryCreated.getCityId();
