@@ -38,12 +38,12 @@ public class Producer {
 		this.producing = producing;
 	}
 
-	public void startProduction(Clock clock) {
+	public void startProduction(long currentGameTime) {
 		if (isProducing()) {
 			return;
 		}
 		setProducing(true);
-		setProductionStartTime(clock.getCurrentGameTime());
+		setProductionStartTime(currentGameTime);
 	}
 
 	public void stopProduction() {

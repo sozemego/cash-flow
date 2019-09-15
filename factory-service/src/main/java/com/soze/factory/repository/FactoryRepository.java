@@ -35,7 +35,7 @@ public class FactoryRepository {
 		for (int i = 1; i < events.size(); i++) {
 			Event event = events.get(i);
 			LOG.trace("Applying event = {}", event);
-			factory.accept(event);
+			event.accept(factory);
 		}
 
 		return Optional.of(factory);

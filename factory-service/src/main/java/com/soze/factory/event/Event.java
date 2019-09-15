@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
 @JsonSubTypes(value = {
 	@JsonSubTypes.Type(value = FactoryCreated.class, name = "FACTORY_CREATED"),
+	@JsonSubTypes.Type(value = ProductionStarted.class, name = "PRODUCTION_STARTED"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Event {
@@ -37,12 +38,14 @@ public abstract class Event {
 
 	public abstract EventType getType();
 
+	public abstract void accept(EventVisitor visitor);
+
 	@Override
 	public String toString() {
 		return "Event{" + "entityId='" + entityId + '\'' + ", timestamp=" + timestamp + ", version=" + version + '}';
 	}
 
 	public enum EventType {
-		FACTORY_CREATED
+		FACTORY_CREATED, PRODUCTION_STARTED
 	}
 }

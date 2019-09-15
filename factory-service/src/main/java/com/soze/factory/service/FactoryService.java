@@ -1,92 +1,45 @@
 package com.soze.factory.service;
 
-import com.soze.common.dto.Clock;
 import com.soze.common.dto.Resource;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.server.*;
 import com.soze.factory.FactoryConverter;
 import com.soze.factory.aggregate.Factory;
-import com.soze.factory.aggregate.Producer;
 import com.soze.factory.aggregate.Storage;
+import com.soze.factory.event.EventVisitor;
+import com.soze.factory.event.FactoryCreated;
+import com.soze.factory.event.ProductionStarted;
 import com.soze.factory.repository.FactoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Service
-public class FactoryService {
+public class FactoryService implements EventVisitor {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FactoryService.class);
 
 	private final FactoryConverter factoryConverter;
 	private final FactoryRepository repository;
-	private final Clock clock;
-
-	private final Set<WebSocketSession> sessions = new HashSet<>();
-
-	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+	private final SocketSessionContainer socketSessionContainer;
 
 	@Autowired
-	public FactoryService(FactoryConverter factoryConverter,
-												FactoryRepository repository,
-												Clock clock
+	public FactoryService(FactoryConverter factoryConverter, FactoryRepository repository,
+												SocketSessionContainer socketSessionContainer
 											 ) {
 		this.factoryConverter = factoryConverter;
 		this.repository = repository;
-		this.clock = clock;
+		this.socketSessionContainer = socketSessionContainer;
 	}
 
-	private void startProducing(Factory factory) {
-		Producer producer = factory.getProducer();
-		if (producer.isProducing()) {
-			return;
-		}
-		Storage storage = factory.getStorage();
-		if (storage.isFull()) {
-			LOG.info("Factory {} is full", factory.getId());
-			return;
-		}
-
-		producer.startProduction(clock);
-		long minutes = producer.getTime();
-		long timeRemaining = TimeUnit.MINUTES.toMillis(minutes) / clock.getMultiplier();
-		LOG.info("Starting production of {} at factory = {}, it will finish in {} ms", producer.getResource(),
-						 factory.getId(), timeRemaining
-						);
-		executorService.schedule(() -> {
-			finishProducing(factory);
-			startProducing(factory);
-		}, timeRemaining, TimeUnit.MILLISECONDS);
-
-		ResourceProductionStarted resourceProductionStarted = new ResourceProductionStarted(factory.getId(),
-																																												factory.getProducer()
-																																															 .getResource(),
-																																												factory.getProducer()
-																																															 .getProductionStartTime()
-		);
-		sendToAll(resourceProductionStarted);
-	}
-
-	private void finishProducing(Factory factory) {
-		LOG.trace("Factory {} finished producing {}", factory.getId(), factory.getProducer().getResource());
-		Producer producer = factory.getProducer();
-		producer.stopProduction();
-		Storage storage = factory.getStorage();
-		storage.addResource(producer.getResource());
-		sendToAll(new ResourceProduced(factory.getId(), producer.getResource()));
-	}
-
-	public void addSession(WebSocketSession session) {
-		sessions.add(session);
+	public void handleNewSession(WebSocketSession session) {
 
 		//send back all factories to the session
 		List<Factory> factories = repository.getAll();
@@ -95,10 +48,6 @@ public class FactoryService {
 			FactoryAdded factoryAdded = new FactoryAdded(factoryConverter.convert(factory));
 			sendTo(factoryAdded, session);
 		}
-	}
-
-	public void removeSession(WebSocketSession session) {
-		sessions.remove(session);
 	}
 
 	private void sendTo(ServerMessage serverMessage, WebSocketSession session) {
@@ -116,7 +65,7 @@ public class FactoryService {
 
 	private void sendToAll(ServerMessage serverMessage) {
 		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
-		for (WebSocketSession session : sessions) {
+		for (WebSocketSession session : (List<WebSocketSession>)null) {
 			sendTo(textMessage, session);
 		}
 	}
@@ -136,7 +85,19 @@ public class FactoryService {
 		LOG.info("Removed {} of {} from factoryId = {}", count, resource, factory.getId());
 
 		sendToAll(new StorageContentChanged(factoryId, resource, -count));
-		startProducing(factory);
 	}
 
+	@EventListener
+	@Override
+	public void visit(FactoryCreated factoryCreated) {
+		LOG.info("{}", factoryCreated);
+		Factory factory = repository.findById(UUID.fromString(factoryCreated.getEntityId())).get();
+		sendToAll(new FactoryAdded(factoryConverter.convert(factory)));
+	}
+
+	@EventListener
+	@Override
+	public void visit(ProductionStarted productionStarted) {
+		LOG.info("{}", productionStarted);
+	}
 }

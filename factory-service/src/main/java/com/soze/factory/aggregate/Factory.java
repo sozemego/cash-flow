@@ -1,12 +1,13 @@
 package com.soze.factory.aggregate;
 
-import com.soze.factory.event.Event;
+import com.soze.factory.event.EventVisitor;
 import com.soze.factory.event.FactoryCreated;
+import com.soze.factory.event.ProductionStarted;
 
 /**
  * Aggregate root for the factory.
  */
-public class Factory {
+public class Factory implements EventVisitor {
 
 	private final String id;
 	private final String name;
@@ -47,7 +48,13 @@ public class Factory {
 		return producer;
 	}
 
-	public void accept(Event event) {
+	@Override
+	public void visit(FactoryCreated factoryCreated) {
 
+	}
+
+	@Override
+	public void visit(ProductionStarted productionStarted) {
+		producer.startProduction(productionStarted.getProductionStartTime());
 	}
 }

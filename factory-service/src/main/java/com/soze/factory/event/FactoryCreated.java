@@ -43,6 +43,11 @@ public class FactoryCreated extends Event {
 	}
 
 	@Override
+	public void accept(EventVisitor visitor) {
+		visitor.visit(this);
+	}
+
+	@Override
 	public String toString() {
 		return "FactoryCreated{" + "name='" + name + '\'' + ", texture='" + texture + '\'' + ", cityId='" + cityId + '\'' + '}';
 	}
