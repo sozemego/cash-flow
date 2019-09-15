@@ -1,14 +1,16 @@
 package com.soze.factory.command;
 
+import java.util.UUID;
+
 public class FinishProduction implements Command {
 
-	private final String factoryId;
+	private final UUID factoryId;
 
-	public FinishProduction(String factoryId) {
+	public FinishProduction(UUID factoryId) {
 		this.factoryId = factoryId;
 	}
 
-	public String getFactoryId() {
+	public UUID getFactoryId() {
 		return factoryId;
 	}
 

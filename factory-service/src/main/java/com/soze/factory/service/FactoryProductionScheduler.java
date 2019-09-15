@@ -73,7 +73,7 @@ public class FactoryProductionScheduler {
 		long minutes = factory.getProducer().getTime();
 		long timeRemaining = TimeUnit.MINUTES.toMillis(minutes) / clock.getMultiplier();
 		executorService.schedule(() -> {
-			commandService.visit(new FinishProduction(productionStarted.getEntityId()));
+			commandService.visit(new FinishProduction(UUID.fromString(productionStarted.getEntityId())));
 		}, timeRemaining, TimeUnit.MILLISECONDS);
 	}
 

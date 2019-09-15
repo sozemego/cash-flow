@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -23,15 +24,18 @@ public class FactoryStarterService {
 	private final FactoryTemplateLoader templateLoader;
 	private final FactoryCommandService factoryCommandService;
 	private final FactoryRepository factoryRepository;
+	private final ApplicationEventPublisher eventPublisher;
 
 	@Autowired
 	public FactoryStarterService(RemoteWorldService remoteWorldService, FactoryTemplateLoader templateLoader,
-															 FactoryCommandService factoryCommandService, FactoryRepository factoryRepository
+															 FactoryCommandService factoryCommandService, FactoryRepository factoryRepository,
+															 ApplicationEventPublisher eventPublisher
 															) {
 		this.remoteWorldService = remoteWorldService;
 		this.templateLoader = templateLoader;
 		this.factoryCommandService = factoryCommandService;
 		this.factoryRepository = factoryRepository;
+		this.eventPublisher = eventPublisher;
 	}
 
 	@EventListener
@@ -49,8 +53,9 @@ public class FactoryStarterService {
 		commands.addAll(templateLoader.getFactoryCommandsByTemplateId("FORESTER", wroclaw.id));
 		commands.addAll(templateLoader.getFactoryCommandsByTemplateId("FORESTER", warsaw.id));
 		for (Command command : commands) {
-			command.accept(factoryCommandService);
+			eventPublisher.publishEvent(command);
 		}
+
 	}
 
 }
