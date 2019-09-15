@@ -2,6 +2,7 @@ package com.soze.factory.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.soze.common.json.JsonUtils;
+import com.soze.factory.command.ChangeStorageCapacity;
 import com.soze.factory.command.Command;
 import com.soze.factory.command.CreateFactory;
 import org.slf4j.Logger;
@@ -47,12 +48,14 @@ public class FactoryTemplateLoader {
 			throw new IllegalArgumentException("Did not find template by id " + id);
 		}
 
+		UUID factoryId = UUID.randomUUID();
 		List<Command> commands = new ArrayList<>();
 		String name = root.get("name").asText();
 		String texture = root.get("texture").asText();
-		commands.add(new CreateFactory(UUID.randomUUID(), name, texture, cityId));
-
-		//TODO storage
+		commands.add(new CreateFactory(factoryId, name, texture, cityId));
+		JsonNode storage = root.get("storage");
+		int capacity = storage.get("capacity").asInt();
+		commands.add(new ChangeStorageCapacity(factoryId, capacity));
 		//TODO producer
 
 		return commands;

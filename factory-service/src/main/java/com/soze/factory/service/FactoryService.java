@@ -9,6 +9,7 @@ import com.soze.factory.aggregate.Storage;
 import com.soze.factory.event.EventVisitor;
 import com.soze.factory.event.FactoryCreated;
 import com.soze.factory.event.ProductionStarted;
+import com.soze.factory.event.StorageCapacityChanged;
 import com.soze.factory.repository.FactoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,7 @@ public class FactoryService implements EventVisitor {
 
 	private void sendToAll(ServerMessage serverMessage) {
 		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
-		for (WebSocketSession session : (List<WebSocketSession>)null) {
+		for (WebSocketSession session : socketSessionContainer.getAllSessions()) {
 			sendTo(textMessage, session);
 		}
 	}
@@ -99,5 +100,10 @@ public class FactoryService implements EventVisitor {
 	@Override
 	public void visit(ProductionStarted productionStarted) {
 		LOG.info("{}", productionStarted);
+	}
+
+	@Override
+	public void visit(StorageCapacityChanged storageCapacityChanged) {
+		LOG.info("{}", storageCapacityChanged);
 	}
 }

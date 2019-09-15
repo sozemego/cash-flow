@@ -22,4 +22,9 @@ public class StartProduction implements Command {
 	public void accept(CommandVisitor commandVisitor) {
 		commandVisitor.visit(this);
 	}
+
+	@Override
+	public String toString() {
+		return "StartProduction{" + "factoryId='" + factoryId + '\'' + ", currentGameTime=" + currentGameTime + '}';
+	}
 }

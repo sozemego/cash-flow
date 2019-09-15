@@ -3,6 +3,7 @@ package com.soze.factory.aggregate;
 import com.soze.factory.event.EventVisitor;
 import com.soze.factory.event.FactoryCreated;
 import com.soze.factory.event.ProductionStarted;
+import com.soze.factory.event.StorageCapacityChanged;
 
 /**
  * Aggregate root for the factory.
@@ -56,5 +57,13 @@ public class Factory implements EventVisitor {
 	@Override
 	public void visit(ProductionStarted productionStarted) {
 		producer.startProduction(productionStarted.getProductionStartTime());
+	}
+
+	@Override
+	public void visit(StorageCapacityChanged storageCapacityChanged) {
+		Storage previousStorage = getStorage();
+		int newCapacity = previousStorage.getCapacity() + storageCapacityChanged.getChange();
+		storage = new Storage(newCapacity);
+		storage.transferFrom(previousStorage);
 	}
 }

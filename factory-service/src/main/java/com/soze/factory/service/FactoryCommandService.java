@@ -5,12 +5,10 @@ import com.soze.common.dto.Clock;
 import com.soze.factory.aggregate.Factory;
 import com.soze.factory.aggregate.Producer;
 import com.soze.factory.aggregate.Storage;
-import com.soze.factory.command.CommandVisitor;
-import com.soze.factory.command.CreateFactory;
-import com.soze.factory.command.FinishProduction;
-import com.soze.factory.command.StartProduction;
+import com.soze.factory.command.*;
 import com.soze.factory.event.FactoryCreated;
 import com.soze.factory.event.ProductionStarted;
+import com.soze.factory.event.StorageCapacityChanged;
 import com.soze.factory.repository.FactoryRepository;
 import com.soze.factory.world.RemoteWorldService;
 import org.slf4j.Logger;
@@ -48,7 +46,7 @@ public class FactoryCommandService implements CommandVisitor {
 
 	@Override
 	public void visit(CreateFactory createFactory) {
-		LOG.info("handling createFactory = {}", createFactory);
+		LOG.info("{}", createFactory);
 		if (repository.findById(createFactory.getFactoryId()).isPresent()) {
 			throw new IllegalStateException("Factory with id = " + createFactory.getFactoryId() + " already exists");
 		}
@@ -66,13 +64,17 @@ public class FactoryCommandService implements CommandVisitor {
 
 	@Override
 	public void visit(StartProduction startProduction) {
-		LOG.info("Handling {}", startProduction);
+		LOG.info("{}", startProduction);
 		Factory factory = getFactory(startProduction.getFactoryId());
 
 		Producer producer = factory.getProducer();
 		if (producer.isProducing()) {
 			return;
 		}
+		if (producer.getResource() == null) {
+			return;
+		}
+
 		Storage storage = factory.getStorage();
 		if (storage.isFull()) {
 			LOG.info("Factory {} is full", factory.getId());
@@ -92,8 +94,17 @@ public class FactoryCommandService implements CommandVisitor {
 	}
 
 	@Override
+	public void visit(ChangeStorageCapacity changeStorageCapacity) {
+		LOG.info("{}", changeStorageCapacity);
+		eventPublisher.publishEvent(
+			new StorageCapacityChanged(changeStorageCapacity.getFactoryId().toString(), LocalDateTime.now(), 1,
+																 changeStorageCapacity.getChange()
+			));
+	}
+
+	@Override
 	public void visit(FinishProduction finishProduction) {
-		LOG.info("Handling {}", finishProduction);
+		LOG.info("{}", finishProduction);
 		Factory factory = getFactory(finishProduction.getFactoryId());
 
 	}

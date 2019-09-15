@@ -17,20 +17,28 @@ public class Storage {
 	}
 
 	public void addResource(Resource resource) {
-		if (!canFit(resource)) {
+		addResource(resource, 1);
+	}
+
+	public void addResource(Resource resource, final int count) {
+		if (!canFit(resource, count)) {
 			return;
 		}
-		resources.compute(resource, (res, count) -> {
-			if (count == null) {
-				return 1;
+		resources.compute(resource, (res, actualCount) -> {
+			if (actualCount == null) {
+				return count;
 			}
-			return ++count;
+			return actualCount + count;
 		});
-		capacityTaken += 1;
+		capacityTaken += count;
 	}
 
 	public boolean canFit(Resource resource) {
-		return capacityTaken < capacity;
+		return canFit(resource, 1);
+	}
+
+	public boolean canFit(Resource resource, int count) {
+		return capacityTaken + count <= capacity;
 	}
 
 	public void removeResource(Resource resource) {
@@ -77,6 +85,13 @@ public class Storage {
 
 	public Map<Resource, Integer> getResources() {
 		return new HashMap<>(resources);
+	}
+
+	void transferFrom(Storage otherStorage) {
+		otherStorage.getResources().forEach((resource, count) -> {
+			int transferCount = Math.min(count, getRemainingCapacity());
+			addResource(resource, transferCount);
+		});
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import com.soze.factory.repository.FactoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  * Starts timers that are supposed to trigger some actions when production is supposed to end.
  */
 @Service
+@Profile("!test")
 public class FactoryProductionScheduler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FactoryProductionScheduler.class);
