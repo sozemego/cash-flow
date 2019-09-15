@@ -28,15 +28,13 @@ public class FactoryCommandService implements CommandVisitor {
 
 	private final FactoryRepository repository;
 	private final RemoteWorldService worldService;
-	private final Clock clock;
 
 	@Autowired
 	public FactoryCommandService(FactoryRepository repository,
-															 RemoteWorldService worldService, Clock clock
+															 RemoteWorldService worldService
 															) {
 		this.repository = repository;
 		this.worldService = worldService;
-		this.clock = clock;
 	}
 
 	@Override
