@@ -9,7 +9,6 @@ import com.soze.factory.event.FactoryCreated;
 public class Factory {
 
 	private final String id;
-	private final String templateId;
 	private final String name;
 	private final String texture;
 	private final String cityId;
@@ -19,7 +18,6 @@ public class Factory {
 
 	public Factory(FactoryCreated factoryCreated) {
 		this.id = factoryCreated.getEntityId();
-		this.templateId = factoryCreated.getTemplateId();
 		this.name = factoryCreated.getName();
 		this.texture = factoryCreated.getTexture();
 		this.cityId = factoryCreated.getCityId();
@@ -27,10 +25,6 @@ public class Factory {
 
 	public String getId() {
 		return id;
-	}
-
-	public String getTemplateId() {
-		return templateId;
 	}
 
 	public String getName() {

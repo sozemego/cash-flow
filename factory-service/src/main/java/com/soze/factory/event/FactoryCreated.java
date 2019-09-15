@@ -9,7 +9,6 @@ public class FactoryCreated extends Event {
 
 	private final String name;
 	private final String texture;
-	private final String templateId;
 	private final String cityId;
 
 	@JsonCreator
@@ -18,13 +17,11 @@ public class FactoryCreated extends Event {
 												@JsonProperty("version") int version,
 												@JsonProperty("name") String name,
 												@JsonProperty("texture") String texture,
-												@JsonProperty("templateId") String templateId,
 												@JsonProperty("cityId") String cityId
 											 ) {
 		super(entityId, timestamp, version);
 		this.name = name;
 		this.texture = texture;
-		this.templateId = templateId;
 		this.cityId = cityId;
 	}
 
@@ -36,10 +33,6 @@ public class FactoryCreated extends Event {
 		return texture;
 	}
 
-	public String getTemplateId() {
-		return templateId;
-	}
-
 	public String getCityId() {
 		return cityId;
 	}
@@ -47,5 +40,10 @@ public class FactoryCreated extends Event {
 	@Override
 	public EventType getType() {
 		return EventType.FACTORY_CREATED;
+	}
+
+	@Override
+	public String toString() {
+		return "FactoryCreated{" + "name='" + name + '\'' + ", texture='" + texture + '\'' + ", cityId='" + cityId + '\'' + '}';
 	}
 }

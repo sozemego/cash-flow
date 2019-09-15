@@ -3,6 +3,7 @@ package com.soze.factory.service;
 import com.soze.common.dto.Clock;
 import com.soze.common.dto.Resource;
 import com.soze.factory.FactoryConverter;
+import com.soze.factory.repository.FactoryRepository;
 import com.soze.factory.world.RemoteWorldService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,10 +27,13 @@ class FactoryServiceTest {
 	@Autowired
 	private RemoteWorldService remoteWorldService;
 
+	@Autowired
+	private FactoryRepository repository;
+
 	@BeforeEach
 	public void setup() {
 		this.factoryService = new FactoryService(
-			factoryTemplateLoader, factoryConverter, remoteWorldService, repository, new Clock(60, System.currentTimeMillis()));
+			factoryConverter, repository, new Clock(60, System.currentTimeMillis()));
 	}
 
 	@Test

@@ -13,7 +13,6 @@ public class FactoryConverter {
 	public FactoryDTO convert(Factory factory) {
 		FactoryDTO factoryDTO = new FactoryDTO();
 		factoryDTO.setId(factory.getId());
-		factoryDTO.setTemplateId(factory.getTemplateId());
 		factoryDTO.setName(factory.getName());
 		factoryDTO.setTexture(factory.getTexture());
 		factoryDTO.setCityId(factory.getCityId());

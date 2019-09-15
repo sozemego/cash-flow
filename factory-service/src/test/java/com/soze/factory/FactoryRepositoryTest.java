@@ -29,7 +29,7 @@ class FactoryRepositoryTest {
 	public void getFactoryById() {
 		UUID factoryId = UUID.randomUUID();
 		FactoryCreated factoryCreated = new FactoryCreated(
-			factoryId.toString(), LocalDateTime.now(), 1, "forester", "png", "templateId", "wroclaw");
+			factoryId.toString(), LocalDateTime.now(), 1, "forester", "png", "wroclaw");
 		eventStore.handleEvent(factoryCreated);
 		Optional<Factory> factoryOptional = factoryRepository.findById(factoryId);
 		Assertions.assertTrue(factoryOptional.isPresent());

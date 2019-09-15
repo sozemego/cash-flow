@@ -4,7 +4,6 @@ package com.soze.common.dto;
 public class FactoryDTO {
 
 	private String id;
-	private String templateId;
 	private String name;
 	private String texture;
 
@@ -23,14 +22,6 @@ public class FactoryDTO {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getTemplateId() {
-		return templateId;
-	}
-
-	public void setTemplateId(String templateId) {
-		this.templateId = templateId;
 	}
 
 	public String getName() {
@@ -75,6 +66,6 @@ public class FactoryDTO {
 
 	@Override
 	public String toString() {
-		return "FactoryDTO{" + "id='" + id + '\'' + ", templateId='" + templateId + '\'' + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", producer=" + producer + ", storage=" + storage + ", cityId='" + cityId + '\'' + '}';
+		return "FactoryDTO{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", producer=" + producer + ", storage=" + storage + ", cityId='" + cityId + '\'' + '}';
 	}
 }

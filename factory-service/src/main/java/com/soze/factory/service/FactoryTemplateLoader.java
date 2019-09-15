@@ -48,7 +48,9 @@ public class FactoryTemplateLoader {
 		}
 
 		List<Command> commands = new ArrayList<>();
-		commands.add(new CreateFactory(UUID.randomUUID(), id, cityId));
+		String name = root.get("name").asText();
+		String texture = root.get("texture").asText();
+		commands.add(new CreateFactory(UUID.randomUUID(), name, texture, cityId));
 
 		//TODO storage
 		//TODO producer

@@ -36,6 +36,7 @@ public class FileEventStore implements EventStore {
 		List<Event> eventList = JsonUtils.parseList(file, Event.class);
 		LOG.info("Loaded {} events", eventList.size());
 		for (Event event : eventList) {
+			LOG.trace("Storing event = {}", event);
 			List<Event> entityEvents = events.computeIfAbsent(event.getEntityId(), (id) -> new ArrayList<>());
 			entityEvents.add(event);
 		}
