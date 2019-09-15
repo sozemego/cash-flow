@@ -2,7 +2,9 @@ package com.soze.factory.service;
 
 import com.soze.common.dto.Resource;
 import com.soze.common.json.JsonUtils;
-import com.soze.common.message.server.*;
+import com.soze.common.message.server.FactoryAdded;
+import com.soze.common.message.server.ServerMessage;
+import com.soze.common.message.server.StorageContentChanged;
 import com.soze.factory.FactoryConverter;
 import com.soze.factory.aggregate.Factory;
 import com.soze.factory.aggregate.Storage;
@@ -20,7 +22,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FactoryService implements EventVisitor {
@@ -103,7 +106,11 @@ public class FactoryService implements EventVisitor {
 	}
 
 	@Override
+	@EventListener
 	public void visit(StorageCapacityChanged storageCapacityChanged) {
 		LOG.info("{}", storageCapacityChanged);
+		sendToAll(new com.soze.common.message.server.StorageCapacityChanged(storageCapacityChanged.getEntityId(),
+																																				storageCapacityChanged.getChange()
+		));
 	}
 }

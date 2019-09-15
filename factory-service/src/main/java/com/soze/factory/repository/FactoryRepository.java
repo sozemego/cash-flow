@@ -25,6 +25,7 @@ public class FactoryRepository {
 	}
 
 	public Optional<Factory> findById(UUID factoryId) {
+		LOG.trace("Searching for {}", factoryId);
 		List<Event> events = eventStore.getEventsForEntity(factoryId.toString());
 		if (events.isEmpty()) {
 			return Optional.empty();

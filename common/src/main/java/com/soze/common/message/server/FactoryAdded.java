@@ -30,4 +30,9 @@ public class FactoryAdded extends ServerMessage {
 	public String getType() {
 		return ServerMessageType.FACTORY_ADDED.name();
 	}
+
+	@Override
+	public String toString() {
+		return "FactoryAdded{" + "factoryDTO=" + factoryDTO + '}';
+	}
 }

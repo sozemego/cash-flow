@@ -15,6 +15,7 @@ import java.util.UUID;
 	@JsonSubTypes.Type(value = TruckAdded.class, name = "TRUCK_ADDED"),
 	@JsonSubTypes.Type(value = TruckTravelStarted.class, name = "TRUCK_TRAVEL_STARTED"),
 	@JsonSubTypes.Type(value = StorageContentChanged.class, name = "STORAGE_CONTENT_CHANGED"),
+	@JsonSubTypes.Type(value = StorageCapacityChanged.class, name = "STORAGE_CAPACITY_CHANGED"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class ServerMessage {
@@ -33,6 +34,6 @@ public abstract class ServerMessage {
 
 	public enum ServerMessageType {
 		RESOURCE_PRODUCED, RESOURCE_PRODUCTION_STARTED, FACTORY_ADDED, TRUCK_ADDED, TRUCK_TRAVEL_STARTED, TRUCK_ARRIVED,
-		STORAGE_CONTENT_CHANGED
+		STORAGE_CONTENT_CHANGED, STORAGE_CAPACITY_CHANGED
 	}
 }
