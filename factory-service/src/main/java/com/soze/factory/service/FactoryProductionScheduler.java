@@ -2,13 +2,17 @@ package com.soze.factory.service;
 
 import com.soze.common.dto.Clock;
 import com.soze.factory.aggregate.Factory;
+import com.soze.factory.aggregate.Producer;
+import com.soze.factory.aggregate.Storage;
 import com.soze.factory.command.FinishProduction;
+import com.soze.factory.command.StartProduction;
 import com.soze.factory.event.ProductionStarted;
 import com.soze.factory.repository.FactoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -38,15 +42,37 @@ public class FactoryProductionScheduler {
 		this.clock = clock;
 	}
 
+	/**
+	 * Every 10 seconds checks all factories if they are producing. If not
+	 * sends a {@link com.soze.factory.command.StartProduction} command.
+	 */
+	@Scheduled(fixedDelay = 10000)
+	public void checkFactories() {
+		LOG.debug("Checking for idle factories");
+		repository.getAll().forEach(factory -> {
+			Producer producer = factory.getProducer();
+			if (producer.isProducing()) {
+				LOG.trace("Factory {} already producing", factory.getId());
+				return;
+			}
+			Storage storage = factory.getStorage();
+			if (storage.isFull()) {
+				LOG.trace("Factory {} is full", factory.getId());
+				return;
+			}
+			commandService.visit(new StartProduction(factory.getId(), clock.getCurrentGameTime()));
+		});
+	}
+
 	@EventListener
 	public void handleProductionStarted(ProductionStarted productionStarted) {
-//		LOG.info("{}", productionStarted);
-//		Factory factory = repository.findById(UUID.fromString(productionStarted.getEntityId())).get();
-//		long minutes = factory.getProducer().getTime();
-//		long timeRemaining = TimeUnit.MINUTES.toMillis(minutes) / clock.getMultiplier();
-//		executorService.schedule(() -> {
-//			commandService.visit(new FinishProduction(productionStarted.getEntityId()));
-//		}, timeRemaining, TimeUnit.MILLISECONDS);
+		LOG.info("{}", productionStarted);
+		Factory factory = repository.findById(UUID.fromString(productionStarted.getEntityId())).get();
+		long minutes = factory.getProducer().getTime();
+		long timeRemaining = TimeUnit.MINUTES.toMillis(minutes) / clock.getMultiplier();
+		executorService.schedule(() -> {
+			commandService.visit(new FinishProduction(productionStarted.getEntityId()));
+		}, timeRemaining, TimeUnit.MILLISECONDS);
 	}
 
 }
