@@ -42,4 +42,8 @@ public class CreateFactory implements Command {
 		commandVisitor.visit(this);
 	}
 
+	@Override
+	public String toString() {
+		return "CreateFactory{" + "factoryId=" + factoryId + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", cityId='" + cityId + '\'' + ", playerId='" + playerId + '\'' + '}';
+	}
 }
