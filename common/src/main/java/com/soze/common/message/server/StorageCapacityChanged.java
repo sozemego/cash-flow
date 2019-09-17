@@ -7,20 +7,20 @@ import java.util.UUID;
 
 public class StorageCapacityChanged extends ServerMessage {
 
-	private final String factoryId;
+	private final String entityId;
 	private final int change;
 
 	@JsonCreator
 	public StorageCapacityChanged(@JsonProperty("messageId") UUID messageId,
-																@JsonProperty("factoryId") String factoryId,
+																@JsonProperty("entityId") String entityId,
 																@JsonProperty("change") int change) {
 		super(messageId);
-		this.factoryId = factoryId;
+		this.entityId = entityId;
 		this.change = change;
 	}
 
-	public StorageCapacityChanged(String factoryId, int change) {
-		this(UUID.randomUUID(), factoryId, change);
+	public StorageCapacityChanged(String entityId, int change) {
+		this(UUID.randomUUID(), entityId, change);
 	}
 
 
@@ -29,8 +29,8 @@ public class StorageCapacityChanged extends ServerMessage {
 		return ServerMessageType.STORAGE_CAPACITY_CHANGED.name();
 	}
 
-	public String getFactoryId() {
-		return factoryId;
+	public String getEntityId() {
+		return entityId;
 	}
 
 	public int getChange() {
@@ -39,6 +39,6 @@ public class StorageCapacityChanged extends ServerMessage {
 
 	@Override
 	public String toString() {
-		return "StorageCapacityChanged{" + "factoryId='" + factoryId + '\'' + ", change=" + change + '}';
+		return "StorageCapacityChanged{" + "entityId='" + entityId + '\'' + ", change=" + change + '}';
 	}
 }
