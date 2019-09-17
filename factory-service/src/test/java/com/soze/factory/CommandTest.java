@@ -1,7 +1,9 @@
 package com.soze.factory;
 
+import com.soze.factory.command.Command;
 import com.soze.factory.event.Event;
 import com.soze.factory.repository.FactoryRepository;
+import com.soze.factory.service.FactoryCommandService;
 import com.soze.factory.service.SocketSessionContainer;
 import com.soze.factory.service.TestWebSocketSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +34,9 @@ public class CommandTest {
 
 	private TestWebSocketSession session;
 
+	@Autowired
+	private FactoryCommandService factoryCommandService;
+
 	@BeforeEach
 	public void setup() {
 		getEvents().clear();
@@ -57,5 +62,9 @@ public class CommandTest {
 
 	public TestWebSocketSession getSession() {
 		return session;
+	}
+
+	public void issueCommand(Command command) {
+		command.accept(factoryCommandService);
 	}
 }

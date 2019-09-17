@@ -21,10 +21,10 @@ public class ChangeStorageCapacityTest extends CommandTest {
 	void changeStorageCapacity() {
 		UUID factoryId = UUID.randomUUID();
 		CreateFactory createFactory = new CreateFactory(factoryId, "Forester", "texture.png", "Warsaw");
-		publish(createFactory);
+		issueCommand(createFactory);
 
 		ChangeStorageCapacity command = new ChangeStorageCapacity(factoryId, 5);
-		publish(command);
+		issueCommand(command);
 		Factory factory = getFactoryRepository().findById(factoryId).get();
 		Storage storage = factory.getStorage();
 		Assertions.assertEquals(5, storage.getCapacity());
@@ -35,7 +35,7 @@ public class ChangeStorageCapacityTest extends CommandTest {
 	public void changeStorageCapacity_factoryDoesNotExist() {
 		UUID factoryId = UUID.randomUUID();
 		ChangeStorageCapacity command = new ChangeStorageCapacity(factoryId, 5);
-		Assertions.assertThrows(NoSuchElementException.class, () -> publish(command));
+		Assertions.assertThrows(NoSuchElementException.class, () -> issueCommand(command));
 		Assertions.assertTrue(getSession().getMessages().isEmpty());
 	}
 

@@ -1,5 +1,6 @@
 package com.soze.factory.command;
 
+
 import com.soze.factory.event.Event;
 
 import java.util.List;

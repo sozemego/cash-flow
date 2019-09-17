@@ -37,7 +37,7 @@ class CreateFactoryTest extends CommandTest {
 	void createFactory() {
 		UUID factoryId = UUID.randomUUID();
 		CreateFactory createFactory = new CreateFactory(factoryId, "Forester", "texture.png", "Warsaw");
-		publish(createFactory);
+		issueCommand(createFactory);
 		Assertions.assertEquals(1, getEvents().size());
 		Assertions.assertTrue(getEvents().get(0) instanceof FactoryCreated);
 		Assertions.assertTrue(getFactoryRepository().findById(factoryId).isPresent());
@@ -48,13 +48,13 @@ class CreateFactoryTest extends CommandTest {
 	public void createFactory_alreadyExists() {
 		UUID factoryId = UUID.randomUUID();
 		CreateFactory createFactory = new CreateFactory(factoryId, "Forester", "texture.png", "Warsaw");
-		publish(createFactory);
+		issueCommand(createFactory);
 		Assertions.assertEquals(1, getEvents().size());
 		Assertions.assertTrue(getEvents().get(0) instanceof FactoryCreated);
 		Assertions.assertTrue(getFactoryRepository().findById(factoryId).isPresent());
 		Assertions.assertTrue(session.getMessages().get(0) instanceof FactoryAdded);
 		getEvents().clear();
-		Assertions.assertThrows(IllegalStateException.class, () -> publish(createFactory));
+		Assertions.assertThrows(IllegalStateException.class, () -> issueCommand(createFactory));
 	}
 
 

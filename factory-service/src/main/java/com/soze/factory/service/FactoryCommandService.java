@@ -4,12 +4,12 @@ import com.soze.common.dto.CityDTO;
 import com.soze.factory.aggregate.Factory;
 import com.soze.factory.command.*;
 import com.soze.factory.event.Event;
+import com.soze.factory.event.EventBus;
 import com.soze.factory.repository.FactoryRepository;
 import com.soze.factory.world.RemoteWorldService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,17 +27,17 @@ public class FactoryCommandService implements CommandVisitor {
 
 	private final FactoryRepository repository;
 	private final RemoteWorldService worldService;
+	private final EventBus eventBus;
 
 	@Autowired
-	public FactoryCommandService(FactoryRepository repository,
-															 RemoteWorldService worldService
+	public FactoryCommandService(FactoryRepository repository, RemoteWorldService worldService, EventBus eventBus
 															) {
 		this.repository = repository;
 		this.worldService = worldService;
+		this.eventBus = eventBus;
 	}
 
 	@Override
-	@EventListener
 	public List<Event> visit(CreateFactory createFactory) {
 		LOG.info("{}", createFactory);
 		if (repository.findById(createFactory.getFactoryId()).isPresent()) {
@@ -49,27 +49,24 @@ public class FactoryCommandService implements CommandVisitor {
 			throw new IllegalArgumentException("City with id = " + createFactory.getCityId() + " does not exist");
 		}
 		Factory factory = new Factory();
-		return factory.visit(createFactory);
+		return eventBus.publish(factory.visit(createFactory));
 	}
 
 	@Override
-	@EventListener
 	public List<Event> visit(StartProduction startProduction) {
 		LOG.info("{}", startProduction);
 		Factory factory = getFactory(startProduction.getFactoryId());
-		return factory.visit(startProduction);
+		return eventBus.publish(factory.visit(startProduction));
 	}
 
 	@Override
-	@EventListener
 	public List<Event> visit(ChangeStorageCapacity changeStorageCapacity) {
 		LOG.info("{}", changeStorageCapacity);
 		Factory factory = getFactory(changeStorageCapacity.getFactoryId());
-		return factory.visit(changeStorageCapacity);
+		return eventBus.publish(factory.visit(changeStorageCapacity));
 	}
 
 	@Override
-	@EventListener
 	public List<Event> visit(FinishProduction finishProduction) {
 		LOG.info("{}", finishProduction);
 		Factory factory = getFactory(finishProduction.getFactoryId());
