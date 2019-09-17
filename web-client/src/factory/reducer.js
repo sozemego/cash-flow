@@ -60,8 +60,8 @@ const storageContentChanged = produce((state, action) => {
 });
 
 const storageCapacityChanged = produce((state, action) => {
-  const { factoryId, change } = action;
-  const factory = findFactory(state, factoryId);
+  const { entityId, change } = action;
+  const factory = findFactory(state, entityId);
   if (!factory) {
     return;
   }
