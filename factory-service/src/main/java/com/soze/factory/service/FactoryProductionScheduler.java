@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Starts timers that are supposed to trigger some actions when production is supposed to end.
+ * Starts timers that are supposed to trigger some actions when production ends.
  */
 @Service
 @Profile("!test")
@@ -63,6 +63,22 @@ public class FactoryProductionScheduler {
 				return;
 			}
 			commandService.visit(new StartProduction(factory.getId(), clock.getCurrentGameTime()));
+		});
+	}
+
+	/**
+	 * Checks if factory finished producing.
+	 */
+	@Scheduled(fixedDelay = 5000)
+	public void checkFactoriesFinished() {
+		LOG.debug("Checking for factories which finished production");
+		repository.getAll().forEach(factory -> {
+			Producer producer = factory.getProducer();
+			if (!producer.isFinished(clock)) {
+				LOG.trace("Factory {} still producing", factory.getId());
+				return;
+			}
+			commandService.visit(new FinishProduction(factory.getId()));
 		});
 	}
 
