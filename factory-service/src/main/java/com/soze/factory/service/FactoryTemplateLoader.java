@@ -1,7 +1,9 @@
 package com.soze.factory.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.soze.common.dto.Resource;
 import com.soze.common.json.JsonUtils;
+import com.soze.factory.command.AddProductionLine;
 import com.soze.factory.command.ChangeStorageCapacity;
 import com.soze.factory.command.Command;
 import com.soze.factory.command.CreateFactory;
@@ -56,7 +58,10 @@ public class FactoryTemplateLoader {
 		JsonNode storage = root.get("storage");
 		int capacity = storage.get("capacity").asInt();
 		commands.add(new ChangeStorageCapacity(factoryId, capacity));
-		//TODO producer
+		JsonNode producer = root.get("producer");
+		Resource resource = Resource.valueOf(producer.get("resource").asText());
+		long time = producer.get("time").asLong();
+		commands.add(new AddProductionLine(factoryId, resource, 1, time));
 
 		return commands;
 	}

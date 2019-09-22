@@ -50,14 +50,12 @@ public class FactoryStarterService {
 		CityDTO wroclaw = remoteWorldService.getCityByName("Wroclaw");
 		CityDTO warsaw = remoteWorldService.getCityByName("Warsaw");
 
-		List<Command> commands = new ArrayList<>();
-		commands.addAll(templateLoader.getFactoryCommandsByTemplateId("FORESTER", wroclaw.id));
-		commands.addAll(templateLoader.getFactoryCommandsByTemplateId("FORESTER", wroclaw.id));
-		commands.addAll(templateLoader.getFactoryCommandsByTemplateId("FORESTER", warsaw.id));
-		for (Command command : commands) {
-			eventPublisher.publishEvent(command);
-		}
-
+		List<Command> commands1 = templateLoader.getFactoryCommandsByTemplateId("FORESTER", wroclaw.id);
+		commands1.forEach(command -> command.accept(factoryCommandService));
+		List<Command> commands2 = templateLoader.getFactoryCommandsByTemplateId("FORESTER", wroclaw.id);
+		commands2.forEach(command -> command.accept(factoryCommandService));
+		List<Command> commands3 = templateLoader.getFactoryCommandsByTemplateId("FORESTER", warsaw.id);
+		commands3.forEach(command -> command.accept(factoryCommandService));
 	}
 
 }

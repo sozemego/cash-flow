@@ -67,6 +67,13 @@ public class FactoryCommandService implements CommandVisitor {
 	}
 
 	@Override
+	public List<Event> visit(AddProductionLine addProductionLine) {
+		LOG.info("{}", addProductionLine);
+		Factory factory = getFactory(addProductionLine.getFactoryId());
+		return eventBus.publish(factory.visit(addProductionLine));
+	}
+
+	@Override
 	public List<Event> visit(FinishProduction finishProduction) {
 		LOG.info("{}", finishProduction);
 		Factory factory = getFactory(finishProduction.getFactoryId());

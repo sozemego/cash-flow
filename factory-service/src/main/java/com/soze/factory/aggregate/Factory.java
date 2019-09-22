@@ -96,6 +96,14 @@ public class Factory implements EventVisitor, CommandVisitor {
 	}
 
 	@Override
+	public List<Event> visit(AddProductionLine addProductionLine) {
+		return Collections.singletonList(
+			new ProductionLineAdded(getId().toString(), LocalDateTime.now(), 1, addProductionLine.getResource(),
+															addProductionLine.getCount(), addProductionLine.getTime()
+			));
+	}
+
+	@Override
 	public void visit(FactoryCreated factoryCreated) {
 		this.id = UUID.fromString(factoryCreated.getEntityId());
 		this.name = factoryCreated.getName();
@@ -114,5 +122,14 @@ public class Factory implements EventVisitor, CommandVisitor {
 		int newCapacity = previousStorage.getCapacity() + storageCapacityChanged.getChange();
 		storage = new Storage(newCapacity);
 		storage.transferFrom(previousStorage);
+	}
+
+	@Override
+	public void visit(ProductionLineAdded productionLineAdded) {
+		Producer producer = new Producer();
+		producer.setResource(productionLineAdded.getResource());
+		producer.setProducing(false);
+		producer.setTime(productionLineAdded.getTime());
+		this.producer = producer;
 	}
 }

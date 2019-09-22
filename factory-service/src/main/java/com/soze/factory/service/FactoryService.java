@@ -8,10 +8,7 @@ import com.soze.common.message.server.StorageContentChanged;
 import com.soze.factory.FactoryConverter;
 import com.soze.factory.aggregate.Factory;
 import com.soze.factory.aggregate.Storage;
-import com.soze.factory.event.EventVisitor;
-import com.soze.factory.event.FactoryCreated;
-import com.soze.factory.event.ProductionStarted;
-import com.soze.factory.event.StorageCapacityChanged;
+import com.soze.factory.event.*;
 import com.soze.factory.repository.FactoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,5 +110,11 @@ public class FactoryService implements EventVisitor {
 		sendToAll(new com.soze.common.message.server.StorageCapacityChanged(storageCapacityChanged.getEntityId(),
 																																				storageCapacityChanged.getChange()
 		));
+	}
+
+	@Override
+	@EventListener
+	public void visit(ProductionLineAdded productionLineAdded) {
+		LOG.info("{}", productionLineAdded);
 	}
 }
