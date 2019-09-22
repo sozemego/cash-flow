@@ -72,6 +72,13 @@ public class FactoryService implements EventVisitor {
 		}
 	}
 
+	private void sendToAll(Object message) {
+		TextMessage textMessage = new TextMessage(JsonUtils.serialize(message));
+		for (WebSocketSession session : socketSessionContainer.getAllSessions()) {
+			sendTo(textMessage, session);
+		}
+	}
+
 	public void sell(String factoryId, Resource resource, int count) {
 		LOG.info("Attempting to sell {} of {} from factoryId = {}", count, resource, factoryId);
 		Factory factory = repository.findById(UUID.fromString(factoryId)).orElseThrow(
@@ -116,5 +123,12 @@ public class FactoryService implements EventVisitor {
 	@EventListener
 	public void visit(ProductionLineAdded productionLineAdded) {
 		LOG.info("{}", productionLineAdded);
+		sendToAll(productionLineAdded);
+	}
+
+	@Override
+	public void visit(ProductionFinished productionFinished) {
+		LOG.info("{}", productionFinished);
+		sendToAll(productionFinished);
 	}
 }

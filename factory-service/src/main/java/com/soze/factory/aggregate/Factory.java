@@ -1,5 +1,6 @@
 package com.soze.factory.aggregate;
 
+import com.soze.common.dto.Resource;
 import com.soze.factory.command.*;
 import com.soze.factory.event.*;
 
@@ -84,7 +85,8 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public List<Event> visit(FinishProduction finishProduction) {
-		return Collections.emptyList();
+		return Collections.singletonList(
+			new ProductionFinished(finishProduction.getFactoryId().toString(), LocalDateTime.now(), 1));
 	}
 
 	@Override
@@ -131,5 +133,13 @@ public class Factory implements EventVisitor, CommandVisitor {
 		producer.setProducing(false);
 		producer.setTime(productionLineAdded.getTime());
 		this.producer = producer;
+	}
+
+	@Override
+	public void visit(ProductionFinished productionFinished) {
+		Resource resource = getProducer().getResource();
+		Storage storage = getStorage();
+		storage.addResource(resource);
+		getProducer().stopProduction();
 	}
 }

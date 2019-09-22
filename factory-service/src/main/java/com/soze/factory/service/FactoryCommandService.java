@@ -2,6 +2,7 @@ package com.soze.factory.service;
 
 import com.soze.common.dto.CityDTO;
 import com.soze.factory.aggregate.Factory;
+import com.soze.factory.aggregate.Storage;
 import com.soze.factory.command.*;
 import com.soze.factory.event.Event;
 import com.soze.factory.event.EventBus;
@@ -12,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -54,30 +54,28 @@ public class FactoryCommandService implements CommandVisitor {
 
 	@Override
 	public List<Event> visit(StartProduction startProduction) {
-		LOG.info("{}", startProduction);
-		Factory factory = getFactory(startProduction.getFactoryId());
-		return eventBus.publish(factory.visit(startProduction));
+		return visit((Command) startProduction);
 	}
 
 	@Override
 	public List<Event> visit(ChangeStorageCapacity changeStorageCapacity) {
-		LOG.info("{}", changeStorageCapacity);
-		Factory factory = getFactory(changeStorageCapacity.getFactoryId());
-		return eventBus.publish(factory.visit(changeStorageCapacity));
+		return visit((Command) changeStorageCapacity);
 	}
 
 	@Override
 	public List<Event> visit(AddProductionLine addProductionLine) {
-		LOG.info("{}", addProductionLine);
-		Factory factory = getFactory(addProductionLine.getFactoryId());
-		return eventBus.publish(factory.visit(addProductionLine));
+		return visit((Command) addProductionLine);
 	}
 
 	@Override
 	public List<Event> visit(FinishProduction finishProduction) {
-		LOG.info("{}", finishProduction);
-		Factory factory = getFactory(finishProduction.getFactoryId());
-		return new ArrayList<>();
+		return visit((Command) finishProduction);
+	}
+
+	private List<Event> visit(Command command) {
+		LOG.info("{}", command);
+		Factory factory = getFactory(command.getEntityId());
+		return eventBus.publish(command.accept(factory));
 	}
 
 	private Factory getFactory(String id) {

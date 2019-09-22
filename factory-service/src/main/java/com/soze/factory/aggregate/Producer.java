@@ -3,6 +3,8 @@ package com.soze.factory.aggregate;
 import com.soze.common.dto.Clock;
 import com.soze.common.dto.Resource;
 
+import java.util.concurrent.TimeUnit;
+
 public class Producer {
 
 	private Resource resource;
@@ -52,6 +54,13 @@ public class Producer {
 		}
 		setProducing(false);
 		setProductionStartTime(-1L);
+	}
+
+	public boolean isFinished(Clock clock) {
+		long gameTime = clock.getCurrentGameTime();
+		long gameTimePassed = gameTime - getProductionStartTime();
+		long minutesPassed = TimeUnit.MILLISECONDS.toMinutes(gameTimePassed);
+		return minutesPassed >= getTime();
 	}
 
 	public long getProductionStartTime() {

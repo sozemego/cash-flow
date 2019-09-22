@@ -6,5 +6,6 @@ public interface EventVisitor {
 	void visit(ProductionStarted productionStarted);
 	void visit(StorageCapacityChanged storageCapacityChanged);
 	void visit(ProductionLineAdded productionLineAdded);
+	void visit(ProductionFinished productionFinished);
 
 }

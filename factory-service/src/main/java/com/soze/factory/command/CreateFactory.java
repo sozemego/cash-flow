@@ -1,5 +1,8 @@
 package com.soze.factory.command;
 
+import com.soze.factory.event.Event;
+
+import java.util.List;
 import java.util.UUID;
 
 public class CreateFactory implements Command {
@@ -38,8 +41,13 @@ public class CreateFactory implements Command {
 	}
 
 	@Override
-	public void accept(CommandVisitor commandVisitor) {
-		commandVisitor.visit(this);
+	public UUID getEntityId() {
+		return getFactoryId();
+	}
+
+	@Override
+	public List<Event> accept(CommandVisitor commandVisitor) {
+		return commandVisitor.visit(this);
 	}
 
 	@Override
