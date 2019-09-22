@@ -17,26 +17,18 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Event {
 
-	private final String entityId;
-	private final LocalDateTime timestamp;
-	private final int version;
+	public String entityId;
+	public LocalDateTime timestamp;
+	public int version;
+
+	public Event() {
+
+	}
 
 	public Event(String entityId, LocalDateTime timestamp, int version) {
 		this.entityId = entityId;
 		this.timestamp = timestamp;
 		this.version = version;
-	}
-
-	public String getEntityId() {
-		return entityId;
-	}
-
-	public LocalDateTime getTimestamp() {
-		return timestamp;
-	}
-
-	public int getVersion() {
-		return version;
 	}
 
 	public abstract EventType getType();

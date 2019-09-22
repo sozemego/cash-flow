@@ -1,34 +1,23 @@
 package com.soze.factory.event;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.soze.common.dto.Resource;
 
 import java.time.LocalDateTime;
 
 public class ProductionStarted extends Event {
 
-	private final Resource resource;
-	private final long productionStartTime;
+	public Resource resource;
+	public long productionStartTime;
 
-	@JsonCreator
-	public ProductionStarted(@JsonProperty("entityId") String entityId,
-													 @JsonProperty("timestamp") LocalDateTime timestamp,
-													 @JsonProperty("version") int version,
-													 @JsonProperty("resource") Resource resource,
-													 @JsonProperty("productionStartTime") long productionStartTime
+	public ProductionStarted() {
+	}
+
+	public ProductionStarted(String entityId, LocalDateTime timestamp, int version, Resource resource,
+													 long productionStartTime
 													) {
 		super(entityId, timestamp, version);
 		this.resource = resource;
 		this.productionStartTime = productionStartTime;
-	}
-
-	public Resource getResource() {
-		return resource;
-	}
-
-	public long getProductionStartTime() {
-		return productionStartTime;
 	}
 
 	@Override

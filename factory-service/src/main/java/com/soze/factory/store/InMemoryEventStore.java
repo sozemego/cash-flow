@@ -25,7 +25,7 @@ public class InMemoryEventStore implements EventStore {
 	@EventListener
 	public void handleEvent(Event event) {
 		LOG.info("{}", event);
-		String entityId = event.getEntityId();
+		String entityId = event.entityId;
 		List<Event> entityEvents = events.computeIfAbsent(entityId, (key) -> new ArrayList<>());
 		entityEvents.add(event);
 	}

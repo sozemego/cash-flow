@@ -86,7 +86,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 	@Override
 	public List<Event> visit(FinishProduction finishProduction) {
 		return Collections.singletonList(
-			new ProductionFinished(finishProduction.getFactoryId().toString(), LocalDateTime.now(), 1));
+			new ProductionFinished(finishProduction.getFactoryId().toString(), LocalDateTime.now()));
 	}
 
 	@Override
@@ -107,21 +107,21 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public void visit(FactoryCreated factoryCreated) {
-		this.id = UUID.fromString(factoryCreated.getEntityId());
-		this.name = factoryCreated.getName();
-		this.texture = factoryCreated.getTexture();
-		this.cityId = factoryCreated.getCityId();
+		this.id = UUID.fromString(factoryCreated.entityId);
+		this.name = factoryCreated.name;
+		this.texture = factoryCreated.texture;
+		this.cityId = factoryCreated.cityId;
 	}
 
 	@Override
 	public void visit(ProductionStarted productionStarted) {
-		producer.startProduction(productionStarted.getProductionStartTime());
+		producer.startProduction(productionStarted.productionStartTime);
 	}
 
 	@Override
 	public void visit(StorageCapacityChanged storageCapacityChanged) {
 		Storage previousStorage = getStorage();
-		int newCapacity = previousStorage.getCapacity() + storageCapacityChanged.getChange();
+		int newCapacity = previousStorage.getCapacity() + storageCapacityChanged.change;
 		storage = new Storage(newCapacity);
 		storage.transferFrom(previousStorage);
 	}
@@ -129,9 +129,9 @@ public class Factory implements EventVisitor, CommandVisitor {
 	@Override
 	public void visit(ProductionLineAdded productionLineAdded) {
 		Producer producer = new Producer();
-		producer.setResource(productionLineAdded.getResource());
+		producer.setResource(productionLineAdded.resource);
 		producer.setProducing(false);
-		producer.setTime(productionLineAdded.getTime());
+		producer.setTime(productionLineAdded.time);
 		this.producer = producer;
 	}
 

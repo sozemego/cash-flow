@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -37,7 +36,7 @@ public class FileEventStore implements EventStore {
 		LOG.info("Loaded {} events", eventList.size());
 		for (Event event : eventList) {
 			LOG.trace("Storing event = {}", event);
-			List<Event> entityEvents = events.computeIfAbsent(event.getEntityId(), (id) -> new ArrayList<>());
+			List<Event> entityEvents = events.computeIfAbsent(event.entityId, (id) -> new ArrayList<>());
 			entityEvents.add(event);
 		}
 	}
@@ -45,7 +44,7 @@ public class FileEventStore implements EventStore {
 	@Override
 	public void handleEvent(Event event) {
 		LOG.info("Handling event = {}", event);
-		List<Event> entityEvents = events.computeIfAbsent(event.getEntityId(), (id) -> new ArrayList<>());
+		List<Event> entityEvents = events.computeIfAbsent(event.entityId, (id) -> new ArrayList<>());
 		entityEvents.add(event);
 		persistEvents();
 	}

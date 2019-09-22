@@ -100,7 +100,7 @@ public class FactoryService implements EventVisitor {
 	@Override
 	public void visit(FactoryCreated factoryCreated) {
 		LOG.info("{}", factoryCreated);
-		Factory factory = repository.findById(UUID.fromString(factoryCreated.getEntityId())).get();
+		Factory factory = repository.findById(UUID.fromString(factoryCreated.entityId)).get();
 		sendToAll(new FactoryAdded(factoryConverter.convert(factory)));
 	}
 
@@ -114,8 +114,8 @@ public class FactoryService implements EventVisitor {
 	@EventListener
 	public void visit(StorageCapacityChanged storageCapacityChanged) {
 		LOG.info("{}", storageCapacityChanged);
-		sendToAll(new com.soze.common.message.server.StorageCapacityChanged(storageCapacityChanged.getEntityId(),
-																																				storageCapacityChanged.getChange()
+		sendToAll(new com.soze.common.message.server.StorageCapacityChanged(storageCapacityChanged.entityId,
+																																				storageCapacityChanged.change
 		));
 	}
 

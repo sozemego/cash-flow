@@ -1,26 +1,21 @@
 package com.soze.factory.event;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.LocalDateTime;
 
 public class StorageCapacityChanged extends Event {
 
-	private final int change;
+	public int change;
 
-	@JsonCreator
-	public StorageCapacityChanged(@JsonProperty("entityId") String entityId,
-																@JsonProperty("timestamp") LocalDateTime timestamp,
-																@JsonProperty("version") int version,
-																@JsonProperty("change") int change
+	public StorageCapacityChanged() {
+	}
+
+	public StorageCapacityChanged(String entityId,
+																LocalDateTime timestamp,
+																int version,
+																int change
 															 ) {
 		super(entityId, timestamp, version);
 		this.change = change;
-	}
-
-	public int getChange() {
-		return change;
 	}
 
 	@Override

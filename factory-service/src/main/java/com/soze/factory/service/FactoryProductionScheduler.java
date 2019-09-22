@@ -85,11 +85,11 @@ public class FactoryProductionScheduler {
 	@EventListener
 	public void handleProductionStarted(ProductionStarted productionStarted) {
 		LOG.info("{}", productionStarted);
-		Factory factory = repository.findById(UUID.fromString(productionStarted.getEntityId())).get();
+		Factory factory = repository.findById(UUID.fromString(productionStarted.entityId)).get();
 		long minutes = factory.getProducer().getTime();
 		long timeRemaining = TimeUnit.MINUTES.toMillis(minutes) / clock.getMultiplier();
 		executorService.schedule(() -> {
-			commandService.visit(new FinishProduction(UUID.fromString(productionStarted.getEntityId())));
+			commandService.visit(new FinishProduction(UUID.fromString(productionStarted.entityId)));
 		}, timeRemaining, TimeUnit.MILLISECONDS);
 	}
 
