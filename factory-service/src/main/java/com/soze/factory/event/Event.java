@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 	@JsonSubTypes.Type(value = ProductionStarted.class, name = "PRODUCTION_STARTED"),
 	@JsonSubTypes.Type(value = StorageCapacityChanged.class, name = "STORAGE_CAPACITY_CHANGED"),
 	@JsonSubTypes.Type(value = ProductionLineAdded.class, name = "PRODUCTION_LINE_ADDED"),
+	@JsonSubTypes.Type(value = ProductionFinished.class, name = "PRODUCTION_FINISHED"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Event {
