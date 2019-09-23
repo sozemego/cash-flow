@@ -31,4 +31,9 @@ public class ProductionLineAdded extends Event {
 	public void accept(EventVisitor visitor) {
 		visitor.visit(this);
 	}
+
+	@Override
+	public String toString() {
+		return "ProductionLineAdded{" + "resource=" + resource + ", count=" + count + ", time=" + time + ", entityId='" + entityId + '\'' + ", timestamp=" + timestamp + ", version=" + version + '}';
+	}
 }

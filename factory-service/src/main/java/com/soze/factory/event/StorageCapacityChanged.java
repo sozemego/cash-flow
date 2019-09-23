@@ -30,6 +30,6 @@ public class StorageCapacityChanged extends Event {
 
 	@Override
 	public String toString() {
-		return "StorageCapacityChanged{" + "change=" + change + '}';
+		return "StorageCapacityChanged{" + "change=" + change + ", entityId='" + entityId + '\'' + ", timestamp=" + timestamp + ", version=" + version + '}';
 	}
 }
