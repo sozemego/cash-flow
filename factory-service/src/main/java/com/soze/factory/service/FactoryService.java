@@ -108,6 +108,7 @@ public class FactoryService implements EventVisitor {
 	@Override
 	public void visit(ProductionStarted productionStarted) {
 		LOG.info("{}", productionStarted);
+		sendToAll(productionStarted);
 	}
 
 	@Override
@@ -127,6 +128,7 @@ public class FactoryService implements EventVisitor {
 	}
 
 	@Override
+	@EventListener
 	public void visit(ProductionFinished productionFinished) {
 		LOG.info("{}", productionFinished);
 		sendToAll(productionFinished);
