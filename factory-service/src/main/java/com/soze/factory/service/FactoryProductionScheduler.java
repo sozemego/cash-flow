@@ -45,10 +45,10 @@ public class FactoryProductionScheduler {
 	}
 
 	/**
-	 * Every 10 seconds checks all factories if they are producing. If not
+	 * Every X seconds checks all factories if they are producing. If not
 	 * sends a {@link com.soze.factory.command.StartProduction} command.
 	 */
-	@Scheduled(fixedDelay = 10000)
+	@Scheduled(fixedDelay = 5000)
 	public void checkFactories() {
 		LOG.debug("Checking for idle factories");
 		repository.getAll().forEach(factory -> {
