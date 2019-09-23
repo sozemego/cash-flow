@@ -1,6 +1,8 @@
 import { produce } from "immer";
 import {
   FACTORY_ADDED,
+  PRODUCTION_FINISHED,
+  PRODUCTION_STARTED,
   RESOURCE_PRODUCED,
   RESOURCE_PRODUCTION_STARTED,
   STORAGE_CAPACITY_CHANGED,
@@ -24,6 +26,10 @@ export function reducer(state = initialState, action) {
       return storageContentChanged(state, action);
     case STORAGE_CAPACITY_CHANGED:
       return storageCapacityChanged(state, action);
+    case PRODUCTION_FINISHED:
+      return productionFinished(state, action);
+    case PRODUCTION_STARTED:
+      return productionStarted(state, action);
     default:
       return state;
   }
@@ -32,6 +38,22 @@ export function reducer(state = initialState, action) {
 const factoryAdded = produce((state, action) => {
   const { factoryDTO } = action;
   state.factories.push(factoryDTO);
+});
+
+const productionFinished = produce((state, action) => {
+  const { entityId } = action;
+  const factory = findFactory(state, entityId);
+  const { producer, storage } = factory;
+  const { resource } = producer;
+  const count = storage.resources[resource] || 0;
+  storage.resources[resource] = count + 1;
+  factory.producer.productionStartTime = -1;
+});
+
+const productionStarted = produce((state, action) => {
+  const { entityId, productionStartTime } = action;
+  const factory = findFactory(state, entityId);
+  factory.producer.productionStartTime = productionStartTime;
 });
 
 const resourceProduced = produce((state, action) => {
