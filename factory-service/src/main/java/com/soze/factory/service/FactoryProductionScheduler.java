@@ -74,6 +74,10 @@ public class FactoryProductionScheduler {
 		LOG.debug("Checking for factories which finished production");
 		repository.getAll().forEach(factory -> {
 			Producer producer = factory.getProducer();
+			if (!producer.isProducing()) {
+				LOG.trace("Factory {} is not producing", factory.getId());
+				return;
+			}
 			if (!producer.isFinished(clock)) {
 				LOG.trace("Factory {} still producing", factory.getId());
 				return;
