@@ -6,9 +6,11 @@ import com.soze.common.dto.SellResultDTO;
 import com.soze.factory.FactoryConverter;
 import com.soze.common.client.FactoryServiceClient;
 import com.soze.factory.aggregate.Factory;
+import com.soze.factory.event.Event;
 import com.soze.factory.repository.FactoryRepository;
 import com.soze.factory.service.FactoryService;
 import com.soze.factory.service.FactoryTemplateLoader;
+import com.soze.factory.store.EventStore;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,16 +37,19 @@ public class FactoryController implements FactoryServiceClient {
 	private final FactoryConverter factoryConverter;
 	private final FactoryRepository factoryRepository;
 	private final HttpServletResponse response;
+	private final EventStore eventStore;
 
 	@Autowired
 	public FactoryController(FactoryService factoryService, FactoryTemplateLoader factoryTemplateLoader,
-													 FactoryConverter factoryConverter, FactoryRepository factoryRepository, HttpServletResponse response
+													 FactoryConverter factoryConverter, FactoryRepository factoryRepository,
+													 HttpServletResponse response, EventStore eventStore
 													) {
 		this.factoryService = factoryService;
 		this.factoryTemplateLoader = factoryTemplateLoader;
 		this.factoryConverter = factoryConverter;
 		this.factoryRepository = factoryRepository;
 		this.response = response;
+		this.eventStore = eventStore;
 	}
 
 	@GetMapping(value = "/")
@@ -86,6 +91,12 @@ public class FactoryController implements FactoryServiceClient {
 			return new SellResultDTO(factoryId, resource, 0);
 		}
 
+	}
+
+	@GetMapping("/events")
+	public List<Event> getEvents(@RequestParam String id) {
+		LOG.info("Called getEvents, id = {}", id);
+		return eventStore.getEventsForEntity(id);
 	}
 
 }
