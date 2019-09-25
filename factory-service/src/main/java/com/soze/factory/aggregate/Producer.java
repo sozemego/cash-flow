@@ -57,6 +57,9 @@ public class Producer {
 	}
 
 	public boolean isFinished(Clock clock) {
+		if (!isProducing()) {
+			return false;
+		}
 		long gameTime = clock.getCurrentGameTime();
 		long gameTimePassed = gameTime - getProductionStartTime();
 		long minutesPassed = TimeUnit.MILLISECONDS.toMinutes(gameTimePassed);
