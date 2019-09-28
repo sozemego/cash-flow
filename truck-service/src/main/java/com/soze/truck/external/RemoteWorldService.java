@@ -1,7 +1,8 @@
-package com.soze.truck.world;
+package com.soze.truck.external;
 
 import com.soze.common.client.WorldServiceClient;
 import com.soze.common.dto.CityDTO;
+import com.soze.common.resilience.RetryUtils;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
@@ -56,18 +57,15 @@ public class RemoteWorldService {
 
 	private List<CityDTO> getAllCities() {
 		LOG.info("Getting all cities");
-		CircuitBreaker circuitBreaker = CircuitBreaker.ofDefaults("RemoteWorldService");
-		RetryConfig retryConfig = RetryConfig.custom()
-																				 .maxAttempts(25)
-																				 .waitDuration(Duration.ofMillis(500))
-																				 .build();
 
-		Retry retry = Retry.of("RemoteWorldService", retryConfig);
-		Callable<List<CityDTO>> callable = circuitBreaker.decorateCallable(Retry.decorateCallable(retry, this::fetchAllCities));
-
-		return Try.ofCallable(callable)
-							.onFailure(t -> LOG.info("Problem getting all cities", t))
-							.get();
+		return RetryUtils.retry(25, Duration.ofMillis(2500), () -> {
+			try {
+				return this.fetchAllCities();
+			} catch (Exception e) {
+				LOG.warn("Problem fetching all cities");
+				throw e;
+			}
+		});
 	}
 
 	private List<CityDTO> fetchAllCities() {

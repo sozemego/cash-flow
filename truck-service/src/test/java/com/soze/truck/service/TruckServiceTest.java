@@ -10,7 +10,7 @@ import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
-import com.soze.truck.world.RemoteWorldService;
+import com.soze.truck.external.RemoteWorldService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

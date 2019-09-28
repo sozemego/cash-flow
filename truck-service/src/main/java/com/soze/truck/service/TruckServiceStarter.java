@@ -2,7 +2,7 @@ package com.soze.truck.service;
 
 import com.soze.common.dto.CityDTO;
 import com.soze.truck.domain.Truck;
-import com.soze.truck.world.RemoteWorldService;
+import com.soze.truck.external.RemoteWorldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

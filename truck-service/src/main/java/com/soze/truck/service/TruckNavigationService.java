@@ -2,7 +2,7 @@ package com.soze.truck.service;
 
 import com.soze.common.dto.CityDTO;
 import com.soze.common.dto.Clock;
-import com.soze.truck.world.RemoteWorldService;
+import com.soze.truck.external.RemoteWorldService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
