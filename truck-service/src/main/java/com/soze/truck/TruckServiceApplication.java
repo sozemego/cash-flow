@@ -32,7 +32,7 @@ public class TruckServiceApplication {
 	@Bean
 	@Profile("!test")
 	public Clock clock() {
-		return RetryUtils.retry(25, Duration.ofMillis(2500), () -> {
+		return RetryUtils.retry(2500, Duration.ofMillis(5000), () -> {
 			LOG.info("Fetching clock");
 			try {
 				return clockServiceClient.getClock();

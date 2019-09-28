@@ -39,7 +39,7 @@ public class FactoryServiceApplication {
 	@Profile("!test")
 	public Clock clock() {
 		LOG.info("Init clock ...");
-		return RetryUtils.retry(25, Duration.ofMillis(2000), () -> {
+		return RetryUtils.retry(2500, Duration.ofMillis(5000), () -> {
 			try {
 				return clockServiceClient.getClock();
 			} catch (Exception e) {
