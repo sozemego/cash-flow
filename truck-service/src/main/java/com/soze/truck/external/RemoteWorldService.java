@@ -62,7 +62,7 @@ public class RemoteWorldService {
 			try {
 				return this.fetchAllCities();
 			} catch (Exception e) {
-				LOG.warn("Problem fetching all cities");
+				LOG.warn("Problem fetching all cities", e);
 				throw e;
 			}
 		});
