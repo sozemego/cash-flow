@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { CityInline } from "../city/CityInline";
 import { useGetCities, useGetHighlightedCity } from "../city/selectors";
 import {
@@ -14,22 +14,12 @@ import { calculateCapacityTaken, Storage } from "../components/Storage";
 import { useGetFactories } from "../factory/selectors";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { useGetPlayer } from "../player/selectors";
-
-const Container = styled.div`
-  margin: 2px;
-  padding: 12px;
-  border: dotted gray 1px;
-  ${props =>
-    props.highlighted &&
-    css`
-      background: #e0e0e0;
-    `}
-  ${props =>
-    props.next &&
-    css`
-      background: #ccffff;
-    `}
-`;
+import Card from "antd/lib/card";
+import Divider from "antd/lib/divider";
+import Tag from "antd/lib/tag";
+import Icon from "antd/lib/icon";
+import { Tooltip } from "antd";
+import { Debug } from "../components/Debug";
 
 const Header = styled.div`
   display: flex;
@@ -42,50 +32,50 @@ const Id = styled.div`
   font-size: 0.75rem;
 `;
 
-const Divider = styled.hr`
-  width: 25%;
-  opacity: 0.25;
-  margin-left: 0;
-`;
-
-const Debug = styled.div`
-  cursor: pointer;
-  border: 1px solid black;
-`;
-
 export function Truck({ truck }) {
-  const [debug, setDebug] = useState(false);
   const highlightedCityId = useGetHighlightedCity();
 
   const { id, name, navigation, storage } = truck;
   const { currentCityId, nextCityId } = navigation;
 
+  const cardStyle = Object.assign(
+    {},
+    highlightedCityId === currentCityId && { background: "#e0e0e0" },
+    nextCityId && nextCityId === highlightedCityId && { background: "#ccffff" }
+  );
+
   return (
-    <Container
-      highlighted={highlightedCityId === currentCityId}
-      next={nextCityId && nextCityId === highlightedCityId}
-    >
+    <>
       <Header>
-        <Id>{id}</Id>
-        <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
+        <div>
+          <Tag color={"brown"}>{name}</Tag>
+          <Tag color={"gray"}>{id}</Tag>
+        </div>
+        <Tooltip
+          title={<Debug obj={truck} />}
+          style={{ width: "auto" }}
+        >
+          <Icon type={"question-circle"} />
+        </Tooltip>
       </Header>
-      <span>
-        {name} {nextCityId ? "travelling to " : "in "}
-        <CityInline cityId={nextCityId || currentCityId} />
-      </span>
-      <Divider />
-      <Storage storage={storage} />
-      <Divider />
-      {!nextCityId && (
-        <>
-          <Buy truck={truck} cityId={currentCityId} />
-          <Divider />
-        </>
-      )}
-      {!nextCityId && <TravelTo truck={truck} />}
-      {nextCityId && <Traveling truck={truck} />}
-      {debug && <div>{JSON.stringify(truck, null, 2)}</div>}
-    </Container>
+      <Card bodyStyle={cardStyle}>
+        <span>
+          {nextCityId ? "Travelling to " : "In "}
+          <CityInline cityId={nextCityId || currentCityId} />
+        </span>
+        <Divider style={{ margin: "4px" }} />
+        <Storage storage={storage} />
+        <Divider />
+        {!nextCityId && (
+          <>
+            <Buy truck={truck} cityId={currentCityId} />
+            <Divider />
+          </>
+        )}
+        {!nextCityId && <TravelTo truck={truck} />}
+        {nextCityId && <Traveling truck={truck} />}
+      </Card>
+    </>
   );
 }
 
@@ -264,7 +254,10 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
       <ResourceIcon resource={resource} />
       <input
         type={"number"}
-        max={Math.min(canAffordAmount, Math.min(capacity - capacityTaken, count))}
+        max={Math.min(
+          canAffordAmount,
+          Math.min(capacity - capacityTaken, count)
+        )}
         min={0}
         style={{ width: "48px" }}
         value={selectedCount}
