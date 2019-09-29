@@ -1,21 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { ResourceIcon } from "./ResourceIcon";
-
-const Container = styled.div`
-  color: gray;
-  font-size: 0.85rem;
-`;
+import Icon from "antd/lib/icon";
+import { Tag } from "antd";
 
 const ResourcesContainer = styled.div`
   display: flex;
   flex-direction: row;
-  min-height: 60px;
-`;
-
-const Empty = styled.div`
-  color: gray;
-  font-size: 0.75rem;
+  // min-height: 60px;
 `;
 
 const Resource = styled.div`
@@ -40,14 +32,14 @@ export function Storage({ storage }) {
     }
   );
 
+  const capacityTaken = calculateCapacityTaken(storage);
+
   return (
     <div>
-      <Container>Storage</Container>
       <div>
-        Capacity {calculateCapacityTaken(storage)} / {storage.capacity}
+        <Icon type="database" /> Capacity {capacityTaken} / {storage.capacity}
       </div>
       <ResourcesContainer>
-        {resourceCounts.length === 0 && <Empty>Empty</Empty>}
         {resourceCounts.map(({ resource, count }) => (
           <Resource key={resource}>
             <ResourceIcon resource={resource} />
