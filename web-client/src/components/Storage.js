@@ -2,12 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { ResourceIcon } from "./ResourceIcon";
 import Icon from "antd/lib/icon";
-import { Tag } from "antd";
 
 const ResourcesContainer = styled.div`
   display: flex;
   flex-direction: row;
-  // min-height: 60px;
 `;
 
 const Resource = styled.div`
