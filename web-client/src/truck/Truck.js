@@ -22,6 +22,7 @@ import { Tooltip } from "antd";
 import { Debug } from "../components/Debug";
 import InputNumber from "antd/lib/input-number";
 import Button from "antd/lib/button";
+import Progress from "antd/lib/progress";
 
 const Header = styled.div`
   display: flex;
@@ -177,7 +178,7 @@ function Traveling({ truck }) {
           <div>{getFormattedTime(new Date(startTime))}</div>
           <CityInline cityId={currentCityId} />
         </div>
-        <ProgressBar time={totalTime} current={travelTimePassed} height={6} />
+        <Progress percent={(travelTimePassed / totalTime) * 100} showInfo={false}/>
         <div>
           <div>{getFormattedTime(new Date(arrivalTime))}</div>
           <CityInline cityId={nextCityId} />
