@@ -1,14 +1,10 @@
 import React from "react";
 import { useGetCities } from "./selectors";
-import styled from "styled-components";
-
-const Name = styled.span`
-  color: #eeb012;
-`;
+import Tag from "antd/lib/tag";
 
 export function CityInline({ cityId }) {
   const cities = useGetCities();
   const city = cities[cityId] || {};
 
-  return <Name>{city.name}</Name>;
+  return <Tag color={'gold'}>{city.name}</Tag>;
 }
