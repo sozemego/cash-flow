@@ -3,31 +3,13 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { cityHighlighted } from "./actions";
 import Card from "antd/lib/card";
-import { Avatar } from "antd";
 import Tag from "antd/lib/tag";
 import Icon from "antd/lib/icon";
-
-const Container = styled.div`
-  margin: 2px;
-  padding: 12px;
-  border: dotted gray 1px;
-`;
 
 const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-`;
-
-const Id = styled.div`
-  color: gray;
-  font-size: 0.75rem;
-`;
-
-const Divider = styled.div`
-  width: 25%;
-  opacity: 0.25;
-  margin-left: 0;
 `;
 
 const Debug = styled.div`

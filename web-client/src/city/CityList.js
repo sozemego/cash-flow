@@ -1,16 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { City } from "./City";
-import Tag from "antd/lib/tag";
 import { Typography } from "antd";
 import { Divider } from "antd/es";
 
 const Container = styled.div`
   margin-left: 12px;
-`;
-
-const Header = styled.div`
-  min-height: 50px;
 `;
 
 export function CityList({ cities }) {
