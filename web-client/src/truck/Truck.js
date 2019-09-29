@@ -244,6 +244,11 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
   const capacity = truck.storage.capacity;
   const capacityTaken = calculateCapacityTaken(truck.storage);
   const canAffordAmount = Number((cash / resourcePrice).toFixed(0));
+  const max = Math.min(
+    canAffordAmount,
+    Math.min(capacity - capacityTaken, count)
+  );
+  const buyDisabled = selectedCount === 0 || max === 0;
 
   return (
     <BuyableResourceContainer>
@@ -261,7 +266,7 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
           value={selectedCount}
           onChange={setSelectedCount}
         />
-        <div style={{ minWidth: "72px" }}>
+        <div style={{ minWidth: "84px" }}>
           <Button
             icon={"dollar"}
             onClick={() =>
@@ -274,10 +279,11 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
                 )
               )
             }
-            disabled={selectedCount === 0}
+            disabled={buyDisabled}
             block
+            style={{backgroundColor: buyDisabled ? "#DDDDDD" : "#78D89C"}}
           >
-            ${selectedCount * resourcePrice}
+            {selectedCount * resourcePrice}
           </Button>
         </div>
       </div>
