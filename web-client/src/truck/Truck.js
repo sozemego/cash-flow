@@ -20,17 +20,14 @@ import Tag from "antd/lib/tag";
 import Icon from "antd/lib/icon";
 import { Tooltip } from "antd";
 import { Debug } from "../components/Debug";
+import InputNumber from "antd/lib/input-number";
+import Button from "antd/lib/button";
 
 const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-`;
-
-const Id = styled.div`
-  color: gray;
-  font-size: 0.75rem;
 `;
 
 export function Truck({ truck }) {
@@ -63,11 +60,11 @@ export function Truck({ truck }) {
         </span>
         <Divider style={{ margin: "4px" }} />
         <Storage storage={storage} />
-        <Divider />
+        <Divider style={{ margin: "4px" }} />
         {!nextCityId && (
           <>
             <Buy truck={truck} cityId={currentCityId} />
-            <Divider />
+            <Divider style={{ margin: "4px" }} />
           </>
         )}
         {!nextCityId && <TravelTo truck={truck} />}
@@ -203,14 +200,16 @@ function getResourceList(factories) {
 
 const BuyContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `;
 
 const BuyableResourceContainer = styled.div`
   display: flex;
   align-items: center;
-  border-right: 1px dashed gray;
+  justify-content: space-between;
 `;
+
+const resourcePrice = 5;
 
 export function Buy({ truck, cityId }) {
   const allFactories = Object.values(useGetFactories());
@@ -244,37 +243,44 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
 
   const capacity = truck.storage.capacity;
   const capacityTaken = calculateCapacityTaken(truck.storage);
-  const canAffordAmount = Number((cash / 5).toFixed(0));
+  const canAffordAmount = Number((cash / resourcePrice).toFixed(0));
 
   return (
     <BuyableResourceContainer>
-      <span>{count}</span>
-      <ResourceIcon resource={resource} />
-      <input
-        type={"number"}
-        max={Math.min(
-          canAffordAmount,
-          Math.min(capacity - capacityTaken, count)
-        )}
-        min={0}
-        style={{ width: "48px" }}
-        value={selectedCount}
-        onChange={e => setSelectedCount(e.target.value)}
-      />
-      <button
-        onClick={() =>
-          socket.send(
-            createBuyResourceRequestMessage(
-              truck.id,
-              factoryId,
-              resource,
-              selectedCount
-            )
-          )
-        }
-      >
-        BUY!
-      </button>
+      <div>
+        <ResourceIcon resource={resource} />
+        <span>{count}</span>
+      </div>
+      <div style={{display: "flex"}}>
+        <InputNumber
+          max={Math.min(
+            canAffordAmount,
+            Math.min(capacity - capacityTaken, count)
+          )}
+          min={0}
+          value={selectedCount}
+          onChange={setSelectedCount}
+        />
+        <div style={{ minWidth: "72px" }}>
+          <Button
+            icon={"dollar"}
+            onClick={() =>
+              socket.send(
+                createBuyResourceRequestMessage(
+                  truck.id,
+                  factoryId,
+                  resource,
+                  selectedCount
+                )
+              )
+            }
+            disabled={selectedCount === 0}
+            block
+          >
+            ${selectedCount * resourcePrice}
+          </Button>
+        </div>
+      </div>
     </BuyableResourceContainer>
   );
 }
