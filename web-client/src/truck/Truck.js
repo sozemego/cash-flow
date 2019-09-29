@@ -25,6 +25,7 @@ const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const Id = styled.div`
@@ -51,10 +52,7 @@ export function Truck({ truck }) {
           <Tag color={"brown"}>{name}</Tag>
           <Tag color={"gray"}>{id}</Tag>
         </div>
-        <Tooltip
-          title={<Debug obj={truck} />}
-          style={{ width: "auto" }}
-        >
+        <Tooltip title={<Debug obj={truck} />}>
           <Icon type={"question-circle"} />
         </Tooltip>
       </Header>
