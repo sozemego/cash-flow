@@ -2,6 +2,7 @@ import React from "react";
 import { Game } from "./game/Game";
 import { Clock } from "./clock/Clock";
 import { Player } from "./player/Player";
+import 'antd/dist/antd.css';
 
 function App() {
   return (

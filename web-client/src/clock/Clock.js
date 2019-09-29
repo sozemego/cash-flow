@@ -1,11 +1,30 @@
 import React from "react";
-import { getCurrentGameDate, getFormattedDateTime } from "./business";
+import { DatePicker, TimePicker } from "antd";
+import moment from "moment";
+
 import { useGameClock } from "./gameClock";
 
+const dateFormat = `DD-MM-YYYY`;
+const timeFormat = "HH:mm";
+
 export function Clock() {
-	const { clock } = useGameClock({interval: 1000});
+  const { date } = useGameClock({ interval: 1000 });
 
-	const date = getCurrentGameDate(clock);
-
-  return <div>{getFormattedDateTime(date)}</div>;
+  return (
+    <>
+      <DatePicker
+        value={moment(
+          `${date.getDate() + 1}/${date.getMonth()}/${date.getFullYear()}`,
+          dateFormat
+        )}
+        format={dateFormat}
+				allowClear={false}
+      />
+      <TimePicker
+        value={moment(`${date.getHours()}:${date.getMinutes()}`, timeFormat)}
+        format={timeFormat}
+				allowClear={false}
+      />
+    </>
+  );
 }
