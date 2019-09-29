@@ -5,20 +5,17 @@ import { cityHighlighted } from "./actions";
 import Card from "antd/lib/card";
 import Tag from "antd/lib/tag";
 import Icon from "antd/lib/icon";
+import { Tooltip } from "antd";
+import { Debug } from "../components/Debug";
 
 const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-`;
-
-const Debug = styled.div`
-  cursor: pointer;
-  max-height: 24px;
+  align-items: center;
 `;
 
 export function City({ city }) {
-  const [debug, setDebug] = useState(false);
   const dispatch = useDispatch();
 
   const { id, name, factorySlots } = city;
@@ -27,16 +24,17 @@ export function City({ city }) {
     <>
       <Header>
         <Tag color={"gold"}>{name}</Tag>
-        <Debug onClick={() => setDebug(!debug)}>
-          {debug ? <Icon type="question" /> : <Icon type="question-circle" />}
-        </Debug>
+        <Tooltip
+          title={<Debug obj={city} />}
+        >
+          <Icon type={"question-circle"} />
+        </Tooltip>
       </Header>
       <Card
         onMouseEnter={() => dispatch(cityHighlighted(id))}
         onMouseLeave={() => dispatch(cityHighlighted(null))}
       >
         <div>Factory slots - {factorySlots}</div>
-        {debug && <div>{JSON.stringify(city, null, 2)}</div>}
       </Card>
     </>
   );
