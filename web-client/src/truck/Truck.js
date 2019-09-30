@@ -97,6 +97,13 @@ function calculateDistance(from, to) {
   return Number((d / 1000).toFixed(0));
 }
 
+function distanceTime(currentCity, targetCity, speed) {
+  const distance = calculateDistance(currentCity, targetCity);
+  const travelTime = (distance / speed).toFixed(1);
+
+  return `${distance}km - ${travelTime}h`;
+}
+
 export function TravelTo({ truck }) {
   const { id, speed, navigation } = truck;
   const { currentCityId, nextCityId } = navigation;
@@ -115,10 +122,7 @@ export function TravelTo({ truck }) {
   }, [cityToTravelToId, citiesToTravelTo, nextCityId]);
 
   const currentCity = allCities[currentCityId];
-  const cityToTravelTo = allCities[cityToTravelToId];
 
-  const distance = calculateDistance(currentCity, cityToTravelTo);
-  const travelTime = (distance / speed).toFixed(1);
 
   return (
     <div>
@@ -130,7 +134,7 @@ export function TravelTo({ truck }) {
         <div>
           <Select
             onChange={value => setCityToTravelToId(value)}
-            style={{ width: 120 }}
+            style={{ width: 250 }}
             value={cityToTravelToId}
           >
             {citiesToTravelTo.map(city => (
@@ -139,13 +143,10 @@ export function TravelTo({ truck }) {
                 onClick={() => setCityToTravelToId(city.id)}
                 value={city.id}
               >
-                {city.name}
+                {city.name} [{distanceTime(currentCity, allCities[city.id], speed)}]
               </Select.Option>
             ))}
           </Select>
-          <span>
-            Distance: {distance} km. Travel time: {travelTime}h
-          </span>
         </div>
         <button
           onClick={() => {
