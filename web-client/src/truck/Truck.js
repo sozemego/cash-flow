@@ -23,6 +23,7 @@ import { Debug } from "../components/Debug";
 import InputNumber from "antd/lib/input-number";
 import Button from "antd/lib/button";
 import Progress from "antd/lib/progress";
+import Select from "antd/lib/select";
 
 const Header = styled.div`
   display: flex;
@@ -121,33 +122,40 @@ export function TravelTo({ truck }) {
 
   return (
     <div>
-      <div>Speed {speed} km/h</div>
-      <span>Travel to </span>
-      <select
-        value={cityToTravelToId}
-        onChange={e => setCityToTravelToId(e.target.value)}
-      >
-        {citiesToTravelTo.map(city => (
-          <option
-            key={city.id}
-            onClick={() => setCityToTravelToId(city.id)}
-            value={city.id}
+      <div>
+        <div>Speed {speed} km/h</div>
+        <span>Travel to </span>
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div>
+          <Select
+            onChange={value => setCityToTravelToId(value)}
+            style={{ width: 120 }}
+            value={cityToTravelToId}
           >
-            {city.name}
-          </option>
-        ))}
-      </select>
-      <span>
-        Distance: {distance} km. {travelTime}h
-      </span>
-      <button
-        onClick={() => {
-          socket.send(createTruckTravelMessage(id, cityToTravelToId));
-        }}
-        disabled={cityToTravelToId === ""}
-      >
-        GO
-      </button>
+            {citiesToTravelTo.map(city => (
+              <Select.Option
+                key={city.id}
+                onClick={() => setCityToTravelToId(city.id)}
+                value={city.id}
+              >
+                {city.name}
+              </Select.Option>
+            ))}
+          </Select>
+          <span>
+            Distance: {distance} km. Travel time: {travelTime}h
+          </span>
+        </div>
+        <button
+          onClick={() => {
+            socket.send(createTruckTravelMessage(id, cityToTravelToId));
+          }}
+          disabled={cityToTravelToId === ""}
+        >
+          GO
+        </button>
+      </div>
     </div>
   );
 }
@@ -178,7 +186,10 @@ function Traveling({ truck }) {
           <div>{getFormattedTime(new Date(startTime))}</div>
           <CityInline cityId={currentCityId} />
         </div>
-        <Progress percent={(travelTimePassed / totalTime) * 100} showInfo={false}/>
+        <Progress
+          percent={(travelTimePassed / totalTime) * 100}
+          showInfo={false}
+        />
         <div>
           <div>{getFormattedTime(new Date(arrivalTime))}</div>
           <CityInline cityId={nextCityId} />
@@ -257,7 +268,7 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
         <ResourceIcon resource={resource} />
         <span>{count}</span>
       </div>
-      <div style={{display: "flex"}}>
+      <div style={{ display: "flex" }}>
         <InputNumber
           max={Math.min(
             canAffordAmount,
@@ -282,7 +293,7 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
             }
             disabled={buyDisabled}
             block
-            style={{backgroundColor: buyDisabled ? "#DDDDDD" : "#78D89C"}}
+            style={{ backgroundColor: buyDisabled ? "#DDDDDD" : "#78D89C" }}
           >
             {selectedCount * resourcePrice}
           </Button>
