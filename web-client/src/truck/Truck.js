@@ -44,6 +44,11 @@ export function Truck({ truck }) {
     nextCityId && nextCityId === highlightedCityId && { background: "#ccffff" }
   );
 
+  const buyStyle = Object.assign(
+    {},
+    nextCityId && { opacity: 0.5, pointerEvents: "none" }
+  );
+
   return (
     <>
       <Header>
@@ -63,12 +68,10 @@ export function Truck({ truck }) {
         <Divider style={{ margin: "4px" }} />
         <Storage storage={storage} />
         <Divider style={{ margin: "4px" }} />
-        {!nextCityId && (
-          <>
-            <Buy truck={truck} cityId={currentCityId} />
-            <Divider style={{ margin: "4px" }} />
-          </>
-        )}
+        <div style={buyStyle}>
+          <Buy truck={truck} cityId={nextCityId || currentCityId} />
+          <Divider style={{ margin: "4px" }} />
+        </div>
         {!nextCityId && <TravelTo truck={truck} />}
         {nextCityId && <Traveling truck={truck} />}
       </Card>
@@ -123,7 +126,6 @@ export function TravelTo({ truck }) {
 
   const currentCity = allCities[currentCityId];
 
-
   return (
     <div>
       <div>
@@ -143,7 +145,8 @@ export function TravelTo({ truck }) {
                 onClick={() => setCityToTravelToId(city.id)}
                 value={city.id}
               >
-                {city.name} [{distanceTime(currentCity, allCities[city.id], speed)}]
+                {city.name} [
+                {distanceTime(currentCity, allCities[city.id], speed)}]
               </Select.Option>
             ))}
           </Select>
@@ -234,6 +237,7 @@ export function Buy({ truck, cityId }) {
 
   return (
     <BuyContainer>
+      <span>Resources to purchase in <CityInline cityId={cityId}/></span>
       {resources.map(({ factoryId, resource, count }) => {
         return (
           <FactoryResource
