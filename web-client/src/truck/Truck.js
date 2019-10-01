@@ -7,7 +7,6 @@ import {
   createTruckTravelMessage
 } from "./message";
 import { useTruckSocket } from "./useTruckSocket";
-import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { getFormattedTime } from "../clock/business";
 import { useGameClock } from "../clock/gameClock";
 import { calculateCapacityTaken, Storage } from "../components/Storage";
