@@ -1,18 +1,8 @@
 import React from "react";
-import styled from "styled-components";
 import { ResourceIcon } from "./ResourceIcon";
 import Icon from "antd/lib/icon";
+import Tag from "antd/lib/tag";
 
-const ResourcesContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
-const Resource = styled.div`
-  border: 1px dotted gray;
-  display: flex;
-  align-items: center;
-`;
 
 export function calculateCapacityTaken(storage) {
   const { resources } = storage;
@@ -37,14 +27,14 @@ export function Storage({ storage }) {
       <div>
         <Icon type="database" /> Capacity {capacityTaken} / {storage.capacity}
       </div>
-      <ResourcesContainer>
+      <div>
         {resourceCounts.map(({ resource, count }) => (
-          <Resource key={resource}>
-            <ResourceIcon resource={resource} />
+          <Tag color={"purple"}>
             <span>{count}</span>
-          </Resource>
+            <ResourceIcon resource={resource} />
+          </Tag>
         ))}
-      </ResourcesContainer>
+      </div>
     </div>
   );
 }
