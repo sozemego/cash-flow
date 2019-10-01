@@ -271,7 +271,7 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
     <BuyableResourceContainer>
       <div>
         <ResourceIcon resource={resource} />
-        <span>{count}</span>
+        <span>{count} - ${5}</span>
       </div>
       <div style={{ display: "flex" }}>
         <InputNumber
