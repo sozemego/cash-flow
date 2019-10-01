@@ -8,6 +8,8 @@ import { useGetHighlightedCity } from "../city/selectors";
 import { useDispatch } from "react-redux";
 import { cityHighlighted } from "../city/actions";
 import { Storage } from "../components/Storage";
+import Divider from "antd/lib/divider";
+import Progress from "antd/lib/progress";
 
 const Container = styled.div`
   margin: 2px;
@@ -29,12 +31,6 @@ const Header = styled.div`
 const Id = styled.div`
   color: gray;
   font-size: 0.75rem;
-`;
-
-const Divider = styled.hr`
-  width: 25%;
-  opacity: 0.25;
-  margin-left: -12px;
 `;
 
 const Producer = styled.div`
@@ -128,7 +124,11 @@ export function Factory({ factory }) {
             <ProductionDate>
               {getFormattedTime(new Date(producer.productionStartTime))}
             </ProductionDate>
-            <ProgressBar current={productionTimePassed} time={ms} height={6} disabled={producer.productionStartTime === -1}/>
+            <Progress
+              percent={(productionTimePassed / ms) * 100}
+              showInfo={false}
+              strokeColor={productionTimePassed / ms >= 0.99 ? "gray" : "green"}
+            />
             <ProductionDate>
               {getFormattedTime(productionEndTime)}
             </ProductionDate>
