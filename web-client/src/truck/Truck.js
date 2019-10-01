@@ -150,14 +150,15 @@ export function TravelTo({ truck }) {
             ))}
           </Select>
         </div>
-        <button
+        <Button
+          type={"primary"}
           onClick={() => {
             socket.send(createTruckTravelMessage(id, cityToTravelToId));
           }}
           disabled={cityToTravelToId === ""}
         >
           GO
-        </button>
+        </Button>
       </div>
     </div>
   );
