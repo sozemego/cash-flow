@@ -13,7 +13,7 @@ export function CityList({ cities }) {
 
   return (
     <Container>
-      <Typography level={3}>CITIES</Typography>
+      <Typography level={3}>Cities</Typography>
       <Divider/>
       {cityList.map(city => (
         <City key={city.id} city={city} />
