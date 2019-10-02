@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import { ProgressBar } from "../components/progressBar/ProgressBar";
 import { CityInline } from "../city/CityInline";
 import { getFormattedTime } from "../clock/business";
 import { useGameClock } from "../clock/gameClock";
