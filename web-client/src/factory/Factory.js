@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import styled, { css } from "styled-components";
-import { CityInline } from "../city/CityInline";
+import styled from "styled-components";
 import { getFormattedTime } from "../clock/business";
 import { useGameClock } from "../clock/gameClock";
 import { useGetCities, useGetHighlightedCity } from "../city/selectors";
@@ -121,7 +120,7 @@ export function Factory({ factory }) {
                 percent={(productionTimePassed / ms) * 100}
                 showInfo={false}
                 strokeColor={
-                  productionTimePassed / ms >= 0.99 ? "gray" : "green"
+                  productionTimePassed === ms ? "gray" : "green"
                 }
               />
               <ProductionDate>
