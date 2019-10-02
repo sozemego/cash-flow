@@ -4,6 +4,8 @@ import { Factory } from "./Factory";
 import { useFactorySocket } from "./useFactorySocket";
 import { READY_STATE_TABLE } from "../websocket/hook";
 import { useGetCities } from "../city/selectors";
+import { Divider } from "antd";
+import Tag from "antd/lib/tag";
 
 const Container = styled.div`
   margin-left: 12px;
@@ -39,21 +41,31 @@ export function FactoryGroup({ factories }) {
   return (
     <Container>
       <Header>
-        <div>Factories - state [{READY_STATE_TABLE[readyState]}]</div>
-        <div>
-          Group by:
-          {Object.values(GROUP_BY).map(val => (
-            <GroupButton
-              onClick={() => setGroupBy(val)}
-              selected={val === groupBy}
-              key={val}
-            >
-              {val.toUpperCase()}
-            </GroupButton>
-          ))}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignContent: "center"
+          }}
+        >
+          <div style={{ alignSelf: "center" }}>
+            Factories - state [{READY_STATE_TABLE[readyState]}]
+          </div>
+          <span>
+            Group by:
+            {Object.values(GROUP_BY).map(val => (
+              <GroupButton
+                onClick={() => setGroupBy(val)}
+                selected={val === groupBy}
+                key={val}
+              >
+                {val.toUpperCase()}
+              </GroupButton>
+            ))}
+          </span>
         </div>
+        <Divider style={{ margin: "10px" }} />
       </Header>
-      <hr />
       {groupBy === GROUP_BY.DEFAULT && <FactoryList factories={factories} />}
       {groupBy === GROUP_BY.TYPE && <FactoryByType factories={factories} />}
       {groupBy === GROUP_BY.CITY && (
@@ -70,30 +82,22 @@ export function FactoryList({ factories }) {
 }
 
 export function FactoryByType({ factories }) {
-  const factoryByType = {};
+  const factoryByName = {};
   factories.forEach(factory => {
-    const factories = factoryByType[factory.templateId] || [];
+    const factories = factoryByName[factory.name] || [];
     factories.push(factory);
-    factoryByType[factory.templateId] = factories;
+    factoryByName[factory.name] = factories;
   });
 
-  const types = [...new Set(factories.map(factory => factory.templateId))];
+  const names = [...new Set(factories.map(factory => factory.name))];
 
-  return types.map(type => (
-    <div key={type}>
-      <div>{type}</div>
-      <hr style={{ width: "25%", margin: "auto" }} />
-      <FactoryList factories={factoryByType[type]} />
-    </div>
+  return names.map(name => (
+    <FactoryList key={name} factories={factoryByName[name]} />
   ));
 }
 
 const FactoryByCityContainer = styled.div`
   padding-left: 2px;
-  ${props =>
-    css`
-      border-left: 2px solid ${props.even ? "#D3D3D3" : "#9e9e9e"};
-    `}}
 `;
 
 export function FactoryByCity({ factories, cities }) {
@@ -112,9 +116,9 @@ export function FactoryByCity({ factories, cities }) {
     const even = index % 2 === 0;
     return (
       <FactoryByCityContainer key={city.id} even={even}>
-        <div>
+        <Tag color={"orange"}>
           {city.name} [{factories.length}]
-        </div>
+        </Tag>
         <FactoryList factories={factories} />
       </FactoryByCityContainer>
     );

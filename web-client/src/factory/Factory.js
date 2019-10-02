@@ -3,33 +3,19 @@ import styled, { css } from "styled-components";
 import { CityInline } from "../city/CityInline";
 import { getFormattedTime } from "../clock/business";
 import { useGameClock } from "../clock/gameClock";
-import { useGetHighlightedCity } from "../city/selectors";
+import { useGetCities, useGetHighlightedCity } from "../city/selectors";
 import { useDispatch } from "react-redux";
 import { cityHighlighted } from "../city/actions";
 import { Storage } from "../components/Storage";
 import Divider from "antd/lib/divider";
 import Progress from "antd/lib/progress";
-
-const Container = styled.div`
-  margin: 2px;
-  padding: 12px;
-  border: dotted gray 1px;
-  ${props =>
-    props.highlighted &&
-    css`
-      background: #e0e0e0;
-    `}
-`;
+import Card from "antd/lib/card";
+import Tag from "antd/lib/tag";
 
 const Header = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-`;
-
-const Id = styled.div`
-  color: gray;
-  font-size: 0.75rem;
 `;
 
 const Producer = styled.div`
@@ -79,7 +65,9 @@ export function Factory({ factory }) {
   const [debug, setDebug] = useState(false);
   const dispatch = useDispatch();
   const highlightedCityId = useGetHighlightedCity();
+  const cities = useGetCities();
   const { id, name, storage, producer, cityId } = factory;
+  const cityName = cities[cityId].name;
 
   const { time, clock } = useGameClock({ interval: 500 });
   const minutes = producer.time;
@@ -95,46 +83,55 @@ export function Factory({ factory }) {
     producer.productionStartTime + ms * clock.multiplier
   );
 
+  const cardStyle = Object.assign(
+    {},
+    highlightedCityId === cityId && { background: "#e0e0e0" }
+  );
+
   return (
-    <Container
-      onMouseEnter={() => dispatch(cityHighlighted(cityId))}
-      onMouseLeave={() => dispatch(cityHighlighted(null))}
-      highlighted={highlightedCityId === cityId}
-    >
+    <>
       <Header>
-        <Id>{id}</Id>
+        <div>
+          <Tag color={"blue"}>{name}</Tag>
+          <Tag color={"gold"}>{cityName}</Tag>
+          <Tag color={"gray"}>{id}</Tag>
+        </div>
         <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
       </Header>
-      <div>
-        {name} at <CityInline cityId={cityId} />
-      </div>
-      <Divider />
-      <Storage storage={storage} />
-      <Divider />
-      <div>
-        <Producer>
-          <div>
-            <span>
-              Production of 1 {producer.resource} takes{" "}
-              {formatDuration(minutes)}
-            </span>
-          </div>
-          <ProducerProgress>
-            <ProductionDate>
-              {getFormattedTime(new Date(producer.productionStartTime))}
-            </ProductionDate>
-            <Progress
-              percent={(productionTimePassed / ms) * 100}
-              showInfo={false}
-              strokeColor={productionTimePassed / ms >= 0.99 ? "gray" : "green"}
-            />
-            <ProductionDate>
-              {getFormattedTime(productionEndTime)}
-            </ProductionDate>
-          </ProducerProgress>
-        </Producer>
-      </div>
-      {debug && <div>{JSON.stringify(factory, null, 2)}</div>}
-    </Container>
+      <Card
+        onMouseEnter={() => dispatch(cityHighlighted(cityId))}
+        onMouseLeave={() => dispatch(cityHighlighted(null))}
+        bodyStyle={cardStyle}
+      >
+        <Storage storage={storage} />
+        <Divider style={{ margin: "2px" }} />
+        <div>
+          <Producer>
+            <div>
+              <span>
+                Production of 1 {producer.resource} takes{" "}
+                {formatDuration(minutes)}
+              </span>
+            </div>
+            <ProducerProgress>
+              <ProductionDate>
+                {getFormattedTime(new Date(producer.productionStartTime))}
+              </ProductionDate>
+              <Progress
+                percent={(productionTimePassed / ms) * 100}
+                showInfo={false}
+                strokeColor={
+                  productionTimePassed / ms >= 0.99 ? "gray" : "green"
+                }
+              />
+              <ProductionDate>
+                {getFormattedTime(productionEndTime)}
+              </ProductionDate>
+            </ProducerProgress>
+          </Producer>
+        </div>
+        {debug && <div>{JSON.stringify(factory, null, 2)}</div>}
+      </Card>
+    </>
   );
 }
