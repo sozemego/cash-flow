@@ -15,19 +15,28 @@ export const READY_STATE_TABLE = {
  * @returns {{readyState: number socket: WebSocket}}
  */
 export function useWebsocket(url, dispatch) {
-  const [readyState, setReadyState] = useState(WebSocket.CLOSED);
+  const [readyState, setReadyState] = useState(WebSocket.CONNECTING);
 
   useEffect(() => {
-    if (!isSocketCreated(url)) {
+    if (!isSocketCreated(url) || readyState === WebSocket.CLOSED) {
+      setReadyState(WebSocket.CONNECTING);
       const socket = createSocket(url, dispatch);
       socket.onopen = function onOpen() {
         console.log("WebSocket connected to " + url);
         setReadyState(WebSocket.OPEN);
       };
+      socket.onclose = function onClose(arg) {
+        setTimeout(() => {
+          setReadyState(WebSocket.CLOSED);
+        }, 2500);
+      };
     }
-  }, [url, dispatch]);
+  }, [url, dispatch, readyState]);
 
   const socket = getSocket(url);
 
-  return { socket, readyState };
+  return {
+    socket,
+    readyState: socket ? socket.readyState : WebSocket.CONNECTING
+  };
 }
