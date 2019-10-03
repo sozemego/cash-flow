@@ -29,7 +29,7 @@ export function Storage({ storage }) {
       </div>
       <div>
         {resourceCounts.map(({ resource, count }) => (
-          <Tag color={"purple"}>
+          <Tag color={"purple"} key={resource}>
             <span>{count}</span>
             <ResourceIcon resource={resource} />
           </Tag>
