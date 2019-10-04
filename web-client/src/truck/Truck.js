@@ -256,7 +256,7 @@ export function Buy({ truck, cityId }) {
 export function FactoryResource({ truck, resource, count, factoryId }) {
   const { socket } = useTruckSocket();
   const [selectedCount, setSelectedCount] = useState(0);
-  const { cash } = useGetPlayer();
+  const { cash = 0 } = useGetPlayer();
 
   const capacity = truck.storage.capacity;
   const capacityTaken = calculateCapacityTaken(truck.storage);
