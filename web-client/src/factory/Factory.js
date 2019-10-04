@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { getFormattedTime } from "../clock/business";
 import { useGameClock } from "../clock/gameClock";
@@ -10,6 +10,9 @@ import Divider from "antd/lib/divider";
 import Progress from "antd/lib/progress";
 import Card from "antd/lib/card";
 import Tag from "antd/lib/tag";
+import Icon from "antd/lib/icon";
+import { Tooltip } from "antd";
+import { Debug } from "../components/Debug";
 
 const Header = styled.div`
   display: flex;
@@ -30,11 +33,6 @@ const ProducerProgress = styled.div`
 
 const ProductionDate = styled.div`
   margin: 4px;
-`;
-
-const Debug = styled.div`
-  cursor: pointer;
-  border: 1px solid black;
 `;
 
 function formatDuration(minutes) {
@@ -61,7 +59,6 @@ function formatDuration(minutes) {
 }
 
 export function Factory({ factory }) {
-  const [debug, setDebug] = useState(false);
   const dispatch = useDispatch();
   const highlightedCityId = useGetHighlightedCity();
   const cities = useGetCities();
@@ -95,7 +92,9 @@ export function Factory({ factory }) {
           <Tag color={"gold"}>{cityName}</Tag>
           <Tag color={"gray"}>{id}</Tag>
         </div>
-        <Debug onClick={() => setDebug(!debug)}>{debug ? "-" : "+"}</Debug>
+        <Tooltip title={<Debug obj={factory} />}>
+          <Icon type={"question-circle"} />
+        </Tooltip>
       </Header>
       <Card
         onMouseEnter={() => dispatch(cityHighlighted(cityId))}
@@ -129,7 +128,6 @@ export function Factory({ factory }) {
             </ProducerProgress>
           </Producer>
         </div>
-        {debug && <div>{JSON.stringify(factory, null, 2)}</div>}
       </Card>
     </>
   );
