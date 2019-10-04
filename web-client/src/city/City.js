@@ -7,6 +7,9 @@ import Tag from "antd/lib/tag";
 import Icon from "antd/lib/icon";
 import { Tooltip } from "antd";
 import { Debug } from "../components/Debug";
+import { useGetFactories } from "../factory/selectors";
+import { combine } from "../storage/business";
+import { ResourceList, Storage } from "../components/Storage";
 
 const Header = styled.div`
   display: flex;
@@ -19,6 +22,9 @@ export function City({ city }) {
   const dispatch = useDispatch();
 
   const { id, name, factorySlots } = city;
+  const factories = useGetFactories();
+  const factoriesInThisCity = factories.filter(factory => factory.cityId === id);
+  const totalCityStorage = combine(factoriesInThisCity.map(factory => factory.storage));
 
   return (
     <>
@@ -35,6 +41,7 @@ export function City({ city }) {
         onMouseLeave={() => dispatch(cityHighlighted(null))}
       >
         <div>Factory slots - {factorySlots}</div>
+				<ResourceList resources={totalCityStorage.resources}/>
       </Card>
     </>
   );

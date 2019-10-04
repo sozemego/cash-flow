@@ -5,24 +5,43 @@
  * @param newStorage
  */
 export function transfer(oldStorage, newStorage) {
-	if (oldStorage.capacity <= newStorage.capacity) {
-		newStorage.resources = {...oldStorage.resources};
-		return;
-	}
-	const resources = oldStorage.resources;
-	Object.entries(resources).forEach(([resource, count]) => {
-		newStorage.resources[resource] = Math.min(count, getRemainingCapacity(newStorage));
-	});
+  const resources = oldStorage.resources;
+  Object.entries(resources).forEach(([resource, count]) => {
+  	addResource(newStorage, resource, count);
+  });
 }
 
 export function getRemainingCapacity(storage) {
-	return storage.capacity - getCapacityTaken(storage);
+	const remainingCapacity = storage.capacity - getCapacityTaken(storage);
+	if (isNaN(remainingCapacity)) {
+		throw new Error('Remaining capacity cannot be NaN');
+	}
+  return remainingCapacity;
 }
 
 export function getCapacityTaken(storage) {
-	const resources = storage;
-	let capacityTaken = 0;
-	Object.values(resources).forEach(count => capacityTaken += count);
-	return capacityTaken;
+  const { resources } = storage;
+  let capacityTaken = 0;
+  Object.values(resources).forEach(count => (capacityTaken += count));
+  return capacityTaken;
 }
 
+export function addResource(storage, resource, count = 1) {
+	const remainingCapacity = getRemainingCapacity(storage);
+	const countToAdd = Math.min(remainingCapacity, count);
+	const previousCount = storage.resources[resource] || 0;
+	storage.resources[resource] = previousCount + countToAdd;
+}
+
+/**
+ * Combines all storages into one with a capacity the sum of all total capacities.
+ * @param storages
+ */
+export function combine(storages) {
+  const totalStorage = { capacity: 0, resources: {} };
+	for (let storage of storages) {
+		totalStorage.capacity += storage.capacity;
+		transfer(storage, totalStorage);
+	}
+	return totalStorage;
+}
