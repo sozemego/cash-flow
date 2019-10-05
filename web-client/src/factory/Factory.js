@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FACTORY_SERVICE_URL_EVENTS } from "../config/urls";
 import { getFormattedTime } from "../clock/business";
@@ -14,7 +14,6 @@ import Tag from "antd/lib/tag";
 import Icon from "antd/lib/icon";
 import { Modal, Tooltip } from "antd";
 import { Debug } from "../components/Debug";
-import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { Events } from "../components/Events";
 
 const Header = styled.div`
