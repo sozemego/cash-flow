@@ -1,5 +1,6 @@
-import React from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { FACTORY_SERVICE_URL_EVENTS } from "../config/urls";
 import { getFormattedTime } from "../clock/business";
 import { useGameClock } from "../clock/gameClock";
 import { useGetCities, useGetHighlightedCity } from "../city/selectors";
@@ -11,8 +12,10 @@ import Progress from "antd/lib/progress";
 import Card from "antd/lib/card";
 import Tag from "antd/lib/tag";
 import Icon from "antd/lib/icon";
-import { Tooltip } from "antd";
+import { Modal, Tooltip } from "antd";
 import { Debug } from "../components/Debug";
+import { useScrollPosition } from "@n8tb1t/use-scroll-position";
+import { Events } from "../components/Events";
 
 const Header = styled.div`
   display: flex;
@@ -59,6 +62,7 @@ function formatDuration(minutes) {
 }
 
 export function Factory({ factory }) {
+  const [showEvents, setShowEvents] = useState(false);
   const dispatch = useDispatch();
   const highlightedCityId = useGetHighlightedCity();
   const cities = useGetCities();
@@ -92,9 +96,17 @@ export function Factory({ factory }) {
           <Tag color={"gold"}>{cityName}</Tag>
           <Tag color={"gray"}>{id}</Tag>
         </div>
-        <Tooltip title={<Debug obj={factory} />}>
-          <Icon type={"question-circle"} />
-        </Tooltip>
+        <div>
+          <Icon type="ordered-list" onClick={() => setShowEvents(true)} />
+          <FactoryEvents
+            factory={factory}
+            showEvents={showEvents}
+            onClose={() => setShowEvents(false)}
+          />
+          <Tooltip title={<Debug obj={factory} />}>
+            <Icon type={"question-circle"} />
+          </Tooltip>
+        </div>
       </Header>
       <Card
         onMouseEnter={() => dispatch(cityHighlighted(cityId))}
@@ -118,9 +130,7 @@ export function Factory({ factory }) {
               <Progress
                 percent={(productionTimePassed / ms) * 100}
                 showInfo={false}
-                strokeColor={
-                  productionTimePassed === ms ? "gray" : "green"
-                }
+                strokeColor={productionTimePassed === ms ? "gray" : "green"}
               />
               <ProductionDate>
                 {getFormattedTime(productionEndTime)}
@@ -130,5 +140,32 @@ export function Factory({ factory }) {
         </div>
       </Card>
     </>
+  );
+}
+
+export function FactoryEvents({ factory, showEvents, onClose }) {
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    if (!showEvents) {
+      return;
+    }
+    fetch(FACTORY_SERVICE_URL_EVENTS + "?id=" + factory.id)
+      .then(result => result.json())
+      .then(setEvents);
+  }, [showEvents]);
+
+  return (
+    <Modal visible={showEvents} onOk={onClose} onCancel={onClose} width={1400}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around"
+        }}
+      >
+        <Events events={events} />
+        <Debug obj={factory} style={{flexBasis: 0, flexGrow: 1}}/>
+      </div>
+    </Modal>
   );
 }
