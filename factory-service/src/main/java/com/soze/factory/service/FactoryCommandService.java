@@ -68,6 +68,11 @@ public class FactoryCommandService implements CommandVisitor {
 	}
 
 	@Override
+	public List<Event> visit(SellResource sellResource) {
+		return visit((Command) sellResource);
+	}
+
+	@Override
 	public List<Event> visit(FinishProduction finishProduction) {
 		return visit((Command) finishProduction);
 	}

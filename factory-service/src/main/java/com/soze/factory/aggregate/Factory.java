@@ -5,6 +5,7 @@ import com.soze.factory.command.*;
 import com.soze.factory.event.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -106,6 +107,18 @@ public class Factory implements EventVisitor, CommandVisitor {
 	}
 
 	@Override
+	public List<Event> visit(SellResource sellResource) {
+		Storage storage = getStorage();
+		if (!storage.hasResource(sellResource.getResource(), sellResource.getCount())) {
+			return new ArrayList<>();
+		}
+		return Collections.singletonList(
+			new ResourceSold(getId().toString(), LocalDateTime.now(), 1, sellResource.getResource().name(),
+											 sellResource.getCount()
+			));
+	}
+
+	@Override
 	public void visit(FactoryCreated factoryCreated) {
 		this.id = UUID.fromString(factoryCreated.entityId);
 		this.name = factoryCreated.name;
@@ -141,5 +154,11 @@ public class Factory implements EventVisitor, CommandVisitor {
 		Storage storage = getStorage();
 		storage.addResource(resource);
 		getProducer().stopProduction();
+	}
+
+	@Override
+	public void visit(ResourceSold resourceSold) {
+		Storage storage = getStorage();
+		storage.removeResource(Resource.valueOf(resourceSold.resource), resourceSold.count);
 	}
 }

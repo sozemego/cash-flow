@@ -12,5 +12,6 @@ public interface CommandVisitor {
 	List<Event> visit(FinishProduction finishProduction);
 	List<Event> visit(ChangeStorageCapacity changeStorageCapacity);
 	List<Event> visit(AddProductionLine addProductionLine);
+	List<Event> visit(SellResource sellResource);
 
 }

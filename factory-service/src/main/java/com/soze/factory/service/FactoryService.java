@@ -79,23 +79,6 @@ public class FactoryService implements EventVisitor {
 		}
 	}
 
-	public void sell(String factoryId, Resource resource, int count) {
-		LOG.info("Attempting to sell {} of {} from factoryId = {}", count, resource, factoryId);
-		Factory factory = repository.findById(UUID.fromString(factoryId)).orElseThrow(
-			() -> new IllegalStateException("Factory with id " + factoryId + " does not exist"));
-
-		Storage storage = factory.getStorage();
-		boolean hasResource = storage.hasResource(resource, count);
-		if (!hasResource) {
-			throw new IllegalStateException(
-				"Factory with id = " + factoryId + ", does not have " + count + " of " + resource);
-		}
-		storage.removeResource(resource, count);
-		LOG.info("Removed {} of {} from factoryId = {}", count, resource, factory.getId());
-
-		sendToAll(new StorageContentChanged(factoryId, resource, -count));
-	}
-
 	@EventListener
 	@Override
 	public void visit(FactoryCreated factoryCreated) {
@@ -132,5 +115,12 @@ public class FactoryService implements EventVisitor {
 	public void visit(ProductionFinished productionFinished) {
 		LOG.info("{}", productionFinished);
 		sendToAll(productionFinished);
+	}
+
+	@Override
+	@EventListener
+	public void visit(ResourceSold resourceSold) {
+		LOG.info("{}", resourceSold);
+		sendToAll(resourceSold);
 	}
 }

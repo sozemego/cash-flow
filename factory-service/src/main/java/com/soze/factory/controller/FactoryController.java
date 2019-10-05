@@ -1,13 +1,15 @@
 package com.soze.factory.controller;
 
+import com.soze.common.client.FactoryServiceClient;
 import com.soze.common.dto.FactoryDTO;
 import com.soze.common.dto.Resource;
 import com.soze.common.dto.SellResultDTO;
 import com.soze.factory.FactoryConverter;
-import com.soze.common.client.FactoryServiceClient;
 import com.soze.factory.aggregate.Factory;
+import com.soze.factory.command.SellResource;
 import com.soze.factory.event.Event;
 import com.soze.factory.repository.FactoryRepository;
+import com.soze.factory.service.FactoryCommandService;
 import com.soze.factory.service.FactoryService;
 import com.soze.factory.service.FactoryTemplateLoader;
 import com.soze.factory.store.EventStore;
@@ -16,7 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -33,6 +37,7 @@ public class FactoryController implements FactoryServiceClient {
 	private static final Logger LOG = LoggerFactory.getLogger(FactoryController.class);
 
 	private final FactoryService factoryService;
+	private final FactoryCommandService factoryCommandService;
 	private final FactoryTemplateLoader factoryTemplateLoader;
 	private final FactoryConverter factoryConverter;
 	private final FactoryRepository factoryRepository;
@@ -40,11 +45,12 @@ public class FactoryController implements FactoryServiceClient {
 	private final EventStore eventStore;
 
 	@Autowired
-	public FactoryController(FactoryService factoryService, FactoryTemplateLoader factoryTemplateLoader,
-													 FactoryConverter factoryConverter, FactoryRepository factoryRepository,
-													 HttpServletResponse response, EventStore eventStore
+	public FactoryController(FactoryService factoryService, FactoryCommandService factoryCommandService,
+													 FactoryTemplateLoader factoryTemplateLoader, FactoryConverter factoryConverter,
+													 FactoryRepository factoryRepository, HttpServletResponse response, EventStore eventStore
 													) {
 		this.factoryService = factoryService;
+		this.factoryCommandService = factoryCommandService;
 		this.factoryTemplateLoader = factoryTemplateLoader;
 		this.factoryConverter = factoryConverter;
 		this.factoryRepository = factoryRepository;
@@ -56,8 +62,7 @@ public class FactoryController implements FactoryServiceClient {
 	public List<FactoryDTO> getFactories() {
 		LOG.info("Calling getFactories");
 		List<Factory> factories = factoryRepository.getAll();
-		List<FactoryDTO> factoryDTOS = factories.stream().map(factoryConverter::convert).collect(
-			Collectors.toList());
+		List<FactoryDTO> factoryDTOS = factories.stream().map(factoryConverter::convert).collect(Collectors.toList());
 		LOG.info("Returning {} factories", factoryDTOS.size());
 		return factoryDTOS;
 	}
@@ -84,7 +89,7 @@ public class FactoryController implements FactoryServiceClient {
 		LOG.info("Called /sell endpoint, factoryId = {}, resource = {}, count = {}", factoryId, resourceStr, count);
 		Resource resource = Resource.valueOf(resourceStr);
 		try {
-			factoryService.sell(factoryId, resource, count);
+			factoryCommandService.visit(new SellResource(UUID.fromString(factoryId), resource, count));
 			return new SellResultDTO(factoryId, resource, count);
 		} catch (Exception e) {
 			LOG.warn("Exception when trying to sell resource", e);
