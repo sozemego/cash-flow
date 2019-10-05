@@ -151,6 +151,14 @@ export function FactoryEvents({ factory, showEvents, onClose }) {
     }
     fetch(FACTORY_SERVICE_URL_EVENTS + "?id=" + factory.id)
       .then(result => result.json())
+      .then(events => {
+        return events.map(event => {
+          const parsedEvent = {...event};
+          const { timestamp: ts } = parsedEvent;
+          parsedEvent.timestamp = new Date(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5]);
+          return parsedEvent;
+        });
+      })
       .then(setEvents);
   }, [showEvents]);
 
