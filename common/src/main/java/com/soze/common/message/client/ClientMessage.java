@@ -11,7 +11,8 @@ import java.util.UUID;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
 @JsonSubTypes(value = {
 	@JsonSubTypes.Type(value = TruckTravelRequest.class, name = "TRUCK_TRAVEL_REQUEST"),
-	@JsonSubTypes.Type(value = BuyResourceRequest.class, name = "BUY_RESOURCE_REQUEST")
+	@JsonSubTypes.Type(value = BuyResourceRequest.class, name = "BUY_RESOURCE_REQUEST"),
+	@JsonSubTypes.Type(value = DumpContent.class, name = "DUMP_CONTENT")
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class ClientMessage {
@@ -29,7 +30,7 @@ public abstract class ClientMessage {
 	public abstract ClientMessageType getType();
 
 	public enum ClientMessageType {
-		TRUCK_TRAVEL_REQUEST, BUY_RESOURCE_REQUEST
+		TRUCK_TRAVEL_REQUEST, BUY_RESOURCE_REQUEST, DUMP_CONTENT
 	}
 
 }

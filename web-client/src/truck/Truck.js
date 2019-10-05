@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { CityInline } from "../city/CityInline";
 import { useGetCities, useGetHighlightedCity } from "../city/selectors";
 import {
-  createBuyResourceRequestMessage,
-  createTruckTravelMessage
+	createBuyResourceRequestMessage,
+	createTruckTravelMessage, dump
 } from "./message";
 import { useTruckSocket } from "./useTruckSocket";
 import { getFormattedTime } from "../clock/business";
@@ -33,6 +33,7 @@ const Header = styled.div`
 
 export function Truck({ truck }) {
   const highlightedCityId = useGetHighlightedCity();
+  const {socket} = useTruckSocket();
 
   const { id, name, navigation, storage } = truck;
   const { currentCityId, nextCityId } = navigation;
@@ -55,10 +56,15 @@ export function Truck({ truck }) {
           <Tag color={"brown"}>{name}</Tag>
           <Tag color={"gray"}>{id}</Tag>
         </div>
-        <Tooltip title={<Debug obj={truck} />}>
-          <Icon type={"question-circle"} />
-        </Tooltip>
-      </Header>
+				<div>
+					<Icon type="delete" onClick={() => {
+						socket.send(dump(id));
+					}}/>
+					<Tooltip title={<Debug obj={truck} />}>
+						<Icon type={"question-circle"} />
+					</Tooltip>
+				</div>
+        </Header>
       <Card bodyStyle={cardStyle}>
         <span>
           {nextCityId ? "Travelling to " : "In "}

@@ -60,7 +60,12 @@ const storageContentChanged = produce((state, action) => {
     return;
   }
   const actualCount = truck.storage.resources[resource] || 0;
-  truck.storage.resources[resource] = actualCount + change;
+  const newCount = actualCount + change;
+  if (newCount === 0) {
+    delete truck.storage.resources[resource];
+  } else {
+    truck.storage.resources[resource] = actualCount + change;
+  }
 });
 
 const storageCapacityChanged = produce((state, action) => {

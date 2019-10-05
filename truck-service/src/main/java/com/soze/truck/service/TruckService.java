@@ -4,10 +4,8 @@ import com.soze.common.dto.CityDTO;
 import com.soze.common.dto.Clock;
 import com.soze.common.dto.Resource;
 import com.soze.common.json.JsonUtils;
-import com.soze.common.message.server.ServerMessage;
-import com.soze.common.message.server.TruckAdded;
-import com.soze.common.message.server.TruckArrived;
-import com.soze.common.message.server.TruckTravelStarted;
+import com.soze.common.message.server.*;
+import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
@@ -171,6 +169,27 @@ public class TruckService {
 	 */
 	public void buyResource(String truckId, String factoryId, Resource resource, int count) {
 		new BuyResourceSaga(this, remoteFactoryService, playerService, truckId, factoryId, resource, count).run();
+	}
+
+	/**
+	 * Removes all content from truck.
+	 */
+	public void dump(String truckId) {
+		LOG.info("Dumping contents of truck {}", truckId);
+		Truck truck = getTruck(truckId).orElseThrow(
+			() -> new IllegalArgumentException("Truck with id = " + truckId + " does not exist"));
+
+		Storage storage = truck.getStorage();
+		Map<Resource, Integer> resources = storage.getResources();
+		List<ServerMessage> storageContentChangedList = new ArrayList<>();
+		for (Map.Entry<Resource, Integer> entry : resources.entrySet()) {
+			storageContentChangedList.add(new StorageContentChanged(truckId, entry.getKey(), -entry.getValue()));
+		}
+		for (ServerMessage serverMessage : storageContentChangedList) {
+			sendToAll(serverMessage);
+		}
+		storage.clear();
+		LOG.info("Contents of truck {} cleared", truckId);
 	}
 
 }

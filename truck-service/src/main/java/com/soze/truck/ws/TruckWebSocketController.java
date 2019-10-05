@@ -3,6 +3,7 @@ package com.soze.truck.ws;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.client.BuyResourceRequest;
 import com.soze.common.message.client.ClientMessage;
+import com.soze.common.message.client.DumpContent;
 import com.soze.common.message.client.TruckTravelRequest;
 import com.soze.truck.service.TruckService;
 import org.slf4j.Logger;
@@ -62,10 +63,13 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 
 			if (clientMessage.getType() == ClientMessage.ClientMessageType.BUY_RESOURCE_REQUEST) {
 				BuyResourceRequest buyResourceRequest = (BuyResourceRequest) clientMessage;
-				truckService.buyResource(
-					buyResourceRequest.getTruckId(), buyResourceRequest.getFactoryId(), buyResourceRequest.getResource(),
-					buyResourceRequest.getCount()
+				truckService.buyResource(buyResourceRequest.getTruckId(), buyResourceRequest.getFactoryId(),
+																 buyResourceRequest.getResource(), buyResourceRequest.getCount()
 																);
+			}
+			if (clientMessage.getType() == ClientMessage.ClientMessageType.DUMP_CONTENT) {
+				DumpContent dumpContent = (DumpContent) clientMessage;
+				truckService.dump(dumpContent.getEntityId());
 			}
 		} catch (Exception e) {
 			LOG.info("Exception during message handling", e);

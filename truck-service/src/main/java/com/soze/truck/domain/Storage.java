@@ -87,6 +87,11 @@ public class Storage {
 		return new HashMap<>(resources);
 	}
 
+	public void clear() {
+		resources.clear();
+		capacityTaken = 0;
+	}
+
 	@Override
 	public String toString() {
 		return "Storage{" + "capacity=" + capacity + ", resources=" + resources + ", capacityTaken=" + capacityTaken + '}';
