@@ -25,6 +25,14 @@ public class JsonUtils {
 		}
 	}
 
+	public static <T> T parse(File file, Class<T> clazz) {
+		try {
+			return MAPPER.readValue(file, clazz);
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+
 	public static <T> List<T> parseList(String json, Class<T> clazz) {
 		try {
 			return MAPPER.readValue(json, MAPPER.getTypeFactory().constructCollectionType(List.class, clazz));
