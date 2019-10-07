@@ -27,7 +27,7 @@ public class ClockRepository {
 		File file = FileUtils.getFile(FILE);
 		Map<String, Object> json = JsonUtils.parse(file, Map.class);
 
-		if ((int) json.get("startTime") == -1) {
+		if ((long) json.get("startTime") == -1) {
 			startTime = Instant.now().toEpochMilli();
 			json.put("startTime", startTime);
 			FileUtils.write(FileUtils.getFile(FILE), JsonUtils.serialize(json));
