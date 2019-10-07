@@ -1,4 +1,4 @@
-const express = require("express");
+const  express = require('express');
 const router = express.Router();
 
 const { getPlayer, transfer } = require("./service");
@@ -9,7 +9,9 @@ router.use((req, res, next) => {
 });
 
 router.get("/player", (req, res) => {
-  res.send(getPlayer());
+  const player = getPlayer();
+  console.log(`Returning ${JSON.stringify(player)}`);
+  res.send(player);
 });
 
 router.post("/transfer", (req, res) => {
@@ -23,7 +25,7 @@ router.post("/transfer", (req, res) => {
 
   const result = transfer(amount);
   console.log(result);
-  res.send(result);
+  res.json(result);
 });
 
 module.exports = router;
