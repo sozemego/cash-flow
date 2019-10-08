@@ -23,9 +23,8 @@ router.post("/transfer", (req, res) => {
     return;
   }
 
-  const result = transfer(amount);
-  console.log(result);
-  res.json(result);
+  const transferResult = transfer(amount);
+  res.json(transferResult);
 });
 
 module.exports = router;
