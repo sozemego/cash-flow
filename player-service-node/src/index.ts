@@ -10,6 +10,7 @@ import { Eureka } from "eureka-js-client";
 
 import { router as playerRouter } from "./player/router";
 const { startWebsocket } = require("./player/socketRoute");
+const logger = require("./logger").namedLogger("index");
 
 const app = express();
 const server: Server = http.createServer(app);
@@ -27,9 +28,9 @@ startWebsocket(server);
 let eurekaClient: Eureka = null;
 
 server.listen(port, () => {
-  console.log("App listening on " + port);
+  logger.info("App listening on " + port);
 
-  console.log("Registering in eureka service discovery");
+  logger.info("Registering in eureka service discovery");
   eurekaClient = new Eureka({
     // application instance information
     instance: {
@@ -64,5 +65,5 @@ module.exports = {
 };
 
 process.on("exit", code => {
-  console.log(`About to exit with code: ${code}`);
+  logger.info(`About to exit with code: ${code}`);
 });

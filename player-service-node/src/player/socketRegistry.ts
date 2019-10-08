@@ -1,4 +1,5 @@
 import WebSocket = require("ws");
+const logger = require("../logger").namedLogger("socket-registry");
 
 const sockets: WebSocket[] = [];
 
@@ -9,18 +10,18 @@ export interface SocketRegistry {
 }
 
 function addSocket(socket: WebSocket): void {
-  console.log("Adding socket");
+  logger.info("Adding socket");
   sockets.push(socket);
-  console.log(`There are currently ${sockets.length} sockets connected.`);
+  logger.info(`There are currently ${sockets.length} sockets connected.`);
 }
 
 function removeSocket(socket): void {
-  console.log("Disconnecting socket");
+  logger.info("Disconnecting socket");
   const index = sockets.findIndex(element => element === socket);
   if (index > -1) {
     sockets.splice(index, 1);
   }
-  console.log(`There are currently ${sockets.length} sockets connected.`);
+  logger.info(`There are currently ${sockets.length} sockets connected.`);
 }
 
 function getSockets(): WebSocket[] {

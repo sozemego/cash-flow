@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import { registry } from "./socketRegistry";
+const logger = require("../logger").namedLogger("player-service");
 
 interface PlayerService {
   transfer: (number) => TransferResult;
@@ -20,7 +21,7 @@ const playerString = fs.readFileSync("player.json", { encoding: "utf-8" });
 const player: Player = JSON.parse(playerString);
 
 function transfer(amount): TransferResult {
-  console.log(
+  logger.info(
     `Attempting to transfer ${amount} to player ${JSON.stringify(player)}`
   );
 
@@ -37,13 +38,13 @@ function transfer(amount): TransferResult {
 }
 
 function savePlayer() {
-  console.log("Saving player");
+  logger.info("Saving player");
   fs.writeFileSync("player.json", JSON.stringify(player));
 }
 
 function syncCashChange(amount) {
   const sockets = registry.getSockets();
-  console.log(`Sync player to ${sockets.length} sockets`);
+  logger.info(`Sync player to ${sockets.length} sockets`);
   sockets.forEach(socket =>
     socket.send(JSON.stringify({ type: "PLAYER_CASH_CHANGED", amount }))
   );
