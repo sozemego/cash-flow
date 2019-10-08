@@ -1,14 +1,14 @@
-import {Server} from "http";
-
-const dotenv = require("dotenv");
+import dotenv = require("dotenv");
 dotenv.config();
 
-const express = require("express");
-const http = require("http");
-const cors = require("cors");
-const { Eureka } = require("eureka-js-client");
+import { Server } from "http";
 
-const playerRouter = require("./player/router");
+import express = require("express");
+import http = require("http");
+import cors = require("cors");
+import { Eureka } from "eureka-js-client";
+
+import { router as playerRouter } from "./player/router";
 const { startWebsocket } = require("./player/socketRoute");
 
 const app = express();
@@ -24,7 +24,7 @@ app.use("/", playerRouter);
 
 startWebsocket(server);
 
-let eurekaClient = null;
+let eurekaClient: Eureka = null;
 
 server.listen(port, () => {
   console.log("App listening on " + port);
@@ -38,16 +38,16 @@ server.listen(port, () => {
       app: "PLAYER-SERVICE",
       hostName: "localhost",
       ipAddr: "127.0.0.1",
-      statusPageUrl: 'http://localhost:8080/info',
+      statusPageUrl: "http://localhost:8080/info",
       port: {
-        '$': 9005,
-        '@enabled': true,
+        $: 9005,
+        "@enabled": true
       },
       vipAddress: "player-service",
       dataCenterInfo: {
-        '@class': 'com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo',
-        name: 'MyOwn',
-      },
+        "@class": "com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo",
+        name: "MyOwn"
+      }
     },
     eureka: {
       // eureka server host / port

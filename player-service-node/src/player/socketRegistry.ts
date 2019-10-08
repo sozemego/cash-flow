@@ -1,4 +1,4 @@
-import * as WebSocket from "ws";
+import WebSocket = require("ws");
 
 const sockets: WebSocket[] = [];
 
@@ -8,13 +8,13 @@ export interface SocketRegistry {
   getSockets: () => WebSocket[];
 }
 
-function addSocket(socket: WebSocket) {
+function addSocket(socket: WebSocket): void {
   console.log("Adding socket");
   sockets.push(socket);
   console.log(`There are currently ${sockets.length} sockets connected.`);
 }
 
-function removeSocket(socket) {
+function removeSocket(socket): void {
   console.log("Disconnecting socket");
   const index = sockets.findIndex(element => element === socket);
   if (index > -1) {
@@ -23,10 +23,12 @@ function removeSocket(socket) {
   console.log(`There are currently ${sockets.length} sockets connected.`);
 }
 
-function getSockets() {
+function getSockets(): WebSocket[] {
   return sockets;
 }
 
 export const registry: SocketRegistry = {
-    addSocket, removeSocket, getSockets
+  addSocket,
+  removeSocket,
+  getSockets
 };

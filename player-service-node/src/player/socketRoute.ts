@@ -1,5 +1,5 @@
 import { Server as HttpServer } from "http";
-import * as WebSocket from "ws";
+import WebSocket = require("ws");
 
 import { registry } from "./socketRegistry";
 

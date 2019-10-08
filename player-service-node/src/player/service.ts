@@ -1,10 +1,25 @@
-const fs = require("fs");
-const { getSockets } = require("./socketRegistry");
+import * as fs from "fs";
+import { registry } from "./socketRegistry";
+
+interface PlayerService {
+  transfer: (number) => TransferResult;
+  getPlayer: () => Player;
+}
+
+interface TransferResult {
+  amountTransferred: number;
+  current: number;
+}
+
+interface Player {
+  name: string;
+  cash: number;
+}
 
 const playerString = fs.readFileSync("player.json", { encoding: "utf-8" });
-const player = JSON.parse(playerString);
+const player: Player = JSON.parse(playerString);
 
-function transfer(amount) {
+function transfer(amount): TransferResult {
   console.log(
     `Attempting to transfer ${amount} to player ${JSON.stringify(player)}`
   );
@@ -27,14 +42,14 @@ function savePlayer() {
 }
 
 function syncCashChange(amount) {
-  const sockets = getSockets();
+  const sockets = registry.getSockets();
   console.log(`Sync player to ${sockets.length} sockets`);
   sockets.forEach(socket =>
     socket.send(JSON.stringify({ type: "PLAYER_CASH_CHANGED", amount }))
   );
 }
 
-module.exports = {
+export const service: PlayerService = {
   getPlayer: () => player,
   transfer
 };
