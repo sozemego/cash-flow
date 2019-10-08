@@ -1,3 +1,5 @@
+import {Server} from "http";
+
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -6,11 +8,11 @@ const http = require("http");
 const cors = require("cors");
 const { Eureka } = require("eureka-js-client");
 
-const playerRouter = require("./player/route");
-const { startWebsocket } = require("./player/ws");
+const playerRouter = require("./player/router");
+const { startWebsocket } = require("./player/socketRoute");
 
 const app = express();
-const server = http.createServer(app);
+const server: Server = http.createServer(app);
 const port = 9005;
 
 const corsOptions = {
