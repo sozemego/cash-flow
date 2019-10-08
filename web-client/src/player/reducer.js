@@ -1,5 +1,5 @@
 import produce from "immer";
-import { playerAdded } from "./actions";
+import { playerAdded, playerCashChanged } from "./actions";
 
 const initialState = {
   player: {}
@@ -10,6 +10,9 @@ export function reducer(state = initialState, action) {
     case playerAdded.type: {
       return _playerAdded(state, action);
     }
+    case playerCashChanged.type: {
+      return _playerCashChanged(state, action);
+    }
     default:
       return state;
   }
@@ -17,4 +20,8 @@ export function reducer(state = initialState, action) {
 
 const _playerAdded = produce((state, action) => {
   state.player = action.player;
+});
+
+const _playerCashChanged = produce((state, action) => {
+  state.player.cash += action.amount;
 });
