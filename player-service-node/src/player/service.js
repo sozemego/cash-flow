@@ -1,4 +1,5 @@
 const fs = require("fs");
+const {getSockets} = require('./socketRegistry');
 
 const playerString = fs.readFileSync("player.json", { encoding: "utf-8" });
 const player = JSON.parse(playerString);
@@ -9,6 +10,7 @@ function transfer(amount) {
   if (amount > 0) {
   	player.cash += amount;
   	savePlayer();
+		syncPlayer();
     return { amountTransferred: amount, current: player.cash };
   }
 
@@ -18,13 +20,20 @@ function transfer(amount) {
   }
 
   player.cash += amount;
-  savePlayer()
+  savePlayer();
+	syncPlayer();
   return { amountTransferred: amount, current: player.cash };
 }
 
 function savePlayer() {
 	console.log('Saving player');
 	fs.writeFileSync('player.json', JSON.stringify(player));
+}
+
+function syncPlayer() {
+	const sockets = getSockets();
+	console.log(`Sync player to ${sockets.length} sockets`);
+	sockets.forEach(socket => socket.send(JSON.stringify(player)));
 }
 
 module.exports = {
