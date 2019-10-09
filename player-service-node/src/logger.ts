@@ -21,13 +21,18 @@ function getDefaultFormat() {
   );
 }
 
+function padRight(str: string, maxLength: number): string {
+    const pad = Array.from({ length: maxLength }).join(" ");
+    return (str + pad).substr(0, maxLength);
+}
+
 function getNamedFormat(name: string): Format {
   const { combine, timestamp, printf } = winston.format;
 
   return combine(
     timestamp(),
     printf(info => {
-      return `${info.timestamp} [${name}][${info.level.toUpperCase()}] ${
+      return `${info.timestamp} [${padRight(name, 15)}][${padRight(info.level.toUpperCase(), 4)}] ${
         info.message
       }`;
     })
