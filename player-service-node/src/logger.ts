@@ -27,7 +27,7 @@ function getNamedFormat(name: string): Format {
   return combine(
     timestamp(),
     printf(info => {
-      return `${name}! ${info.timestamp} ${info.level.toUpperCase()}: ${
+      return `${info.timestamp} [${name}][${info.level.toUpperCase()}] ${
         info.message
       }`;
     })
