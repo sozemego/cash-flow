@@ -1,10 +1,14 @@
 package com.soze.truck.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.soze.common.dto.Resource;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonSerialize(using = StorageSerializer.class)
+@JsonDeserialize(using = StorageDeserializer.class)
 public class Storage {
 
 	private final int capacity;

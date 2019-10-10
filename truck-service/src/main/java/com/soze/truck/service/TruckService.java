@@ -9,8 +9,9 @@ import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
-import com.soze.truck.saga.BuyResourceSaga;
 import com.soze.truck.external.RemoteWorldService;
+import com.soze.truck.repository.TruckRepository;
+import com.soze.truck.saga.BuyResourceSaga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,31 +30,30 @@ public class TruckService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TruckService.class);
 
-	private final TruckTemplateLoader truckTemplateLoader;
 	private final TruckConverter truckConverter;
 	private final TruckNavigationService truckNavigationService;
 	private final RemoteWorldService remoteWorldService;
 	private final RemoteFactoryService remoteFactoryService;
 	private final RemotePlayerService playerService;
 	private final Clock clock;
+	private final TruckRepository truckRepository;
 
-	private final List<Truck> trucks = new ArrayList<>();
 	private final Set<WebSocketSession> sessions = new HashSet<>();
 
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
 	@Autowired
-	public TruckService(TruckTemplateLoader truckTemplateLoader, TruckConverter truckConverter,
-											TruckNavigationService truckNavigationService, RemoteWorldService remoteWorldService,
-											RemoteFactoryService remoteFactoryService, RemotePlayerService playerService, Clock clock
+	public TruckService(TruckConverter truckConverter, TruckNavigationService truckNavigationService,
+											RemoteWorldService remoteWorldService, RemoteFactoryService remoteFactoryService,
+											RemotePlayerService playerService, Clock clock, TruckRepository truckRepository
 										 ) {
-		this.truckTemplateLoader = truckTemplateLoader;
 		this.truckConverter = truckConverter;
 		this.truckNavigationService = truckNavigationService;
 		this.remoteWorldService = remoteWorldService;
 		this.remoteFactoryService = remoteFactoryService;
 		this.playerService = playerService;
 		this.clock = clock;
+		this.truckRepository = truckRepository;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class TruckService {
 		LOG.info("Adding truck = {}", truck);
 		validateTruck(truck);
 
-		trucks.add(truck);
+		truckRepository.addTruck(truck);
 
 		truckNavigationService.setCityId(truck.getId(), cityId);
 
@@ -80,7 +80,7 @@ public class TruckService {
 	public void addSession(WebSocketSession session) {
 		sessions.add(session);
 
-		for (Truck truck : trucks) {
+		for (Truck truck : getTrucks()) {
 			sendTo(session, new TruckAdded(truckConverter.convert(truck)));
 		}
 	}
@@ -90,7 +90,7 @@ public class TruckService {
 	}
 
 	public List<Truck> getTrucks() {
-		return trucks;
+		return truckRepository.getTrucks();
 	}
 
 	private void sendTo(WebSocketSession session, ServerMessage serverMessage) {
@@ -160,15 +160,15 @@ public class TruckService {
 	}
 
 	public Optional<Truck> getTruck(String truckId) {
-		Objects.requireNonNull(truckId);
-		return this.trucks.stream().filter(truck -> truck.getId().equals(truckId)).findFirst();
+		return truckRepository.findTruckById(truckId);
 	}
 
 	/**
 	 * <code>TruckId</code> buys <code>count</code> resources from factory with id <code>factoryId</code>.
 	 */
 	public void buyResource(String truckId, String factoryId, Resource resource, int count) {
-		new BuyResourceSaga(this, remoteFactoryService, playerService, truckId, factoryId, resource, count).run();
+		new BuyResourceSaga(this, truckRepository, remoteFactoryService, playerService, truckId, factoryId, resource, count)
+			.run();
 	}
 
 	/**
@@ -190,6 +190,7 @@ public class TruckService {
 		}
 		storage.clear();
 		LOG.info("Contents of truck {} cleared", truckId);
+		truckRepository.update(truck);
 	}
 
 }

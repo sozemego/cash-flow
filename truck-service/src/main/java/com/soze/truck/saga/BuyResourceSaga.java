@@ -6,6 +6,7 @@ import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
+import com.soze.truck.repository.TruckRepository;
 import com.soze.truck.service.TruckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ public class BuyResourceSaga {
 	private static final Logger LOG = LoggerFactory.getLogger(BuyResourceSaga.class);
 
 	private final TruckService truckService;
+	private final TruckRepository truckRepository;
 	private final RemoteFactoryService factoryService;
 	private final RemotePlayerService playerService;
 
@@ -25,10 +27,11 @@ public class BuyResourceSaga {
 	private final Resource resource;
 	private final int count;
 
-	public BuyResourceSaga(TruckService truckService, RemoteFactoryService factoryService,
+	public BuyResourceSaga(TruckService truckService, TruckRepository truckRepository, RemoteFactoryService factoryService,
 												 RemotePlayerService playerService, String truckId, String factoryId, Resource resource, int count
 												) {
 		this.truckService = truckService;
+		this.truckRepository = truckRepository;
 		this.factoryService = factoryService;
 		this.playerService = playerService;
 		this.truckId = truckId;
@@ -90,9 +93,11 @@ public class BuyResourceSaga {
 		};
 
 		truckStorage.addResource(resource, count);
+		truckRepository.update(truck);
 		Runnable reverseAddResource = () -> {
 			LOG.info("Reverse adding {} of resource {} to truck {}", count, resource, truck.getId());
 			truckStorage.removeResource(resource, count);
+			truckRepository.update(truck);
 		};
 
 		try {

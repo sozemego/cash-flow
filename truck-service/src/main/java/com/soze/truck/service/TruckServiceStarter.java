@@ -3,6 +3,9 @@ package com.soze.truck.service;
 import com.soze.common.dto.CityDTO;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteWorldService;
+import com.soze.truck.repository.TruckRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +13,8 @@ import javax.annotation.PostConstruct;
 
 @Service
 public class TruckServiceStarter {
+
+	private static final Logger LOG = LoggerFactory.getLogger(TruckServiceStarter.class);
 
 	private final TruckService truckService;
 	private final TruckTemplateLoader truckTemplateLoader;
@@ -26,7 +31,13 @@ public class TruckServiceStarter {
 
 	@PostConstruct
 	public void setup() {
+		LOG.info("TruckServiceStarted init...");
 		CityDTO city = remoteWorldService.getCityByName("Wroclaw");
+
+		if (!truckService.getTrucks().isEmpty()) {
+			LOG.info("Trucks are already present, skipping starter trucks.");
+			return;
+		}
 
 		Truck truck1 = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
 		truckService.addTruck(truck1, city.id);

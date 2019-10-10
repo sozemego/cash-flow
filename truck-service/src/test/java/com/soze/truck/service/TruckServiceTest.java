@@ -11,14 +11,14 @@ import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.external.RemoteWorldService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.soze.truck.repository.TruckRepository;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClientException;
 
@@ -27,6 +27,7 @@ import java.util.List;
 @SpringBootTest
 @Import(TruckServiceTestBeanConfiguration.class)
 @ActiveProfiles("test")
+@DirtiesContext
 class TruckServiceTest {
 
 	@Autowired
@@ -50,6 +51,9 @@ class TruckServiceTest {
 	@Autowired
 	private RemotePlayerService playerService;
 
+	@Autowired
+	private TruckRepository truckRepository;
+
 	@MockBean
 	private FactoryServiceClient factoryServiceClient;
 
@@ -61,9 +65,15 @@ class TruckServiceTest {
 	@BeforeEach
 	public void setup() {
 		testWebSocketSession = new TestWebSocketSession();
-		truckService = new TruckService(truckTemplateLoader, truckConverter, truckNavigationService, remoteWorldService,
-																		remoteFactoryService, playerService, new Clock(60, System.currentTimeMillis())
+		truckService = new TruckService(truckConverter, truckNavigationService, remoteWorldService,
+																		remoteFactoryService, playerService, new Clock(60, System.currentTimeMillis()),
+																		truckRepository
 		);
+	}
+
+	@AfterEach
+	public void clear() {
+		truckRepository.deleteAll();
 	}
 
 	@Test
