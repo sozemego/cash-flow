@@ -1,52 +1,28 @@
 package com.soze.truck.service;
 
+import java.beans.ConstructorProperties;
+
 public class TruckNavigation {
 
-	private final String truckId;
+	public final String truckId;
 
-	private String currentCityId = null;
+	public String currentCityId = null;
 
-	private long startTime = -1L;
-	private long arrivalTime = -1L;
-	private String nextCityId;
+	public long startTime = -1L;
+	public long arrivalTime = -1L;
+	public String nextCityId;
 
 	public TruckNavigation(String truckId) {
 		this.truckId = truckId;
 	}
 
-	public String getTruckId() {
-		return truckId;
-	}
-
-	public String getCurrentCityId() {
-		return currentCityId;
-	}
-
-	public void setCurrentCityId(String currentCityId) {
+	@ConstructorProperties({"truckId", "currentCityId", "startTime", "arrivalTime", "nextCityId"})
+	public TruckNavigation(String truckId, String currentCityId, long startTime, long arrivalTime, String nextCityId
+												) {
+		this.truckId = truckId;
 		this.currentCityId = currentCityId;
-	}
-
-	public long getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(long startTime) {
 		this.startTime = startTime;
-	}
-
-	public String getNextCityId() {
-		return nextCityId;
-	}
-
-	public void setNextCityId(String nextCityId) {
-		this.nextCityId = nextCityId;
-	}
-
-	public long getArrivalTime() {
-		return arrivalTime;
-	}
-
-	public void setArrivalTime(long arrivalTime) {
 		this.arrivalTime = arrivalTime;
+		this.nextCityId = nextCityId;
 	}
 }

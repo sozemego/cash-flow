@@ -39,10 +39,10 @@ public class TruckConverter {
 
 	public TruckNavigationDTO convert(TruckNavigation navigation) {
 		TruckNavigationDTO truckNavigationDTO = new TruckNavigationDTO();
-		truckNavigationDTO.setArrivalTime(navigation.getArrivalTime());
-		truckNavigationDTO.setCurrentCityId(navigation.getCurrentCityId());
-		truckNavigationDTO.setNextCityId(navigation.getNextCityId());
-		truckNavigationDTO.setStartTime(navigation.getStartTime());
+		truckNavigationDTO.setArrivalTime(navigation.arrivalTime);
+		truckNavigationDTO.setCurrentCityId(navigation.currentCityId);
+		truckNavigationDTO.setNextCityId(navigation.nextCityId);
+		truckNavigationDTO.setStartTime(navigation.startTime);
 		return truckNavigationDTO;
 	}
 

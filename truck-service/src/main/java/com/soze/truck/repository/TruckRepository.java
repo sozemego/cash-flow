@@ -1,8 +1,8 @@
 package com.soze.truck.repository;
 
+import com.soze.common.file.FileUtils;
 import com.soze.common.json.JsonUtils;
 import com.soze.truck.domain.Truck;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,7 +29,7 @@ public class TruckRepository {
 	}
 
 	@PostConstruct
-	public void setup() {
+	public void setup() throws IOException {
 		LOG.info("Truck repository init... loading trucks from {}", fileName);
 		File file = getFile();
 		List<Truck> trucks = JsonUtils.parseList(file, Truck.class);
@@ -74,25 +73,15 @@ public class TruckRepository {
 		LOG.info("Persisting {} trucks", trucks.size());
 		String payload = JsonUtils.serialize(trucks);
 		try {
-			FileUtils.writeStringToFile(getFile(), payload, Charset.defaultCharset());
+			FileUtils.writeToFile(getFile(), payload);
 		} catch (Exception e) {
 			LOG.warn("", e);
 		}
 		LOG.info("Persisted trucks");
 	}
 
-	private File getFile() {
-		File file = FileUtils.getFile(fileName);
-		try {
-			FileUtils.touch(file);
-			long size = FileUtils.sizeOf(file);
-			if (size == 0) {
-				FileUtils.writeStringToFile(file, "[]", Charset.defaultCharset());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return file;
+	private File getFile() throws IOException {
+		return FileUtils.getOrEmptyListFile(fileName);
 	}
 
 }

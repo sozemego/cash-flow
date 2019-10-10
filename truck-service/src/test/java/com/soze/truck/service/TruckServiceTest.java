@@ -11,6 +11,7 @@ import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.external.RemoteWorldService;
+import com.soze.truck.repository.TruckNavigationRepository;
 import com.soze.truck.repository.TruckRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
@@ -54,6 +55,9 @@ class TruckServiceTest {
 	@Autowired
 	private TruckRepository truckRepository;
 
+	@Autowired
+	private TruckNavigationRepository truckNavigationRepository;
+
 	@MockBean
 	private FactoryServiceClient factoryServiceClient;
 
@@ -74,6 +78,7 @@ class TruckServiceTest {
 	@AfterEach
 	public void clear() {
 		truckRepository.deleteAll();
+		truckNavigationRepository.deleteAll();
 	}
 
 	@Test
@@ -174,7 +179,7 @@ class TruckServiceTest {
 		this.truckService.travel(truck.getId(), toCityId);
 
 		TruckNavigation navigation = truckNavigationService.getTruckNavigation(truck.getId());
-		Assertions.assertEquals(toCityId, navigation.getNextCityId());
+		Assertions.assertEquals(toCityId, navigation.nextCityId);
 		Assertions.assertEquals(2, session.getAllMessages().size());
 		Assertions.assertEquals(TruckTravelStarted.class, session.getAllMessages().get(1).getClass());
 	}

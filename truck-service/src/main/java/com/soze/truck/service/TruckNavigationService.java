@@ -3,6 +3,7 @@ package com.soze.truck.service;
 import com.soze.common.dto.CityDTO;
 import com.soze.common.dto.Clock;
 import com.soze.truck.external.RemoteWorldService;
+import com.soze.truck.repository.TruckNavigationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,14 @@ public class TruckNavigationService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TruckNavigationService.class);
 
+	private final TruckNavigationRepository repository;
 	private final RemoteWorldService remoteWorldService;
 	private final Clock clock;
 
-	private final Map<String, TruckNavigation> navigations = new HashMap<>();
-
 	@Autowired
-	public TruckNavigationService(RemoteWorldService remoteWorldService, Clock clock) {
+	public TruckNavigationService(TruckNavigationRepository repository, RemoteWorldService remoteWorldService, Clock clock
+															 ) {
+		this.repository = repository;
 		this.remoteWorldService = remoteWorldService;
 		this.clock = clock;
 	}
@@ -32,47 +34,46 @@ public class TruckNavigationService {
 	void setCityId(String truckId, String cityId) {
 		LOG.info("Setting cityId for truckId = {} to cityId = {}", truckId, cityId);
 		TruckNavigation navigation = getTruckNavigation(Objects.requireNonNull(truckId));
-		navigation.setCurrentCityId(Objects.requireNonNull(cityId));
+		navigation.currentCityId = Objects.requireNonNull(cityId);
+		repository.update(navigation);
 	}
 
-	/**
-	 * Gets {@link TruckNavigation} for a given truck.
-	 * If this truck does not have TruckNavigation, creates a new one.
-	 */
 	TruckNavigation getTruckNavigation(String truckId) {
-		return navigations.computeIfAbsent(truckId, TruckNavigation::new);
+		return repository.getTruckNavigation(truckId);
 	}
 
 	String getCityIdForTruck(String truckId) {
 		TruckNavigation navigation = getTruckNavigation(truckId);
-		return navigation.getCurrentCityId();
+		return navigation.currentCityId;
 	}
 
 	TruckNavigation travel(String truckId, String cityId, int kilometersPerHour) {
 		TruckNavigation navigation = getTruckNavigation(truckId);
-		if (navigation.getNextCityId() != null) {
+		if (navigation.nextCityId != null) {
 			throw new IllegalStateException(truckId + " is already travelling!");
 		}
-		navigation.setNextCityId(cityId);
-		navigation.setStartTime(clock.getCurrentGameTime());
-		long distance = calculateDistance(navigation.getCurrentCityId(), cityId);
-		LOG.info("Distance between {} and {} is {}m or {}km", navigation.getCurrentCityId(), cityId, distance, distance / 1000);
+		navigation.nextCityId = cityId;
+		navigation.startTime = clock.getCurrentGameTime();
+		long distance = calculateDistance(navigation.currentCityId, cityId);
+		LOG.info("Distance between {} and {} is {}m or {}km", navigation.currentCityId, cityId, distance, distance / 1000);
 		long metersPerMinute = (kilometersPerHour * 1000) / 60;
 		long timeMinutes = distance / metersPerMinute;
 		long timeMs = TimeUnit.MINUTES.toMillis(timeMinutes);
-		navigation.setArrivalTime(navigation.getStartTime() + timeMs);
+		navigation.arrivalTime = navigation.startTime + timeMs;
+		repository.update(navigation);
 		return navigation;
 	}
 
 	void finishTravel(String truckId) {
 		TruckNavigation navigation = getTruckNavigation(truckId);
-		if (navigation.getNextCityId() == null) {
+		if (navigation.nextCityId == null) {
 			throw new IllegalStateException("Cannot finish travel, truck with id = " + truckId + " is not travelling");
 		}
-		setCityId(truckId, navigation.getNextCityId());
-		navigation.setNextCityId(null);
-		navigation.setArrivalTime(-1);
-		navigation.setStartTime(-1);
+		setCityId(truckId, navigation.nextCityId);
+		navigation.nextCityId = null;
+		navigation.arrivalTime = -1;
+		navigation.startTime = -1;
+		repository.update(navigation);
 	}
 
 	/**

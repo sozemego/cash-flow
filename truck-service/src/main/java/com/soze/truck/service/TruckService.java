@@ -137,20 +137,20 @@ public class TruckService {
 			() -> new IllegalArgumentException("City with id = " + cityId + " does not exist"));
 
 		TruckNavigation currentNavigation = truckNavigationService.getTruckNavigation(truckId);
-		if (currentNavigation.getCurrentCityId().equals(cityId)) {
+		if (currentNavigation.currentCityId.equals(cityId)) {
 			throw new IllegalArgumentException("Truck with id = " + truckId + " is already at city id = " + cityId);
 		}
 
 		TruckNavigation navigation = truckNavigationService.travel(truckId, cityId, truck.getSpeed());
-		long gameTimeTravelDuration = navigation.getArrivalTime() - navigation.getStartTime();
-		long realTimeTravelDuration = (navigation.getArrivalTime() - navigation.getStartTime()) / clock.getMultiplier();
+		long gameTimeTravelDuration = navigation.arrivalTime - navigation.startTime;
+		long realTimeTravelDuration = (navigation.arrivalTime - navigation.startTime) / clock.getMultiplier();
 		LOG.info("Truck {} will arrive at {} in [game - {} ms, {} minutes], [real - {} ms, {} minutes]", truckId, cityId,
 						 gameTimeTravelDuration, TimeUnit.MILLISECONDS.toMinutes(gameTimeTravelDuration), realTimeTravelDuration,
 						 TimeUnit.MILLISECONDS.toMinutes(realTimeTravelDuration)
 						);
 
 		TruckTravelStarted truckTravelStarted = new TruckTravelStarted(
-			truckId, cityId, navigation.getStartTime(), navigation.getArrivalTime());
+			truckId, cityId, navigation.startTime, navigation.arrivalTime);
 		sendToAll(truckTravelStarted);
 
 		executorService.schedule(() -> {
