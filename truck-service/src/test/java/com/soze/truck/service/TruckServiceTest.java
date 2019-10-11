@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
 
@@ -58,6 +59,9 @@ class TruckServiceTest {
 	@Autowired
 	private TruckNavigationRepository truckNavigationRepository;
 
+	@Autowired
+	private SessionRegistry sessionRegistry;
+
 	@MockBean
 	private FactoryServiceClient factoryServiceClient;
 
@@ -71,7 +75,7 @@ class TruckServiceTest {
 		testWebSocketSession = new TestWebSocketSession();
 		truckService = new TruckService(truckConverter, truckNavigationService, remoteWorldService,
 																		remoteFactoryService, playerService, new Clock(60, System.currentTimeMillis()),
-																		truckRepository
+																		truckRepository, sessionRegistry
 		);
 	}
 
@@ -83,16 +87,10 @@ class TruckServiceTest {
 
 	@Test
 	void test_addTruck() {
-		truckService.addSession(testWebSocketSession);
-
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
 		String cityId = "CityID";
 		truckService.addTruck(truck, cityId);
 
-		List<ServerMessage> messages = testWebSocketSession.getAllMessages();
-		Assertions.assertEquals(1, messages.size());
-		ServerMessage serverMessage = messages.get(0);
-		Assertions.assertEquals(ServerMessage.ServerMessageType.TRUCK_ADDED.name(), serverMessage.getType());
 		Assertions.assertEquals(cityId, truckNavigationService.getCityIdForTruck(truck.getId()));
 	}
 
@@ -137,11 +135,9 @@ class TruckServiceTest {
 		String cityId = "CityID";
 		truckService.addTruck(truck, cityId);
 
-		truckService.addSession(testWebSocketSession);
-		List<ServerMessage> messages = testWebSocketSession.getAllMessages();
-		Assertions.assertEquals(1, messages.size());
-		ServerMessage serverMessage = messages.get(0);
-		Assertions.assertEquals(ServerMessage.ServerMessageType.TRUCK_ADDED.name(), serverMessage.getType());
+		List<Truck> trucks = truckService.getTrucks();
+
+		Assertions.assertEquals(1, trucks.size());
 	}
 
 	@Test
@@ -175,13 +171,10 @@ class TruckServiceTest {
 		String toCityId = "Wro";
 
 		TestWebSocketSession session = new TestWebSocketSession();
-		this.truckService.addSession(session);
 		this.truckService.travel(truck.getId(), toCityId);
 
 		TruckNavigation navigation = truckNavigationService.getTruckNavigation(truck.getId());
 		Assertions.assertEquals(toCityId, navigation.nextCityId);
-		Assertions.assertEquals(2, session.getAllMessages().size());
-		Assertions.assertEquals(TruckTravelStarted.class, session.getAllMessages().get(1).getClass());
 	}
 
 	@Test

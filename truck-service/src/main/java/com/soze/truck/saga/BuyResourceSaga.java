@@ -7,6 +7,7 @@ import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.repository.TruckRepository;
+import com.soze.truck.service.SessionRegistry;
 import com.soze.truck.service.TruckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ public class BuyResourceSaga {
 	private final TruckRepository truckRepository;
 	private final RemoteFactoryService factoryService;
 	private final RemotePlayerService playerService;
+	private final SessionRegistry sessionRegistry;
 
 	private final String truckId;
 	private final String factoryId;
@@ -28,12 +30,14 @@ public class BuyResourceSaga {
 	private final int count;
 
 	public BuyResourceSaga(TruckService truckService, TruckRepository truckRepository, RemoteFactoryService factoryService,
-												 RemotePlayerService playerService, String truckId, String factoryId, Resource resource, int count
+												 RemotePlayerService playerService, SessionRegistry sessionRegistry, String truckId, String factoryId,
+												 Resource resource, int count
 												) {
 		this.truckService = truckService;
 		this.truckRepository = truckRepository;
 		this.factoryService = factoryService;
 		this.playerService = playerService;
+		this.sessionRegistry = sessionRegistry;
 		this.truckId = truckId;
 		this.factoryId = factoryId;
 		this.resource = resource;
@@ -117,6 +121,6 @@ public class BuyResourceSaga {
 		LOG.info("Successfully bought {} of {} from {} for truck {}", count, resource, factoryId, truck.getId());
 
 		StorageContentChanged storageContentChanged = new StorageContentChanged(truckId, resource, count);
-		truckService.sendToAll(storageContentChanged);
+		sessionRegistry.sendToAll(storageContentChanged);
 	}
 }

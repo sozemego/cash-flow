@@ -5,6 +5,10 @@ import com.soze.common.message.client.BuyResourceRequest;
 import com.soze.common.message.client.ClientMessage;
 import com.soze.common.message.client.DumpContent;
 import com.soze.common.message.client.TruckTravelRequest;
+import com.soze.common.message.server.TruckAdded;
+import com.soze.truck.domain.Truck;
+import com.soze.truck.service.SessionRegistry;
+import com.soze.truck.service.TruckConverter;
 import com.soze.truck.service.TruckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +24,17 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TruckWebSocketController.class);
 
+	private final SessionRegistry sessionRegistry;
 	private final TruckService truckService;
+	private final TruckConverter truckConverter;
 
 	@Autowired
-	public TruckWebSocketController(TruckService truckService) {
+	public TruckWebSocketController(SessionRegistry sessionRegistry, TruckService truckService,
+																	TruckConverter truckConverter
+																 ) {
+		this.sessionRegistry = sessionRegistry;
 		this.truckService = truckService;
+		this.truckConverter = truckConverter;
 	}
 
 
@@ -32,7 +42,10 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 	public void afterConnectionEstablished(WebSocketSession session
 																				) throws Exception {
 		LOG.info("{} connected", session.getId());
-		truckService.addSession(session);
+		sessionRegistry.addSession(session);
+		for (Truck truck : truckService.getTrucks()) {
+			sessionRegistry.sendTo(session, new TruckAdded(truckConverter.convert(truck)));
+		}
 	}
 
 
@@ -40,7 +53,7 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status
 																	 ) throws Exception {
 		LOG.info("{} disconnected", session.getId());
-		truckService.removeSession(session);
+		sessionRegistry.removeSession(session);
 	}
 
 	@Override

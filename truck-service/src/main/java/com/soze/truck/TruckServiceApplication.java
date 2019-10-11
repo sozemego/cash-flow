@@ -12,12 +12,16 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.time.Duration;
 
 
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableScheduling
 public class TruckServiceApplication {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TruckServiceApplication.class);
@@ -41,6 +45,14 @@ public class TruckServiceApplication {
 				throw e;
 			}
 		});
+	}
+
+	@Bean
+	public TaskScheduler taskScheduler() {
+		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+		taskScheduler.setPoolSize(10);
+		taskScheduler.initialize();
+		return taskScheduler;
 	}
 
 }

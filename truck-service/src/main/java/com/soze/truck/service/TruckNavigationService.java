@@ -54,10 +54,10 @@ public class TruckNavigationService {
 		}
 		navigation.nextCityId = cityId;
 		navigation.startTime = clock.getCurrentGameTime();
-		long distance = calculateDistance(navigation.currentCityId, cityId);
-		LOG.info("Distance between {} and {} is {}m or {}km", navigation.currentCityId, cityId, distance, distance / 1000);
+		long distanceMeters = calculateDistance(navigation.currentCityId, cityId);
+		LOG.info("Distance between {} and {} is {}m or {}km", navigation.currentCityId, cityId, distanceMeters, distanceMeters / 1000);
 		long metersPerMinute = (kilometersPerHour * 1000) / 60;
-		long timeMinutes = distance / metersPerMinute;
+		long timeMinutes = distanceMeters / metersPerMinute;
 		long timeMs = TimeUnit.MINUTES.toMillis(timeMinutes);
 		navigation.arrivalTime = navigation.startTime + timeMs;
 		repository.update(navigation);
@@ -65,6 +65,7 @@ public class TruckNavigationService {
 	}
 
 	void finishTravel(String truckId) {
+		LOG.info("Finishing travel for truck {}", truckId);
 		TruckNavigation navigation = getTruckNavigation(truckId);
 		if (navigation.nextCityId == null) {
 			throw new IllegalStateException("Cannot finish travel, truck with id = " + truckId + " is not travelling");

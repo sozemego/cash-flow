@@ -3,8 +3,10 @@ package com.soze.truck.service;
 import com.soze.common.dto.CityDTO;
 import com.soze.common.dto.Clock;
 import com.soze.common.dto.Resource;
-import com.soze.common.json.JsonUtils;
-import com.soze.common.message.server.*;
+import com.soze.common.message.server.ServerMessage;
+import com.soze.common.message.server.StorageContentChanged;
+import com.soze.common.message.server.TruckAdded;
+import com.soze.common.message.server.TruckTravelStarted;
 import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
@@ -16,13 +18,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -37,15 +37,13 @@ public class TruckService {
 	private final RemotePlayerService playerService;
 	private final Clock clock;
 	private final TruckRepository truckRepository;
-
-	private final Set<WebSocketSession> sessions = new HashSet<>();
-
-	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+	private final SessionRegistry sessionRegistry;
 
 	@Autowired
 	public TruckService(TruckConverter truckConverter, TruckNavigationService truckNavigationService,
 											RemoteWorldService remoteWorldService, RemoteFactoryService remoteFactoryService,
-											RemotePlayerService playerService, Clock clock, TruckRepository truckRepository
+											RemotePlayerService playerService, Clock clock, TruckRepository truckRepository,
+											SessionRegistry sessionRegistry
 										 ) {
 		this.truckConverter = truckConverter;
 		this.truckNavigationService = truckNavigationService;
@@ -54,6 +52,7 @@ public class TruckService {
 		this.playerService = playerService;
 		this.clock = clock;
 		this.truckRepository = truckRepository;
+		this.sessionRegistry = sessionRegistry;
 	}
 
 	/**
@@ -70,47 +69,11 @@ public class TruckService {
 		truckNavigationService.setCityId(truck.getId(), cityId);
 
 		TruckAdded truckAdded = new TruckAdded(truckConverter.convert(truck));
-		sendToAll(truckAdded);
-	}
-
-	/**
-	 * Adds a session to active sessions.
-	 * Sends {@link TruckAdded} message for each current truck.
-	 */
-	public void addSession(WebSocketSession session) {
-		sessions.add(session);
-
-		for (Truck truck : getTrucks()) {
-			sendTo(session, new TruckAdded(truckConverter.convert(truck)));
-		}
-	}
-
-	public void removeSession(WebSocketSession session) {
-		sessions.remove(session);
+		sessionRegistry.sendToAll(truckAdded);
 	}
 
 	public List<Truck> getTrucks() {
 		return truckRepository.getTrucks();
-	}
-
-	private void sendTo(WebSocketSession session, ServerMessage serverMessage) {
-		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
-		sendTo(textMessage, session);
-	}
-
-	private void sendTo(TextMessage textMessage, WebSocketSession session) {
-		try {
-			session.sendMessage(textMessage);
-		} catch (IOException e) {
-			LOG.warn("Exception when sending a server message, to session {}", session.getId(), e);
-		}
-	}
-
-	public void sendToAll(ServerMessage serverMessage) {
-		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
-		for (WebSocketSession session : sessions) {
-			sendTo(textMessage, session);
-		}
 	}
 
 	private void validateTruck(Truck truck) {
@@ -151,12 +114,7 @@ public class TruckService {
 
 		TruckTravelStarted truckTravelStarted = new TruckTravelStarted(
 			truckId, cityId, navigation.startTime, navigation.arrivalTime);
-		sendToAll(truckTravelStarted);
-
-		executorService.schedule(() -> {
-			truckNavigationService.finishTravel(truckId);
-			sendToAll(new TruckArrived(truckId));
-		}, realTimeTravelDuration, TimeUnit.MILLISECONDS);
+		sessionRegistry.sendToAll(truckTravelStarted);
 	}
 
 	public Optional<Truck> getTruck(String truckId) {
@@ -167,8 +125,10 @@ public class TruckService {
 	 * <code>TruckId</code> buys <code>count</code> resources from factory with id <code>factoryId</code>.
 	 */
 	public void buyResource(String truckId, String factoryId, Resource resource, int count) {
-		new BuyResourceSaga(this, truckRepository, remoteFactoryService, playerService, truckId, factoryId, resource, count)
-			.run();
+		new BuyResourceSaga(
+			this, truckRepository, remoteFactoryService, playerService, sessionRegistry, truckId, factoryId, resource,
+			count
+		).run();
 	}
 
 	/**
@@ -186,7 +146,7 @@ public class TruckService {
 			storageContentChangedList.add(new StorageContentChanged(truckId, entry.getKey(), -entry.getValue()));
 		}
 		for (ServerMessage serverMessage : storageContentChangedList) {
-			sendToAll(serverMessage);
+			sessionRegistry.sendToAll(serverMessage);
 		}
 		storage.clear();
 		LOG.info("Contents of truck {} cleared", truckId);
