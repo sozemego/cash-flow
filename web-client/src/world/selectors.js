@@ -7,3 +7,7 @@ export function useGetCities() {
 export function useGetHighlightedCity() {
   return useSelector(state => state.world.highlightedCity);
 }
+
+export function useGetResources() {
+  return useSelector(state => state.world.resources);
+}
