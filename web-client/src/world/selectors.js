@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
 
 export function useGetCities() {
-  return useSelector(state => state.city.cities);
+  return useSelector(state => state.world.cities);
 }
 
 export function useGetHighlightedCity() {
-  return useSelector(state => state.city.highlightedCity);
+  return useSelector(state => state.world.highlightedCity);
 }

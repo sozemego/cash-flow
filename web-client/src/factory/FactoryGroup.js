@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { Factory } from "./Factory";
 import { useFactorySocket } from "./useFactorySocket";
 import { READY_STATE_TABLE } from "../websocket/hook";
-import { useGetCities } from "../city/selectors";
+import { useGetCities } from "../world/selectors";
 import { Divider } from "antd";
 import Tag from "antd/lib/tag";
 

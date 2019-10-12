@@ -5,3 +5,6 @@ export const cityAdded = makeActionCreator(CITY_ADDED, "city");
 
 export const CITY_HIGHLIGHTED = "CITY_HIGHLIGHTED";
 export const cityHighlighted = makeActionCreator(CITY_HIGHLIGHTED, "cityId");
+
+export const RESOURCES_ADDED = "RESOURCES_ADDED";
+export const resourcesAdded = makeActionCreator(RESOURCES_ADDED, "resources");

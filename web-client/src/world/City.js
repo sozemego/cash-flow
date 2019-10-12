@@ -9,7 +9,7 @@ import { Tooltip } from "antd";
 import { Debug } from "../components/Debug";
 import { useGetFactories } from "../factory/selectors";
 import { combine } from "../storage/business";
-import { ResourceList, Storage } from "../components/Storage";
+import { ResourceList } from "../components/Storage";
 
 const Header = styled.div`
   display: flex;

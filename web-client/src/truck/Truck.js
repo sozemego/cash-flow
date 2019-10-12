@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { CityInline } from "../city/CityInline";
-import { useGetCities, useGetHighlightedCity } from "../city/selectors";
+import { CityInline } from "../world/CityInline";
+import { useGetCities, useGetHighlightedCity } from "../world/selectors";
 import {
 	createBuyResourceRequestMessage,
 	createTruckTravelMessage, dump

@@ -3,10 +3,14 @@ import { FactoryGroup } from "../factory/FactoryGroup";
 import { useGetFactories } from "../factory/selectors";
 import { TruckList } from "../truck/TruckList";
 import { useGetTrucks } from "../truck/selectors";
-import { CityList } from "../city/CityList";
-import { useGetCities } from "../city/selectors";
+import { CityList } from "../world/CityList";
+import { useGetCities } from "../world/selectors";
 import { useDispatch } from "react-redux";
-import { cityAdded } from "../city/actions";
+import { cityAdded, resourcesAdded } from "../world/actions";
+import {
+  WORLD_SERVICE_CITIES_URL,
+  WORLD_SERVICE_RESOURCES_URL
+} from "../config/urls";
 
 export function Game() {
   const factories = useGetFactories();
@@ -15,9 +19,15 @@ export function Game() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch("http://localhost:9000/world/")
+    fetch(WORLD_SERVICE_CITIES_URL)
       .then(res => res.json())
       .then(cities => cities.forEach(city => dispatch(cityAdded(city))));
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetch(WORLD_SERVICE_RESOURCES_URL)
+      .then(res => res.json())
+      .then(resources => dispatch(resourcesAdded(resources)));
   }, [dispatch]);
 
   return (
