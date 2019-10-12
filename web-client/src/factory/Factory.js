@@ -159,7 +159,7 @@ export function FactoryEvents({ factory, showEvents, onClose }) {
         });
       })
       .then(setEvents);
-  }, [showEvents]);
+  }, [showEvents, factory.id]);
 
   return (
     <Modal visible={showEvents} onOk={onClose} onCancel={onClose} width={1400}>
