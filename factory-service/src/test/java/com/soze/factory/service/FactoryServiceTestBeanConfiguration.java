@@ -3,6 +3,7 @@ package com.soze.factory.service;
 import com.soze.common.client.WorldServiceClient;
 import com.soze.common.dto.CityDTO;
 import com.soze.common.dto.Clock;
+import com.soze.common.dto.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -38,6 +39,11 @@ public class FactoryServiceTestBeanConfiguration {
 			@Override
 			public CityDTO getCityById(String cityId) {
 				return cities.stream().filter(city -> cityId.equals(city.id)).findFirst().orElse(null);
+			}
+
+			@Override
+			public List<Resource> getResources() {
+				return Arrays.asList(Resource.values());
 			}
 		};
 	}

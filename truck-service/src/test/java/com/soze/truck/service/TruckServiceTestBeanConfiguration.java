@@ -43,6 +43,11 @@ public class TruckServiceTestBeanConfiguration {
 			public CityDTO getCityById(String cityId) {
 				return null;
 			}
+
+			@Override
+			public List<Resource> getResources() {
+				return Arrays.asList(Resource.values());
+			}
 		};
 		return worldServiceClient;
 	}

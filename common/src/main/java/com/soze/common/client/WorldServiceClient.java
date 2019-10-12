@@ -1,6 +1,7 @@
 package com.soze.common.client;
 
 import com.soze.common.dto.CityDTO;
+import com.soze.common.dto.Resource;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,5 +29,11 @@ public interface WorldServiceClient {
 		produces = MediaType.APPLICATION_JSON_VALUE
 	)
 	CityDTO getCityById(@PathVariable("cityId") String cityId);
+
+	@GetMapping(
+		path = "/world/resources",
+		produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	List<Resource> getResources();
 
 }
