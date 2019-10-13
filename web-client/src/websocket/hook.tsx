@@ -8,13 +8,18 @@ export const READY_STATE_TABLE = {
   [WebSocket.CONNECTING]: "connecting"
 };
 
+export interface UseWebSocket {
+  socket: WebSocket,
+  readyState: number
+}
+
 /**
  *
  * @param url
  * @param dispatch
  * @returns {{readyState: number socket: WebSocket}}
  */
-export function useWebsocket(url, dispatch) {
+export function useWebsocket(url: string, dispatch: Function): UseWebSocket {
   const [readyState, setReadyState] = useState(WebSocket.CONNECTING);
 
   useEffect(() => {

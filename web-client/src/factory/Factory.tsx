@@ -15,6 +15,7 @@ import Icon from "antd/lib/icon";
 import { Modal, Tooltip } from "antd";
 import { Debug } from "../components/Debug";
 import { Events } from "../components/Events";
+import {FactoryEvent, IFactory} from "./index.d";
 
 const Header = styled.div`
   display: flex;
@@ -37,7 +38,7 @@ const ProductionDate = styled.div`
   margin: 4px;
 `;
 
-function formatDuration(minutes) {
+function formatDuration(minutes: number): string {
   let hours = 0;
   while (minutes >= 60) {
     hours += 1;
@@ -60,7 +61,11 @@ function formatDuration(minutes) {
   }`;
 }
 
-export function Factory({ factory }) {
+export interface FactoryProps {
+  factory: IFactory;
+}
+
+export function Factory({ factory }: FactoryProps) {
   const [showEvents, setShowEvents] = useState(false);
   const dispatch = useDispatch();
   const highlightedCityId = useGetHighlightedCity();
@@ -82,9 +87,9 @@ export function Factory({ factory }) {
     producer.productionStartTime + ms * clock.multiplier
   );
 
-  const cardStyle = Object.assign(
+  const cardStyle: React.CSSProperties = Object.assign(
     {},
-    highlightedCityId === cityId && { background: "#e0e0e0" }
+    highlightedCityId === cityId ? { background: "#e0e0e0" } : {}
   );
 
   return (
@@ -142,7 +147,17 @@ export function Factory({ factory }) {
   );
 }
 
-export function FactoryEvents({ factory, showEvents, onClose }) {
+export interface FactoryEventsProps {
+  factory: IFactory;
+  showEvents: boolean;
+  onClose: (e: React.MouseEvent<HTMLElement>) => void;
+}
+
+export function FactoryEvents({
+  factory,
+  showEvents,
+  onClose
+}: FactoryEventsProps) {
   const [events, setEvents] = useState([]);
   useEffect(() => {
     if (!showEvents) {
@@ -151,10 +166,17 @@ export function FactoryEvents({ factory, showEvents, onClose }) {
     fetch(FACTORY_SERVICE_URL_EVENTS + "?id=" + factory.id)
       .then(result => result.json())
       .then(events => {
-        return events.map(event => {
-          const parsedEvent = {...event};
-          const { timestamp: ts } = parsedEvent;
-          parsedEvent.timestamp = new Date(ts[0], ts[1], ts[2], ts[3], ts[4], ts[5]);
+        return events.map((event: FactoryEvent) => {
+          const parsedEvent: any = { ...event };
+          const { timestamp: ts } = event;
+          parsedEvent.timestamp = new Date(
+            ts[0],
+            ts[1],
+            ts[2],
+            ts[3],
+            ts[4],
+            ts[5]
+          );
           return parsedEvent;
         });
       })
@@ -171,7 +193,7 @@ export function FactoryEvents({ factory, showEvents, onClose }) {
         }}
       >
         <Events events={events} />
-        <Debug obj={factory} style={{flexBasis: 0, flexGrow: 1}}/>
+        <Debug obj={factory} style={{ flexBasis: 0, flexGrow: 1 }} />
       </div>
     </Modal>
   );

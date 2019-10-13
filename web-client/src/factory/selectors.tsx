@@ -1,8 +1,7 @@
 import { useSelector } from "react-redux";
 
 export function useGetFactories() {
-  const factories = useSelector(state => {
+  return useSelector((state: any) => {
     return state.factory.factories;
   });
-  return factories;
 }

@@ -2,17 +2,17 @@ package com.soze.common.dto;
 
 public class ProducerDTO {
 
-	private Resource resource;
+	private String resource;
 	private long time;
 	private long progress;
 	private boolean producing = false;
 	private long productionStartTime = -1L;
 
-	public Resource getResource() {
+	public String getResource() {
 		return resource;
 	}
 
-	public void setResource(Resource resource) {
+	public void setResource(String resource) {
 		this.resource = resource;
 	}
 

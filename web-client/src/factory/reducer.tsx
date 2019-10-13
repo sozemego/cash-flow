@@ -10,12 +10,18 @@ import {
   STORAGE_CONTENT_CHANGED
 } from "./actions";
 import { transfer } from "../storage/business";
+import { Action } from "../store/actionCreator";
+import { IFactory } from "./index.d";
 
-const initialState = {
+export interface FactoryState {
+  factories: IFactory[];
+}
+
+const initialState: FactoryState = {
   factories: []
 };
 
-export function reducer(state = initialState, action) {
+export function reducer(state: FactoryState = initialState, action: Action) {
   switch (action.type) {
     case FACTORY_ADDED:
       return factoryAdded(state, action);
@@ -46,6 +52,9 @@ const factoryAdded = produce((state, action) => {
 const productionFinished = produce((state, action) => {
   const { entityId } = action;
   const factory = findFactory(state, entityId);
+  if (!factory) {
+    return state;
+  }
   const { producer, storage } = factory;
   const { resource } = producer;
   const count = storage.resources[resource] || 0;
@@ -56,12 +65,18 @@ const productionFinished = produce((state, action) => {
 const productionStarted = produce((state, action) => {
   const { entityId, productionStartTime } = action;
   const factory = findFactory(state, entityId);
+  if (!factory) {
+    return state;
+  }
   factory.producer.productionStartTime = productionStartTime;
 });
 
 const resourceProduced = produce((state, action) => {
   const { factoryId, resource } = action;
   const factory = findFactory(state, factoryId);
+  if (!factory) {
+    return state;
+  }
   const { storage } = factory;
   const count = storage.resources[resource] || 0;
   storage.resources[resource] = count + 1;
@@ -71,6 +86,9 @@ const resourceProduced = produce((state, action) => {
 const resourceProductionStarted = produce((state, action) => {
   const { factoryId, productionStartTime } = action;
   const factory = findFactory(state, factoryId);
+  if (!factory) {
+    return state;
+  }
   factory.producer.productionStartTime = productionStartTime;
 });
 
@@ -104,10 +122,13 @@ const resourceSold = produce((state, action) => {
     return;
   }
   const { storage } = factory;
-  const oldCount = storage.resources[resource];
+  const oldCount: number = storage.resources[resource];
   storage.resources[resource] = oldCount - count;
 });
 
-function findFactory(state, factoryId) {
+function findFactory(
+  state: FactoryState,
+  factoryId: string
+): IFactory | undefined {
   return state.factories.find(factory => factory.id === factoryId);
 }

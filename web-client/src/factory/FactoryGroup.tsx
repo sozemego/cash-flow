@@ -6,6 +6,7 @@ import { READY_STATE_TABLE } from "../websocket/hook";
 import { useGetCities } from "../world/selectors";
 import { Divider } from "antd";
 import Tag from "antd/lib/tag";
+import { IFactory } from "./index.d";
 
 const Container = styled.div`
   margin-left: 12px;
@@ -15,7 +16,11 @@ const Header = styled.div`
   min-height: 50px;
 `;
 
-const GroupButton = styled.button`
+interface GroupButtonProps {
+    selected: boolean
+}
+
+const GroupButton = styled.button<GroupButtonProps>`
   display: inline-block;
   margin-left: 4px;
   margin-right: 4px;
@@ -33,7 +38,11 @@ const GROUP_BY = {
   TYPE: "TYPE"
 };
 
-export function FactoryGroup({ factories }) {
+export interface FactoryGroupProps {
+  factories: IFactory[];
+}
+
+export function FactoryGroup({ factories }: FactoryGroupProps) {
   const [groupBy, setGroupBy] = useState(GROUP_BY.CITY);
   const { readyState } = useFactorySocket();
   const cities = useGetCities();
@@ -75,14 +84,30 @@ export function FactoryGroup({ factories }) {
   );
 }
 
-export function FactoryList({ factories }) {
-  return factories.map(factory => (
-    <Factory key={factory.id} factory={factory} />
-  ));
+export interface FactoryListProps {
+  factories: IFactory[];
 }
 
-export function FactoryByType({ factories }) {
-  const factoryByName = {};
+export function FactoryList({ factories }: FactoryListProps) {
+  return (
+    <>
+      {factories.map(factory => (
+        <Factory key={factory.id} factory={factory} />
+      ))}
+    </>
+  );
+}
+
+export interface FactoryByTypeProps {
+  factories: IFactory[];
+}
+
+interface FactoryByProp {
+  [prop: string]: IFactory[];
+}
+
+export function FactoryByType({ factories }: FactoryByTypeProps) {
+  const factoryByName: FactoryByProp = {};
   factories.forEach(factory => {
     const factories = factoryByName[factory.name] || [];
     factories.push(factory);
@@ -91,9 +116,13 @@ export function FactoryByType({ factories }) {
 
   const names = [...new Set(factories.map(factory => factory.name))];
 
-  return names.map(name => (
-    <FactoryList key={name} factories={factoryByName[name]} />
-  ));
+  return (
+    <>
+      {names.map(name => (
+        <FactoryList key={name} factories={factoryByName[name]} />
+      ))}
+    </>
+  );
 }
 
 const FactoryByCityContainer = styled.div`
@@ -101,21 +130,20 @@ const FactoryByCityContainer = styled.div`
 `;
 
 export function FactoryByCity({ factories, cities }) {
-  const factoryByCity = {};
-  factories.forEach(factory => {
+  const factoryByCity: FactoryByProp = {};
+  factories.forEach((factory: IFactory) => {
     const factories = factoryByCity[factory.cityId] || [];
     factories.push(factory);
     factoryByCity[factory.cityId] = factories;
   });
 
-  return cities.map((city, index) => {
+  return cities.map((city) => {
     const factories = factoryByCity[city.id] || [];
     if (factories.length === 0) {
       return null;
     }
-    const even = index % 2 === 0;
     return (
-      <FactoryByCityContainer key={city.id} even={even}>
+      <FactoryByCityContainer key={city.id}>
         <Tag color={"orange"}>
           {city.name} [{factories.length}]
         </Tag>
