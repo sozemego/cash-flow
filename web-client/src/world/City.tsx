@@ -10,6 +10,7 @@ import { Debug } from "../components/Debug";
 import { useGetFactories } from "../factory/selectors";
 import { combine } from "../storage/business";
 import { ResourceList } from "../components/Storage";
+import { FactoryStorage } from "../factory/index.d";
 
 const Header = styled.div`
   display: flex;
@@ -26,7 +27,7 @@ export function City({ city }) {
   const factoriesInThisCity = factories.filter(
     factory => factory.cityId === id
   );
-  const totalCityStorage = combine(
+  const totalCityStorage: FactoryStorage = combine(
     factoriesInThisCity.map(factory => factory.storage)
   );
 
