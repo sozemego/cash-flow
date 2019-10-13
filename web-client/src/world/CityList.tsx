@@ -1,19 +1,24 @@
 import React from "react";
 import styled from "styled-components";
-import { City } from "./City";
-import { Typography } from "antd";
-import { Divider } from "antd/es";
+import { Typography } from "antd/lib";
+import { Divider } from "antd/lib";
+import {ICity} from "./index.d";
+import {City} from "./City";
 
 const Container = styled.div`
   margin-left: 12px;
 `;
 
-export function CityList({ cities }) {
+export interface CityListProps {
+    cities: ICity[]
+}
+
+export function CityList({ cities }: CityListProps) {
   const cityList = Object.values(cities);
 
   return (
     <Container>
-      <Typography level={3}>Cities</Typography>
+      <Typography>Cities</Typography>
       <Divider/>
       {cityList.map(city => (
         <City key={city.id} city={city} />

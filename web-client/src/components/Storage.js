@@ -31,10 +31,14 @@ export function ResourceList({ resources }) {
     return { resource, count };
   });
 
-  return resourceCounts.map(({ resource, count }) => (
-    <Tag color={"purple"} key={resource}>
-      <span>{count}</span>
-      <ResourceIcon resource={resource} />
-    </Tag>
-  ));
+  return (
+    <>
+      {resourceCounts.map(({ resource, count }) => (
+        <Tag color={"purple"} key={resource}>
+          <span>{count}</span>
+          <ResourceIcon resource={resource} />
+        </Tag>
+      ))}
+    </>
+  );
 }

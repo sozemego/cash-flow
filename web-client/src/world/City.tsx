@@ -23,16 +23,18 @@ export function City({ city }) {
 
   const { id, name, factorySlots } = city;
   const factories = useGetFactories();
-  const factoriesInThisCity = factories.filter(factory => factory.cityId === id);
-  const totalCityStorage = combine(factoriesInThisCity.map(factory => factory.storage));
+  const factoriesInThisCity = factories.filter(
+    factory => factory.cityId === id
+  );
+  const totalCityStorage = combine(
+    factoriesInThisCity.map(factory => factory.storage)
+  );
 
   return (
     <>
       <Header>
         <Tag color={"gold"}>{name}</Tag>
-        <Tooltip
-          title={<Debug obj={city} />}
-        >
+        <Tooltip title={<Debug obj={city} />}>
           <Icon type={"question-circle"} />
         </Tooltip>
       </Header>
@@ -41,7 +43,7 @@ export function City({ city }) {
         onMouseLeave={() => dispatch(cityHighlighted(null))}
       >
         <div>Factory slots - {factorySlots}</div>
-				<ResourceList resources={totalCityStorage.resources}/>
+        <ResourceList resources={totalCityStorage.resources} />
       </Card>
     </>
   );

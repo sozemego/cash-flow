@@ -50,7 +50,6 @@ function Resources() {
   const resources = useGetResources();
   const factories = useGetFactories();
   const resourceCounts = calcTotalResourceCounts(factories);
-  console.log(resourceCounts);
 
   function close() {
     setShow(false);
