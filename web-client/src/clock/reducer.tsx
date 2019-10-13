@@ -1,12 +1,17 @@
 import { produce } from "immer";
 import { CLOCK_FETCHED } from "./actions";
 
-const initialState = {
+export interface ClockState {
+  multiplier: number;
+  startTime: number
+}
+
+const initialState: ClockState = {
   multiplier: 0,
   startTime: Date.now()
 };
 
-export function reducer(state = initialState, action) {
+export function reducer(state: ClockState = initialState, action) {
   switch (action.type) {
     case CLOCK_FETCHED:
       return clockFetched(state, action);
