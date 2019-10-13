@@ -14,7 +14,7 @@ export function TruckList({ trucks }) {
 
   return (
     <Container>
-      <Typography level={3}>Trucks - state [{READY_STATE_TABLE[readyState]}]</Typography>
+      <Typography>Trucks - state [{READY_STATE_TABLE[readyState]}]</Typography>
       <Divider />
       {trucks.map(truck => (
         <Truck key={truck.id} truck={truck} />

@@ -1,7 +1,12 @@
 import { useSelector } from "react-redux";
 import { ResourceMap } from "./reducer";
+import { ICity } from "./index.d";
 
-export function useGetCities() {
+export interface CityMap {
+  [id: string]: ICity;
+}
+
+export function useGetCities(): CityMap {
   return useSelector((state: any) => state.world.cities);
 }
 

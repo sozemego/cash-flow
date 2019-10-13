@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { CityInline } from "../world/CityInline";
 import { useGetCities, useGetHighlightedCity } from "../world/selectors";
 import {
-	createBuyResourceRequestMessage,
-	createTruckTravelMessage, dump
+  createBuyResourceRequestMessage,
+  createTruckTravelMessage,
+  dump
 } from "./message";
 import { useTruckSocket } from "./useTruckSocket";
 import { getFormattedTime } from "../clock/business";
@@ -23,6 +24,7 @@ import InputNumber from "antd/lib/input-number";
 import Button from "antd/lib/button";
 import Progress from "antd/lib/progress";
 import Select from "antd/lib/select";
+import { IFactory } from "../factory/index.d";
 
 const Header = styled.div`
   display: flex;
@@ -33,20 +35,24 @@ const Header = styled.div`
 
 export function Truck({ truck }) {
   const highlightedCityId = useGetHighlightedCity();
-  const {socket} = useTruckSocket();
+  const { socket } = useTruckSocket();
 
   const { id, name, navigation, storage } = truck;
   const { currentCityId, nextCityId } = navigation;
 
   const cardStyle = Object.assign(
     {},
-    highlightedCityId === currentCityId && { background: "#e0e0e0" },
-    nextCityId && nextCityId === highlightedCityId && { background: "#ccffff" }
+    highlightedCityId === currentCityId ? { background: "#e0e0e0" } : {},
+    nextCityId && nextCityId === highlightedCityId
+      ? { background: "#ccffff" }
+      : {}
   );
 
   const buyStyle = Object.assign(
     {},
-    nextCityId && { opacity: 0.5, pointerEvents: "none" }
+    nextCityId
+      ? { opacity: 0.5, pointerEvents: "none" }
+      : { pointerEvents: "all" }
   );
 
   return (
@@ -56,15 +62,18 @@ export function Truck({ truck }) {
           <Tag color={"brown"}>{name}</Tag>
           <Tag color={"gray"}>{id}</Tag>
         </div>
-				<div>
-					<Icon type="delete" onClick={() => {
-						socket.send(dump(id));
-					}}/>
-					<Tooltip title={<Debug obj={truck} />}>
-						<Icon type={"question-circle"} />
-					</Tooltip>
-				</div>
-        </Header>
+        <div>
+          <Icon
+            type="delete"
+            onClick={() => {
+              socket.send(dump(id));
+            }}
+          />
+          <Tooltip title={<Debug obj={truck} />}>
+            <Icon type={"question-circle"} />
+          </Tooltip>
+        </div>
+      </Header>
       <Card bodyStyle={cardStyle}>
         <span>
           {nextCityId ? "Travelling to " : "In "}
@@ -73,6 +82,7 @@ export function Truck({ truck }) {
         <Divider style={{ margin: "4px" }} />
         <Storage storage={storage} />
         <Divider style={{ margin: "4px" }} />
+        //@ts-ignore
         <div style={buyStyle}>
           <Buy truck={truck} cityId={nextCityId || currentCityId} />
           <Divider style={{ margin: "4px" }} />
@@ -145,6 +155,7 @@ export function TravelTo({ truck }) {
             value={cityToTravelToId}
           >
             {citiesToTravelTo.map(city => (
+              //@ts-ignore
               <Select.Option
                 key={city.id}
                 onClick={() => setCityToTravelToId(city.id)}
@@ -209,8 +220,14 @@ function Traveling({ truck }) {
   );
 }
 
-function getResourceList(factories) {
-  const resources = [];
+interface ResourceFromFactory {
+  factoryId: string;
+  resource: string;
+  count: number;
+}
+
+function getResourceList(factories: IFactory[]): ResourceFromFactory[] {
+  const resources: ResourceFromFactory[] = [];
   factories.forEach(factory => {
     const { storage } = factory;
     Object.entries(storage.resources).forEach(([resource, count]) => {
@@ -234,7 +251,7 @@ const BuyableResourceContainer = styled.div`
 const resourcePrice = 5;
 
 export function Buy({ truck, cityId }) {
-  const allFactories = Object.values(useGetFactories());
+  const allFactories: IFactory[] = Object.values(useGetFactories());
   const factoriesInCity = allFactories.filter(
     factory => factory.cityId === cityId
   );
@@ -243,7 +260,9 @@ export function Buy({ truck, cityId }) {
 
   return (
     <BuyContainer>
-      <span>Resources to purchase in <CityInline cityId={cityId}/></span>
+      <span>
+        Resources to purchase in <CityInline cityId={cityId} />
+      </span>
       {resources.map(({ factoryId, resource, count }) => {
         return (
           <FactoryResource
@@ -277,7 +296,9 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
     <BuyableResourceContainer>
       <div>
         <ResourceIcon resource={resource} />
-        <span>{count} - ${5}</span>
+        <span>
+          {count} - ${5}
+        </span>
       </div>
       <div style={{ display: "flex" }}>
         <InputNumber
@@ -287,6 +308,7 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
           )}
           min={0}
           value={selectedCount}
+          //@ts-ignore
           onChange={setSelectedCount}
         />
         <div style={{ minWidth: "84px" }}>
