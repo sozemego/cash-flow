@@ -150,6 +150,8 @@ factory-store.json
 .env
 built/
 
+react-app-env.d.ts
+
 trucks.json
 trucks-test.json
 navigation.json
