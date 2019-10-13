@@ -6,6 +6,7 @@ import Icon from "antd/lib/icon";
 import Modal from "antd/lib/modal";
 import Table from "antd/lib/table";
 import { ResourceIcon } from "../components/ResourceIcon";
+import { useGetFactories } from "../factory/selectors";
 
 export function Header(props) {
   return (
@@ -31,9 +32,25 @@ export function Header(props) {
   );
 }
 
+function calcTotalResourceCounts(factories) {
+  const counts = {};
+  factories.forEach(factory => {
+    const { storage } = factory;
+    const { resources } = storage;
+    Object.entries(resources).forEach(([resource, count]) => {
+      const actualCount = counts[resource] || 0;
+      counts[resource] = actualCount + count;
+    })
+  });
+  return counts;
+}
+
 function Resources() {
   const [show, setShow] = useState(false);
   const resources = useGetResources();
+  const factories = useGetFactories();
+  const resourceCounts = calcTotalResourceCounts(factories);
+  console.log(resourceCounts);
 
   function close() {
     setShow(false);
@@ -46,22 +63,25 @@ function Resources() {
       key: "name",
       render: name => {
         name = name[0].toUpperCase() + name.substr(1).toLowerCase();
-        return <div><ResourceIcon resource={name.toLowerCase()}/>{name}</div>;
+        return (
+          <div>
+            <ResourceIcon resource={name.toLowerCase()} />
+            {name}
+          </div>
+        );
       }
     },
-    { title: "Min price", dataIndex: "minPrice", key: "minPrice" },
-    { title: "Max price", dataIndex: "maxPrice", key: "maxPrice" }
+    { title: "Price", dataIndex: "price", key: "price" },
+    { title: "In factories", dataIndex: "countInFactories", key: "countInFactories" }
   ];
   const data = Object.values(resources).map(resource => {
     return {
       key: resource.name,
       name: resource.name,
-      minPrice: resource.minPrice,
-      maxPrice: resource.maxPrice
+      price: `${resource.minPrice} - ${resource.maxPrice}`,
+      countInFactories: resourceCounts[resource.name.toUpperCase()]
     };
   });
-
-  console.log(data);
 
   return (
     <>
