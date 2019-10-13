@@ -1,10 +1,10 @@
 /**
  * Transfers all resources from oldStorage to newStorage.
  * Drops any resources that will not fit in the newStorage.
- * @param oldStorage
- * @param newStorage
  */
-export function transfer(oldStorage, newStorage) {
+import {FactoryStorage} from "../factory/index.d";
+
+export function transfer(oldStorage: FactoryStorage, newStorage: FactoryStorage) {
   const resources = oldStorage.resources;
   Object.entries(resources).forEach(([resource, count]) => {
   	addResource(newStorage, resource, count);
@@ -22,7 +22,7 @@ export function getRemainingCapacity(storage) {
 export function getCapacityTaken(storage) {
   const { resources } = storage;
   let capacityTaken = 0;
-  Object.values(resources).forEach(count => (capacityTaken += count));
+  Object.values(resources).forEach((count: any) => (capacityTaken += count));
   return capacityTaken;
 }
 
