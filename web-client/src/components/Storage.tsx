@@ -2,11 +2,12 @@ import React from "react";
 import { ResourceIcon } from "./ResourceIcon";
 import Icon from "antd/lib/icon";
 import Tag from "antd/lib/tag";
+import { ResourceMap } from "../world/reducer";
 
 export function calculateCapacityTaken(storage) {
-  const { resources } = storage;
+  const { resources }: ResourceMap = storage;
   let capacityTaken = 0;
-  Object.values(resources).forEach(taken => {
+  Object.values(resources).forEach((taken: number) => {
     capacityTaken += taken;
   });
   return capacityTaken;
@@ -26,8 +27,13 @@ export function Storage({ storage }) {
   );
 }
 
-export function ResourceList({ resources }) {
-  const resourceCounts = Object.entries(resources).map(([resource, count]) => {
+interface ResourceCount {
+    resource: string;
+    count: number;
+}
+
+export function ResourceList({ resources }: ResourceMap) {
+  const resourceCounts: ResourceCount[] = Object.entries(resources).map(([resource, count]) => {
     return { resource, count };
   });
 

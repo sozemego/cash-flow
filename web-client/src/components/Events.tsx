@@ -3,11 +3,19 @@ import { Divider } from "antd";
 import Search from "antd/lib/input/Search";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 
-export function Events({ events }) {
+interface Event {
+  type: string;
+}
+
+export interface EventsProps {
+  events: Event[];
+}
+
+export function Events({ events }: EventsProps) {
   const [filterPhrase, setFilterPhrase] = useState("");
   const [checkedType, setCheckType] = useState({});
 
-  const uniqueTypes = [...new Set(events.map(event => event.type))];
+  const uniqueTypes: string[] = [...new Set(events.map(event => event.type))];
   const phraseFilter = event =>
     event.toLowerCase().includes(filterPhrase.toLowerCase());
   const typeFilter =
@@ -15,6 +23,7 @@ export function Events({ events }) {
       ? e => true
       : event => checkedType[event.type] === true;
 
+  // @ts-ignore
   return (
     <div
       style={{
@@ -30,7 +39,8 @@ export function Events({ events }) {
         onChange={e => setFilterPhrase(e.target.value)}
       />
       <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-        {uniqueTypes.map(type => (
+        {uniqueTypes.map((type: string) => (
+          //@ts-ignore
           <CheckableTag
             color={"green"}
             key={type}
