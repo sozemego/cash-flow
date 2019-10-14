@@ -9,7 +9,6 @@ public class FactoryDTO {
 
 	private ProducerDTO producer;
 	private FactoryStorageDTO storage;
-	private StorageDTO generalStorage;
 
 	private String cityId;
 
@@ -70,11 +69,4 @@ public class FactoryDTO {
 		return "FactoryDTO{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", producer=" + producer + ", storage=" + storage + ", cityId='" + cityId + '\'' + '}';
 	}
 
-	public StorageDTO getGeneralStorage() {
-		return generalStorage;
-	}
-
-	public void setGeneralStorage(StorageDTO generalStorage) {
-		this.generalStorage = generalStorage;
-	}
 }

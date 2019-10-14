@@ -17,7 +17,6 @@ public class Factory implements EventVisitor, CommandVisitor {
 	private String texture;
 	private String cityId;
 
-	private GeneralStorage generalStorage = new GeneralStorage(0);
 	private FactoryStorage storage = new FactoryStorage(new HashMap<>());
 	private Producer producer = new Producer();
 
@@ -47,10 +46,6 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	public FactoryStorage getStorage() {
 		return storage;
-	}
-
-	public GeneralStorage getGeneralStorage() {
-		return generalStorage;
 	}
 
 	public Producer getProducer() {
@@ -135,10 +130,21 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public void visit(StorageCapacityChanged storageCapacityChanged) {
-		GeneralStorage previousStorage = getGeneralStorage();
-		int newCapacity = previousStorage.getCapacity() + storageCapacityChanged.change;
-		generalStorage = new GeneralStorage(newCapacity);
-		generalStorage.transferFrom(previousStorage);
+		FactoryStorage factoryStorage = getStorage();
+		if (factoryStorage.getCapacities().isEmpty()) {
+			Map<Resource, Integer> capacities = new HashMap<>();
+			for (Resource resource : Resource.values()) {
+				capacities.put(resource, storageCapacityChanged.change);
+			}
+			this.storage = new FactoryStorage(capacities);
+		} else {
+			Map<Resource, Integer> capacities = factoryStorage.getCapacities();
+			Map<Resource, Integer> newCapacities = new HashMap<>();
+			capacities.forEach((resource, capacity) -> {
+				newCapacities.put(resource, capacity + storageCapacityChanged.change);
+			});
+			this.storage = new FactoryStorage(newCapacities);
+		}
 	}
 
 	@Override
@@ -154,13 +160,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 	public void visit(ProductionFinished productionFinished) {
 		Resource resource = getProducer().getResource();
 		FactoryStorage storage = getStorage();
-		if (!storage.getCapacities().isEmpty()) {
-			storage.addResource(resource);
-		} else {
-			GeneralStorage generalStorage = getGeneralStorage();
-			generalStorage.addResource(resource);
-		}
-
+		storage.addResource(resource);
 		getProducer().stopProduction();
 	}
 

@@ -13,6 +13,7 @@ public class FactoryStorage {
 
 	public FactoryStorage(Map<Resource, Integer> capacities) {
 		Objects.requireNonNull(this.capacities = capacities);
+		validateCapacities(this.capacities);
 	}
 
 	public void addResource(Resource resource) {
@@ -94,6 +95,17 @@ public class FactoryStorage {
 		otherStorage.getResources().forEach((resource, count) -> {
 			int transferCount = Math.min(count, getRemainingCapacity(resource));
 			addResource(resource, transferCount);
+		});
+	}
+
+	/**
+	 * Checks if any of the capacities are below zero.
+	 */
+	private void validateCapacities(Map<Resource, Integer> capacities) {
+		capacities.forEach((resource, capacity) -> {
+			if (capacity < 0) {
+				throw new IllegalArgumentException("Capacity cannot be negative: " + resource + ":" + capacity);
+			}
 		});
 	}
 

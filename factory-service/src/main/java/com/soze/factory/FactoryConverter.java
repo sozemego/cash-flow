@@ -24,12 +24,6 @@ public class FactoryConverter {
 		FactoryStorageDTO factoryStorageDTO = new FactoryStorageDTO(factoryStorage.getCapacities(), factoryStorage.getResources());
 		factoryDTO.setStorage(factoryStorageDTO);
 
-		GeneralStorage generalStorage = factory.getGeneralStorage();
-		StorageDTO generalStorageDTO = new StorageDTO();
-		generalStorageDTO.setCapacity(generalStorage.getCapacity());
-		generalStorageDTO.getResources().putAll(generalStorage.getResources());
-		factoryDTO.setGeneralStorage(generalStorageDTO);
-
 		ProducerDTO producerDTO = new ProducerDTO();
 		Producer producer = factory.getProducer();
 		producerDTO.setProducing(producer.isProducing());
