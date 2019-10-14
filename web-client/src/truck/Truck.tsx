@@ -25,6 +25,7 @@ import Button from "antd/lib/button";
 import Progress from "antd/lib/progress";
 import Select from "antd/lib/select";
 import { IFactory } from "../factory/index.d";
+import { PointerEventsProperty } from "csstype";
 
 const Header = styled.div`
   display: flex;
@@ -51,8 +52,8 @@ export function Truck({ truck }) {
   const buyStyle = Object.assign(
     {},
     nextCityId
-      ? { opacity: 0.5, pointerEvents: "none" }
-      : { pointerEvents: "all" }
+      ? { opacity: 0.5 }
+      : { opacity: 1, pointerEvents: "all" as PointerEventsProperty  }
   );
 
   return (
@@ -82,7 +83,6 @@ export function Truck({ truck }) {
         <Divider style={{ margin: "4px" }} />
         <Storage storage={storage} />
         <Divider style={{ margin: "4px" }} />
-        //@ts-ignore
         <div style={buyStyle}>
           <Buy truck={truck} cityId={nextCityId || currentCityId} />
           <Divider style={{ margin: "4px" }} />
