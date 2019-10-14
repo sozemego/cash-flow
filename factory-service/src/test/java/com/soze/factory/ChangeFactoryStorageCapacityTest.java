@@ -1,8 +1,9 @@
 package com.soze.factory;
 
+import com.soze.common.dto.Resource;
 import com.soze.common.message.server.StorageCapacityChanged;
 import com.soze.factory.aggregate.Factory;
-import com.soze.factory.aggregate.Storage;
+import com.soze.factory.aggregate.FactoryStorage;
 import com.soze.factory.command.ChangeStorageCapacity;
 import com.soze.factory.command.CreateFactory;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 @SpringBootTest
 @ActiveProfiles({"test", "memory-store"})
-public class ChangeStorageCapacityTest extends CommandTest {
+public class ChangeFactoryStorageCapacityTest extends CommandTest {
 
 	@Test
 	void changeStorageCapacity() {
@@ -26,8 +27,8 @@ public class ChangeStorageCapacityTest extends CommandTest {
 		ChangeStorageCapacity command = new ChangeStorageCapacity(factoryId, 5);
 		issueCommand(command);
 		Factory factory = getFactoryRepository().findById(factoryId).get();
-		Storage storage = factory.getStorage();
-		Assertions.assertEquals(5, storage.getCapacity());
+		FactoryStorage storage = factory.getStorage();
+		Assertions.assertEquals(5, storage.getCapacity(Resource.WOOD));
 		Assertions.assertTrue(getSession().getMessages().get(1) instanceof StorageCapacityChanged);
 	}
 

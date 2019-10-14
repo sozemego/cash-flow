@@ -5,10 +5,7 @@ import com.soze.factory.command.*;
 import com.soze.factory.event.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Aggregate root for the factory.
@@ -20,7 +17,8 @@ public class Factory implements EventVisitor, CommandVisitor {
 	private String texture;
 	private String cityId;
 
-	private Storage storage = new Storage(0);
+	private GeneralStorage generalStorage = new GeneralStorage(0);
+	private FactoryStorage storage = new FactoryStorage(new HashMap<>());
 	private Producer producer = new Producer();
 
 	public Factory() {
@@ -47,8 +45,12 @@ public class Factory implements EventVisitor, CommandVisitor {
 		return cityId;
 	}
 
-	public Storage getStorage() {
+	public FactoryStorage getStorage() {
 		return storage;
+	}
+
+	public GeneralStorage getGeneralStorage() {
+		return generalStorage;
 	}
 
 	public Producer getProducer() {
@@ -73,7 +75,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 			return Collections.emptyList();
 		}
 
-		Storage storage = getStorage();
+		FactoryStorage storage = getStorage();
 		if (storage.isFull()) {
 			return Collections.emptyList();
 		}
@@ -108,7 +110,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public List<Event> visit(SellResource sellResource) {
-		Storage storage = getStorage();
+		FactoryStorage storage = getStorage();
 		if (!storage.hasResource(sellResource.getResource(), sellResource.getCount())) {
 			return new ArrayList<>();
 		}
@@ -133,10 +135,10 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public void visit(StorageCapacityChanged storageCapacityChanged) {
-		Storage previousStorage = getStorage();
+		GeneralStorage previousStorage = getGeneralStorage();
 		int newCapacity = previousStorage.getCapacity() + storageCapacityChanged.change;
-		storage = new Storage(newCapacity);
-		storage.transferFrom(previousStorage);
+		generalStorage = new GeneralStorage(newCapacity);
+		generalStorage.transferFrom(previousStorage);
 	}
 
 	@Override
@@ -151,14 +153,20 @@ public class Factory implements EventVisitor, CommandVisitor {
 	@Override
 	public void visit(ProductionFinished productionFinished) {
 		Resource resource = getProducer().getResource();
-		Storage storage = getStorage();
-		storage.addResource(resource);
+		FactoryStorage storage = getStorage();
+		if (!storage.getCapacities().isEmpty()) {
+			storage.addResource(resource);
+		} else {
+			GeneralStorage generalStorage = getGeneralStorage();
+			generalStorage.addResource(resource);
+		}
+
 		getProducer().stopProduction();
 	}
 
 	@Override
 	public void visit(ResourceSold resourceSold) {
-		Storage storage = getStorage();
+		FactoryStorage storage = getStorage();
 		storage.removeResource(Resource.valueOf(resourceSold.resource), resourceSold.count);
 	}
 }

@@ -8,7 +8,8 @@ public class FactoryDTO {
 	private String texture;
 
 	private ProducerDTO producer;
-	private StorageDTO storage;
+	private FactoryStorageDTO storage;
+	private StorageDTO generalStorage;
 
 	private String cityId;
 
@@ -48,11 +49,11 @@ public class FactoryDTO {
 		this.producer = producer;
 	}
 
-	public StorageDTO getStorage() {
+	public FactoryStorageDTO getStorage() {
 		return storage;
 	}
 
-	public void setStorage(StorageDTO storage) {
+	public void setStorage(FactoryStorageDTO storage) {
 		this.storage = storage;
 	}
 
@@ -67,5 +68,13 @@ public class FactoryDTO {
 	@Override
 	public String toString() {
 		return "FactoryDTO{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", producer=" + producer + ", storage=" + storage + ", cityId='" + cityId + '\'' + '}';
+	}
+
+	public StorageDTO getGeneralStorage() {
+		return generalStorage;
+	}
+
+	public void setGeneralStorage(StorageDTO generalStorage) {
+		this.generalStorage = generalStorage;
 	}
 }

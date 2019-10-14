@@ -1,19 +1,15 @@
 package com.soze.factory.service;
 
-import com.soze.common.dto.Resource;
 import com.soze.common.json.JsonUtils;
 import com.soze.common.message.server.FactoryAdded;
 import com.soze.common.message.server.ServerMessage;
-import com.soze.common.message.server.StorageContentChanged;
 import com.soze.factory.FactoryConverter;
 import com.soze.factory.aggregate.Factory;
-import com.soze.factory.aggregate.Storage;
 import com.soze.factory.event.*;
 import com.soze.factory.repository.FactoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;

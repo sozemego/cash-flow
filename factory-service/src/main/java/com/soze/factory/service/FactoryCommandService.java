@@ -2,7 +2,6 @@ package com.soze.factory.service;
 
 import com.soze.common.dto.CityDTO;
 import com.soze.factory.aggregate.Factory;
-import com.soze.factory.aggregate.Storage;
 import com.soze.factory.command.*;
 import com.soze.factory.event.Event;
 import com.soze.factory.event.EventBus;

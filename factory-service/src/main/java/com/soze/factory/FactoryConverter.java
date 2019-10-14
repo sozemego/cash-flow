@@ -1,9 +1,12 @@
 package com.soze.factory;
 
 import com.soze.common.dto.FactoryDTO;
+import com.soze.common.dto.FactoryStorageDTO;
 import com.soze.common.dto.ProducerDTO;
 import com.soze.common.dto.StorageDTO;
 import com.soze.factory.aggregate.Factory;
+import com.soze.factory.aggregate.FactoryStorage;
+import com.soze.factory.aggregate.GeneralStorage;
 import com.soze.factory.aggregate.Producer;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +20,15 @@ public class FactoryConverter {
 		factoryDTO.setTexture(factory.getTexture());
 		factoryDTO.setCityId(factory.getCityId());
 
-		StorageDTO storageDTO = new StorageDTO();
-		storageDTO.setCapacity(factory.getStorage().getCapacity());
-		storageDTO.getResources().putAll(factory.getStorage().getResources());
-		factoryDTO.setStorage(storageDTO);
+		FactoryStorage factoryStorage = factory.getStorage();
+		FactoryStorageDTO factoryStorageDTO = new FactoryStorageDTO(factoryStorage.getCapacities(), factoryStorage.getResources());
+		factoryDTO.setStorage(factoryStorageDTO);
+
+		GeneralStorage generalStorage = factory.getGeneralStorage();
+		StorageDTO generalStorageDTO = new StorageDTO();
+		generalStorageDTO.setCapacity(generalStorage.getCapacity());
+		generalStorageDTO.getResources().putAll(generalStorage.getResources());
+		factoryDTO.setGeneralStorage(generalStorageDTO);
 
 		ProducerDTO producerDTO = new ProducerDTO();
 		Producer producer = factory.getProducer();

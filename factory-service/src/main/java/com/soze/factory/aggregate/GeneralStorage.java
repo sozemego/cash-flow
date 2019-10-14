@@ -5,14 +5,14 @@ import com.soze.common.dto.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Storage {
+public class GeneralStorage {
 
 	private final int capacity;
 	private final Map<Resource, Integer> resources = new HashMap<>();
 
 	private int capacityTaken = 0;
 
-	public Storage(int capacity) {
+	public GeneralStorage(int capacity) {
 		this.capacity = capacity;
 	}
 
@@ -87,7 +87,7 @@ public class Storage {
 		return new HashMap<>(resources);
 	}
 
-	void transferFrom(Storage otherStorage) {
+	void transferFrom(GeneralStorage otherStorage) {
 		otherStorage.getResources().forEach((resource, count) -> {
 			int transferCount = Math.min(count, getRemainingCapacity());
 			addResource(resource, transferCount);

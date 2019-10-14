@@ -2,6 +2,7 @@ package com.soze.common.client;
 
 import com.soze.common.dto.CityDTO;
 import com.soze.common.dto.Resource;
+import com.soze.common.dto.ResourceDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,6 @@ public interface WorldServiceClient {
 		path = "/world/resources",
 		produces = MediaType.APPLICATION_JSON_VALUE
 	)
-	List<Resource> getResources();
+	List<ResourceDTO> getResources();
 
 }

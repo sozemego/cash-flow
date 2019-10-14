@@ -4,12 +4,14 @@ import com.soze.common.client.WorldServiceClient;
 import com.soze.common.dto.CityDTO;
 import com.soze.common.dto.Clock;
 import com.soze.common.dto.Resource;
+import com.soze.common.dto.ResourceDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @Profile("test")
@@ -42,8 +44,8 @@ public class FactoryServiceTestBeanConfiguration {
 			}
 
 			@Override
-			public List<Resource> getResources() {
-				return Arrays.asList(Resource.values());
+			public List<ResourceDTO> getResources() {
+				return Arrays.stream(Resource.values()).map(ResourceDTO::new).collect(Collectors.toList());
 			}
 		};
 	}

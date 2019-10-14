@@ -3,7 +3,7 @@ package com.soze.factory.service;
 import com.soze.common.dto.Clock;
 import com.soze.factory.aggregate.Factory;
 import com.soze.factory.aggregate.Producer;
-import com.soze.factory.aggregate.Storage;
+import com.soze.factory.aggregate.FactoryStorage;
 import com.soze.factory.command.FinishProduction;
 import com.soze.factory.command.StartProduction;
 import com.soze.factory.event.ProductionStarted;
@@ -57,7 +57,7 @@ public class FactoryProductionScheduler {
 				LOG.trace("Factory {} already producing", factory.getId());
 				return;
 			}
-			Storage storage = factory.getStorage();
+			FactoryStorage storage = factory.getStorage();
 			if (storage.isFull()) {
 				LOG.trace("Factory {} is full", factory.getId());
 				return;

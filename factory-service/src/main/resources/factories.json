@@ -4,11 +4,27 @@
     "name": "Forester",
     "texture": "textures/buildings/medieval/medieval_lumber.png",
     "storage": {
-      "capacity": 100
+      "capacities": {
+        "WOOD": 100
+      }
     },
     "producer": {
       "resource": "WOOD",
       "time": 60
+    }
+  },
+  {
+    "id": "STONE_QUARRY",
+    "name": "Stone quarry",
+    "texture": "textures/buildings/medieval/quarry.png",
+    "storage": {
+      "capacities": {
+        "STONE": 250
+      }
+    },
+    "producer": {
+      "resource": "STONE",
+      "time": 90
     }
   }
 ]

@@ -3,6 +3,7 @@ package com.soze.world.controller;
 import com.soze.common.client.WorldServiceClient;
 import com.soze.common.dto.CityDTO;
 import com.soze.common.dto.Resource;
+import com.soze.common.dto.ResourceDTO;
 import com.soze.world.domain.City;
 import com.soze.world.service.WorldService;
 import io.swagger.annotations.Api;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Api(value = "World")
@@ -66,8 +68,10 @@ public class WorldController implements WorldServiceClient {
 	}
 
 	@Override
-	public List<Resource> getResources() {
+	public List<ResourceDTO> getResources() {
 		LOG.info("Called getResources");
-		return Arrays.asList(Resource.values());
+		return Arrays.stream(Resource.values())
+								 .map(ResourceDTO::new)
+								 .collect(Collectors.toList());
 	}
 }
