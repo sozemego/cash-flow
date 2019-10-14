@@ -24,7 +24,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 @Import(TruckServiceTestBeanConfiguration.class)
@@ -220,9 +222,11 @@ class TruckServiceTest {
 
 		String factoryId = "factoryId";
 		FactoryDTO factory = new FactoryDTO();
-		StorageDTO factoryStorage = new StorageDTO();
-		factoryStorage.setCapacity(10);
-		factoryStorage.getResources().put(Resource.WOOD, 2);
+		Map<Resource, Integer> capacities = new HashMap<>();
+		capacities.put(Resource.WOOD, 10);
+		Map<Resource, Integer> resources = new HashMap<>();
+		resources.put(Resource.WOOD, 2);
+		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources);
 		factory.setStorage(factoryStorage);
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
 
@@ -242,9 +246,11 @@ class TruckServiceTest {
 		String factoryId = "factoryId";
 		int count = 5;
 		FactoryDTO factory = new FactoryDTO();
-		StorageDTO factoryStorage = new StorageDTO();
-		factoryStorage.setCapacity(10);
-		factoryStorage.getResources().put(Resource.WOOD, 5);
+		Map<Resource, Integer> capacities = new HashMap<>();
+		capacities.put(Resource.WOOD, 10);
+		Map<Resource, Integer> resources = new HashMap<>();
+		resources.put(Resource.WOOD, 5);
+		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources);
 		factory.setStorage(factoryStorage);
 
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
@@ -274,9 +280,11 @@ class TruckServiceTest {
 		String factoryId = "factoryId";
 		int count = 5;
 		FactoryDTO factory = new FactoryDTO();
-		StorageDTO factoryStorage = new StorageDTO();
-		factoryStorage.setCapacity(10);
-		factoryStorage.getResources().put(Resource.WOOD, 5);
+		Map<Resource, Integer> capacities = new HashMap<>();
+		capacities.put(Resource.WOOD, 10);
+		Map<Resource, Integer> resources = new HashMap<>();
+		resources.put(Resource.WOOD, 5);
+		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources);
 		factory.setStorage(factoryStorage);
 
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);

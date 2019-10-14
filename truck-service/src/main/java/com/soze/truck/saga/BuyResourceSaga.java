@@ -71,7 +71,7 @@ public class BuyResourceSaga {
 		}
 
 		FactoryDTO factoryDTO = factoryOptional.get();
-		StorageDTO factoryStorage = factoryDTO.getStorage();
+		FactoryStorageDTO factoryStorage = factoryDTO.getStorage();
 		long actualCount = factoryStorage.getResources().get(resource);
 		if (actualCount < count) {
 			LOG.info("Factory = {} does not have enough of {}. It has {}", factoryId, resource, actualCount);

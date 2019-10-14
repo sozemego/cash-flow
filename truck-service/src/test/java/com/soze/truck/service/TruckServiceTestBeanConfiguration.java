@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @Profile("test")
@@ -45,8 +46,8 @@ public class TruckServiceTestBeanConfiguration {
 			}
 
 			@Override
-			public List<Resource> getResources() {
-				return Arrays.asList(Resource.values());
+			public List<ResourceDTO> getResources() {
+				return Arrays.stream(Resource.values()).map(ResourceDTO::new).collect(Collectors.toList());
 			}
 		};
 		return worldServiceClient;
