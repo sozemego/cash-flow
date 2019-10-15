@@ -109,6 +109,30 @@ public class FactoryStorage {
 		});
 	}
 
+	/**
+	 * This method does not remove any resources. It simply removes entries for resources or capacities maps
+	 * that have values as 0.
+	 */
+	public void clean() {
+		Map<Resource, Integer> newResources = new HashMap<>();
+		this.resources.forEach((resource, count) -> {
+			if(count != 0) {
+				newResources.put(resource, count);
+			}
+		});
+		this.resources.clear();
+		this.resources.putAll(newResources);
+
+		Map<Resource, Integer> newCapacities = new HashMap<>();
+		this.capacities.forEach((resource, capacity) -> {
+			if(capacity != 0) {
+				newCapacities.put(resource, capacity);
+			}
+		});
+		this.capacities.clear();
+		this.capacities.putAll(newCapacities);
+	}
+
 	@Override
 	public String toString() {
 		return "FactoryStorage{" + "capacities=" + capacities + ", resources=" + resources + '}';

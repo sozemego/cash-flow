@@ -78,4 +78,14 @@ public class FactoryTemplateLoader {
 		return findRootById(id) != null;
 	}
 
+	public Optional<JsonNode> findRootByName(String name) {
+		for (JsonNode node : jsonEntities.values()) {
+			String nodeName = node.get("name").asText();
+			if (name.equals(nodeName)) {
+				return Optional.of(node);
+			}
+		}
+		return Optional.empty();
+	}
+
 }

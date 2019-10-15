@@ -116,6 +116,13 @@ public class Factory implements EventVisitor, CommandVisitor {
 	}
 
 	@Override
+	public List<Event> visit(ChangeResourceStorageCapacity changeResourceStorageCapacity) {
+		return Collections.singletonList(new ResourceStorageCapacityChanged(getId().toString(), LocalDateTime.now(), 1,
+																																				changeResourceStorageCapacity.getCapacityChanges()
+		));
+	}
+
+	@Override
 	public void visit(FactoryCreated factoryCreated) {
 		this.id = UUID.fromString(factoryCreated.entityId);
 		this.name = factoryCreated.name;
@@ -148,6 +155,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 		});
 		this.storage = new FactoryStorage(newCapacities);
 		this.storage.transferFrom(factoryStorage);
+		this.storage.clean();
 	}
 
 	@Override

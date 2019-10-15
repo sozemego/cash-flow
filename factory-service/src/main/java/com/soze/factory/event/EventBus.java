@@ -29,7 +29,7 @@ public class EventBus {
 			upcastEvents.add(upcastService.upcast(event));
 		}
 		for (Event event : upcastEvents) {
-			publish(upcastService.upcast(event));
+			publish(event);
 		}
 		return upcastEvents;
 	}
