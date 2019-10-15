@@ -2,9 +2,11 @@ package com.soze.factory.store;
 
 import com.soze.common.json.JsonUtils;
 import com.soze.factory.event.Event;
+import com.soze.factory.event.EventUpcastService;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,13 @@ public class FileEventStore implements EventStore {
 
 	private final Map<String, List<Event>> events = new ConcurrentHashMap<>();
 
+	private final EventUpcastService upcaster;
+
+	@Autowired
+	public FileEventStore(EventUpcastService upcaster) {
+		this.upcaster = upcaster;
+	}
+
 	@PostConstruct
 	public void setup() {
 		LOG.info("FileEventStore init");
@@ -35,9 +44,10 @@ public class FileEventStore implements EventStore {
 		List<Event> eventList = JsonUtils.parseList(file, Event.class);
 		LOG.info("Loaded {} events", eventList.size());
 		for (Event event : eventList) {
-			LOG.trace("Storing event = {}", event);
-			List<Event> entityEvents = events.computeIfAbsent(event.entityId, (id) -> new ArrayList<>());
-			entityEvents.add(event);
+			Event upcastEvent = upcaster.upcast(event);
+			LOG.trace("Storing event in memory = {}", upcastEvent);
+			List<Event> entityEvents = events.computeIfAbsent(upcastEvent.entityId, (id) -> new ArrayList<>());
+			entityEvents.add(upcastEvent);
 		}
 	}
 

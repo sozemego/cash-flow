@@ -119,4 +119,11 @@ public class FactoryService implements EventVisitor {
 		LOG.info("{}", resourceSold);
 		sendToAll(resourceSold);
 	}
+
+	@Override
+	@EventListener
+	public void visit(ResourceStorageCapacityChanged resourceStorageCapacityChanged) {
+		LOG.info("{}", resourceStorageCapacityChanged);
+		sendToAll(resourceStorageCapacityChanged);
+	}
 }

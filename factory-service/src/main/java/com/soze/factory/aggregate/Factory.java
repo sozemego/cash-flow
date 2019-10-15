@@ -130,21 +130,24 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public void visit(StorageCapacityChanged storageCapacityChanged) {
+		//do nothing, this even will be upcast
+	}
+
+	@Override
+	public void visit(ResourceStorageCapacityChanged resourceStorageCapacityChanged) {
 		FactoryStorage factoryStorage = getStorage();
-		if (factoryStorage.getCapacities().isEmpty()) {
-			Map<Resource, Integer> capacities = new HashMap<>();
-			for (Resource resource : Resource.values()) {
-				capacities.put(resource, storageCapacityChanged.change);
-			}
-			this.storage = new FactoryStorage(capacities);
-		} else {
-			Map<Resource, Integer> capacities = factoryStorage.getCapacities();
-			Map<Resource, Integer> newCapacities = new HashMap<>();
-			capacities.forEach((resource, capacity) -> {
-				newCapacities.put(resource, capacity + storageCapacityChanged.change);
+		Map<Resource, Integer> newCapacities = new HashMap<>(factoryStorage.getCapacities());
+		Map<Resource, Integer> capacityChanges = resourceStorageCapacityChanged.capacityChanges;
+		capacityChanges.forEach((resource, change) -> {
+			newCapacities.compute(resource, (r, capacity) -> {
+				if (capacity == null) {
+					return change;
+				}
+				return capacity + change;
 			});
-			this.storage = new FactoryStorage(newCapacities);
-		}
+		});
+		this.storage = new FactoryStorage(newCapacities);
+		this.storage.transferFrom(factoryStorage);
 	}
 
 	@Override
