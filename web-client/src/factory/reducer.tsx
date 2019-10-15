@@ -6,12 +6,13 @@ import {
   RESOURCE_PRODUCED,
   RESOURCE_PRODUCTION_STARTED,
   RESOURCE_SOLD,
+  RESOURCE_STORAGE_CAPACITY_CHANGED,
   STORAGE_CAPACITY_CHANGED,
   STORAGE_CONTENT_CHANGED
 } from "./actions";
-import { transfer } from "../storage/business";
 import { Action } from "../store/actionCreator";
-import { IFactory } from "./index.d";
+import { IFactory, IFactoryStorage } from "./index.d";
+import {transfer} from "./FactoryStorage";
 
 export interface FactoryState {
   factories: IFactory[];
@@ -33,6 +34,8 @@ export function reducer(state: FactoryState = initialState, action: Action) {
       return storageContentChanged(state, action);
     case STORAGE_CAPACITY_CHANGED:
       return storageCapacityChanged(state, action);
+    case RESOURCE_STORAGE_CAPACITY_CHANGED:
+      return resourceStorageCapacityChanged(state, action);
     case PRODUCTION_FINISHED:
       return productionFinished(state, action);
     case PRODUCTION_STARTED:
@@ -103,16 +106,26 @@ const storageContentChanged = produce((state, action) => {
 });
 
 const storageCapacityChanged = produce((state, action) => {
-  const { entityId, change } = action;
+  //no longer in use
+  return state;
+});
+
+const resourceStorageCapacityChanged = produce((state, action) => {
+  const { entityId, capacityChanges } = action;
   const factory = findFactory(state, entityId);
   if (!factory) {
     return;
   }
-  const oldStorage = factory.storage;
-  const nextStorage = { ...factory.storage };
-  nextStorage.capacity = oldStorage.capacity + change;
-  transfer(oldStorage, nextStorage);
-  factory.storage = nextStorage;
+  const { storage } = factory;
+  const newStorage: IFactoryStorage = {
+    capacities: storage.capacities,
+    resources: {}
+  };
+  Object.entries(capacityChanges).forEach(([resource, change]) => {
+    const capacity = newStorage.capacities[resource] || 0;
+    newStorage.capacities[resource] = capacity + (change as number);
+  });
+  transfer(storage, newStorage);
 });
 
 const resourceSold = produce((state, action) => {

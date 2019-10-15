@@ -8,9 +8,9 @@ import Icon from "antd/lib/icon";
 import { Tooltip } from "antd";
 import { Debug } from "../components/Debug";
 import { useGetFactories } from "../factory/selectors";
-import { combine } from "../storage/business";
 import { ResourceList } from "../components/Storage";
-import { FactoryStorage } from "../factory/index.d";
+import { IFactoryStorage } from "../factory/index.d";
+import { combine } from "../factory/FactoryStorage";
 
 const Header = styled.div`
   display: flex;
@@ -27,7 +27,7 @@ export function City({ city }) {
   const factoriesInThisCity = factories.filter(
     factory => factory.cityId === id
   );
-  const totalCityStorage: FactoryStorage = combine(
+  const totalCityStorage: IFactoryStorage = combine(
     factoriesInThisCity.map(factory => factory.storage)
   );
 

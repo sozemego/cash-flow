@@ -6,7 +6,6 @@ import { useGameClock } from "../clock/gameClock";
 import { useGetCities, useGetHighlightedCity } from "../world/selectors";
 import { useDispatch } from "react-redux";
 import { cityHighlighted } from "../world/actions";
-import { Storage } from "../components/Storage";
 import Divider from "antd/lib/divider";
 import Progress from "antd/lib/progress";
 import Card from "antd/lib/card";
@@ -15,7 +14,8 @@ import Icon from "antd/lib/icon";
 import { Modal, Tooltip } from "antd";
 import { Debug } from "../components/Debug";
 import { Events } from "../components/Events";
-import {FactoryEvent, IFactory} from "./index.d";
+import { FactoryEvent, IFactory } from "./index.d";
+import {FactoryStorage} from "./FactoryStorage";
 
 const Header = styled.div`
   display: flex;
@@ -117,7 +117,7 @@ export function Factory({ factory }: FactoryProps) {
         onMouseLeave={() => dispatch(cityHighlighted(null))}
         bodyStyle={cardStyle}
       >
-        <Storage storage={storage} />
+        <FactoryStorage storage={storage} />
         <Divider style={{ margin: "2px" }} />
         <div>
           <Producer>

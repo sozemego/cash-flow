@@ -2,12 +2,10 @@
  * Transfers all resources from oldStorage to newStorage.
  * Drops any resources that will not fit in the newStorage.
  */
-import {FactoryStorage} from "../factory/index.d";
-
-export function transfer(oldStorage: FactoryStorage, newStorage: FactoryStorage) {
+export function transfer(oldStorage, newStorage) {
   const resources = oldStorage.resources;
   Object.entries(resources).forEach(([resource, count]) => {
-  	addResource(newStorage, resource, count);
+  	addResource(newStorage, resource, count as number);
   });
 }
 
@@ -33,15 +31,3 @@ export function addResource(storage, resource, count = 1) {
 	storage.resources[resource] = previousCount + countToAdd;
 }
 
-/**
- * Combines all storages into one with a capacity the sum of all total capacities.
- * @param storages
- */
-export function combine(storages) {
-  const totalStorage = { capacity: 0, resources: {} };
-	for (let storage of storages) {
-		totalStorage.capacity += storage.capacity;
-		transfer(storage, totalStorage);
-	}
-	return totalStorage;
-}
