@@ -1,6 +1,6 @@
 import React from "react";
 import { IFactoryStorage } from "./index.d";
-import {ResourceIcon} from "../components/ResourceIcon";
+import { ResourceIcon } from "../components/ResourceIcon";
 
 export interface FactoryStorageProps {
   storage: IFactoryStorage;
@@ -12,13 +12,13 @@ export function FactoryStorage({ storage }: FactoryStorageProps) {
   return (
     <>
       {Object.entries(capacities).map(([resource, capacity]) => {
-          const capacityTaken = resources[resource] || 0;
-          return (
-              <div>
-                  <ResourceIcon resource={resource}/>
-                  {capacityTaken} / {capacity}
-              </div>
-          )
+        const capacityTaken = resources[resource] || 0;
+        return (
+          <div key={resource}>
+            <ResourceIcon resource={resource} />
+            {capacityTaken} / {capacity}
+          </div>
+        );
       })}
     </>
   );
