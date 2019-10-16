@@ -1,6 +1,8 @@
 package com.soze.common.dto;
 
 
+import java.util.Map;
+
 public class FactoryDTO {
 
 	private String id;

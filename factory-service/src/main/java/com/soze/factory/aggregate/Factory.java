@@ -83,8 +83,12 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public List<Event> visit(FinishProduction finishProduction) {
-		return Collections.singletonList(
-			new ProductionFinished(finishProduction.getFactoryId().toString(), LocalDateTime.now()));
+		ProductionFinished productionFinished = new ProductionFinished(getId().toString(), LocalDateTime.now());
+		FactoryStorage storage = getStorage().copy();
+		Producer producer = getProducer();
+		storage.addResource(producer.getResource());
+		ResourcePriceChanged resourcePriceChanged = new ResourcePriceChanged(getId().toString(), LocalDateTime.now(), storage.getPrices());
+		return Arrays.asList(productionFinished, resourcePriceChanged);
 	}
 
 	@Override
@@ -179,5 +183,10 @@ public class Factory implements EventVisitor, CommandVisitor {
 	public void visit(ResourceSold resourceSold) {
 		FactoryStorage storage = getStorage();
 		storage.removeResource(Resource.valueOf(resourceSold.resource), resourceSold.count);
+	}
+
+	@Override
+	public void visit(ResourcePriceChanged resourcePriceChanged) {
+
 	}
 }

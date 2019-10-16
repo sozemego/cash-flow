@@ -226,7 +226,7 @@ class TruckServiceTest {
 		capacities.put(Resource.WOOD, 10);
 		Map<Resource, Integer> resources = new HashMap<>();
 		resources.put(Resource.WOOD, 2);
-		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources);
+		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources, new HashMap<>());
 		factory.setStorage(factoryStorage);
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
 
@@ -250,7 +250,7 @@ class TruckServiceTest {
 		capacities.put(Resource.WOOD, 10);
 		Map<Resource, Integer> resources = new HashMap<>();
 		resources.put(Resource.WOOD, 5);
-		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources);
+		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources, new HashMap<>());
 		factory.setStorage(factoryStorage);
 
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
@@ -284,7 +284,7 @@ class TruckServiceTest {
 		capacities.put(Resource.WOOD, 10);
 		Map<Resource, Integer> resources = new HashMap<>();
 		resources.put(Resource.WOOD, 5);
-		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources);
+		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources, new HashMap<>());
 		factory.setStorage(factoryStorage);
 
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);

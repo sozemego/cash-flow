@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 	@JsonSubTypes.Type(value = ProductionFinished.class, name = "PRODUCTION_FINISHED"),
 	@JsonSubTypes.Type(value = ResourceSold.class, name = "RESOURCE_SOLD"),
 	@JsonSubTypes.Type(value = ResourceStorageCapacityChanged.class, name = "RESOURCE_STORAGE_CAPACITY_CHANGED"),
+	@JsonSubTypes.Type(value = ResourcePriceChanged.class, name = "RESOURCE_PRICE_CHANGED"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Event {
@@ -44,6 +45,6 @@ public abstract class Event {
 
 	public enum EventType {
 		FACTORY_CREATED, PRODUCTION_STARTED, STORAGE_CAPACITY_CHANGED, PRODUCTION_LINE_ADDED, PRODUCTION_FINISHED, RESOURCE_SOLD,
-		RESOURCE_STORAGE_CAPACITY_CHANGED
+		RESOURCE_STORAGE_CAPACITY_CHANGED, RESOURCE_PRICE_CHANGED
 	}
 }

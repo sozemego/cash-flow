@@ -21,7 +21,7 @@ public class FactoryConverter {
 		factoryDTO.setCityId(factory.getCityId());
 
 		FactoryStorage factoryStorage = factory.getStorage();
-		FactoryStorageDTO factoryStorageDTO = new FactoryStorageDTO(factoryStorage.getCapacities(), factoryStorage.getResources());
+		FactoryStorageDTO factoryStorageDTO = new FactoryStorageDTO(factoryStorage.getCapacities(), factoryStorage.getResources(), factoryStorage.getPrices());
 		factoryDTO.setStorage(factoryStorageDTO);
 
 		ProducerDTO producerDTO = new ProducerDTO();

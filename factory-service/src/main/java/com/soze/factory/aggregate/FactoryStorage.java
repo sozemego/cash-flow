@@ -10,6 +10,7 @@ public class FactoryStorage {
 
 	private final Map<Resource, Integer> capacities;
 	private final Map<Resource, Integer> resources = new HashMap<>();
+	private final Map<Resource, Integer> prices = new HashMap<>();
 
 	public FactoryStorage(Map<Resource, Integer> capacities) {
 		Objects.requireNonNull(this.capacities = capacities);
@@ -30,6 +31,7 @@ public class FactoryStorage {
 			}
 			return actualCount + count;
 		});
+		calculatePrices();
 	}
 
 	public boolean canFit(Resource resource) {
@@ -55,6 +57,7 @@ public class FactoryStorage {
 			}
 			return count;
 		});
+		calculatePrices();
 	}
 
 	public boolean hasResource(Resource resource) {
@@ -75,6 +78,10 @@ public class FactoryStorage {
 
 	public Map<Resource, Integer> getCapacities() {
 		return capacities;
+	}
+
+	public Map<Resource, Integer> getPrices() {
+		return prices;
 	}
 
 	public int getRemainingCapacity(Resource resource) {
@@ -131,6 +138,29 @@ public class FactoryStorage {
 		});
 		this.capacities.clear();
 		this.capacities.putAll(newCapacities);
+	}
+
+	private void calculatePrices() {
+		capacities.forEach((resource, capacity) -> {
+			float percentTaken = resources.getOrDefault(resource, 0) / (float) capacity;
+			float percentFree = 1f - percentTaken;
+			float priceRange = resource.getMaxPrice() - resource.getMinPrice();
+			int price = resource.getMinPrice() + (int) (priceRange * percentFree);
+			prices.put(resource, price);
+		});
+		for (Resource resource : Resource.values()) {
+			boolean hasCapacity = capacities.containsKey(resource);
+			if (!hasCapacity) {
+				prices.remove(resource);
+			}
+		}
+	}
+
+	public FactoryStorage copy() {
+		FactoryStorage storage = new FactoryStorage(new HashMap<>(capacities));
+		storage.resources.putAll(getResources());
+		storage.prices.putAll(getPrices());
+		return storage;
 	}
 
 	@Override
