@@ -71,7 +71,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 		}
 
 		FactoryStorage storage = getStorage();
-		if (storage.isFull()) {
+		if (storage.isFull(producer.getResource())) {
 			return Collections.emptyList();
 		}
 
@@ -147,19 +147,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 	@Override
 	public void visit(ResourceStorageCapacityChanged resourceStorageCapacityChanged) {
 		FactoryStorage factoryStorage = getStorage();
-		Map<Resource, Integer> newCapacities = new HashMap<>(factoryStorage.getCapacities());
-		Map<Resource, Integer> capacityChanges = resourceStorageCapacityChanged.capacityChanges;
-		capacityChanges.forEach((resource, change) -> {
-			newCapacities.compute(resource, (r, capacity) -> {
-				if (capacity == null) {
-					return change;
-				}
-				return capacity + change;
-			});
-		});
-		this.storage = new FactoryStorage(newCapacities);
-		this.storage.transferFrom(factoryStorage);
-		this.storage.clean();
+		factoryStorage.changeCapacities(resourceStorageCapacityChanged.capacityChanges);
 	}
 
 	@Override

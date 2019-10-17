@@ -8,7 +8,7 @@ import Icon from "antd/lib/icon";
 import { Tooltip } from "antd";
 import { Debug } from "../components/Debug";
 import { useGetFactories } from "../factory/selectors";
-import { ResourceList } from "../components/Storage";
+import { ResourceCount, ResourceList } from "../components/Storage";
 import { IFactoryStorage } from "../factory/index.d";
 import { combine } from "../factory/FactoryStorage";
 
@@ -31,6 +31,12 @@ export function City({ city }) {
     factoriesInThisCity.map(factory => factory.storage)
   );
 
+  const resourceCounts: ResourceCount[] = Object.entries(totalCityStorage).map(
+    ([resource, slot]) => {
+      return { resource, count: slot.count };
+    }
+  );
+
   return (
     <>
       <Header>
@@ -44,7 +50,7 @@ export function City({ city }) {
         onMouseLeave={() => dispatch(cityHighlighted(null))}
       >
         <div>Factory slots - {factorySlots}</div>
-        <ResourceList resources={totalCityStorage.resources} />
+        <ResourceList resources={resourceCounts} />
       </Card>
     </>
   );

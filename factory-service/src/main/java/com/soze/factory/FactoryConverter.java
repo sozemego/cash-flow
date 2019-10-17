@@ -1,14 +1,14 @@
 package com.soze.factory;
 
-import com.soze.common.dto.FactoryDTO;
-import com.soze.common.dto.FactoryStorageDTO;
-import com.soze.common.dto.ProducerDTO;
-import com.soze.common.dto.StorageDTO;
+import com.soze.common.dto.*;
 import com.soze.factory.aggregate.Factory;
 import com.soze.factory.aggregate.FactoryStorage;
 import com.soze.factory.aggregate.GeneralStorage;
 import com.soze.factory.aggregate.Producer;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class FactoryConverter {
@@ -21,8 +21,11 @@ public class FactoryConverter {
 		factoryDTO.setCityId(factory.getCityId());
 
 		FactoryStorage factoryStorage = factory.getStorage();
-		FactoryStorageDTO factoryStorageDTO = new FactoryStorageDTO(factoryStorage.getCapacities(), factoryStorage.getResources(), factoryStorage.getPrices());
-		factoryDTO.setStorage(factoryStorageDTO);
+		Map<Resource, StorageSlotDTO> resourceDTOs = new HashMap<>();
+		factoryStorage.getResources().forEach((resource, storageSlot) -> {
+			resourceDTOs.put(resource, new StorageSlotDTO(resource, storageSlot.getCount(), storageSlot.getCapacity(), storageSlot.getPrice()));
+		});
+		factoryDTO.setStorage(resourceDTOs);
 
 		ProducerDTO producerDTO = new ProducerDTO();
 		Producer producer = factory.getProducer();

@@ -12,6 +12,7 @@ import com.soze.truck.service.TruckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class BuyResourceSaga {
@@ -71,14 +72,15 @@ public class BuyResourceSaga {
 		}
 
 		FactoryDTO factoryDTO = factoryOptional.get();
-		FactoryStorageDTO factoryStorage = factoryDTO.getStorage();
-		long actualCount = factoryStorage.getResources().get(resource);
+		Map<Resource, StorageSlotDTO> factoryStorage = factoryDTO.getStorage();
+		StorageSlotDTO slot = factoryStorage.getOrDefault(resource, new StorageSlotDTO(resource,0, 0, 0));
+		long actualCount = slot.getCount();
 		if (actualCount < count) {
 			LOG.info("Factory = {} does not have enough of {}. It has {}", factoryId, resource, actualCount);
 			return;
 		}
 
-		long cost = count * 5; // for now assume static cost
+		long cost = count * slot.getPrice();
 		PlayerDTO playerDTO = playerService.getPlayer();
 		if (playerDTO.getCash() < cost) {
 			LOG.info("Player {}-{} does not have enough cash [required - {}, actual - {}]!", playerDTO.getId(), playerDTO.getName(), cost, playerDTO.getCash());

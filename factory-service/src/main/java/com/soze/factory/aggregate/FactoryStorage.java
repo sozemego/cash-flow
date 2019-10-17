@@ -8,13 +8,12 @@ import java.util.Objects;
 
 public class FactoryStorage {
 
-	private final Map<Resource, Integer> capacities;
-	private final Map<Resource, Integer> resources = new HashMap<>();
-	private final Map<Resource, Integer> prices = new HashMap<>();
+	private final Map<Resource, StorageSlot> resources;
 
-	public FactoryStorage(Map<Resource, Integer> capacities) {
-		Objects.requireNonNull(this.capacities = capacities);
-		validateCapacities(this.capacities);
+	public FactoryStorage(Map<Resource, StorageSlot> resources) {
+		Objects.requireNonNull(this.resources = resources);
+		validateSlots(this.resources);
+		calculatePrices();
 	}
 
 	public void addResource(Resource resource) {
@@ -25,12 +24,8 @@ public class FactoryStorage {
 		if (!canFit(resource, count)) {
 			return;
 		}
-		resources.compute(resource, (res, actualCount) -> {
-			if (actualCount == null) {
-				return count;
-			}
-			return actualCount + count;
-		});
+		StorageSlot slot = getSlot(resource);
+		slot.setCount(slot.getCount() + count);
 		calculatePrices();
 	}
 
@@ -51,12 +46,8 @@ public class FactoryStorage {
 			return;
 		}
 
-		resources.compute(resource, (res, actualCount) -> {
-			if (actualCount >= count) {
-				return actualCount - count;
-			}
-			return count;
-		});
+		StorageSlot slot = getSlot(resource);
+		slot.setCount(slot.getCount() - count);
 		calculatePrices();
 	}
 
@@ -65,23 +56,8 @@ public class FactoryStorage {
 	}
 
 	public boolean hasResource(Resource resource, int count) {
-		return resources.getOrDefault(resource, 0) >= count;
-	}
-
-	public boolean isFull() {
-		return capacities.equals(resources);
-	}
-
-	public Map<Resource, Integer> getResources() {
-		return new HashMap<>(resources);
-	}
-
-	public Map<Resource, Integer> getCapacities() {
-		return capacities;
-	}
-
-	public Map<Resource, Integer> getPrices() {
-		return prices;
+		StorageSlot slot = resources.get(resource);
+		return slot != null && slot.getCount() >= count;
 	}
 
 	public int getRemainingCapacity(Resource resource) {
@@ -91,16 +67,16 @@ public class FactoryStorage {
 	}
 
 	public int getCapacityTaken(Resource resource) {
-		return resources.getOrDefault(resource, 0);
+		return getSlot(resource).getCount();
 	}
 
 	public int getCapacity(Resource resource) {
-		return capacities.getOrDefault(resource, 0);
+		return getSlot(resource).getCapacity();
 	}
 
 	void transferFrom(FactoryStorage otherStorage) {
-		otherStorage.getResources().forEach((resource, count) -> {
-			int transferCount = Math.min(count, getRemainingCapacity(resource));
+		otherStorage.getResources().forEach((resource, slot) -> {
+			int transferCount = Math.min(slot.getCount(), getRemainingCapacity(resource));
 			addResource(resource, transferCount);
 		});
 	}
@@ -108,63 +84,103 @@ public class FactoryStorage {
 	/**
 	 * Checks if any of the capacities are below zero.
 	 */
-	private void validateCapacities(Map<Resource, Integer> capacities) {
-		capacities.forEach((resource, capacity) -> {
-			if (capacity < 0) {
-				throw new IllegalArgumentException("Capacity cannot be negative: " + resource + ":" + capacity);
+	private void validateSlots(Map<Resource, StorageSlot> resources) {
+		resources.forEach((resource, slot) -> {
+			if (slot.getCapacity() < 0) {
+				throw new IllegalArgumentException("Capacity cannot be negative: " + resource + ":" + slot.getCapacity());
+			}
+			if (slot.getCount() < 0) {
+				throw new IllegalArgumentException("Capacity cannot be negative: " + resource + ":" + slot.getCount());
+			}
+			if (slot.getPrice() < 0) {
+				throw new IllegalArgumentException("Capacity cannot be negative: " + resource + ":" + slot.getPrice());
 			}
 		});
 	}
 
 	/**
-	 * This method does not remove any resources. It simply removes entries for resources or capacities maps
-	 * that have values as 0.
+	 * This method does not remove any resources. It simply removes resources that have 0 capacity or less.
 	 */
 	public void clean() {
-		Map<Resource, Integer> newResources = new HashMap<>();
-		this.resources.forEach((resource, count) -> {
-			if(count != 0) {
-				newResources.put(resource, count);
+		Map<Resource, StorageSlot> newResources = new HashMap<>();
+		this.resources.forEach((resource, slot) -> {
+			if (slot.getCapacity() > 0) {
+				newResources.put(resource, slot);
 			}
 		});
 		this.resources.clear();
 		this.resources.putAll(newResources);
+	}
 
-		Map<Resource, Integer> newCapacities = new HashMap<>();
-		this.capacities.forEach((resource, capacity) -> {
-			if(capacity != 0) {
-				newCapacities.put(resource, capacity);
-			}
-		});
-		this.capacities.clear();
-		this.capacities.putAll(newCapacities);
+	public boolean isFull(Resource resource) {
+		return getRemainingCapacity(resource) == 0;
 	}
 
 	private void calculatePrices() {
-		capacities.forEach((resource, capacity) -> {
-			float percentTaken = resources.getOrDefault(resource, 0) / (float) capacity;
+		resources.forEach((resource, slot) -> {
+			if (slot.getCapacity() == 0) {
+				return;
+			}
+			float percentTaken = slot.getCount() / (float) slot.getCapacity();
 			float percentFree = 1f - percentTaken;
 			float priceRange = resource.getMaxPrice() - resource.getMinPrice();
 			int price = resource.getMinPrice() + (int) (priceRange * percentFree);
-			prices.put(resource, price);
+			slot.setPrice(price);
 		});
-		for (Resource resource : Resource.values()) {
-			boolean hasCapacity = capacities.containsKey(resource);
-			if (!hasCapacity) {
-				prices.remove(resource);
-			}
-		}
+		clean();
 	}
 
 	public FactoryStorage copy() {
-		FactoryStorage storage = new FactoryStorage(new HashMap<>(capacities));
-		storage.resources.putAll(getResources());
-		storage.prices.putAll(getPrices());
-		return storage;
+		Map<Resource, StorageSlot> newResources = new HashMap<>();
+		resources.forEach((resource, slot) -> {
+			newResources.put(resource, new StorageSlot(slot));
+		});
+		return new FactoryStorage(newResources);
+	}
+
+	public void setCapacity(Resource resource, int capacity) {
+		getSlot(resource).setCapacity(capacity);
+	}
+
+	public void changeCapacities(Map<Resource, Integer> capacityChanges) {
+		capacityChanges.forEach((resource, change) -> {
+			StorageSlot slot = getSlot(resource);
+			slot.setCapacity(slot.getCapacity() + change);
+		});
+		clean();
+	}
+
+	public Map<Resource, StorageSlot> getResources() {
+		return resources;
+	}
+
+	public Map<Resource, Integer> getPrices() {
+		Map<Resource, Integer> prices = new HashMap<>();
+		resources.forEach((resource, slot) -> {
+			prices.put(resource, slot.getPrice());
+		});
+		return prices;
+	}
+
+	public Map<Resource, Integer> getCapacities() {
+		Map<Resource, Integer> capacities = new HashMap<>();
+		resources.forEach((resource, slot) -> {
+			capacities.put(resource, slot.getCapacity());
+		});
+		return capacities;
+	}
+
+	private StorageSlot getSlot(Resource resource) {
+		return resources.compute(resource, (r, slot) -> {
+			if (slot == null) {
+				return new StorageSlot(0, 0, 0);
+			}
+			return slot;
+		});
 	}
 
 	@Override
 	public String toString() {
-		return "FactoryStorage{" + "capacities=" + capacities + ", resources=" + resources + '}';
+		return "FactoryStorage{" + "resources=" + resources + '}';
 	}
 }

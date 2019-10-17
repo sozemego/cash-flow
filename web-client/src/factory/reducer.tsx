@@ -60,8 +60,8 @@ const productionFinished = produce((state, action) => {
   }
   const { producer, storage } = factory;
   const { resource } = producer;
-  const count = storage.resources[resource] || 0;
-  storage.resources[resource] = count + 1;
+  const slot = storage[resource];
+  slot.count += 1;
   factory.producer.productionStartTime = -1;
 });
 
@@ -118,12 +118,12 @@ const resourceStorageCapacityChanged = produce((state, action) => {
   }
   const { storage } = factory;
   const newStorage: IFactoryStorage = {
-    capacities: storage.capacities,
-    resources: {}
+
   };
   Object.entries(capacityChanges).forEach(([resource, change]) => {
-    const capacity = newStorage.capacities[resource] || 0;
-    newStorage.capacities[resource] = capacity + (change as number);
+    const slot = newStorage[resource] || {capacity: 0, count: 0, price: 0};
+    slot.capacity += change as number;
+    newStorage[resource] = slot;
   });
   transfer(storage, newStorage);
 });
@@ -135,8 +135,9 @@ const resourceSold = produce((state, action) => {
     return;
   }
   const { storage } = factory;
-  const oldCount: number = storage.resources[resource];
-  storage.resources[resource] = oldCount - count;
+  const slot = storage[resource];
+  slot.count -= count;
+  storage[resource] = slot;
 });
 
 function findFactory(

@@ -7,18 +7,18 @@ export interface IFactory {
   producer: Producer;
 }
 
-export interface Resources {
-  [key: string]: number;
-}
-
-export interface Capacities {
-  [key: string]: number;
-}
-
 export interface IFactoryStorage {
-  capacities: Capacities;
-  resources: Resources;
+  [key: string]: IStorageSlot;
 }
+
+export interface IStorageSlot {
+  resource: string;
+  count: number;
+  capacity: number;
+  price: number;
+}
+
+export type IStorageSlotEntry = [string, IStorageSlot];
 
 export interface Producer {
   resource: string;

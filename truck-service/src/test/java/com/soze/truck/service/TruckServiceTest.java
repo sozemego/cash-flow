@@ -222,12 +222,10 @@ class TruckServiceTest {
 
 		String factoryId = "factoryId";
 		FactoryDTO factory = new FactoryDTO();
-		Map<Resource, Integer> capacities = new HashMap<>();
-		capacities.put(Resource.WOOD, 10);
-		Map<Resource, Integer> resources = new HashMap<>();
-		resources.put(Resource.WOOD, 2);
-		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources, new HashMap<>());
-		factory.setStorage(factoryStorage);
+		Map<Resource, StorageSlotDTO> resources = new HashMap<>();
+		resources.put(Resource.WOOD, new StorageSlotDTO(Resource.WOOD, 2, 10, 0));
+		factory.setStorage(resources);
+
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
 
 		truckService.buyResource(truck.getId(), "factoryId", Resource.WOOD, 5);
@@ -246,12 +244,9 @@ class TruckServiceTest {
 		String factoryId = "factoryId";
 		int count = 5;
 		FactoryDTO factory = new FactoryDTO();
-		Map<Resource, Integer> capacities = new HashMap<>();
-		capacities.put(Resource.WOOD, 10);
-		Map<Resource, Integer> resources = new HashMap<>();
-		resources.put(Resource.WOOD, 5);
-		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources, new HashMap<>());
-		factory.setStorage(factoryStorage);
+		Map<Resource, StorageSlotDTO> resources = new HashMap<>();
+		resources.put(Resource.WOOD, new StorageSlotDTO(Resource.WOOD, 5, 10, 5));
+		factory.setStorage(resources);
 
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
 		SellResultDTO sellResult = new SellResultDTO(factoryId, Resource.WOOD, count);
@@ -280,12 +275,10 @@ class TruckServiceTest {
 		String factoryId = "factoryId";
 		int count = 5;
 		FactoryDTO factory = new FactoryDTO();
-		Map<Resource, Integer> capacities = new HashMap<>();
-		capacities.put(Resource.WOOD, 10);
-		Map<Resource, Integer> resources = new HashMap<>();
-		resources.put(Resource.WOOD, 5);
-		FactoryStorageDTO factoryStorage = new FactoryStorageDTO(capacities, resources, new HashMap<>());
-		factory.setStorage(factoryStorage);
+
+		Map<Resource, StorageSlotDTO> resources = new HashMap<>();
+		resources.put(Resource.WOOD, new StorageSlotDTO(Resource.WOOD, count, 10, 5));
+		factory.setStorage(resources);
 
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
 		SellResultDTO sellResult = new SellResultDTO(factoryId, Resource.WOOD, count);

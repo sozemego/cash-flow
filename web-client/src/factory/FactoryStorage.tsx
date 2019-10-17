@@ -1,5 +1,5 @@
 import React from "react";
-import { IFactoryStorage } from "./index.d";
+import { IFactoryStorage, IStorageSlotEntry } from "./index.d";
 import { ResourceIcon } from "../components/ResourceIcon";
 
 export interface FactoryStorageProps {
@@ -7,16 +7,14 @@ export interface FactoryStorageProps {
 }
 
 export function FactoryStorage({ storage }: FactoryStorageProps) {
-  const { capacities, resources } = storage;
-
   return (
     <>
-      {Object.entries(capacities).map(([resource, capacity]) => {
-        const capacityTaken = resources[resource] || 0;
+      {Object.entries(storage).map(([resource, slot]: IStorageSlotEntry) => {
+        const { count, capacity } = slot;
         return (
           <div key={resource}>
             <ResourceIcon resource={resource} />
-            {capacityTaken} / {capacity}
+            {count} / {capacity}
           </div>
         );
       })}
@@ -78,15 +76,18 @@ export function addResource(storage, resource, count = 1) {
  * @param storages
  */
 export function combine(storages: IFactoryStorage[]): IFactoryStorage {
-  const totalStorage = { capacities: {}, resources: {} };
+  const totalStorage: IFactoryStorage = {};
   for (let storage of storages) {
-    const totalCapacities = totalStorage.capacities;
-    const capacities = storage.capacities;
-    Object.entries(capacities).forEach(([resource, capacity]) => {
-      const totalCapacity = totalCapacities[resource] || 0;
-      totalCapacities[resource] = totalCapacity + (capacity as number);
+    Object.entries(storage).forEach(([resource, slot]: IStorageSlotEntry) => {
+      const totalSlot = totalStorage[resource] || {
+        count: 0,
+        capacity: 0,
+        price: 0
+      };
+      totalSlot.count += slot.count;
+      totalSlot.capacity += slot.capacity;
+      totalStorage[resource] = totalSlot;
     });
-    transfer(storage, totalStorage);
   }
   return totalStorage;
 }

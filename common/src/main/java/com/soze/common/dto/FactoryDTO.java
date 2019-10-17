@@ -10,7 +10,7 @@ public class FactoryDTO {
 	private String texture;
 
 	private ProducerDTO producer;
-	private FactoryStorageDTO storage;
+	private Map<Resource, StorageSlotDTO> storage;
 
 	private String cityId;
 
@@ -50,11 +50,11 @@ public class FactoryDTO {
 		this.producer = producer;
 	}
 
-	public FactoryStorageDTO getStorage() {
+	public Map<Resource, StorageSlotDTO> getStorage() {
 		return storage;
 	}
 
-	public void setStorage(FactoryStorageDTO storage) {
+	public void setStorage(Map<Resource, StorageSlotDTO> storage) {
 		this.storage = storage;
 	}
 

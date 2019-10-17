@@ -58,7 +58,7 @@ public class FactoryProductionScheduler {
 				return;
 			}
 			FactoryStorage storage = factory.getStorage();
-			if (storage.isFull()) {
+			if (storage.isFull(producer.getResource())) {
 				LOG.trace("Factory {} is full", factory.getId());
 				return;
 			}

@@ -13,9 +13,9 @@ class FactoryStorageTest {
 
 	@Test
 	public void createStorage_oneResource() {
-		Map<Resource, Integer> capacities = new HashMap<>();
-		capacities.put(Resource.WOOD, 5);
-		FactoryStorage factoryStorage = new FactoryStorage(capacities);
+		Map<Resource, StorageSlot> resources = new HashMap<>();
+		resources.put(Resource.WOOD, new StorageSlot(0, 5, 0));
+		FactoryStorage factoryStorage = new FactoryStorage(resources);
 
 		Assertions.assertEquals(factoryStorage.getCapacity(Resource.WOOD), 5);
 		Assertions.assertTrue(factoryStorage.canFit(Resource.WOOD));
@@ -24,10 +24,10 @@ class FactoryStorageTest {
 
 	@Test
 	public void createStorage_moreResources() {
-		Map<Resource, Integer> capacities = new HashMap<>();
-		capacities.put(Resource.WOOD, 5);
-		capacities.put(Resource.STONE, 10);
-		FactoryStorage factoryStorage = new FactoryStorage(capacities);
+		Map<Resource, StorageSlot> resources = new HashMap<>();
+		resources.put(Resource.WOOD, new StorageSlot(0, 5, 0));
+		resources.put(Resource.STONE, new StorageSlot(0, 10, 0));
+		FactoryStorage factoryStorage = new FactoryStorage(resources);
 
 		Assertions.assertEquals(factoryStorage.getCapacity(Resource.WOOD), 5);
 		Assertions.assertEquals(factoryStorage.getCapacity(Resource.STONE), 10);
@@ -37,10 +37,10 @@ class FactoryStorageTest {
 
 	@Test
 	public void addResources() {
-		Map<Resource, Integer> capacities = new HashMap<>();
-		capacities.put(Resource.WOOD, 5);
-		capacities.put(Resource.STONE, 10);
-		FactoryStorage factoryStorage = new FactoryStorage(capacities);
+		Map<Resource, StorageSlot> resources = new HashMap<>();
+		resources.put(Resource.WOOD, new StorageSlot(0, 5, 0));
+		resources.put(Resource.STONE, new StorageSlot(0, 10, 0));
+		FactoryStorage factoryStorage = new FactoryStorage(resources);
 
 		factoryStorage.addResource(Resource.WOOD, 5);
 		Assertions.assertEquals(0, factoryStorage.getRemainingCapacity(Resource.WOOD));
@@ -52,9 +52,10 @@ class FactoryStorageTest {
 
 	@Test
 	public void addResources_overCapacity() {
-		Map<Resource, Integer> capacities = new HashMap<>();
-		capacities.put(Resource.WOOD, 5);
-		FactoryStorage factoryStorage = new FactoryStorage(capacities);
+		Map<Resource, StorageSlot> resources = new HashMap<>();
+		resources.put(Resource.WOOD, new StorageSlot(0, 5, 0));
+		FactoryStorage factoryStorage = new FactoryStorage(resources);
+
 
 		factoryStorage.addResource(Resource.WOOD, 50);
 
@@ -65,9 +66,9 @@ class FactoryStorageTest {
 
 	@Test
 	public void addResource_notInCapacities() {
-		Map<Resource, Integer> capacities = new HashMap<>();
-		capacities.put(Resource.WOOD, 5);
-		FactoryStorage factoryStorage = new FactoryStorage(capacities);
+		Map<Resource, StorageSlot> resources = new HashMap<>();
+		resources.put(Resource.WOOD, new StorageSlot(0, 5, 0));
+		FactoryStorage factoryStorage = new FactoryStorage(resources);
 
 		factoryStorage.addResource(Resource.WOOD, 50);
 
@@ -78,10 +79,11 @@ class FactoryStorageTest {
 
 	@Test
 	public void addResource_removeResource() {
-		Map<Resource, Integer> capacities = new HashMap<>();
-		capacities.put(Resource.WOOD, 5);
-		capacities.put(Resource.STONE, 10);
-		FactoryStorage factoryStorage = new FactoryStorage(capacities);
+		Map<Resource, StorageSlot> resources = new HashMap<>();
+		resources.put(Resource.WOOD, new StorageSlot(0, 5, 0));
+		resources.put(Resource.STONE, new StorageSlot(0, 10, 0));
+		FactoryStorage factoryStorage = new FactoryStorage(resources);
+
 
 		factoryStorage.addResource(Resource.WOOD, 5);
 		Assertions.assertEquals(0, factoryStorage.getRemainingCapacity(Resource.WOOD));

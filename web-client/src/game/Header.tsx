@@ -7,6 +7,7 @@ import Modal from "antd/lib/modal";
 import Table from "antd/lib/table";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { useGetFactories } from "../factory/selectors";
+import {IStorageSlot} from "../factory/index.d";
 
 export function Header(props) {
   return (
@@ -36,10 +37,9 @@ function calcTotalResourceCounts(factories) {
   const counts = {};
   factories.forEach(factory => {
     const { storage } = factory;
-    const { resources } = storage;
-    Object.entries(resources).forEach(([resource, count]) => {
+    Object.entries(storage).forEach(([resource, slot]) => {
       const actualCount = counts[resource] || 0;
-      counts[resource] = actualCount + count;
+      counts[resource] = actualCount + (slot as IStorageSlot).count;
     })
   });
   return counts;

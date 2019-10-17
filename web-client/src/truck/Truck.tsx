@@ -53,7 +53,7 @@ export function Truck({ truck }) {
     {},
     nextCityId
       ? { opacity: 0.5 }
-      : { opacity: 1, pointerEvents: "all" as PointerEventsProperty  }
+      : { opacity: 1, pointerEvents: "all" as PointerEventsProperty }
   );
 
   return (
@@ -230,8 +230,8 @@ function getResourceList(factories: IFactory[]): ResourceFromFactory[] {
   const resources: ResourceFromFactory[] = [];
   factories.forEach(factory => {
     const { storage } = factory;
-    Object.entries(storage.resources).forEach(([resource, count]) => {
-      resources.push({ factoryId: factory.id, resource, count });
+    Object.entries(storage).forEach(([resource, slot]) => {
+      resources.push({ factoryId: factory.id, resource, count: slot.count });
     });
   });
   return resources;
