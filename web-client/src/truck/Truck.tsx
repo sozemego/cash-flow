@@ -224,6 +224,7 @@ interface ResourceFromFactory {
   factoryId: string;
   resource: string;
   count: number;
+  price: number;
 }
 
 function getResourceList(factories: IFactory[]): ResourceFromFactory[] {
@@ -231,7 +232,7 @@ function getResourceList(factories: IFactory[]): ResourceFromFactory[] {
   factories.forEach(factory => {
     const { storage } = factory;
     Object.entries(storage).forEach(([resource, slot]) => {
-      resources.push({ factoryId: factory.id, resource, count: slot.count });
+      resources.push({ factoryId: factory.id, resource, count: slot.count, price: slot.price });
     });
   });
   return resources;
@@ -248,8 +249,6 @@ const BuyableResourceContainer = styled.div`
   justify-content: space-between;
 `;
 
-const resourcePrice = 5;
-
 export function Buy({ truck, cityId }) {
   const allFactories: IFactory[] = Object.values(useGetFactories());
   const factoriesInCity = allFactories.filter(
@@ -263,7 +262,7 @@ export function Buy({ truck, cityId }) {
       <span>
         Resources to purchase in <CityInline cityId={cityId} />
       </span>
-      {resources.map(({ factoryId, resource, count }) => {
+      {resources.map(({ factoryId, resource, count, price }) => {
         return (
           <FactoryResource
             key={factoryId}
@@ -271,6 +270,7 @@ export function Buy({ truck, cityId }) {
             resource={resource}
             truck={truck}
             count={count}
+            price={price}
           />
         );
       })}
@@ -278,14 +278,14 @@ export function Buy({ truck, cityId }) {
   );
 }
 
-export function FactoryResource({ truck, resource, count, factoryId }) {
+export function FactoryResource({ truck, resource, count, price, factoryId }) {
   const { socket } = useTruckSocket();
   const [selectedCount, setSelectedCount] = useState(0);
   const { cash = 0 } = useGetPlayer();
 
   const capacity = truck.storage.capacity;
   const capacityTaken = calculateCapacityTaken(truck.storage);
-  const canAffordAmount = Number((cash / resourcePrice).toFixed(0));
+  const canAffordAmount = Number((cash / price).toFixed(0));
   const max = Math.min(
     canAffordAmount,
     Math.min(capacity - capacityTaken, count)
@@ -297,7 +297,7 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
       <div>
         <ResourceIcon resource={resource} />
         <span>
-          {count} - ${5}
+          {count} - ${price}
         </span>
       </div>
       <div style={{ display: "flex" }}>
@@ -328,7 +328,7 @@ export function FactoryResource({ truck, resource, count, factoryId }) {
             block
             style={{ backgroundColor: buyDisabled ? "#DDDDDD" : "#78D89C" }}
           >
-            {selectedCount * resourcePrice}
+            {selectedCount * price}
           </Button>
         </div>
       </div>
