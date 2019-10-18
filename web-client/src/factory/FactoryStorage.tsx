@@ -1,21 +1,29 @@
 import React from "react";
 import { IFactoryStorage, IStorageSlotEntry } from "./index.d";
 import { ResourceIcon } from "../components/ResourceIcon";
+import Tag from "antd/lib/tag";
+import styled from "styled-components";
 
 export interface FactoryStorageProps {
   storage: IFactoryStorage;
 }
 
+const ResourceContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export function FactoryStorage({ storage }: FactoryStorageProps) {
   return (
     <>
       {Object.entries(storage).map(([resource, slot]: IStorageSlotEntry) => {
-        const { count, capacity } = slot;
+        const { count, capacity, price } = slot;
         return (
-          <div key={resource}>
+          <ResourceContainer key={resource}>
+            <Tag color={"magenta"}>${price}</Tag>
             <ResourceIcon resource={resource} />
             {count} / {capacity}
-          </div>
+          </ResourceContainer>
         );
       })}
     </>
