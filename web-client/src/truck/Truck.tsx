@@ -52,7 +52,7 @@ export function Truck({ truck }) {
   const buyStyle = Object.assign(
     {},
     nextCityId
-      ? { opacity: 0.5 }
+      ? { opacity: 0.5, pointerEvents: "none" as PointerEventsProperty }
       : { opacity: 1, pointerEvents: "all" as PointerEventsProperty }
   );
 
