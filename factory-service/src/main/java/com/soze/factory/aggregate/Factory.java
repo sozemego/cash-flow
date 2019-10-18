@@ -87,7 +87,8 @@ public class Factory implements EventVisitor, CommandVisitor {
 		FactoryStorage storage = getStorage().copy();
 		Producer producer = getProducer();
 		storage.addResource(producer.getResource());
-		ResourcePriceChanged resourcePriceChanged = new ResourcePriceChanged(getId().toString(), LocalDateTime.now(), storage.getPrices());
+		ResourcePriceChanged resourcePriceChanged = new ResourcePriceChanged(
+			getId().toString(), LocalDateTime.now(), storage.getPrices());
 		return Arrays.asList(productionFinished, resourcePriceChanged);
 	}
 
@@ -109,14 +110,19 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public List<Event> visit(SellResource sellResource) {
-		FactoryStorage storage = getStorage();
+		FactoryStorage storage = getStorage().copy();
 		if (!storage.hasResource(sellResource.getResource(), sellResource.getCount())) {
 			return new ArrayList<>();
 		}
-		return Collections.singletonList(
-			new ResourceSold(getId().toString(), LocalDateTime.now(), 1, sellResource.getResource().name(),
-											 sellResource.getCount()
-			));
+		storage.removeResource(sellResource.getResource(), sellResource.getCount());
+
+		ResourceSold resourceSold = new ResourceSold(getId().toString(), LocalDateTime.now(), 1,
+																								 sellResource.getResource().name(), sellResource.getCount()
+		);
+
+		ResourcePriceChanged resourcePriceChanged = new ResourcePriceChanged(getId().toString(), LocalDateTime.now(), storage.getPrices());
+
+		return Arrays.asList(resourceSold, resourcePriceChanged);
 	}
 
 	@Override
