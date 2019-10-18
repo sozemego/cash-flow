@@ -3,6 +3,7 @@ import {
   FACTORY_ADDED,
   PRODUCTION_FINISHED,
   PRODUCTION_STARTED,
+  RESOURCE_PRICE_CHANGED,
   RESOURCE_PRODUCED,
   RESOURCE_PRODUCTION_STARTED,
   RESOURCE_SOLD,
@@ -12,7 +13,7 @@ import {
 } from "./actions";
 import { Action } from "../store/actionCreator";
 import { IFactory, IFactoryStorage } from "./index.d";
-import {transfer} from "./FactoryStorage";
+import { transfer } from "./FactoryStorage";
 
 export interface FactoryState {
   factories: IFactory[];
@@ -42,6 +43,8 @@ export function reducer(state: FactoryState = initialState, action: Action) {
       return productionStarted(state, action);
     case RESOURCE_SOLD:
       return resourceSold(state, action);
+    case RESOURCE_PRICE_CHANGED:
+      return resourcePriceChanged(state, action);
     default:
       return state;
   }
@@ -117,11 +120,9 @@ const resourceStorageCapacityChanged = produce((state, action) => {
     return;
   }
   const { storage } = factory;
-  const newStorage: IFactoryStorage = {
-
-  };
+  const newStorage: IFactoryStorage = {};
   Object.entries(capacityChanges).forEach(([resource, change]) => {
-    const slot = newStorage[resource] || {capacity: 0, count: 0, price: 0};
+    const slot = newStorage[resource] || { capacity: 0, count: 0, price: 0 };
     slot.capacity += change as number;
     newStorage[resource] = slot;
   });
@@ -138,6 +139,18 @@ const resourceSold = produce((state, action) => {
   const slot = storage[resource];
   slot.count -= count;
   storage[resource] = slot;
+});
+
+const resourcePriceChanged = produce((state, action) => {
+  const { prices, entityId } = action;
+  const factory = findFactory(state, entityId);
+  if (!factory) {
+    return;
+  }
+  const { storage } = factory;
+  Object.entries(prices).forEach(([resource, price]) => {
+    storage[resource].price = price as number;
+  });
 });
 
 function findFactory(
