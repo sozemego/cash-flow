@@ -295,9 +295,10 @@ export function FactoryResource({ truck, resource, count, price, factoryId }) {
   return (
     <BuyableResourceContainer>
       <div>
+        <Tag color={'magenta'}>${price}</Tag>
         <ResourceIcon resource={resource} />
         <span>
-          {count} - ${price}
+          {count}
         </span>
       </div>
       <div style={{ display: "flex" }}>
