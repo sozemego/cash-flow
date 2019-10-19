@@ -7,9 +7,8 @@ import Modal from "antd/lib/modal";
 import Table from "antd/lib/table";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { useGetFactories } from "../factory/selectors";
-import { IFactory, IStorageSlot, IStorageSlotEntry } from "../factory/index.d";
-import {Resource} from "../world/index.d";
-import {ResourceMap} from "../world/reducer";
+import { IFactory, IStorageSlotEntry } from "../factory/index.d";
+import { ResourceMap } from "../world/reducer";
 
 export function Header(props) {
   return (
@@ -46,7 +45,10 @@ interface ResourceData {
   factories: number;
 }
 
-function calcTotalResources(factories: IFactory[], resources: ResourceMap): ResourceDatas {
+function calcTotalResources(
+  factories: IFactory[],
+  resources: ResourceMap
+): ResourceDatas {
   const datas: ResourceDatas = {};
   factories.forEach(factory => {
     const { storage } = factory;
@@ -125,7 +127,9 @@ function Resources() {
       name: resource.name,
       price: `${resource.minPrice} - ${resource.maxPrice}`,
       countInFactories: data.count,
-      priceSaturation: `${data.averagePrice.toFixed(1)} (${(data.saturation * 100).toFixed(0)}%)`
+      priceSaturation: `${data.averagePrice.toFixed(1)} (${(
+        data.saturation * 100
+      ).toFixed(0)}%)`
     };
   });
 
