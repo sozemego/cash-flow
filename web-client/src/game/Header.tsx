@@ -7,7 +7,7 @@ import Modal from "antd/lib/modal";
 import Table from "antd/lib/table";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { useGetFactories } from "../factory/selectors";
-import { IFactory, IStorageSlotEntry } from "../factory/index.d";
+import { IFactory, IStorageSlot, IStorageSlotEntry } from "../factory/index.d";
 import { ResourceMap } from "../world/reducer";
 
 export function Header(props) {
@@ -52,7 +52,8 @@ function calcTotalResources(
   const datas: ResourceDatas = {};
   factories.forEach(factory => {
     const { storage } = factory;
-    Object.entries(storage).forEach(([resource, slot]: IStorageSlotEntry) => {
+    Object.entries(storage).forEach(([resource, slot]) => {
+      slot = slot as IStorageSlot;
       const defaultData: ResourceData = {
         count: 0,
         averagePrice: 0,

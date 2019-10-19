@@ -33,7 +33,7 @@ export function City({ city }) {
 
   const resourceCounts: ResourceCount[] = Object.entries(totalCityStorage).map(
     ([resource, slot]) => {
-      return { resource, count: slot.count };
+      return { resource, count: slot!.count };
     }
   );
 

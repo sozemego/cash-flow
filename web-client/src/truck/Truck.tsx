@@ -232,7 +232,7 @@ function getResourceList(factories: IFactory[]): ResourceFromFactory[] {
   factories.forEach(factory => {
     const { storage } = factory;
     Object.entries(storage).forEach(([resource, slot]) => {
-      resources.push({ factoryId: factory.id, resource, count: slot.count, price: slot.price });
+      resources.push({ factoryId: factory.id, resource, count: slot!.count, price: slot!.price });
     });
   });
   return resources;

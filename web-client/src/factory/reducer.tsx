@@ -64,7 +64,7 @@ const productionFinished = produce((state, action) => {
   const { producer, storage } = factory;
   const { resource } = producer;
   const slot = storage[resource];
-  slot.count += 1;
+  slot!.count += 1;
   factory.producer.productionStartTime = -1;
 });
 
@@ -84,8 +84,8 @@ const resourceProduced = produce((state, action) => {
     return state;
   }
   const { storage } = factory;
-  const count = storage.resources[resource] || 0;
-  storage.resources[resource] = count + 1;
+  const slot = storage[resource];
+  slot.count += 1;
   factory.producer.productionStartTime = -1;
 });
 
@@ -104,8 +104,9 @@ const storageContentChanged = produce((state, action) => {
   if (!factory) {
     return;
   }
-  const currentCount = factory.storage.resources[resource] || 0;
-  factory.storage.resources[resource] = currentCount + change;
+  const { storage } = factory;
+  const slot = storage[resource];
+  slot.count += 1;
 });
 
 const storageCapacityChanged = produce((state, action) => {

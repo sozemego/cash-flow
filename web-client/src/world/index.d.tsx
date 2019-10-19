@@ -1,5 +1,10 @@
+export enum ResourceName {
+  WOOD = "WOOD",
+  STONE = "STONE"
+}
+
 export interface Resource {
-  name: string;
+  name: ResourceName;
   minPrice: number;
   maxPrice: number;
 }

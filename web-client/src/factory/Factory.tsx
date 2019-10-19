@@ -15,7 +15,7 @@ import { Modal, Tooltip } from "antd";
 import { Debug } from "../components/Debug";
 import { Events } from "../components/Events";
 import { FactoryEvent, IFactory } from "./index.d";
-import {FactoryStorage} from "./FactoryStorage";
+import { FactoryStorage } from "./FactoryStorage";
 
 const Header = styled.div`
   display: flex;

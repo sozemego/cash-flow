@@ -1,8 +1,9 @@
 import React from "react";
-import { IFactoryStorage, IStorageSlotEntry } from "./index.d";
+import { IFactoryStorage, IStorageSlot, IStorageSlotEntry } from "./index.d";
 import { ResourceIcon } from "../components/ResourceIcon";
 import Tag from "antd/lib/tag";
 import styled from "styled-components";
+import { ResourceName } from "../world/index.d";
 
 export interface FactoryStorageProps {
   storage: IFactoryStorage;
@@ -16,8 +17,8 @@ const ResourceContainer = styled.div`
 export function FactoryStorage({ storage }: FactoryStorageProps) {
   return (
     <>
-      {Object.entries(storage).map(([resource, slot]: IStorageSlotEntry) => {
-        const { count, capacity, price } = slot;
+      {Object.entries(storage).map(([resource, slot]) => {
+        const { count, capacity, price } = slot as IStorageSlot;
         return (
           <ResourceContainer key={resource}>
             <Tag color={"magenta"}>${price}</Tag>
@@ -38,15 +39,14 @@ export function transfer(
   oldStorage: IFactoryStorage,
   newStorage: IFactoryStorage
 ) {
-  const resources = oldStorage.resources;
-  Object.entries(resources).forEach(([resource, count]) => {
-    addResource(newStorage, resource, count);
+  Object.entries(oldStorage).forEach(([resource, slot]) => {
+    addSlot(newStorage, slot as IStorageSlot);
   });
 }
 
 export function getRemainingCapacity(
   storage: IFactoryStorage,
-  resource: string
+  resource: ResourceName
 ): number {
   const remainingCapacity =
     getCapacity(storage, resource) - getCapacityTaken(storage, resource);
@@ -58,25 +58,34 @@ export function getRemainingCapacity(
 
 export function getCapacity(
   storage: IFactoryStorage,
-  resource: string
+  resource: ResourceName
 ): number {
-  const { capacities } = storage;
-  return capacities[resource] || 0;
+  const slot = storage[resource];
+  if (!slot) {
+    return 0;
+  }
+  return slot.capacity;
 }
 
 export function getCapacityTaken(
   storage: IFactoryStorage,
   resource: string
 ): number {
-  const { resources } = storage;
-  return resources[resource] || 0;
+  const slot = storage[resource];
+  if (!slot) {
+    return 0;
+  }
+  return slot.count;
 }
 
-export function addResource(storage, resource, count = 1) {
-  const remainingCapacity = getRemainingCapacity(storage, resource);
-  const countToAdd = Math.min(remainingCapacity, count);
-  const previousCount = storage.resources[resource] || 0;
-  storage.resources[resource] = previousCount + countToAdd;
+export function addSlot(storage: IFactoryStorage, slot: IStorageSlot) {
+  const currentSlot = storage[slot.resource];
+  if (!currentSlot) {
+    storage[slot.resource] = slot;
+  } else {
+    currentSlot.capacity += slot.capacity;
+    currentSlot.count += slot.count;
+  }
 }
 
 /**
@@ -86,14 +95,17 @@ export function addResource(storage, resource, count = 1) {
 export function combine(storages: IFactoryStorage[]): IFactoryStorage {
   const totalStorage: IFactoryStorage = {};
   for (let storage of storages) {
-    Object.entries(storage).forEach(([resource, slot]: IStorageSlotEntry) => {
-      const totalSlot = totalStorage[resource] || {
+    Object.values(storage).forEach(slot => {
+      slot = slot as IStorageSlot; //TODO come back here for this garbage
+      const { resource, capacity, count } = slot;
+      const totalSlot: IStorageSlot = totalStorage[resource] || {
+        resource,
         count: 0,
         capacity: 0,
         price: 0
       };
-      totalSlot.count += slot.count;
-      totalSlot.capacity += slot.capacity;
+      totalSlot.count += count;
+      totalSlot.capacity += capacity;
       totalStorage[resource] = totalSlot;
     });
   }
