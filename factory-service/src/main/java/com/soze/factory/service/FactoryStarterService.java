@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Profile("!test")
@@ -50,11 +51,11 @@ public class FactoryStarterService {
 		CityDTO wroclaw = remoteWorldService.getCityByName("Wroclaw");
 		CityDTO warsaw = remoteWorldService.getCityByName("Warsaw");
 
-		List<Command> commands1 = templateLoader.getFactoryCommandsByTemplateId("FORESTER", wroclaw.id);
+		List<Command> commands1 = templateLoader.getFactoryCommandsByTemplateId(UUID.randomUUID(),"FORESTER", wroclaw.id);
 		commands1.forEach(command -> command.accept(factoryCommandService));
-		List<Command> commands2 = templateLoader.getFactoryCommandsByTemplateId("FORESTER", wroclaw.id);
+		List<Command> commands2 = templateLoader.getFactoryCommandsByTemplateId(UUID.randomUUID(),"FORESTER", wroclaw.id);
 		commands2.forEach(command -> command.accept(factoryCommandService));
-		List<Command> commands3 = templateLoader.getFactoryCommandsByTemplateId("FORESTER", warsaw.id);
+		List<Command> commands3 = templateLoader.getFactoryCommandsByTemplateId(UUID.randomUUID(),"FORESTER", warsaw.id);
 		commands3.forEach(command -> command.accept(factoryCommandService));
 	}
 

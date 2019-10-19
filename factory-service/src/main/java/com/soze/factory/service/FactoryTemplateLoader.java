@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.soze.common.dto.Resource;
 import com.soze.common.json.JsonUtils;
 import com.soze.factory.command.AddProductionLine;
-import com.soze.factory.command.ChangeStorageCapacity;
+import com.soze.factory.command.ChangeResourceStorageCapacity;
 import com.soze.factory.command.Command;
 import com.soze.factory.command.CreateFactory;
 import org.slf4j.Logger;
@@ -44,20 +44,26 @@ public class FactoryTemplateLoader {
 	 * in order to create a initial version of factory with this templateId.
 	 * Since factory cannot exist without a city, it is required for its creation.
 	 */
-	public List<Command> getFactoryCommandsByTemplateId(String id, String cityId) {
-		JsonNode root = findRootById(Objects.requireNonNull(id));
+	public List<Command> getFactoryCommandsByTemplateId(UUID factoryId, String templateId, String cityId) {
+		Objects.requireNonNull(factoryId);
+		Objects.requireNonNull(cityId);
+		JsonNode root = findRootById(Objects.requireNonNull(templateId));
 		if (root == null) {
-			throw new IllegalArgumentException("Did not find template by id " + id);
+			throw new IllegalArgumentException("Did not find template by id " + templateId);
 		}
 
-		UUID factoryId = UUID.randomUUID();
 		List<Command> commands = new ArrayList<>();
 		String name = root.get("name").asText();
 		String texture = root.get("texture").asText();
 		commands.add(new CreateFactory(factoryId, name, texture, cityId));
-		JsonNode storage = root.get("storage");
-		int capacity = storage.get("capacity").asInt();
-		commands.add(new ChangeStorageCapacity(factoryId, capacity));
+
+		Map<Resource, Integer> capacities = new HashMap<>();
+		JsonNode storage = root.get("storage").get("capacities");
+		storage.fields().forEachRemaining((field) -> {
+			capacities.put(Resource.valueOf(field.getKey()), field.getValue().asInt());
+		});
+		commands.add(new ChangeResourceStorageCapacity(factoryId, capacities));
+
 		JsonNode producer = root.get("producer");
 		Resource resource = Resource.valueOf(producer.get("resource").asText());
 		long time = producer.get("time").asLong();

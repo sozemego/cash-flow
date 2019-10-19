@@ -6,6 +6,7 @@ import com.soze.common.dto.Resource;
 import com.soze.common.dto.SellResultDTO;
 import com.soze.factory.FactoryConverter;
 import com.soze.factory.aggregate.Factory;
+import com.soze.factory.command.Command;
 import com.soze.factory.command.SellResource;
 import com.soze.factory.event.Event;
 import com.soze.factory.repository.FactoryRepository;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -99,9 +101,20 @@ public class FactoryController implements FactoryServiceClient {
 	}
 
 	@GetMapping("/events")
-	public List<Event> getEvents(@RequestParam String id) {
+	public List<Event> getEvents(@RequestParam("id") String id) {
 		LOG.info("Called getEvents, id = {}", id);
 		return eventStore.getEventsForEntity(id);
+	}
+
+	@PostMapping(path = "/construct")
+	public FactoryDTO constructFactory(@RequestParam("templateId") String templateId, @RequestParam("cityId") String cityId) {
+		UUID factoryId = UUID.randomUUID();
+		LOG.info("Called constructFactory, templateId = {}, cityId = {}", templateId, cityId);
+		List<Command> commands = factoryTemplateLoader.getFactoryCommandsByTemplateId(factoryId, templateId, cityId);
+		commands.forEach(command -> command.accept(factoryCommandService));
+
+		Optional<Factory> factory = factoryRepository.findById(factoryId);
+		return factoryConverter.convert(factory.get());
 	}
 
 }
