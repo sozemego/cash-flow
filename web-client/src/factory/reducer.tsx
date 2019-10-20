@@ -124,13 +124,14 @@ const resourceStorageCapacityChanged = produce((state, action) => {
     return;
   }
   const { storage } = factory;
-  const newStorage: IFactoryStorage = {};
   Object.entries(capacityChanges).forEach(([resource, change]) => {
-    const slot = newStorage[resource] || { capacity: 0, count: 0, price: 0 };
+    const slot = storage[resource] || { resource, capacity: 0, count: 0, price: 0 };
     slot.capacity += change as number;
-    newStorage[resource] = slot;
+    if (slot.capacity < slot.count) {
+      slot.count = slot.capacity;
+    }
+    storage[resource] = slot;
   });
-  transfer(storage, newStorage);
 });
 
 const resourceSold = produce((state, action) => {
