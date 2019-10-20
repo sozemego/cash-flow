@@ -124,8 +124,8 @@ public class FactoryStorage {
 			float percentTaken = slot.getCount() / (float) slot.getCapacity();
 			float percentFree = 1f - percentTaken;
 			float priceRange = resource.getMaxPrice() - resource.getMinPrice();
-			int price = resource.getMinPrice() + (int) (priceRange * percentFree);
-			slot.setPrice(price);
+			float price = (float) resource.getMinPrice() + (priceRange * percentFree);
+			slot.setPrice(Math.round(price));
 		});
 		clean();
 	}

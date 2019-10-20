@@ -101,4 +101,25 @@ class FactoryStorageTest {
 
 	}
 
+	@Test
+	public void priceCalc() {
+		Map<Resource, StorageSlot> resources = new HashMap<>();
+		resources.put(Resource.WOOD, new StorageSlot(0, 10, 0));
+		FactoryStorage factoryStorage = new FactoryStorage(resources);
+
+		Assertions.assertEquals(Resource.WOOD.getMaxPrice(), (int) factoryStorage.getPrices().get(Resource.WOOD));
+		factoryStorage.addResource(Resource.WOOD);
+		Assertions.assertEquals(Resource.WOOD.getMaxPrice(), (int) factoryStorage.getPrices().get(Resource.WOOD));
+		factoryStorage.addResource(Resource.WOOD);
+		factoryStorage.addResource(Resource.WOOD);
+		factoryStorage.addResource(Resource.WOOD);
+		factoryStorage.addResource(Resource.WOOD);
+		factoryStorage.addResource(Resource.WOOD);
+		factoryStorage.addResource(Resource.WOOD);
+		factoryStorage.addResource(Resource.WOOD);
+		factoryStorage.addResource(Resource.WOOD);
+		factoryStorage.addResource(Resource.WOOD);
+		Assertions.assertEquals(Resource.WOOD.getMinPrice(), (int) factoryStorage.getPrices().get(Resource.WOOD));
+	}
+
 }
