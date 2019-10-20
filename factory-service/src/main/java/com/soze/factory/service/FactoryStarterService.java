@@ -27,18 +27,15 @@ public class FactoryStarterService {
 	private final FactoryTemplateLoader templateLoader;
 	private final FactoryCommandService factoryCommandService;
 	private final FactoryRepository factoryRepository;
-	private final ApplicationEventPublisher eventPublisher;
 
 	@Autowired
 	public FactoryStarterService(RemoteWorldService remoteWorldService, FactoryTemplateLoader templateLoader,
-															 FactoryCommandService factoryCommandService, FactoryRepository factoryRepository,
-															 ApplicationEventPublisher eventPublisher
+															 FactoryCommandService factoryCommandService, FactoryRepository factoryRepository
 															) {
 		this.remoteWorldService = remoteWorldService;
 		this.templateLoader = templateLoader;
 		this.factoryCommandService = factoryCommandService;
 		this.factoryRepository = factoryRepository;
-		this.eventPublisher = eventPublisher;
 	}
 
 	@EventListener
@@ -50,6 +47,7 @@ public class FactoryStarterService {
 		}
 		CityDTO wroclaw = remoteWorldService.getCityByName("Wroclaw");
 		CityDTO warsaw = remoteWorldService.getCityByName("Warsaw");
+		CityDTO opole = remoteWorldService.getCityByName("Opole");
 
 		List<Command> commands1 = templateLoader.getFactoryCommandsByTemplateId(UUID.randomUUID(),"FORESTER", wroclaw.id);
 		commands1.forEach(command -> command.accept(factoryCommandService));
@@ -57,6 +55,8 @@ public class FactoryStarterService {
 		commands2.forEach(command -> command.accept(factoryCommandService));
 		List<Command> commands3 = templateLoader.getFactoryCommandsByTemplateId(UUID.randomUUID(),"FORESTER", warsaw.id);
 		commands3.forEach(command -> command.accept(factoryCommandService));
+		List<Command> commands4 = templateLoader.getFactoryCommandsByTemplateId(UUID.randomUUID(),"STONE_QUARRY", opole.id);
+		commands4.forEach(command -> command.accept(factoryCommandService));
 	}
 
 }
