@@ -17,38 +17,30 @@ public class WorldService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WorldService.class);
 
-	private final WorldLoader worldLoader;
-	private final List<City> cities = new ArrayList<>();
+	private final CityRepository cityRepository;
 
 	@Autowired
-	public WorldService(WorldLoader worldLoader) {
-		this.worldLoader = worldLoader;
-	}
-
-	@PostConstruct
-	public void setup() {
-		LOG.info("WorldService init...");
-		cities.addAll(worldLoader.getCities());
+	public WorldService(CityRepository cityRepository) {
+		this.cityRepository = cityRepository;
 	}
 
 	public List<City> getCities() {
-		return cities;
+		LOG.info("Called getCities");
+		Iterable<City> cities = cityRepository.findAll();
+		List<City> allCities = new ArrayList<>();
+		cities.forEach(allCities::add);
+		return allCities;
 	}
 
 	public Optional<City> getCityById(String cityId) {
 		LOG.debug("Called getCityById with id = {}", cityId);
 		Objects.requireNonNull(cityId);
-		return cities.stream()
-								 .filter(city -> cityId.equals(city.id))
-								 .findFirst();
+		return cityRepository.findById(cityId);
 	}
 
 	public Optional<City> getCityByName(String name) {
 		LOG.debug("called getCityByName with name = {}", name);
 		Objects.requireNonNull(name);
-		return cities.stream()
-								 .filter(city -> name.equals(city.name))
-								 .findFirst();
-
+		return cityRepository.getByName(name);
 	}
 }

@@ -1,0 +1,20 @@
+DROP SCHEMA IF EXISTS world CASCADE;
+
+CREATE SCHEMA world;
+
+CREATE TABLE world.city
+(
+    ID            VARCHAR PRIMARY KEY,
+    NAME          VARCHAR NOT NULL,
+    FACTORY_SLOTS INT     NOT NULL DEFAULT 0,
+    LATITUDE      FLOAT   NOT NULL,
+    LONGITUDE     FLOAT   NOT NULL
+);
+
+INSERT INTO world.city(ID, NAME, FACTORY_SLOTS, LATITUDE, LONGITUDE)
+VALUES ('Warsaw', 'Warsaw', 5, 52.2297, 21.0122),
+       ('Wroclaw', 'Wroclaw', 4, 51.1079, 17.0385),
+       ('Opole', 'Opole', 1, 50.6751, 17.9213);
+
+GRANT ALL PRIVILEGES ON SCHEMA world to "world-user";
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA world TO "world-user";
