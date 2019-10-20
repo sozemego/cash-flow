@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.soze</groupId>
+    <groupId>com.soze.cashflow</groupId>
     <artifactId>service-discovery</artifactId>
     <version>0.1.0</version>
     <name>service-discovery</name>

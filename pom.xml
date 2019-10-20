@@ -23,32 +23,7 @@
         <module>warehouse-service</module>
         <module>clock-service</module>
         <module>service-discovery</module>
-        <module>player-service</module>
     </modules>
-
-    <dependencies>
-
-    </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <artifactId>logback-core</artifactId>
-                <groupId>ch.qos.logback</groupId>
-                <version>1.3.0-alpha4</version>
-            </dependency>
-            <dependency>
-                <artifactId>logback-classic</artifactId>
-                <groupId>ch.qos.logback</groupId>
-                <version>1.3.0-alpha4</version>
-            </dependency>
-            <dependency>
-                <artifactId>slf4j-api</artifactId>
-                <groupId>org.slf4j</groupId>
-                <version>2.0.0-alpha0</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <repositories>
         <repository>

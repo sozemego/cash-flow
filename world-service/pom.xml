@@ -10,7 +10,7 @@
         <version>2.1.7.RELEASE</version> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.soze</groupId>
+    <groupId>com.soze.cashflow</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>world-service</artifactId>
     <version>0.1.0</version>
@@ -75,8 +75,8 @@
             <version>2.9.2</version>
         </dependency>
         <dependency>
+            <groupId>com.soze.cashflow</groupId>
             <artifactId>common</artifactId>
-            <groupId>com.soze</groupId>
             <scope>compile</scope>
             <version>0.1.0</version>
         </dependency>

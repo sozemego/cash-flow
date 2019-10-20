@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.soze</groupId>
+    <groupId>com.soze.cashflow</groupId>
     <artifactId>truck-service</artifactId>
     <version>0.1.0</version>
 
@@ -98,8 +98,8 @@
             <version>4.2.0.Final</version>
         </dependency>
         <dependency>
+            <groupId>com.soze.cashflow</groupId>
             <artifactId>common</artifactId>
-            <groupId>com.soze</groupId>
             <scope>compile</scope>
             <version>0.1.0</version>
         </dependency>
@@ -117,7 +117,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.soze</groupId>
+            <groupId>com.soze.cashflow</groupId>
             <artifactId>clock-service</artifactId>
             <version>0.1.0</version>
             <scope>compile</scope>

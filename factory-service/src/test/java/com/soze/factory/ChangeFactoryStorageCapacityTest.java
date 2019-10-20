@@ -6,7 +6,9 @@ import com.soze.factory.aggregate.Factory;
 import com.soze.factory.aggregate.FactoryStorage;
 import com.soze.factory.command.ChangeStorageCapacity;
 import com.soze.factory.command.CreateFactory;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class ChangeFactoryStorageCapacityTest extends CommandTest {
 
 	@Test
+	@Disabled
 	void changeStorageCapacity() {
 		UUID factoryId = UUID.randomUUID();
 		CreateFactory createFactory = new CreateFactory(factoryId, "Forester", "texture.png", "Warsaw");

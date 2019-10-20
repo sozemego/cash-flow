@@ -2,12 +2,8 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <groupId>com.soze</groupId>
-        <artifactId>cashflow</artifactId>
-        <version>0.1.0</version>
-    </parent>
 
+    <groupId>com.soze.cashflow</groupId>
     <artifactId>common</artifactId>
     <version>0.1.0</version>
 
@@ -15,6 +11,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <java.version>1.8</java.version>
         <resilience4j.version>0.17.0</resilience4j.version>
     </properties>

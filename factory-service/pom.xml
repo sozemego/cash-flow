@@ -89,8 +89,8 @@
             <version>2.9.2</version>
         </dependency>
         <dependency>
+            <groupId>com.soze.cashflow</groupId>
             <artifactId>common</artifactId>
-            <groupId>com.soze</groupId>
             <scope>compile</scope>
             <version>0.1.0</version>
         </dependency>
@@ -101,7 +101,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.soze</groupId>
+            <groupId>com.soze.cashflow</groupId>
             <artifactId>clock-service</artifactId>
             <version>0.1.0</version>
             <scope>compile</scope>
