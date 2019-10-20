@@ -2,6 +2,7 @@ import { produce } from "immer";
 import {
   FACTORY_ADDED,
   PRODUCTION_FINISHED,
+  PRODUCTION_LINE_ADDED,
   PRODUCTION_STARTED,
   RESOURCE_PRICE_CHANGED,
   RESOURCE_PRODUCED,
@@ -45,6 +46,8 @@ export function reducer(state: FactoryState = initialState, action: Action) {
       return resourceSold(state, action);
     case RESOURCE_PRICE_CHANGED:
       return resourcePriceChanged(state, action);
+    case PRODUCTION_LINE_ADDED:
+      return productionLineAdded(state, action);
     default:
       return state;
   }
@@ -152,6 +155,17 @@ const resourcePriceChanged = produce((state, action) => {
   Object.entries(prices).forEach(([resource, price]) => {
     storage[resource].price = price as number;
   });
+});
+
+const productionLineAdded = produce((state, action) => {
+  const { entityId, resource, count, time } = action;
+  const factory = findFactory(state, entityId);
+  if (!factory) {
+    return;
+  }
+  const { producer } = factory;
+  producer.resource = resource;
+  producer.time = time;
 });
 
 function findFactory(
