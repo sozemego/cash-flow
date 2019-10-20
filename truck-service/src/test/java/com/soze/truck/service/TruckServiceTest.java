@@ -3,11 +3,10 @@ package com.soze.truck.service;
 
 import com.soze.common.client.PlayerServiceClient;
 import com.soze.common.dto.*;
-import com.soze.common.message.server.ServerMessage;
-import com.soze.common.message.server.TruckTravelStarted;
 import com.soze.common.client.FactoryServiceClient;
 import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
+import com.soze.truck.domain.TruckNavigation;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.external.RemoteWorldService;
@@ -22,7 +21,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.util.HashMap;
 import java.util.List;

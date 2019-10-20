@@ -4,6 +4,7 @@ import com.soze.common.dto.StorageDTO;
 import com.soze.common.dto.TruckDTO;
 import com.soze.common.dto.TruckNavigationDTO;
 import com.soze.truck.domain.Truck;
+import com.soze.truck.domain.TruckNavigation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,42 +1,30 @@
 package com.soze.truck.repository;
 
-import com.soze.common.file.FileUtils;
-import com.soze.common.json.JsonUtils;
-import com.soze.truck.service.TruckNavigation;
+import com.soze.truck.domain.TruckNavigation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.Objects;
+import java.util.Optional;
 
-@Service
+@Repository
+@Transactional
 public class TruckNavigationRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TruckNavigationRepository.class);
+	private final TruckNavigationCrudRepository crudRepository;
 
-	private final Map<String, TruckNavigation> navigations = new HashMap<>();
-
-	private final String filename;
+	@PersistenceContext
+	private EntityManager em;
 
 	@Autowired
-	public TruckNavigationRepository(@Value("${truck.navigation.repository.file}") String filename) {
-		this.filename = filename;
-	}
-
-	@PostConstruct
-	public void setup() throws IOException {
-		LOG.info("TruckNavigationRepository init...");
-		File file = getFile();
-		List<TruckNavigation> navigations = JsonUtils.parseList(file, TruckNavigation.class);
-		LOG.info("Found {} navigations", navigations.size());
-		for (TruckNavigation navigation : navigations) {
-			this.navigations.put(navigation.truckId, navigation);
-		}
+	public TruckNavigationRepository(TruckNavigationCrudRepository crudRepository) {
+		this.crudRepository = crudRepository;
 	}
 
 	/**
@@ -45,32 +33,21 @@ public class TruckNavigationRepository {
 	 */
 	public TruckNavigation getTruckNavigation(String truckId) {
 		Objects.requireNonNull(truckId);
-		return navigations.computeIfAbsent(truckId, TruckNavigation::new);
+		Optional<TruckNavigation> navigationOptional = crudRepository.getByTruckId(truckId);
+		if (navigationOptional.isPresent()) {
+			return navigationOptional.get();
+		}
+		TruckNavigation truckNavigation = new TruckNavigation(truckId);
+		crudRepository.save(truckNavigation);
+		return truckNavigation;
 	}
 
 	public void update(TruckNavigation truckNavigation) {
-		navigations.put(truckNavigation.truckId, truckNavigation);
-		persistNavigations();
+		crudRepository.save(truckNavigation);
 	}
 
 	public void deleteAll() {
-		navigations.clear();
-		persistNavigations();
-	}
-
-	private void persistNavigations() {
-		List<TruckNavigation> navigationList = new ArrayList<>(navigations.values());
-		LOG.info("Persisting {} navigations", navigationList.size());
-		String json = JsonUtils.serialize(navigationList);
-		try {
-			FileUtils.writeToFile(getFile(), json);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private File getFile() throws IOException {
-		return FileUtils.getOrEmptyListFile(filename);
+		crudRepository.deleteAll();
 	}
 
 }

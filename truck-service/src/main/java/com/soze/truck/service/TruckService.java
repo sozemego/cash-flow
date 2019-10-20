@@ -9,6 +9,7 @@ import com.soze.common.message.server.TruckAdded;
 import com.soze.common.message.server.TruckTravelStarted;
 import com.soze.truck.domain.Storage;
 import com.soze.truck.domain.Truck;
+import com.soze.truck.domain.TruckNavigation;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.external.RemoteWorldService;
