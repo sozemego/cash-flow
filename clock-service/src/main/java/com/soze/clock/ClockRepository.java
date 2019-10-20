@@ -1,41 +1,53 @@
 package com.soze.clock;
 
-import com.soze.common.dto.Clock;
-import com.soze.common.json.JsonUtils;
-import org.apache.commons.io.FileUtils;
+import com.soze.clock.entity.Clock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.time.Instant;
-import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-@Service
+@Repository
+@Transactional
 public class ClockRepository {
+
+	@PersistenceContext
+	private EntityManager em;
 
 	private static final Logger LOG = LoggerFactory.getLogger(ClockRepository.class);
 
-	private static final String FILE = "clock.json";
+	private Clock clock;
 
-	private long startTime;
-
-	@PostConstruct
-	public void startup() throws Exception {
+	@EventListener
+	public void handleApplicationStart(ApplicationReadyEvent e) {
 		LOG.info("ClockRepository init...");
-		File file = FileUtils.getFile(FILE);
-		Map<String, Object> json = JsonUtils.parse(file, Map.class);
-
-		if ((long) json.get("startTime") == -1) {
-			startTime = Instant.now().toEpochMilli();
-			json.put("startTime", startTime);
-			FileUtils.write(FileUtils.getFile(FILE), JsonUtils.serialize(json));
+		clock = getClock();
+		if (clock.getStartTime() == 0) {
+			clock.setStartTime(System.currentTimeMillis());
+			clock = update(clock);
 		}
-		LOG.info("Loaded startTime = {}", startTime);
+		LOG.info("Loaded clock = {}", clock);
 	}
 
 	public long getStartTime() {
-		return startTime;
+		return clock.getStartTime();
+	}
+
+	public long getTimeMultiplier() {
+		return clock.getTimeMultiplier();
+	}
+
+	private Clock getClock() {
+		return em.find(Clock.class, 1);
+	}
+
+	private Clock update(Clock clock) {
+		LOG.info("Updating clock = {}", clock);
+		return em.merge(clock);
 	}
 }

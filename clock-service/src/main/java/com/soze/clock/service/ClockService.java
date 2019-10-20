@@ -3,15 +3,12 @@ package com.soze.clock.service;
 import com.soze.clock.ClockRepository;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+
 @Service
 public class ClockService {
 
 	private final ClockRepository clockRepository;
-
-	/**
-	 * Time in game is sped up by this amount relative to real time.
-	 */
-	private static final long MULTIPLIER = 60;
 
 	public ClockService(ClockRepository clockRepository) {
 		this.clockRepository = clockRepository;
@@ -22,6 +19,6 @@ public class ClockService {
 	}
 
 	public long getTimeMultiplier() {
-		return MULTIPLIER;
+		return clockRepository.getTimeMultiplier();
 	}
 }
