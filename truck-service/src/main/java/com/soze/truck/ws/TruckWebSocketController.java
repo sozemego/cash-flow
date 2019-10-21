@@ -19,6 +19,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.UUID;
+
 @Component
 public class TruckWebSocketController extends TextWebSocketHandler {
 
@@ -71,18 +73,18 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 
 			if (clientMessage.getType() == ClientMessage.ClientMessageType.TRUCK_TRAVEL_REQUEST) {
 				TruckTravelRequest truckTravelRequest = (TruckTravelRequest) clientMessage;
-				truckService.travel(truckTravelRequest.getTruckId(), truckTravelRequest.getDestinationCityId());
+				truckService.travel(UUID.fromString(truckTravelRequest.getTruckId()), truckTravelRequest.getDestinationCityId());
 			}
 
 			if (clientMessage.getType() == ClientMessage.ClientMessageType.BUY_RESOURCE_REQUEST) {
 				BuyResourceRequest buyResourceRequest = (BuyResourceRequest) clientMessage;
-				truckService.buyResource(buyResourceRequest.getTruckId(), buyResourceRequest.getFactoryId(),
+				truckService.buyResource(UUID.fromString(buyResourceRequest.getTruckId()), buyResourceRequest.getFactoryId(),
 																 buyResourceRequest.getResource(), buyResourceRequest.getCount()
 																);
 			}
 			if (clientMessage.getType() == ClientMessage.ClientMessageType.DUMP_CONTENT) {
 				DumpContent dumpContent = (DumpContent) clientMessage;
-				truckService.dump(dumpContent.getEntityId());
+				truckService.dump(UUID.fromString(dumpContent.getEntityId()));
 			}
 		} catch (Exception e) {
 			LOG.info("Exception during message handling", e);

@@ -5,10 +5,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface TruckNavigationCrudRepository extends CrudRepository<TruckNavigation, Integer> {
 
-	Optional<TruckNavigation> getByTruckId(String truckId);
+	Optional<TruckNavigation> getByTruckId(UUID truckId);
 
 }

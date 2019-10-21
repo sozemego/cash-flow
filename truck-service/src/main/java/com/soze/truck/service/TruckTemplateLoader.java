@@ -40,7 +40,7 @@ public class TruckTemplateLoader {
 		}
 
 		Truck truck = new Truck();
-		truck.setId(UUID.randomUUID().toString());
+		truck.setId(UUID.randomUUID());
 		truck.setTemplateId(id);
 		truck.setName(root.get("name").asText());
 		truck.setSpeed(root.get("speed").asInt());

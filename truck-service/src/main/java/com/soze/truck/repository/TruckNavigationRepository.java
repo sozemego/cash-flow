@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @Transactional
@@ -31,15 +32,14 @@ public class TruckNavigationRepository {
 	 * Gets {@link TruckNavigation} for a given truck.
 	 * If this truck does not have TruckNavigation, creates a new one.
 	 */
-	public TruckNavigation getTruckNavigation(String truckId) {
+	public TruckNavigation getTruckNavigation(UUID truckId) {
 		Objects.requireNonNull(truckId);
 		Optional<TruckNavigation> navigationOptional = crudRepository.getByTruckId(truckId);
 		if (navigationOptional.isPresent()) {
 			return navigationOptional.get();
 		}
 		TruckNavigation truckNavigation = new TruckNavigation(truckId);
-		crudRepository.save(truckNavigation);
-		return truckNavigation;
+		return crudRepository.save(truckNavigation);
 	}
 
 	public void update(TruckNavigation truckNavigation) {

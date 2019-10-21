@@ -1,21 +1,46 @@
 package com.soze.truck.domain;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+
+import javax.persistence.*;
+import java.util.UUID;
+
+@Entity
+@Table(name = "truck")
+@TypeDefs({@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)})
 public class Truck {
 
-	private String id;
+	@Id
+	private UUID id;
+
+	@Column(name = "template_id")
 	private String templateId;
+
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "texture")
 	private String texture;
 
+	@Type(type = "jsonb")
+	@Column(name = "storage", columnDefinition = "jsonb")
 	private Storage storage;
 
+	@Column(name = "speed")
 	private int speed;
 
-	public String getId() {
+	public Truck() {
+
+	}
+
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

@@ -25,6 +25,7 @@ import org.springframework.web.client.RestClientException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @SpringBootTest
 @Import(TruckServiceTestBeanConfiguration.class)
@@ -142,7 +143,7 @@ class TruckServiceTest {
 
 	@Test
 	public void travel_truckDoesNotExist() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel("someTruck", "cityId"));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(UUID.randomUUID(), "cityId"));
 	}
 
 	@Test
@@ -179,7 +180,7 @@ class TruckServiceTest {
 
 	@Test
 	public void buyResource_truckDoesNotExist() {
-		truckService.buyResource("someTruck", "Warsaw", Resource.WOOD, 1);
+		truckService.buyResource(UUID.randomUUID(), "Warsaw", Resource.WOOD, 1);
 	}
 
 	@Test

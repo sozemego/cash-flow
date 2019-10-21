@@ -20,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -93,7 +90,7 @@ public class TruckService {
 	/**
 	 * Sends a given truck to a given city.
 	 */
-	public void travel(String truckId, String cityId) {
+	public void travel(UUID truckId, String cityId) {
 		LOG.info("Truck {} wants to travel to {}", truckId, cityId);
 		Truck truck = getTruck(truckId).orElseThrow(
 			() -> new IllegalArgumentException("Truck with id = " + truckId + " does not exist"));
@@ -114,18 +111,18 @@ public class TruckService {
 						);
 
 		TruckTravelStarted truckTravelStarted = new TruckTravelStarted(
-			truckId, cityId, navigation.startTime, navigation.arrivalTime);
+			truckId.toString(), cityId, navigation.startTime, navigation.arrivalTime);
 		sessionRegistry.sendToAll(truckTravelStarted);
 	}
 
-	public Optional<Truck> getTruck(String truckId) {
+	public Optional<Truck> getTruck(UUID truckId) {
 		return truckRepository.findTruckById(truckId);
 	}
 
 	/**
 	 * <code>TruckId</code> buys <code>count</code> resources from factory with id <code>factoryId</code>.
 	 */
-	public void buyResource(String truckId, String factoryId, Resource resource, int count) {
+	public void buyResource(UUID truckId, String factoryId, Resource resource, int count) {
 		new BuyResourceSaga(
 			this, truckRepository, remoteFactoryService, playerService, sessionRegistry, truckId, factoryId, resource,
 			count
@@ -135,7 +132,7 @@ public class TruckService {
 	/**
 	 * Removes all content from truck.
 	 */
-	public void dump(String truckId) {
+	public void dump(UUID truckId) {
 		LOG.info("Dumping contents of truck {}", truckId);
 		Truck truck = getTruck(truckId).orElseThrow(
 			() -> new IllegalArgumentException("Truck with id = " + truckId + " does not exist"));
@@ -144,7 +141,7 @@ public class TruckService {
 		Map<Resource, Integer> resources = storage.getResources();
 		List<ServerMessage> storageContentChangedList = new ArrayList<>();
 		for (Map.Entry<Resource, Integer> entry : resources.entrySet()) {
-			storageContentChangedList.add(new StorageContentChanged(truckId, entry.getKey(), -entry.getValue()));
+			storageContentChangedList.add(new StorageContentChanged(truckId.toString(), entry.getKey(), -entry.getValue()));
 		}
 		for (ServerMessage serverMessage : storageContentChangedList) {
 			sessionRegistry.sendToAll(serverMessage);

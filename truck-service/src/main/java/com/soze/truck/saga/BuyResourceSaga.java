@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class BuyResourceSaga {
 
@@ -25,13 +26,13 @@ public class BuyResourceSaga {
 	private final RemotePlayerService playerService;
 	private final SessionRegistry sessionRegistry;
 
-	private final String truckId;
+	private final UUID truckId;
 	private final String factoryId;
 	private final Resource resource;
 	private final int count;
 
 	public BuyResourceSaga(TruckService truckService, TruckRepository truckRepository, RemoteFactoryService factoryService,
-												 RemotePlayerService playerService, SessionRegistry sessionRegistry, String truckId, String factoryId,
+												 RemotePlayerService playerService, SessionRegistry sessionRegistry, UUID truckId, String factoryId,
 												 Resource resource, int count
 												) {
 		this.truckService = truckService;
@@ -122,7 +123,7 @@ public class BuyResourceSaga {
 
 		LOG.info("Successfully bought {} of {} from {} for truck {}", count, resource, factoryId, truck.getId());
 
-		StorageContentChanged storageContentChanged = new StorageContentChanged(truckId, resource, count);
+		StorageContentChanged storageContentChanged = new StorageContentChanged(truckId.toString(), resource, count);
 		sessionRegistry.sendToAll(storageContentChanged);
 	}
 }

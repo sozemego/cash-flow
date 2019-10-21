@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.soze.common.dto.Resource;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @JsonSerialize(using = StorageSerializer.class)
 @JsonDeserialize(using = StorageDeserializer.class)
-public class Storage {
+public class Storage implements Serializable {
 
 	private final int capacity;
 	private final Map<Resource, Integer> resources = new HashMap<>();

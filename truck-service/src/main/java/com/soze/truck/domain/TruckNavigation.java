@@ -2,6 +2,7 @@ package com.soze.truck.domain;
 
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "navigation")
@@ -12,7 +13,7 @@ public class TruckNavigation {
 	public int id;
 
 	@Column(name = "truck_id")
-	public String truckId;
+	public UUID truckId;
 
 	@Column(name = "current_city_id")
 	public String currentCityId = "MOON";
@@ -29,7 +30,7 @@ public class TruckNavigation {
 	public TruckNavigation() {
 	}
 
-	public TruckNavigation(String truckId) {
+	public TruckNavigation(UUID truckId) {
 		this.truckId = truckId;
 	}
 

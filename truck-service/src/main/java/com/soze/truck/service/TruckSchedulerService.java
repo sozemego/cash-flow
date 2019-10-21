@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TruckSchedulerService {
@@ -37,7 +38,7 @@ public class TruckSchedulerService {
 		LOG.trace("checkNavigationFinish started");
 		List<Truck> trucks = truckService.getTrucks();
 		for (Truck truck : trucks) {
-			String truckId = truck.getId();
+			UUID truckId = truck.getId();
 			TruckNavigation navigation = truckNavigationService.getTruckNavigation(truckId);
 			if (navigation.nextCityId == null) {
 				continue;
@@ -47,7 +48,7 @@ public class TruckSchedulerService {
 			if (currentGameTime >= arrivalTime) {
 				LOG.trace("Truck with id = {} finished travel", truckId);
 				truckNavigationService.finishTravel(truckId);
-				sessionRegistry.sendToAll(new TruckArrived(truckId));
+				sessionRegistry.sendToAll(new TruckArrived(truckId.toString()));
 			}
 		}
 	}

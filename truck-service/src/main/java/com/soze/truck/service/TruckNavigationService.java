@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -30,23 +32,24 @@ public class TruckNavigationService {
 		this.clock = clock;
 	}
 
-	void setCityId(String truckId, String cityId) {
+	@Transactional
+	public void setCityId(UUID truckId, String cityId) {
 		LOG.info("Setting cityId for truckId = {} to cityId = {}", truckId, cityId);
 		TruckNavigation navigation = getTruckNavigation(Objects.requireNonNull(truckId));
 		navigation.currentCityId = Objects.requireNonNull(cityId);
-		repository.update(navigation);
 	}
 
-	TruckNavigation getTruckNavigation(String truckId) {
+	TruckNavigation getTruckNavigation(UUID truckId) {
 		return repository.getTruckNavigation(truckId);
 	}
 
-	String getCityIdForTruck(String truckId) {
+	String getCityIdForTruck(UUID truckId) {
 		TruckNavigation navigation = getTruckNavigation(truckId);
 		return navigation.currentCityId;
 	}
 
-	TruckNavigation travel(String truckId, String cityId, int kilometersPerHour) {
+	@Transactional
+	public TruckNavigation travel(UUID truckId, String cityId, int kilometersPerHour) {
 		TruckNavigation navigation = getTruckNavigation(truckId);
 		if (navigation.nextCityId != null) {
 			throw new IllegalStateException(truckId + " is already travelling!");
@@ -59,11 +62,11 @@ public class TruckNavigationService {
 		long timeMinutes = distanceMeters / metersPerMinute;
 		long timeMs = TimeUnit.MINUTES.toMillis(timeMinutes);
 		navigation.arrivalTime = navigation.startTime + timeMs;
-		repository.update(navigation);
 		return navigation;
 	}
 
-	void finishTravel(String truckId) {
+	@Transactional
+	public void finishTravel(UUID truckId) {
 		LOG.info("Finishing travel for truck {}", truckId);
 		TruckNavigation navigation = getTruckNavigation(truckId);
 		if (navigation.nextCityId == null) {
@@ -73,7 +76,6 @@ public class TruckNavigationService {
 		navigation.nextCityId = null;
 		navigation.arrivalTime = -1;
 		navigation.startTime = -1;
-		repository.update(navigation);
 	}
 
 	/**
