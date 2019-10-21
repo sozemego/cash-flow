@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 	@JsonSubTypes.Type(value = ResourcePriceChanged.class, name = "RESOURCE_PRICE_CHANGED"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Event {
+public abstract class Event implements Serializable {
 
 	public String entityId;
 	public LocalDateTime timestamp;

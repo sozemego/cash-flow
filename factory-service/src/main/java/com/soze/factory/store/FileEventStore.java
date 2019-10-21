@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -28,7 +25,7 @@ public class FileEventStore implements EventStore {
 
 	private static final String FILE = "factory-store.json";
 
-	private final Map<String, List<Event>> events = new ConcurrentHashMap<>();
+	private final Map<UUID, List<Event>> events = new ConcurrentHashMap<>();
 
 	private final EventUpcastService upcaster;
 
@@ -46,7 +43,7 @@ public class FileEventStore implements EventStore {
 		for (Event event : eventList) {
 			Event upcastEvent = upcaster.upcast(event);
 			LOG.trace("Storing event in memory = {}", upcastEvent);
-			List<Event> entityEvents = events.computeIfAbsent(upcastEvent.entityId, (id) -> new ArrayList<>());
+			List<Event> entityEvents = events.computeIfAbsent(UUID.fromString(upcastEvent.entityId), (id) -> new ArrayList<>());
 			entityEvents.add(upcastEvent);
 		}
 	}
@@ -54,18 +51,18 @@ public class FileEventStore implements EventStore {
 	@Override
 	public void handleEvent(Event event) {
 		LOG.info("Handling event = {}", event);
-		List<Event> entityEvents = events.computeIfAbsent(event.entityId, (id) -> new ArrayList<>());
+		List<Event> entityEvents = events.computeIfAbsent(UUID.fromString(event.entityId), (id) -> new ArrayList<>());
 		entityEvents.add(event);
 		persistEvents();
 	}
 
 	@Override
-	public List<Event> getEventsForEntity(String entityId) {
+	public List<Event> getEventsForEntity(UUID entityId) {
 		return events.getOrDefault(entityId, new ArrayList<>());
 	}
 
 	@Override
-	public List<String> getAllIds() {
+	public List<UUID> getAllIds() {
 		return new ArrayList<>(events.keySet());
 	}
 

@@ -6,6 +6,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Event store for factory service.
@@ -17,9 +18,9 @@ public interface EventStore {
 	@Order(value = Ordered.HIGHEST_PRECEDENCE)
 	void handleEvent(Event event);
 
-	List<Event> getEventsForEntity(String entityId);
+	List<Event> getEventsForEntity(UUID entityId);
 
-	List<String> getAllIds();
+	List<UUID> getAllIds();
 
 	int count();
 

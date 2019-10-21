@@ -1,0 +1,12 @@
+DROP SCHEMA IF EXISTS factory CASCADE;
+
+CREATE SCHEMA factory;
+
+CREATE TABLE factory.factory_event (
+    ID UUID PRIMARY KEY,
+    EVENT JSONB NOT NULL
+);
+
+GRANT ALL PRIVILEGES ON SCHEMA factory to "factory-user";
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA factory TO "factory-user";
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA factory TO "factory-user";

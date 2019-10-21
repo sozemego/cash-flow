@@ -103,7 +103,7 @@ public class FactoryController implements FactoryServiceClient {
 	@GetMapping("/events")
 	public List<Event> getEvents(@RequestParam("id") String id) {
 		LOG.info("Called getEvents, id = {}", id);
-		return eventStore.getEventsForEntity(id);
+		return eventStore.getEventsForEntity(UUID.fromString(id));
 	}
 
 	@PostMapping(path = "/construct")

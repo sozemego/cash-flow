@@ -26,7 +26,7 @@ public class FactoryRepository {
 
 	public Optional<Factory> findById(UUID factoryId) {
 		LOG.trace("Searching for {}", factoryId);
-		List<Event> events = eventStore.getEventsForEntity(factoryId.toString());
+		List<Event> events = eventStore.getEventsForEntity(factoryId);
 		if (events.isEmpty()) {
 			return Optional.empty();
 		}
@@ -49,7 +49,7 @@ public class FactoryRepository {
 	public List<Factory> getAll() {
 		return eventStore.getAllIds()
 										 .stream()
-										 .map(id -> findById(UUID.fromString(id)))
+										 .map(this::findById)
 										 .filter(Optional::isPresent)
 										 .map(Optional::get)
 										 .collect(Collectors.toList());
