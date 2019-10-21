@@ -13,8 +13,7 @@ import {
   STORAGE_CONTENT_CHANGED
 } from "./actions";
 import { Action } from "../store/actionCreator";
-import { IFactory, IFactoryStorage } from "./index.d";
-import { transfer } from "./FactoryStorage";
+import { IFactory } from "./index.d";
 
 export interface FactoryState {
   factories: IFactory[];
@@ -109,7 +108,7 @@ const storageContentChanged = produce((state, action) => {
   }
   const { storage } = factory;
   const slot = storage[resource];
-  slot.count += 1;
+  slot.count += change;
 });
 
 const storageCapacityChanged = produce((state, action) => {
@@ -159,7 +158,7 @@ const resourcePriceChanged = produce((state, action) => {
 });
 
 const productionLineAdded = produce((state, action) => {
-  const { entityId, resource, count, time } = action;
+  const { entityId, resource, time } = action;
   const factory = findFactory(state, entityId);
   if (!factory) {
     return;

@@ -1,9 +1,8 @@
 import React from "react";
-import { IFactoryStorage, IStorageSlot, IStorageSlotEntry } from "./index.d";
+import { IFactoryStorage, IStorageSlot } from "./index.d";
 import { ResourceIcon } from "../components/ResourceIcon";
 import Tag from "antd/lib/tag";
 import styled from "styled-components";
-import { ResourceName } from "../world/index.d";
 
 export interface FactoryStorageProps {
   storage: IFactoryStorage;
@@ -29,63 +28,6 @@ export function FactoryStorage({ storage }: FactoryStorageProps) {
       })}
     </>
   );
-}
-
-/**
- * Transfers all resources from oldStorage to newStorage.
- * Drops any resources that will not fit in the newStorage.
- */
-export function transfer(
-  oldStorage: IFactoryStorage,
-  newStorage: IFactoryStorage
-) {
-  Object.entries(oldStorage).forEach(([resource, slot]) => {
-    addSlot(newStorage, slot as IStorageSlot);
-  });
-}
-
-export function getRemainingCapacity(
-  storage: IFactoryStorage,
-  resource: ResourceName
-): number {
-  const remainingCapacity =
-    getCapacity(storage, resource) - getCapacityTaken(storage, resource);
-  if (isNaN(remainingCapacity)) {
-    throw new Error("Remaining capacity cannot be NaN");
-  }
-  return remainingCapacity;
-}
-
-export function getCapacity(
-  storage: IFactoryStorage,
-  resource: ResourceName
-): number {
-  const slot = storage[resource];
-  if (!slot) {
-    return 0;
-  }
-  return slot.capacity;
-}
-
-export function getCapacityTaken(
-  storage: IFactoryStorage,
-  resource: string
-): number {
-  const slot = storage[resource];
-  if (!slot) {
-    return 0;
-  }
-  return slot.count;
-}
-
-export function addSlot(storage: IFactoryStorage, slot: IStorageSlot) {
-  const currentSlot = storage[slot.resource];
-  if (!currentSlot) {
-    storage[slot.resource] = slot;
-  } else {
-    currentSlot.capacity += slot.capacity;
-    currentSlot.count += slot.count;
-  }
 }
 
 /**
