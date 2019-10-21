@@ -67,3 +67,7 @@ module.exports = {
 process.on("exit", code => {
   logger.info(`About to exit with code: ${code}`);
 });
+
+process.on("unhandledRejection", (error: Error) => {
+  logger.warn(`Unhandled rejection ${error.stack}`);
+});

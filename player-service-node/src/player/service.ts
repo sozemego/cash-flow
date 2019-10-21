@@ -1,10 +1,10 @@
-import * as fs from "fs";
 import { registry } from "./socketRegistry";
+import { getPlayer, updatePlayer } from "./repository";
 const logger = require("../logger").namedLogger("player-service");
 
 interface PlayerService {
-  transfer: (number) => TransferResult;
-  getPlayer: () => Player;
+  transfer: (number) => Promise<TransferResult>;
+  getPlayer: () => Promise<Player>;
 }
 
 interface TransferResult {
@@ -12,15 +12,13 @@ interface TransferResult {
   current: number;
 }
 
-interface Player {
+export interface Player {
   name: string;
   cash: number;
 }
 
-const playerString = fs.readFileSync("player.json", { encoding: "utf-8" });
-const player: Player = JSON.parse(playerString);
-
-function transfer(amount): TransferResult {
+async function transfer(amount): Promise<TransferResult> {
+  const player = await getPlayer();
   logger.info(
     `Attempting to transfer ${amount} to player ${JSON.stringify(player)}`
   );
@@ -32,14 +30,9 @@ function transfer(amount): TransferResult {
   }
 
   player.cash += amount;
-  savePlayer();
+  await updatePlayer(player);
   syncCashChange(amount);
   return { amountTransferred: amount, current: player.cash };
-}
-
-function savePlayer() {
-  logger.info("Saving player");
-  fs.writeFileSync("player.json", JSON.stringify(player));
 }
 
 function syncCashChange(amount) {
@@ -51,6 +44,6 @@ function syncCashChange(amount) {
 }
 
 export const service: PlayerService = {
-  getPlayer: () => player,
+  getPlayer,
   transfer
 };

@@ -17,13 +17,13 @@ router.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-router.get("/player", (req: Request, res: Response) => {
-  const player = service.getPlayer();
+router.get("/player", async (req: Request, res: Response) => {
+  const player = await service.getPlayer();
   logger.info(`Returning ${JSON.stringify(player)}`);
   res.send(player);
 });
 
-router.post("/transfer", (req: Request, res: Response) => {
+router.post("/transfer", async (req: Request, res: Response) => {
   const { query } = req;
   const amount = Number(query.amount);
   logger.info(`Call to transfer with ${amount}`);
@@ -32,6 +32,6 @@ router.post("/transfer", (req: Request, res: Response) => {
     return;
   }
 
-  const transferResult = service.transfer(amount);
+  const transferResult = await service.transfer(amount);
   res.json(transferResult);
 });
