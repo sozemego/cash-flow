@@ -2,8 +2,9 @@ DROP SCHEMA IF EXISTS factory CASCADE;
 
 CREATE SCHEMA factory;
 
-CREATE TABLE factory.factory_event (
-    ID UUID PRIMARY KEY,
+CREATE TABLE factory.factory_event
+(
+    ID    UUID PRIMARY KEY,
     EVENT JSONB NOT NULL
 );
 

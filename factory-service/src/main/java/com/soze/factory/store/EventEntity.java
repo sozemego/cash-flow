@@ -6,16 +6,22 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
 @Table(name = "factory_event")
 @TypeDefs({@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)})
-public class EventEntity {
+@SqlResultSetMapping(
+	name = "Mapping",
+	classes = @ConstructorResult(
+		targetClass = EventEntity.class,
+		columns = {
+			@ColumnResult(name = "id", type = UUID.class),
+			@ColumnResult(name = "event", type = Event.class),
+		}))
+public class EventEntity implements Serializable {
 
 	@Id
 	@Type(type = "pg-uuid")
@@ -28,6 +34,11 @@ public class EventEntity {
 
 	public EventEntity() {
 
+	}
+
+	public EventEntity(UUID id, Event event) {
+		this.id = id;
+		this.event = event;
 	}
 
 	public UUID getId() {
