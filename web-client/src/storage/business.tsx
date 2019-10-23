@@ -5,15 +5,15 @@
 export function transfer(oldStorage, newStorage) {
   const resources = oldStorage.resources;
   Object.entries(resources).forEach(([resource, count]) => {
-  	addResource(newStorage, resource, count as number);
+    addResource(newStorage, resource, count as number);
   });
 }
 
 export function getRemainingCapacity(storage) {
-	const remainingCapacity = storage.capacity - getCapacityTaken(storage);
-	if (isNaN(remainingCapacity)) {
-		throw new Error('Remaining capacity cannot be NaN');
-	}
+  const remainingCapacity = storage.capacity - getCapacityTaken(storage);
+  if (isNaN(remainingCapacity)) {
+    throw new Error("Remaining capacity cannot be NaN");
+  }
   return remainingCapacity;
 }
 
@@ -25,9 +25,8 @@ export function getCapacityTaken(storage) {
 }
 
 export function addResource(storage, resource, count = 1) {
-	const remainingCapacity = getRemainingCapacity(storage);
-	const countToAdd = Math.min(remainingCapacity, count);
-	const previousCount = storage.resources[resource] || 0;
-	storage.resources[resource] = previousCount + countToAdd;
+  const remainingCapacity = getRemainingCapacity(storage);
+  const countToAdd = Math.min(remainingCapacity, count);
+  const previousCount = storage.resources[resource] || 0;
+  storage.resources[resource] = previousCount + countToAdd;
 }
-

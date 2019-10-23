@@ -2,7 +2,7 @@ export function getCurrentGameDate(clock) {
   const { multiplier, startTime } = clock;
   const now = Date.now();
   const timePassed = now - startTime;
-  const currentTime = startTime + (timePassed * multiplier);
+  const currentTime = startTime + timePassed * multiplier;
   return new Date(currentTime);
 }
 
@@ -23,7 +23,9 @@ export function getFormattedDateTime(date) {
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
 
-  return `${format(dayOfMonth)}-${format(month)}-${format(year)} ${format(hour)}:${format(minute)}`;
+  return `${format(dayOfMonth)}-${format(month)}-${format(year)} ${format(
+    hour
+  )}:${format(minute)}`;
 }
 
 export function getFormattedTime(date) {

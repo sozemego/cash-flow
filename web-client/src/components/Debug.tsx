@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 export function Debug({ obj, style = {} }) {
   const debug = JSON.stringify(obj, null, 2);

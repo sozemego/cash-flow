@@ -14,7 +14,7 @@ export function Player() {
     fetch(PLAYER_SERVICE_URL + "/player")
       .then(response => response.json(), console.log)
       .then(payload => dispatch(playerAdded(payload)));
-  }, /* eslint-disable-line */[]);
+  }, /* eslint-disable-line */ []);
 
   return (
     <div>

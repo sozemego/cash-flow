@@ -9,8 +9,8 @@ export const READY_STATE_TABLE = {
 };
 
 export interface UseWebSocket {
-  socket: WebSocket,
-  readyState: number
+  socket: WebSocket;
+  readyState: number;
 }
 
 /**

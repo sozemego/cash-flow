@@ -232,7 +232,12 @@ function getResourceList(factories: IFactory[]): ResourceFromFactory[] {
   factories.forEach(factory => {
     const { storage } = factory;
     Object.entries(storage).forEach(([resource, slot]) => {
-      resources.push({ factoryId: factory.id, resource, count: slot!.count, price: slot!.price });
+      resources.push({
+        factoryId: factory.id,
+        resource,
+        count: slot!.count,
+        price: slot!.price
+      });
     });
   });
   return resources;
@@ -295,11 +300,9 @@ export function FactoryResource({ truck, resource, count, price, factoryId }) {
   return (
     <BuyableResourceContainer>
       <div>
-        <Tag color={'magenta'}>${price}</Tag>
+        <Tag color={"magenta"}>${price}</Tag>
         <ResourceIcon resource={resource} />
-        <span>
-          {count}
-        </span>
+        <span>{count}</span>
       </div>
       <div style={{ display: "flex" }}>
         <InputNumber

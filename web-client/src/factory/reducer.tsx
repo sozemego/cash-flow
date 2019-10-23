@@ -124,7 +124,12 @@ const resourceStorageCapacityChanged = produce((state, action) => {
   }
   const { storage } = factory;
   Object.entries(capacityChanges).forEach(([resource, change]) => {
-    const slot = storage[resource] || { resource, capacity: 0, count: 0, price: 0 };
+    const slot = storage[resource] || {
+      resource,
+      capacity: 0,
+      count: 0,
+      price: 0
+    };
     slot.capacity += change as number;
     if (slot.capacity < slot.count) {
       slot.count = slot.capacity;

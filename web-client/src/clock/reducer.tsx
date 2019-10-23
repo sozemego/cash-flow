@@ -3,7 +3,7 @@ import { CLOCK_FETCHED } from "./actions";
 
 export interface ClockState {
   multiplier: number;
-  startTime: number
+  startTime: number;
 }
 
 const initialState: ClockState = {

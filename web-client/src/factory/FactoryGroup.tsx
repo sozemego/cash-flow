@@ -17,7 +17,7 @@ const Header = styled.div`
 `;
 
 interface GroupButtonProps {
-    selected: boolean
+  selected: boolean;
 }
 
 const GroupButton = styled.button<GroupButtonProps>`
@@ -137,7 +137,7 @@ export function FactoryByCity({ factories, cities }) {
     factoryByCity[factory.cityId] = factories;
   });
 
-  return cities.map((city) => {
+  return cities.map(city => {
     const factories = factoryByCity[city.id] || [];
     if (factories.length === 0) {
       return null;

@@ -6,5 +6,5 @@ export function CityInline({ cityId }) {
   const cities = useGetCities();
   const city = cities[cityId] || {};
 
-  return <Tag color={'gold'}>{city.name}</Tag>;
+  return <Tag color={"gold"}>{city.name}</Tag>;
 }
