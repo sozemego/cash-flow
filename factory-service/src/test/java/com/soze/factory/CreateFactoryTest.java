@@ -17,7 +17,6 @@ import java.util.UUID;
 
 
 @SpringBootTest
-@ActiveProfiles({"test", "memory-store"})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class CreateFactoryTest extends CommandTest {
 
