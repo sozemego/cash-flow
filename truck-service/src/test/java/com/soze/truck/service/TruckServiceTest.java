@@ -22,10 +22,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClientException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @SpringBootTest
 @Import(TruckServiceTestBeanConfiguration.class)
@@ -191,8 +188,8 @@ class TruckServiceTest {
 
 		this.truckService.addTruck(truck, "Warsaw");
 		truckService.buyResource(truck.getId(), "Warsaw", Resource.WOOD, 5);
-
-		Assertions.assertEquals(0, truckStorage.getCapacityTaken());
+		Optional<Truck> updatedTruck = truckService.getTruck(truck.getId());
+		Assertions.assertEquals(0, updatedTruck.get().getStorage().getCapacityTaken());
 	}
 
 	@Test
@@ -207,8 +204,8 @@ class TruckServiceTest {
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenThrow(new RestClientException("Not found!"));
 
 		truckService.buyResource(truck.getId(), "factoryId", Resource.WOOD, 5);
-
-		Assertions.assertEquals(0, truckStorage.getCapacityTaken());
+		Optional<Truck> updatedTruck = truckService.getTruck(truck.getId());
+		Assertions.assertEquals(0, updatedTruck.get().getStorage().getCapacityTaken());
 	}
 
 	@Test
@@ -228,8 +225,8 @@ class TruckServiceTest {
 		Mockito.when(factoryServiceClient.getFactory(factoryId)).thenReturn(factory);
 
 		truckService.buyResource(truck.getId(), "factoryId", Resource.WOOD, 5);
-
-		Assertions.assertEquals(0, truckStorage.getCapacityTaken());
+		Optional<Truck> updatedTruck = truckService.getTruck(truck.getId());
+		Assertions.assertEquals(0, updatedTruck.get().getStorage().getCapacityTaken());
 	}
 
 	@Test
@@ -260,7 +257,8 @@ class TruckServiceTest {
 		truckService.buyResource(truck.getId(), factoryId, Resource.WOOD, count);
 
 		Mockito.verify(factoryServiceClient, Mockito.times(1)).sell(factoryId, Resource.WOOD.name(), count);
-		Assertions.assertEquals(5, truckStorage.getCapacityTaken());
+		Optional<Truck> updatedTruck = truckService.getTruck(truck.getId());
+		Assertions.assertEquals(5, updatedTruck.get().getStorage().getCapacityTaken());
 	}
 
 	@Test
@@ -287,7 +285,8 @@ class TruckServiceTest {
 		Mockito.when(playerServiceClient.getPlayer()).thenReturn(playerDTO);
 
 		truckService.buyResource(truck.getId(), factoryId, Resource.WOOD, count);
-		Assertions.assertEquals(0, truckStorage.getCapacityTaken());
+		Optional<Truck> updatedTruck = truckService.getTruck(truck.getId());
+		Assertions.assertEquals(0, updatedTruck.get().getStorage().getCapacityTaken());
 	}
 
 }
