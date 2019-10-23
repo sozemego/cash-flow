@@ -17,11 +17,9 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @SpringBootTest
-@ActiveProfiles({"test", "memory-store"})
 public class ChangeFactoryStorageCapacityTest extends CommandTest {
 
 	@Test
-	@Disabled
 	void changeStorageCapacity() {
 		UUID factoryId = UUID.randomUUID();
 		CreateFactory createFactory = new CreateFactory(factoryId, "Forester", "texture.png", "Warsaw");

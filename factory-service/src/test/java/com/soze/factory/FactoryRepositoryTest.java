@@ -8,12 +8,15 @@ import com.soze.factory.store.InMemoryEventStore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-
+@SpringBootTest
+@ActiveProfiles({"test", "database-store"})
 class FactoryRepositoryTest {
 
 	private FactoryRepository factoryRepository;
