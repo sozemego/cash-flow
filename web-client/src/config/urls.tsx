@@ -7,3 +7,4 @@ export const FACTORY_SERVICE_SOCKET_URL = "ws://localhost:9001/websocket";
 export const TRUCK_SERVICE_URL = "ws://localhost:9003";
 export const PLAYER_SERVICE_URL = "http://localhost:9005";
 export const PLAYER_SERVICE_SOCKET_URL = "ws://localhost:9005/websocket";
+export const GAME_EVENT_SERVICE_SOCKET_URL = "ws://localhost:9006/websocket";

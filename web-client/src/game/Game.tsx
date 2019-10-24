@@ -11,6 +11,7 @@ import {
   WORLD_SERVICE_CITIES_URL,
   WORLD_SERVICE_RESOURCES_URL
 } from "../config/urls";
+import { GameEventList } from "../game-event/GameEventList";
 
 export function Game() {
   const factories = useGetFactories();
@@ -40,6 +41,9 @@ export function Game() {
       </div>
       <div style={{ width: "25%" }}>
         <CityList cities={cities} />
+      </div>
+      <div style={{ width: "25%" }}>
+        <GameEventList events={[]} />
       </div>
     </div>
   );
