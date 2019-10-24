@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "queue.host",
+      "type": "java.lang.String",
+      "description": "Description for queue.host."
+  }
+] }

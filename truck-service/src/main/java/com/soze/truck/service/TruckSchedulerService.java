@@ -22,15 +22,17 @@ public class TruckSchedulerService {
 	private final TruckNavigationService truckNavigationService;
 	private final SessionRegistry sessionRegistry;
 	private final Clock clock;
+	private final MessageQueueService messageQueueService;
 
 	@Autowired
 	public TruckSchedulerService(TruckService truckService, TruckNavigationService truckNavigationService,
-															 SessionRegistry sessionRegistry, Clock clock
+															 SessionRegistry sessionRegistry, Clock clock, MessageQueueService messageQueueService
 															) {
 		this.truckService = truckService;
 		this.truckNavigationService = truckNavigationService;
 		this.sessionRegistry = sessionRegistry;
 		this.clock = clock;
+		this.messageQueueService = messageQueueService;
 	}
 
 	@Scheduled(fixedRate = 1000L)
@@ -48,7 +50,9 @@ public class TruckSchedulerService {
 			if (currentGameTime >= arrivalTime) {
 				LOG.trace("Truck with id = {} finished travel", truckId);
 				truckNavigationService.finishTravel(truckId);
-				sessionRegistry.sendToAll(new TruckArrived(truckId.toString()));
+				TruckArrived truckArrived = new TruckArrived(truckId.toString());
+				sessionRegistry.sendToAll(truckArrived);
+				messageQueueService.sendEvent(truckArrived);
 			}
 		}
 	}
