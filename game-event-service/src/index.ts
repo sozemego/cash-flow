@@ -7,6 +7,7 @@ import express = require("express");
 import http = require("http");
 import cors = require("cors");
 import { startWebsocket } from "./socketRoute";
+import { connectToQueue } from "./queueListener";
 
 const logger = require("./logger").namedLogger("index");
 
@@ -22,8 +23,9 @@ app.use(cors(corsOptions));
 
 startWebsocket(server);
 
-server.listen(port, () => {
+server.listen(port, async () => {
   logger.info("App listening on " + port);
+  await connectToQueue();
 });
 
 process.on("exit", code => {

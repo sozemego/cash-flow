@@ -3,6 +3,7 @@ import WebSocket = require("ws");
 const logger = require("./logger").namedLogger("socket-route");
 
 import { registry } from "./socketRegistry";
+import { handleNewSocket } from "./eventService";
 
 export function startWebsocket(httpServer: HttpServer) {
   logger.info("Starting websocket server!");
@@ -13,6 +14,7 @@ export function startWebsocket(httpServer: HttpServer) {
 
   server.on("connection", (ws: WebSocket) => {
     registry.addSocket(ws);
+    handleNewSocket(ws);
 
     ws.onclose = function onClose() {
       registry.removeSocket(ws);
