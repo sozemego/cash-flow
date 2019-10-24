@@ -6,7 +6,7 @@ import { Divider } from "antd";
 import { GameEvent } from "./GameEvent";
 
 export function GameEventList({ events }) {
-  const { readyState, socket } = useGameEventSocket();
+  const { readyState } = useGameEventSocket();
 
   return (
     <div>

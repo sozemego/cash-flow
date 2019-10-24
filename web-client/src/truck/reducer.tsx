@@ -7,12 +7,24 @@ import {
   TRUCK_TRAVEL_STARTED
 } from "./actions";
 import { transfer } from "../storage/business";
+import {
+  StorageCapacityChanged,
+  StorageContentChangedAction,
+  TruckActions,
+  TruckAddedAction,
+  TruckArrivedAction,
+  TruckState,
+  TruckTravelStartedAction
+} from "./index.d";
 
-const initialState = {
+const initialState: TruckState = {
   trucks: {}
 };
 
-export function reducer(state = initialState, action) {
+export function reducer(
+  state = initialState,
+  action: TruckActions
+): TruckState {
   switch (action.type) {
     case TRUCK_ADDED:
       return truckAdded(state, action);
@@ -29,46 +41,53 @@ export function reducer(state = initialState, action) {
   }
 }
 
-const truckAdded = produce((state, action) => {
+const truckAdded = produce((state: TruckState, action: TruckAddedAction) => {
   state.trucks[action.truck.id] = action.truck;
 });
 
-const truckTravelStarted = produce((state, action) => {
-  const { truckId, nextCityId, startTime, arrivalTime } = action;
-  const truck = state.trucks[truckId];
-  truck.navigation = {
-    ...truck.navigation,
-    nextCityId,
-    startTime,
-    arrivalTime
-  };
-});
-
-const truckArrived = produce((state, action) => {
-  const { truckId } = action;
-  const { navigation } = state.trucks[truckId];
-  navigation.currentCityId = navigation.nextCityId;
-  navigation.startTime = -1;
-  navigation.arrivalTime = -1;
-  navigation.nextCityId = null;
-});
-
-const storageContentChanged = produce((state, action) => {
-  const { entityId, resource, change } = action;
-  const truck = state.trucks[entityId];
-  if (!truck) {
-    return;
+const truckTravelStarted = produce(
+  (state: TruckState, action: TruckTravelStartedAction) => {
+    const { truckId, nextCityId, startTime, arrivalTime } = action;
+    const truck = state.trucks[truckId];
+    truck.navigation = {
+      ...truck.navigation,
+      nextCityId,
+      startTime,
+      arrivalTime
+    };
   }
-  const actualCount = truck.storage.resources[resource] || 0;
-  const newCount = actualCount + change;
-  if (newCount === 0) {
-    delete truck.storage.resources[resource];
-  } else {
-    truck.storage.resources[resource] = actualCount + change;
-  }
-});
+);
 
-const storageCapacityChanged = produce((state, action) => {
+const truckArrived = produce(
+  (state: TruckState, action: TruckArrivedAction) => {
+    const { truckId } = action;
+    const { navigation } = state.trucks[truckId as string];
+    const { nextCityId } = navigation;
+    navigation.currentCityId = nextCityId!;
+    navigation.startTime = -1;
+    navigation.arrivalTime = -1;
+    navigation.nextCityId = null;
+  }
+);
+
+const storageContentChanged = produce(
+  (state: TruckState, action: StorageContentChangedAction) => {
+    const { entityId, resource, change } = action;
+    const truck = state.trucks[entityId];
+    if (!truck) {
+      return;
+    }
+    const actualCount = truck.storage.resources[resource] || 0;
+    const newCount = actualCount + change;
+    if (newCount === 0) {
+      delete truck.storage.resources[resource];
+    } else {
+      truck.storage.resources[resource] = actualCount + change;
+    }
+  }
+);
+
+const storageCapacityChanged = produce((state: TruckState, action: StorageCapacityChanged) => {
   const { entityId, change } = action;
   const truck = state.trucks[entityId];
   if (!truck) {
