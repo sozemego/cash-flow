@@ -1,4 +1,6 @@
-export function getCurrentGameDate(clock) {
+import { IClock } from "./index";
+
+export function getCurrentGameDate(clock: IClock): Date {
   const { multiplier, startTime } = clock;
   const now = Date.now();
   const timePassed = now - startTime;
@@ -6,16 +8,17 @@ export function getCurrentGameDate(clock) {
   return new Date(currentTime);
 }
 
-function format(num) {
+function format(num: number): string {
   if (num > 9) {
     return "" + num;
   }
   if (num < 10) {
     return "0" + num;
   }
+  return "";
 }
 
-export function getFormattedDateTime(date) {
+export function getFormattedDateTime(date: Date): string {
   const hour = date.getHours();
   const minute = date.getMinutes();
 
@@ -28,7 +31,7 @@ export function getFormattedDateTime(date) {
   )}:${format(minute)}`;
 }
 
-export function getFormattedTime(date) {
+export function getFormattedTime(date: Date): string {
   const hour = date.getHours();
   const minute = date.getMinutes();
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import { RealClockHook, UseRealClockInitial } from "./index";
 
-export function useRealClock({ interval }) {
+export function useRealClock({ interval }: UseRealClockInitial): RealClockHook {
   const [time, setTime] = useState(Date.now());
 
   useEffect(() => {

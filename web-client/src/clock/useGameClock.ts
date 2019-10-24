@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { useGetGameClock } from "./selectors";
-import { useRealClock } from "./realClock";
+import { useRealClock } from "./useRealClock";
 import { CLOCK_FETCHED } from "./actions";
 import { useDispatch } from "react-redux";
 import { getCurrentGameDate } from "./business";
+import { GameClockHook, UseGameClockInitial } from "./index";
 
-export function useGameClock({ interval }) {
+export function useGameClock({ interval }: UseGameClockInitial): GameClockHook {
   const clock = useGetGameClock();
   const dispatch = useDispatch();
 

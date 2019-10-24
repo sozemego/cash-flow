@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useGameClock } from "./gameClock";
+import { useGameClock } from "./useGameClock";
 import Text from "antd/lib/typography/Text";
 import { getFormattedDateTime } from "./business";
 
