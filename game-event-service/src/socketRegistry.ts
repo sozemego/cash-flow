@@ -15,7 +15,7 @@ function addSocket(socket: WebSocket): void {
   logger.info(`There are currently ${sockets.length} sockets connected.`);
 }
 
-function removeSocket(socket): void {
+function removeSocket(socket: WebSocket): void {
   logger.info("Disconnecting socket");
   const index = sockets.findIndex(element => element === socket);
   if (index > -1) {
