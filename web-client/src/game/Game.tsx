@@ -12,6 +12,7 @@ import {
   WORLD_SERVICE_RESOURCES_URL
 } from "../config/urls";
 import { GameEventList } from "../game-event/GameEventList";
+import { ICity } from "../world/index.d";
 
 export function Game() {
   const factories = useGetFactories();
@@ -21,7 +22,7 @@ export function Game() {
 
   useEffect(() => {
     fetch(WORLD_SERVICE_CITIES_URL)
-      .then(res => res.json())
+      .then<ICity[]>(res => res.json())
       .then(cities => cities.forEach(city => dispatch(cityAdded(city))));
   }, [dispatch]);
 

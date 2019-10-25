@@ -10,7 +10,7 @@ import { useGetFactories } from "../factory/selectors";
 import { IFactory, IStorageSlot } from "../factory";
 import { ResourceMap } from "../world/reducer";
 
-export function Header(props) {
+export function Header() {
   return (
     <>
       <div
@@ -32,17 +32,6 @@ export function Header(props) {
       <hr />
     </>
   );
-}
-
-interface ResourceDatas {
-  [key: string]: ResourceData;
-}
-
-interface ResourceData {
-  count: number;
-  averagePrice: number;
-  saturation: number;
-  factories: number;
 }
 
 function calcTotalResources(
@@ -94,7 +83,7 @@ function Resources() {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: name => {
+      render: (name: string) => {
         name = name[0].toUpperCase() + name.substr(1).toLowerCase();
         return (
           <div>
