@@ -1,6 +1,10 @@
 import uuid from "uuid/v4";
+import { ResourceName } from "../world/index.d";
 
-export function createTruckTravelMessage(truckId, destinationCityId) {
+export function createTruckTravelMessage(
+  truckId: string,
+  destinationCityId: string
+) {
   const messageId = uuid();
   return JSON.stringify({
     messageId,
@@ -11,10 +15,10 @@ export function createTruckTravelMessage(truckId, destinationCityId) {
 }
 
 export function createBuyResourceRequestMessage(
-  truckId,
-  factoryId,
-  resource,
-  count
+  truckId: string,
+  factoryId: string,
+  resource: ResourceName,
+  count: number
 ) {
   const messageId = uuid();
   return JSON.stringify({
@@ -27,7 +31,7 @@ export function createBuyResourceRequestMessage(
   });
 }
 
-export function dump(truckId) {
+export function dump(truckId: string) {
   const messageId = uuid();
   return JSON.stringify({ messageId, entityId: truckId, type: "DUMP_CONTENT" });
 }

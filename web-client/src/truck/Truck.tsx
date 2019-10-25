@@ -26,6 +26,8 @@ import Progress from "antd/lib/progress";
 import Select from "antd/lib/select";
 import { IFactory } from "../factory";
 import { PointerEventsProperty } from "csstype";
+import { BuyProps, FactoryResourceProps, TravellingProps, TravelToProps, TruckProps } from "./index";
+import { ICity, ResourceName } from "../world/index.d";
 
 const Header = styled.div`
   display: flex;
@@ -34,7 +36,7 @@ const Header = styled.div`
   align-items: center;
 `;
 
-export function Truck({ truck }) {
+export function Truck({ truck }: TruckProps) {
   const highlightedCityId = useGetHighlightedCity();
   const { socket } = useTruckSocket();
 
@@ -94,7 +96,7 @@ export function Truck({ truck }) {
   );
 }
 
-function calculateDistance(from, to) {
+function calculateDistance(from: ICity, to: ICity) {
   if (!from || !to) {
     return -1;
   }
@@ -115,14 +117,14 @@ function calculateDistance(from, to) {
   return Number((d / 1000).toFixed(0));
 }
 
-function distanceTime(currentCity, targetCity, speed) {
+function distanceTime(currentCity: ICity, targetCity: ICity, speed: number) {
   const distance = calculateDistance(currentCity, targetCity);
   const travelTime = (distance / speed).toFixed(1);
 
   return `${distance}km - ${travelTime}h`;
 }
 
-export function TravelTo({ truck }) {
+export function TravelTo({ truck }: TravelToProps) {
   const { id, speed, navigation } = truck;
   const { currentCityId, nextCityId } = navigation;
   const { socket } = useTruckSocket();
@@ -150,7 +152,7 @@ export function TravelTo({ truck }) {
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
           <Select
-            onChange={value => setCityToTravelToId(value)}
+            onChange={(value: string) => setCityToTravelToId(value)}
             style={{ width: 250 }}
             value={cityToTravelToId}
           >
@@ -181,7 +183,7 @@ export function TravelTo({ truck }) {
   );
 }
 
-function Traveling({ truck }) {
+function Traveling({ truck }: TravellingProps) {
   const { navigation, speed } = truck;
   const { currentCityId, nextCityId, arrivalTime, startTime } = navigation;
 
@@ -190,7 +192,7 @@ function Traveling({ truck }) {
   const totalTime = arrivalTime - startTime;
 
   const cities = useGetCities();
-  const distance = calculateDistance(cities[currentCityId], cities[nextCityId]);
+  const distance = calculateDistance(cities[currentCityId], cities[nextCityId || 'void']);
   const distanceCovered = (distance * (travelTimePassed / totalTime)).toFixed(
     1
   );
@@ -254,7 +256,7 @@ const BuyableResourceContainer = styled.div`
   justify-content: space-between;
 `;
 
-export function Buy({ truck, cityId }) {
+export function Buy({ truck, cityId }: BuyProps) {
   const allFactories: IFactory[] = Object.values(useGetFactories());
   const factoriesInCity = allFactories.filter(
     factory => factory.cityId === cityId
@@ -272,7 +274,7 @@ export function Buy({ truck, cityId }) {
           <FactoryResource
             key={factoryId}
             factoryId={factoryId}
-            resource={resource}
+            resource={resource as ResourceName}
             truck={truck}
             count={count}
             price={price}
@@ -283,7 +285,7 @@ export function Buy({ truck, cityId }) {
   );
 }
 
-export function FactoryResource({ truck, resource, count, price, factoryId }) {
+export function FactoryResource({ truck, resource, count, price, factoryId }: FactoryResourceProps) {
   const { socket } = useTruckSocket();
   const [selectedCount, setSelectedCount] = useState(0);
   const { cash = 0 } = useGetPlayer();

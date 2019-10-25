@@ -4,12 +4,13 @@ import styled from "styled-components";
 import { READY_STATE_TABLE } from "../websocket/hook";
 import { Truck } from "./Truck";
 import { Typography, Divider } from "antd";
+import { TruckListProps } from "./index";
 
 const Container = styled.div`
   margin-left: 12px;
 `;
 
-export function TruckList({ trucks }) {
+export function TruckList({ trucks }: TruckListProps) {
   const { readyState } = useTruckSocket();
 
   return (

@@ -9,13 +9,13 @@ import {
 import { transfer } from "../storage/business";
 import {
   StorageCapacityChanged,
-  StorageContentChangedAction,
   TruckActions,
   TruckAddedAction,
   TruckArrivedAction,
   TruckState,
   TruckTravelStartedAction
-} from "./index.d";
+} from "./index";
+import { StorageContentChangedAction } from "../storage";
 
 const initialState: TruckState = {
   trucks: {}

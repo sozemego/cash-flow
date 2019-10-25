@@ -1,7 +1,9 @@
 import { PlayerState } from "../player";
+import { TruckState } from "../truck";
 
 export interface AppState {
   readonly player: PlayerState;
+  readonly truck: TruckState;
 }
 
 export interface Action {
