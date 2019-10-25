@@ -16,6 +16,7 @@ import java.util.UUID;
 	@JsonSubTypes.Type(value = TruckTravelStarted.class, name = "TRUCK_TRAVEL_STARTED"),
 	@JsonSubTypes.Type(value = StorageContentChanged.class, name = "STORAGE_CONTENT_CHANGED"),
 	@JsonSubTypes.Type(value = StorageCapacityChanged.class, name = "STORAGE_CAPACITY_CHANGED"),
+	@JsonSubTypes.Type(value = TruckArrived.class, name = "TRUCK_ARRIVED"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class ServerMessage {
