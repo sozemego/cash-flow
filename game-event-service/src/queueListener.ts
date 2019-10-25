@@ -1,5 +1,5 @@
 import amqplib = require("amqplib");
-import { handleEvent } from "./eventService";
+import { handleAppEvent } from "./eventService";
 
 const queueName = "game-event-queue";
 
@@ -12,10 +12,9 @@ export async function connectToQueue() {
     });
 
     const consume = await channel.consume(queueName, message => {
-      console.log(message);
       if (message != null) {
         const json = JSON.parse(message.content.toString());
-        handleEvent(json);
+        handleAppEvent(json);
         channel.ack(message);
       }
     });
