@@ -1,13 +1,4 @@
-export interface Action {
-  type: string;
-  [index: string]: any;
-}
-
-export interface HasType {
-  type: string;
-}
-
-export type ActionCreator = ((...args: any[]) => Action) & HasType;
+import { Action, ActionCreator } from "./index";
 
 export function makeActionCreator(
   type: string,
@@ -30,3 +21,4 @@ export function makeActionCreator(
   };
   return actionCreator;
 }
+

@@ -36,4 +36,4 @@ export interface ClockFetchedAction {
   clock: IClock
 }
 
-export type ClockActions = ClockFetchedAction;
+export type ClockAction = ClockFetchedAction;

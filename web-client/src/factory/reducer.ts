@@ -5,7 +5,6 @@ import {
   PRODUCTION_LINE_ADDED,
   PRODUCTION_STARTED,
   RESOURCE_PRICE_CHANGED,
-  RESOURCE_PRODUCED,
   RESOURCE_SOLD,
   RESOURCE_STORAGE_CAPACITY_CHANGED,
   STORAGE_CONTENT_CHANGED
@@ -13,7 +12,6 @@ import {
 import {
   FactoryAction,
   FactoryAddedAction,
-  ResourceProducedAction,
   FactoryState,
   IFactory,
   ProductionFinishedAction,

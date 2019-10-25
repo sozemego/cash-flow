@@ -1,4 +1,5 @@
-import { ActionCreator, makeActionCreator } from "../store/actionCreator";
+import { makeActionCreator } from "../store/actionCreator";
+import { ActionCreator } from "../store";
 
 export const CITY_ADDED = "CITY_ADDED";
 export const cityAdded: ActionCreator = makeActionCreator(CITY_ADDED, "city");
