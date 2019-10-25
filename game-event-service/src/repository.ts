@@ -12,8 +12,7 @@ pool.on("error", (err: Error, client: Client) => {
 
 export async function getEvents(): Promise<GameEvent[]> {
   logger.info("Fetching events");
-  await pool.query("SET SCHEMA 'game_event'");
-  const data = await pool.query("SELECT * FROM game_event");
+  const data = await pool.query("SELECT * FROM game_event.game_event");
   const events = data.rows;
   logger.info(`Fetched ${events.length} events`);
   return data.rows.map((row: any) => {
@@ -28,11 +27,10 @@ export async function getEvents(): Promise<GameEvent[]> {
 }
 
 const addEventQuery =
-  "INSERT INTO game_event(id, text, timestamp, type, level) VALUES ($1, $2, $3, $4, $5)";
+  "INSERT INTO game_event.game_event(id, text, timestamp, type, level) VALUES ($1, $2, $3, $4, $5)";
 
 export async function addEvent(event: GameEvent): Promise<void> {
   logger.info(`Saving event = ${event.id}`);
-  await pool.query("SET SCHEMA 'game_event'");
   const values = [
     event.id,
     event.text,
