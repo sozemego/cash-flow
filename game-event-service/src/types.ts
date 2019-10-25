@@ -2,9 +2,11 @@ export interface GameEvent {
   id: string;
   timestamp: number;
   text: string;
-  type: string;
+  type: GameEventType;
   level: GameEventLevel;
 }
+
+export type GameEventType = "GAME_EVENT";
 
 export enum Level {
   INFO = "INFO",

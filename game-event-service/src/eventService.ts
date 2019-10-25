@@ -44,14 +44,8 @@ function transform(appEvent: AppEvent): GameEvent {
   const id = uuid();
   const timestamp = Date.now();
   const text = getText(appEvent);
-  const type = getType(appEvent);
   const level = getLevel(appEvent);
-  return { id, timestamp, text, type, level };
-}
-
-function getType(event: AppEvent): string {
-  const { type } = event;
-  return `GE_${type}`;
+  return { id, timestamp, text, type: "GAME_EVENT", level };
 }
 
 const levels: EventLevelMap = {
