@@ -13,11 +13,13 @@ import {
 } from "../config/urls";
 import { GameEventList } from "../game-event/GameEventList";
 import { ICity } from "../world";
+import { useGetEvents } from "../game-event/selectors";
 
 export function Game() {
   const factories = useGetFactories();
   const trucks = useGetTrucks();
   const cities = useGetCities();
+  const events = useGetEvents();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export function Game() {
         <CityList cities={cities} />
       </div>
       <div style={{ width: "25%" }}>
-        <GameEventList events={[]} />
+        <GameEventList events={events} />
       </div>
     </div>
   );

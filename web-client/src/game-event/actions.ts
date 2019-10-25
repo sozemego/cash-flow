@@ -1,0 +1,1 @@
+export const GAME_EVENT = "GAME_EVENT";

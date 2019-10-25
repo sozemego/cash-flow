@@ -5,6 +5,7 @@ import { reducer as truck } from "../truck/reducer";
 import { reducer as world } from "../world/reducer";
 import { reducer as clock } from "../clock/reducer";
 import { reducer as player } from "../player/reducer";
+import { reducer as gameEvent } from "../game-event/reducer";
 
 declare global {
   interface Window {
@@ -16,7 +17,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const enhancer = composeEnhancers();
 
-const reducer = combineReducers({ factory, truck, world, clock, player });
+const reducer = combineReducers({ factory, truck, world, clock, player, gameEvent });
 
 export const store = createStore();
 
