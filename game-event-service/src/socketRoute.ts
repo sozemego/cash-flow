@@ -12,9 +12,9 @@ export function startWebsocket(httpServer: HttpServer) {
     path: "/websocket"
   });
 
-  server.on("connection", (ws: WebSocket) => {
+  server.on("connection", async (ws: WebSocket) => {
     registry.addSocket(ws);
-    handleNewSocket(ws);
+    await handleNewSocket(ws);
 
     ws.onclose = function onClose() {
       registry.removeSocket(ws);

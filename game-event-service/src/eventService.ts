@@ -10,21 +10,21 @@ import {
   Level
 } from "./types";
 import { getText } from "./textService";
+import { addEvent, getEvents } from "./repository";
 
 const logger = require("./logger").namedLogger("event-service");
-
-const events: GameEvent[] = [];
 
 export function handleAppEvent(appEvent: AppEvent) {
   logger.info(`Handling ${appEvent.type}`);
 
   const gameEvent = transform(appEvent);
-  events.push(gameEvent);
+  addEvent(gameEvent);
 
   sendToAllSockets(gameEvent);
 }
 
-export function handleNewSocket(socket: WebSocket) {
+export async function handleNewSocket(socket: WebSocket) {
+  const events = await getEvents();
   logger.info(`Sending ${events.length} current events to new socket`);
   events.forEach(event => sendToSocket(JSON.stringify(event), socket));
 }
