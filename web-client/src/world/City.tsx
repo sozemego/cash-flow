@@ -8,8 +8,8 @@ import Icon from "antd/lib/icon";
 import { Tooltip } from "antd";
 import { Debug } from "../components/Debug";
 import { useGetFactories } from "../factory/selectors";
-import { ResourceCount, ResourceList } from "../components/Storage";
-import { IFactoryStorage } from "../factory/index.d";
+import { ResourceCount, ResourceList } from "../storage/Storage";
+import { IFactoryStorage } from "../factory";
 import { combine } from "../factory/FactoryStorage";
 
 const Header = styled.div`

@@ -6,7 +6,7 @@ import {
   TRUCK_TRAVEL_STARTED
 } from "./actions";
 import { ResourceName } from "../world/index.d";
-import { IStorage } from "../storage/index.d";
+import { IStorage, StorageContentChangedAction } from "../storage/index.d";
 
 export interface TruckState {
   trucks: TruckMap;
@@ -45,13 +45,6 @@ export interface TruckAddedAction {
 export interface TruckArrivedAction {
   type: typeof TRUCK_ARRIVED;
   truckId: string;
-}
-
-export interface StorageContentChangedAction {
-  type: typeof STORAGE_CONTENT_CHANGED;
-  entityId: string;
-  resource: ResourceName;
-  change: number;
 }
 
 export interface StorageCapacityChanged {

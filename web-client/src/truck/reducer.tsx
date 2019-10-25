@@ -63,10 +63,12 @@ const truckArrived = produce(
     const { truckId } = action;
     const { navigation } = state.trucks[truckId as string];
     const { nextCityId } = navigation;
-    navigation.currentCityId = nextCityId!;
-    navigation.startTime = -1;
-    navigation.arrivalTime = -1;
-    navigation.nextCityId = null;
+    if (nextCityId != null) {
+      navigation.currentCityId = nextCityId;
+      navigation.startTime = -1;
+      navigation.arrivalTime = -1;
+      navigation.nextCityId = null;
+    }
   }
 );
 

@@ -6,7 +6,7 @@ import { READY_STATE_TABLE } from "../websocket/hook";
 import { useGetCities } from "../world/selectors";
 import { Divider } from "antd";
 import Tag from "antd/lib/tag";
-import { IFactory } from "./index.d";
+import { FactoryByCityProps, IFactory } from "./index";
 
 const Container = styled.div`
   margin-left: 12px;
@@ -129,7 +129,7 @@ const FactoryByCityContainer = styled.div`
   padding-left: 2px;
 `;
 
-export function FactoryByCity({ factories, cities }) {
+export function FactoryByCity({ factories, cities }: FactoryByCityProps) {
   const factoryByCity: FactoryByProp = {};
   factories.forEach((factory: IFactory) => {
     const factories = factoryByCity[factory.cityId] || [];
@@ -137,18 +137,22 @@ export function FactoryByCity({ factories, cities }) {
     factoryByCity[factory.cityId] = factories;
   });
 
-  return cities.map(city => {
-    const factories = factoryByCity[city.id] || [];
-    if (factories.length === 0) {
-      return null;
-    }
-    return (
-      <FactoryByCityContainer key={city.id}>
-        <Tag color={"orange"}>
-          {city.name} [{factories.length}]
-        </Tag>
-        <FactoryList factories={factories} />
-      </FactoryByCityContainer>
-    );
-  });
+  return (
+    <>
+      {cities.map(city => {
+        const factories = factoryByCity[city.id] || [];
+        if (factories.length === 0) {
+          return null;
+        }
+        return (
+          <FactoryByCityContainer key={city.id}>
+            <Tag color={"orange"}>
+              {city.name} [{factories.length}]
+            </Tag>
+            <FactoryList factories={factories} />
+          </FactoryByCityContainer>
+        );
+      })}
+    </>
+  );
 }

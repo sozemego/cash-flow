@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FACTORY_SERVICE_URL_EVENTS } from "../config/urls";
 import { getFormattedTime } from "../clock/business";
-import { useGameClock } from "../clock/gameClock";
+import { useGameClock } from "../clock/useGameClock";
 import { useGetCities, useGetHighlightedCity } from "../world/selectors";
 import { useDispatch } from "react-redux";
 import { cityHighlighted } from "../world/actions";
@@ -14,7 +14,11 @@ import Icon from "antd/lib/icon";
 import { Modal, Tooltip } from "antd";
 import { Debug } from "../components/Debug";
 import { Events } from "../components/Events";
-import { FactoryEvent, IFactory } from "./index.d";
+import {
+  FactoryEvent,
+  FactoryEventsProps,
+  FactoryProps,
+} from "./index";
 import { FactoryStorage } from "./FactoryStorage";
 
 const Header = styled.div`
@@ -59,10 +63,6 @@ function formatDuration(minutes: number): string {
   return `${hours} hour${pluralHours ? "s" : ""} and ${minutes} minute${
     pluralMinutes ? "s" : ""
   }`;
-}
-
-export interface FactoryProps {
-  factory: IFactory;
 }
 
 export function Factory({ factory }: FactoryProps) {
@@ -145,12 +145,6 @@ export function Factory({ factory }: FactoryProps) {
       </Card>
     </>
   );
-}
-
-export interface FactoryEventsProps {
-  factory: IFactory;
-  showEvents: boolean;
-  onClose: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 export function FactoryEvents({

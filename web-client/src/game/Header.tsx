@@ -7,7 +7,7 @@ import Modal from "antd/lib/modal";
 import Table from "antd/lib/table";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { useGetFactories } from "../factory/selectors";
-import { IFactory, IStorageSlot } from "../factory/index.d";
+import { IFactory, IStorageSlot } from "../factory";
 import { ResourceMap } from "../world/reducer";
 
 export function Header(props) {

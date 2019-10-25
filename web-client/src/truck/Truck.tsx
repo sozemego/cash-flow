@@ -9,8 +9,8 @@ import {
 } from "./message";
 import { useTruckSocket } from "./useTruckSocket";
 import { getFormattedTime } from "../clock/business";
-import { useGameClock } from "../clock/gameClock";
-import { calculateCapacityTaken, Storage } from "../components/Storage";
+import { useGameClock } from "../clock/useGameClock";
+import { calculateCapacityTaken, Storage } from "../storage/Storage";
 import { useGetFactories } from "../factory/selectors";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { useGetPlayer } from "../player/selectors";
@@ -24,7 +24,7 @@ import InputNumber from "antd/lib/input-number";
 import Button from "antd/lib/button";
 import Progress from "antd/lib/progress";
 import Select from "antd/lib/select";
-import { IFactory } from "../factory/index.d";
+import { IFactory } from "../factory";
 import { PointerEventsProperty } from "csstype";
 
 const Header = styled.div`

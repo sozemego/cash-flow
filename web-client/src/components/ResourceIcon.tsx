@@ -1,6 +1,10 @@
 import React from "react";
 
-export function ResourceIcon({ resource }) {
+export interface ResourceIconProps {
+  resource: string;
+}
+
+export function ResourceIcon({ resource }: ResourceIconProps) {
   return (
     <img
       src={`/img/resources/${resource}.png`}

@@ -1,5 +1,5 @@
 import React from "react";
-import { IFactoryStorage, IStorageSlot } from "./index.d";
+import { IFactoryStorage, IStorageSlot } from "./index";
 import { ResourceIcon } from "../components/ResourceIcon";
 import Tag from "antd/lib/tag";
 import styled from "styled-components";

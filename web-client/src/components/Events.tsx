@@ -11,17 +11,21 @@ export interface EventsProps {
   events: Event[];
 }
 
+interface CheckedTypes {
+    [type: string]: boolean;
+}
+
 export function Events({ events }: EventsProps) {
   const [filterPhrase, setFilterPhrase] = useState("");
-  const [checkedType, setCheckType] = useState({});
+  const [checkedType, setCheckType] = useState<CheckedTypes>({});
 
   const uniqueTypes: string[] = [...new Set(events.map(event => event.type))];
-  const phraseFilter = event =>
+  const phraseFilter = (event: string) =>
     event.toLowerCase().includes(filterPhrase.toLowerCase());
   const typeFilter =
     Object.values(checkedType).filter(Boolean).length === 0
-      ? e => true
-      : event => checkedType[event.type] === true;
+      ? (_: Event) => true
+      : (event: Event) => checkedType[event.type];
 
   // @ts-ignore
   return (
@@ -44,7 +48,7 @@ export function Events({ events }: EventsProps) {
           <CheckableTag
             color={"green"}
             key={type}
-            checked={checkedType[type] === true}
+            checked={checkedType[type]}
             onChange={v => {
               checkedType[type] = v;
               setCheckType(checkedType);
