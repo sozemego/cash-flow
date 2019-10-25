@@ -8,7 +8,7 @@ import {
   ResourceListProps,
   StorageProps
 } from "./index";
-import { ResourceName } from "../world/index.d";
+import { ResourceName } from "../world";
 
 export function Storage({ storage }: StorageProps) {
   const capacityTaken = calculateCapacityTaken(storage);

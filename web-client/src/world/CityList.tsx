@@ -3,15 +3,11 @@ import styled from "styled-components";
 import { Typography } from "antd/lib";
 import { Divider } from "antd/lib";
 import { City } from "./City";
-import { CityMap } from "./selectors";
+import { CityListProps } from "./index";
 
 const Container = styled.div`
   margin-left: 12px;
 `;
-
-export interface CityListProps {
-  cities: CityMap;
-}
 
 export function CityList({ cities }: CityListProps) {
   const cityList = Object.values(cities);

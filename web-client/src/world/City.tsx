@@ -8,9 +8,11 @@ import Icon from "antd/lib/icon";
 import { Tooltip } from "antd";
 import { Debug } from "../components/Debug";
 import { useGetFactories } from "../factory/selectors";
-import { ResourceCount, ResourceList } from "../storage/Storage";
-import { IFactoryStorage } from "../factory";
+import { ResourceList } from "../storage/Storage";
+import { IFactoryStorage, IStorageSlot } from "../factory";
 import { combine } from "../factory/FactoryStorage";
+import { CityProps, ResourceName } from "./index";
+import { ResourceCount } from "../storage";
 
 const Header = styled.div`
   display: flex;
@@ -19,7 +21,7 @@ const Header = styled.div`
   align-items: center;
 `;
 
-export function City({ city }) {
+export function City({ city }: CityProps) {
   const dispatch = useDispatch();
 
   const { id, name, factorySlots } = city;
@@ -32,7 +34,9 @@ export function City({ city }) {
   );
 
   const resourceCounts: ResourceCount[] = Object.entries(totalCityStorage).map(
-    ([resource, slot]) => {
+    entry => {
+      const resource = entry[0] as ResourceName;
+      const slot = entry[1] as IStorageSlot;
       return { resource, count: slot!.count };
     }
   );

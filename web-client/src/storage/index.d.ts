@@ -1,5 +1,5 @@
 import { IStorage } from "./index.d";
-import { ResourceName } from "../world/index.d";
+import { ResourceName } from "../world";
 import { STORAGE_CONTENT_CHANGED } from "../truck/actions";
 
 export interface ResourceCount {

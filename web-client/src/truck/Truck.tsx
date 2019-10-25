@@ -27,7 +27,7 @@ import Select from "antd/lib/select";
 import { IFactory } from "../factory";
 import { PointerEventsProperty } from "csstype";
 import { BuyProps, FactoryResourceProps, TravellingProps, TravelToProps, TruckProps } from "./index";
-import { ICity, ResourceName } from "../world/index.d";
+import { ICity, ResourceName } from "../world";
 
 const Header = styled.div`
   display: flex;

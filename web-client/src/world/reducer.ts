@@ -1,17 +1,12 @@
-import { CITY_ADDED, CITY_HIGHLIGHTED, RESOURCES_ADDED } from "./actions";
 import produce from "immer";
-import { Resource } from "./index.d";
-import { Action } from "../store/actionCreator";
-
-export interface ResourceMap {
-  [name: string]: Resource;
-}
-
-export interface WorldState {
-  cities: any;
-  highlightedCity: string | null;
-  resources: ResourceMap;
-}
+import { CITY_ADDED, CITY_HIGHLIGHTED, RESOURCES_ADDED } from "./actions";
+import {
+  CityAddedAction,
+  CityHighlightedAction, ResourceMap,
+  ResourcesAddedAction,
+  WorldAction,
+  WorldState
+} from "./index";
 
 const initialState: WorldState = {
   cities: {},
@@ -19,7 +14,7 @@ const initialState: WorldState = {
   resources: {}
 };
 
-export function reducer(state: WorldState = initialState, action: Action) {
+export function reducer(state: WorldState = initialState, action: WorldAction) {
   switch (action.type) {
     case CITY_ADDED:
       return cityAdded(state, action);
@@ -32,23 +27,24 @@ export function reducer(state: WorldState = initialState, action: Action) {
   }
 }
 
-const cityAdded = produce((state, action) => {
+const cityAdded = produce((state: WorldState, action: CityAddedAction) => {
   const { city } = action;
   state.cities[city.id] = city;
   return state;
 });
 
-const cityHighlighted = produce((state, action) => {
+const cityHighlighted = produce((state: WorldState, action: CityHighlightedAction) => {
   const { cityId } = action;
   state.highlightedCity = cityId;
   return state;
 });
 
-const resourcesAdded = produce((state, action) => {
+const resourcesAdded = produce((state: WorldState, action: ResourcesAddedAction) => {
   const { resources } = action;
+  const map: ResourceMap = {};
   state.resources = resources.reduce((accumulator, curr) => {
     accumulator[curr.name] = curr;
     return accumulator;
-  }, {});
+  }, map);
   return state;
 });

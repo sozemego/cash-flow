@@ -12,7 +12,7 @@ import {
   WORLD_SERVICE_RESOURCES_URL
 } from "../config/urls";
 import { GameEventList } from "../game-event/GameEventList";
-import { ICity } from "../world/index.d";
+import { ICity } from "../world";
 
 export function Game() {
   const factories = useGetFactories();

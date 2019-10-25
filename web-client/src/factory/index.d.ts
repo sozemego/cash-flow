@@ -1,4 +1,4 @@
-import { ICity, ResourceName } from "../world/index.d";
+import { ICity, ResourceName } from "../world";
 import {
   FACTORY_ADDED,
   PRODUCTION_FINISHED,

@@ -20,7 +20,7 @@ import {
   ProductionLineAddedAction
 } from "./index";
 import { StorageContentChangedAction } from "../storage";
-import { ResourceName } from "../world/index.d";
+import { ResourceName } from "../world";
 
 const initialState: FactoryState = {
   factories: []

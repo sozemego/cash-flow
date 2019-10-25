@@ -1,5 +1,5 @@
 import uuid from "uuid/v4";
-import { ResourceName } from "../world/index.d";
+import { ResourceName } from "../world";
 
 export function createTruckTravelMessage(
   truckId: string,

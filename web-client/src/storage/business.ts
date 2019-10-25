@@ -3,7 +3,7 @@
  * Drops any resources that will not fit in the newStorage.
  */
 import { IStorage } from "./index";
-import { ResourceName } from "../world/index.d";
+import { ResourceName } from "../world";
 
 export function transfer(oldStorage: IStorage, newStorage: IStorage) {
   const resources = oldStorage.resources;

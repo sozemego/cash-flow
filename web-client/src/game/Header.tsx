@@ -8,7 +8,7 @@ import Table from "antd/lib/table";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { useGetFactories } from "../factory/selectors";
 import { IFactory, IStorageSlot } from "../factory";
-import { ResourceMap } from "../world/reducer";
+import { ResourceMap } from "../world";
 
 export function Header() {
   return (

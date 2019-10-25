@@ -1,9 +1,11 @@
 import { PlayerState } from "../player";
 import { TruckState } from "../truck";
+import { WorldState } from "../world";
 
 export interface AppState {
   readonly player: PlayerState;
   readonly truck: TruckState;
+  readonly world: WorldState
 }
 
 export interface Action {
