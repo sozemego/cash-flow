@@ -18,7 +18,7 @@ export function GameEventList({ events }: GameEventListProps) {
       <Divider />
       <Card>
         {events.map(event => (
-          <GameEvent event={event} />
+          <GameEvent key={event.id} event={event} />
         ))}
       </Card>
     </div>
