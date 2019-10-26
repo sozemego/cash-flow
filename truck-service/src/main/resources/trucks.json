@@ -2,7 +2,7 @@
   {
     "id": "BASIC_TRUCK",
     "name": "Basic truck",
-    "texture": "some.png",
+    "texture": "truck_15.png",
     "storage": {
       "capacity": 10
     },
@@ -11,7 +11,7 @@
   {
     "id": "FAST_TRUCK",
     "name": "Fast truck",
-    "texture": "some.png",
+    "texture": "truck_16.png",
     "storage": {
       "capacity": 10
     },
