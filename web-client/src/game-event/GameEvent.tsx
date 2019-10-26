@@ -1,7 +1,6 @@
 import React from "react";
 import { Icon } from "antd";
 import styled from "styled-components";
-import Divider from "antd/lib/divider";
 import { GameEventLevelProps, GameEventProps, Level } from "./index.d";
 import { getFormattedTime } from "../clock/business";
 
