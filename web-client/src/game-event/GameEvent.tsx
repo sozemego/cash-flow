@@ -1,8 +1,11 @@
 import React from "react";
 import { Icon } from "antd";
 import styled from "styled-components";
+import { useTransition, animated, config } from "react-spring";
+
 import { GameEventLevelProps, GameEventProps, Level } from "./index.d";
 import { getFormattedDateTime } from "../clock/business";
+import { Transition } from "react-spring/renderprops-universal";
 
 const Container = styled.div`
   display: flex;
@@ -26,15 +29,27 @@ const Timestamp = styled.div`
 
 export function GameEvent({ event }: GameEventProps) {
   return (
-    <>
-      <Container>
-        <Info>
-          <GameEventLevel level={event.level} />
-          <Timestamp>{getFormattedDateTime(new Date(event.timestamp))}</Timestamp>
-        </Info>
-        <div>{event.text}</div>
-      </Container>
-    </>
+    <Transition
+      items={event}
+      config={{ duration: 500 }}
+      from={{ opacity: 0, transform: "translate(50px, 0)" }}
+      enter={{ opacity: 1, transform: "translate(0, 0)" }}
+      leave={{ opacity: 0, transform: "translate(-50px, 0)" }}
+    >
+      {item => props => (
+        <div style={props}>
+          <Container>
+            <Info>
+              <GameEventLevel level={item.level} />
+              <Timestamp>
+                {getFormattedDateTime(new Date(item.timestamp))}
+              </Timestamp>
+            </Info>
+            <div>{item.text}</div>
+          </Container>
+        </div>
+      )}
+    </Transition>
   );
 }
 
