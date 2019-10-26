@@ -30,6 +30,7 @@ export interface BaseAppEvent {
 
 export interface TruckArrivedEvent extends BaseAppEvent {
   truckId: string;
+  cityId: string;
 }
 
 export type AppEvent = TruckArrivedEvent;
