@@ -50,7 +50,7 @@ public class TruckSchedulerService {
 			if (currentGameTime >= arrivalTime) {
 				LOG.trace("Truck with id = {} finished travel", truckId);
 				truckNavigationService.finishTravel(truckId);
-				TruckArrived truckArrived = new TruckArrived(truckId.toString());
+				TruckArrived truckArrived = new TruckArrived(truckId.toString(), navigation.nextCityId);
 				sessionRegistry.sendToAll(truckArrived);
 				messageQueueService.sendEvent(truckArrived);
 			}
