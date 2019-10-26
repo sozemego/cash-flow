@@ -5,6 +5,7 @@ import {
   GameEventState,
   IGameEvent
 } from "./index";
+import { GAME_EVENT, GAME_EVENT_INIT } from "./actions";
 
 const initialState: GameEventState = {
   events: []
@@ -15,7 +16,9 @@ export function reducer(
   action: GameEventActions
 ): GameEventState {
   switch (action.type) {
-    case "GAME_EVENT":
+    case GAME_EVENT_INIT:
+      return initialState;
+    case GAME_EVENT:
       return gameEvent(state, action);
     default:
       return state;

@@ -2,6 +2,7 @@ import {
   STORAGE_CAPACITY_CHANGED,
   TRUCK_ADDED,
   TRUCK_ARRIVED,
+  TRUCK_INIT,
   TRUCK_TRAVEL_STARTED
 } from "./actions";
 import { ResourceName } from "../world";
@@ -37,7 +38,7 @@ export interface FactoryResourceProps {
 }
 
 export interface TruckListProps {
-  trucks: ITruck[]
+  trucks: ITruck[];
 }
 
 export interface TruckMap {
@@ -57,6 +58,10 @@ export interface INavigation {
   startTime: number;
   arrivalTime: number;
   nextCityId: string | null;
+}
+
+export interface TruckInitAction {
+  type: typeof TRUCK_INIT;
 }
 
 export interface TruckTravelStartedAction {
@@ -85,6 +90,7 @@ export interface StorageCapacityChanged {
 }
 
 export type TruckActions =
+  | TruckInitAction
   | TruckTravelStartedAction
   | TruckAddedAction
   | TruckArrivedAction

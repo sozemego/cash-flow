@@ -13,13 +13,7 @@ export interface UseWebSocket {
   readyState: number;
 }
 
-/**
- *
- * @param url
- * @param dispatch
- * @returns {{readyState: number socket: WebSocket}}
- */
-export function useWebsocket(url: string, dispatch: Function): UseWebSocket {
+export function useWebsocket(url: string, dispatch: Function, resetAction: Function): UseWebSocket {
   const [readyState, setReadyState] = useState(WebSocket.CONNECTING);
 
   useEffect(() => {
@@ -32,11 +26,12 @@ export function useWebsocket(url: string, dispatch: Function): UseWebSocket {
       };
       socket.onclose = function onClose(arg) {
         setTimeout(() => {
+          resetAction();
           setReadyState(WebSocket.CLOSED);
         }, 2500);
       };
     }
-  }, [url, dispatch, readyState]);
+  }, [url, dispatch, readyState, resetAction]);
 
   const socket = getSocket(url);
 

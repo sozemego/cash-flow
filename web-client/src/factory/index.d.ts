@@ -1,6 +1,7 @@
 import { ICity, ResourceName } from "../world";
 import {
   FACTORY_ADDED,
+  FACTORY_INIT,
   PRODUCTION_FINISHED,
   PRODUCTION_LINE_ADDED,
   PRODUCTION_STARTED,
@@ -65,6 +66,10 @@ export interface BaseFactoryEvent {
 
 export type FactoryEvent = BaseFactoryEvent;
 
+export interface FactoryInitAction {
+  type: typeof FACTORY_INIT;
+}
+
 export interface FactoryAddedAction {
   type: typeof FACTORY_ADDED;
   factoryDTO: IFactory;
@@ -114,6 +119,7 @@ export interface ProductionLineAddedAction {
 }
 
 export type FactoryAction =
+  | FactoryInitAction
   | FactoryAddedAction
   | StorageContentChangedAction
   | ResourceStorageCapacityChanged

@@ -1,3 +1,8 @@
+import { makeActionCreator } from "../store/actionCreator";
+
+export const FACTORY_INIT = "FACTORY_INIT";
+export const factoryInit = makeActionCreator(FACTORY_INIT);
+
 export const FACTORY_ADDED = "FACTORY_ADDED";
 export const RESOURCE_PRODUCED = "RESOURCE_PRODUCED";
 export const STORAGE_CONTENT_CHANGED = "STORAGE_CONTENT_CHANGED";

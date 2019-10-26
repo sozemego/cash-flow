@@ -4,6 +4,7 @@ import {
   STORAGE_CONTENT_CHANGED,
   TRUCK_ADDED,
   TRUCK_ARRIVED,
+  TRUCK_INIT,
   TRUCK_TRAVEL_STARTED
 } from "./actions";
 import { transfer } from "../storage/business";
@@ -26,6 +27,8 @@ export function reducer(
   action: TruckActions
 ): TruckState {
   switch (action.type) {
+    case TRUCK_INIT:
+      return initialState;
     case TRUCK_ADDED:
       return truckAdded(state, action);
     case TRUCK_TRAVEL_STARTED:
@@ -89,15 +92,17 @@ const storageContentChanged = produce(
   }
 );
 
-const storageCapacityChanged = produce((state: TruckState, action: StorageCapacityChanged) => {
-  const { entityId, change } = action;
-  const truck = state.trucks[entityId];
-  if (!truck) {
-    return;
+const storageCapacityChanged = produce(
+  (state: TruckState, action: StorageCapacityChanged) => {
+    const { entityId, change } = action;
+    const truck = state.trucks[entityId];
+    if (!truck) {
+      return;
+    }
+    const oldStorage = truck.storage;
+    const nextStorage = { ...truck.storage };
+    nextStorage.capacity = oldStorage.capacity + change;
+    transfer(oldStorage, nextStorage);
+    truck.storage = nextStorage;
   }
-  const oldStorage = truck.storage;
-  const nextStorage = { ...truck.storage };
-  nextStorage.capacity = oldStorage.capacity + change;
-  transfer(oldStorage, nextStorage);
-  truck.storage = nextStorage;
-});
+);

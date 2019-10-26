@@ -1,4 +1,4 @@
-import { GAME_EVENT } from "./actions";
+import { GAME_EVENT, GAME_EVENT_INIT } from "./actions";
 
 export interface GameEventProps {
   event: IGameEvent;
@@ -31,6 +31,10 @@ export interface IGameEvent {
   level: IGameEventLevel;
 }
 
+export interface GameEventInitAction {
+  type: typeof GAME_EVENT_INIT;
+}
+
 export interface GameEventAction {
   type: typeof GAME_EVENT;
   id: string;
@@ -39,7 +43,7 @@ export interface GameEventAction {
   timestamp: Date;
 }
 
-export type GameEventActions = GameEventAction;
+export type GameEventActions = GameEventInitAction | GameEventAction;
 
 export interface GameEventParameter {
   key: string;

@@ -1,6 +1,7 @@
 import { produce } from "immer";
 import {
   FACTORY_ADDED,
+  FACTORY_INIT,
   PRODUCTION_FINISHED,
   PRODUCTION_LINE_ADDED,
   PRODUCTION_STARTED,
@@ -31,6 +32,8 @@ export function reducer(
   action: FactoryAction
 ): FactoryState {
   switch (action.type) {
+    case FACTORY_INIT:
+      return initialState;
     case FACTORY_ADDED:
       return factoryAdded(state, action);
     case STORAGE_CONTENT_CHANGED:
