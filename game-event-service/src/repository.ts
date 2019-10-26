@@ -12,7 +12,7 @@ pool.on("error", (err: Error, client: Client) => {
 
 export async function getEvents(): Promise<GameEvent[]> {
   logger.info("Fetching events");
-  const data = await pool.query("SELECT * FROM game_event.game_event");
+  const data = await pool.query("SELECT * FROM game_event.game_event ORDER BY TIMESTAMP DESC LIMIT 30");
   const events = data.rows;
   logger.info(`Fetched ${events.length} events`);
   return data.rows.map((row: any) => {
@@ -20,7 +20,7 @@ export async function getEvents(): Promise<GameEvent[]> {
       id: row.id,
       text: row.text,
       timestamp: Number(row.timestamp),
-      type: row.type,
+      type: "GAME_EVENT",
       level: row.level
     };
   });
