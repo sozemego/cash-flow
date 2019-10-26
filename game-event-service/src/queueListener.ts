@@ -11,10 +11,10 @@ export async function connectToQueue() {
       arguments: { "x-queue-type": "classic" }
     });
 
-    const consume = await channel.consume(queueName, message => {
+    const consume = await channel.consume(queueName, async message => {
       if (message != null) {
         const json = JSON.parse(message.content.toString());
-        handleAppEvent(json);
+        await handleAppEvent(json);
         channel.ack(message);
       }
     });

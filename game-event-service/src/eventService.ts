@@ -11,13 +11,14 @@ import {
 } from "./types";
 import { getText } from "./textService";
 import { addEvent, getEvents } from "./repository";
+import { getClock } from "./remoteClockService";
 
 const logger = require("./logger").namedLogger("event-service");
 
-export function handleAppEvent(appEvent: AppEvent) {
+export async function handleAppEvent(appEvent: AppEvent) {
   logger.info(`Handling ${appEvent.type}`);
 
-  const gameEvent = transform(appEvent);
+  const gameEvent = await transform(appEvent);
   addEvent(gameEvent);
 
   sendToAllSockets(gameEvent);
@@ -40,9 +41,11 @@ function sendToSocket(message: string, socket: WebSocket) {
   socket.send(message);
 }
 
-function transform(appEvent: AppEvent): GameEvent {
+async function transform(appEvent: AppEvent): Promise<GameEvent> {
   const id = uuid();
-  const timestamp = Date.now();
+  const clock = await getClock();
+  console.log(clock);
+  const timestamp = clock ? clock.getCurrentGameTime().getTime() : Date.now();
   const text = getText(appEvent);
   const level = getLevel(appEvent);
   return { id, timestamp, text, type: "GAME_EVENT", level };

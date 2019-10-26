@@ -34,3 +34,14 @@ export interface TruckArrivedEvent extends BaseAppEvent {
 }
 
 export type AppEvent = TruckArrivedEvent;
+
+export interface ClockResponse {
+  multiplier: number;
+  startTime: number;
+}
+
+export interface Clock {
+  multiplier: number;
+  startTime: number;
+  getCurrentGameTime: () => Date;
+}
