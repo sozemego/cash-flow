@@ -13,6 +13,8 @@ import { IFactoryStorage, IStorageSlot } from "../factory";
 import { combine } from "../factory/FactoryStorage";
 import { CityProps, ResourceName } from "./index";
 import { ResourceCount } from "../storage";
+import { useGetTrucks } from "../truck/selectors";
+import { TruckIcon } from "../truck/Truck";
 
 const Header = styled.div`
   display: flex;
@@ -41,6 +43,10 @@ export function City({ city }: CityProps) {
     }
   );
 
+  const trucksInCity = Object.values(useGetTrucks()).filter(
+    truck => truck.navigation.currentCityId === id
+  );
+
   return (
     <>
       <Header>
@@ -55,6 +61,11 @@ export function City({ city }: CityProps) {
       >
         <div>Factory slots - {factorySlots}</div>
         <ResourceList resources={resourceCounts} />
+        <div>
+          {trucksInCity.map(truck => (
+            <TruckIcon key={truck.id} texture={truck.texture} />
+          ))}
+        </div>
       </Card>
     </>
   );
