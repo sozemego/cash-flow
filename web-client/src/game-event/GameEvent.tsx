@@ -2,7 +2,7 @@ import React from "react";
 import { Icon } from "antd";
 import styled from "styled-components";
 import { GameEventLevelProps, GameEventProps, Level } from "./index.d";
-import { getFormattedTime } from "../clock/business";
+import { getFormattedDateTime } from "../clock/business";
 
 const Container = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ export function GameEvent({ event }: GameEventProps) {
       <Container>
         <Info>
           <GameEventLevel level={event.level} />
-          <Timestamp>{getFormattedTime(new Date(event.timestamp))}</Timestamp>
+          <Timestamp>{getFormattedDateTime(new Date(event.timestamp))}</Timestamp>
         </Info>
         <div>{event.text}</div>
       </Container>

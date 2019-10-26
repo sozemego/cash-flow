@@ -1,16 +1,15 @@
 import { GameEventParameter, IGameEvent } from "./index";
-import { MiddlewareAPI, Dispatch } from "redux";
-import { Action, AppState } from "../store";
+import { AppState } from "../store";
 import { getTrucks } from "../truck/selectors";
 import { getCities } from "../world/selectors";
 
 export function getGameEventText(
   gameEvent: IGameEvent,
-  api: MiddlewareAPI<Dispatch<Action>, AppState>
+  state: AppState
 ): string {
   const { text } = gameEvent;
   const parameters = extractParams(text);
-  const filledParameters = findRealTexts(parameters, api.getState);
+  const filledParameters = findRealTexts(parameters, state);
   return applyParameters(text, filledParameters);
 }
 
@@ -47,30 +46,31 @@ function extractParams(text: string): GameEventParameter[] {
 
 function findRealTexts(
   parameters: GameEventParameter[],
-  getState: () => AppState
+  state: AppState
 ): GameEventParameter[] {
   return parameters.map(parameter => {
     const { key, value } = parameter;
 
     return {
       ...parameter,
-      text: getText(key, value, getState)
+      text: getText(key, value, state)
     };
   });
 }
 
-function getText(key: string, value: string, getState: () => AppState): string {
+function getText(key: string, value: string, state: AppState): string {
+  const defaultText = `[${key}=${value}]`;
   if (key === "truckId") {
-    const trucks = getTrucks(getState());
+    const trucks = getTrucks(state);
     const truck = trucks[value];
-    return truck.name;
+    return truck ? truck.name : defaultText;
   }
   if (key === "cityId") {
-    const cities = getCities(getState());
+    const cities = getCities(state);
     const city = cities[value];
-    return city.name;
+    return city ? city.name : defaultText;
   }
-  return `[${key}=${value}]`;
+  return defaultText;
 }
 
 function applyParameters(
