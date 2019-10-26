@@ -2,6 +2,7 @@ import { GameEventParameter, IGameEvent } from "./index";
 import { MiddlewareAPI, Dispatch } from "redux";
 import { Action, AppState } from "../store";
 import { getTrucks } from "../truck/selectors";
+import { getCities } from "../world/selectors";
 
 export function getGameEventText(
   gameEvent: IGameEvent,
@@ -10,9 +11,7 @@ export function getGameEventText(
   const { text } = gameEvent;
   const parameters = extractParams(text);
   const filledParameters = findRealTexts(parameters, api.getState);
-  const parsedText = applyParameters(text, filledParameters);
-  console.log(parsedText);
-  return parsedText;
+  return applyParameters(text, filledParameters);
 }
 
 function extractParams(text: string): GameEventParameter[] {
@@ -66,7 +65,12 @@ function getText(key: string, value: string, getState: () => AppState): string {
     const truck = trucks[value];
     return truck.name;
   }
-  return "invalid text";
+  if (key === "cityId") {
+    const cities = getCities(getState());
+    const city = cities[value];
+    return city.name;
+  }
+  return `[${key}=${value}]`;
 }
 
 function applyParameters(
@@ -82,7 +86,7 @@ function applyParameters(
     const start = result.substring(0, startIndex + indexOffset);
     const end = result.substring(endIndex + 1 + indexOffset);
     result = start + text + end;
-    indexOffset = originalLength - textLength;
+    indexOffset = textLength - originalLength - 1;
   });
   return result;
 }
