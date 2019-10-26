@@ -41,6 +41,10 @@ export interface TruckListProps {
   trucks: ITruck[];
 }
 
+export interface TruckIconProps {
+  texture: string;
+}
+
 export interface TruckMap {
   [id: string]: ITruck;
 }
@@ -48,6 +52,7 @@ export interface TruckMap {
 export interface ITruck {
   id: string;
   name: string;
+  texture: string;
   speed: number;
   navigation: INavigation;
   storage: IStorage;

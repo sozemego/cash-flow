@@ -26,7 +26,14 @@ import Progress from "antd/lib/progress";
 import Select from "antd/lib/select";
 import { IFactory } from "../factory";
 import { PointerEventsProperty } from "csstype";
-import { BuyProps, FactoryResourceProps, TravellingProps, TravelToProps, TruckProps } from "./index";
+import {
+  BuyProps,
+  FactoryResourceProps,
+  TravellingProps,
+  TravelToProps,
+  TruckIconProps,
+  TruckProps
+} from "./index";
 import { ICity, ResourceName } from "../world";
 
 const Header = styled.div`
@@ -40,7 +47,7 @@ export function Truck({ truck }: TruckProps) {
   const highlightedCityId = useGetHighlightedCity();
   const { socket } = useTruckSocket();
 
-  const { id, name, navigation, storage } = truck;
+  const { id, name, navigation, storage, texture } = truck;
   const { currentCityId, nextCityId } = navigation;
 
   const cardStyle = Object.assign(
@@ -79,7 +86,8 @@ export function Truck({ truck }: TruckProps) {
       </Header>
       <Card bodyStyle={cardStyle}>
         <span>
-          {nextCityId ? "Travelling to " : "In "}
+          <TruckIcon texture={texture} />
+          {nextCityId ? "->" : " "}
           <CityInline cityId={nextCityId || currentCityId} />
         </span>
         <Divider style={{ margin: "4px" }} />
@@ -192,7 +200,10 @@ function Traveling({ truck }: TravellingProps) {
   const totalTime = arrivalTime - startTime;
 
   const cities = useGetCities();
-  const distance = calculateDistance(cities[currentCityId], cities[nextCityId || 'void']);
+  const distance = calculateDistance(
+    cities[currentCityId],
+    cities[nextCityId || "void"]
+  );
   const distanceCovered = (distance * (travelTimePassed / totalTime)).toFixed(
     1
   );
@@ -285,7 +296,13 @@ export function Buy({ truck, cityId }: BuyProps) {
   );
 }
 
-export function FactoryResource({ truck, resource, count, price, factoryId }: FactoryResourceProps) {
+export function FactoryResource({
+  truck,
+  resource,
+  count,
+  price,
+  factoryId
+}: FactoryResourceProps) {
   const { socket } = useTruckSocket();
   const [selectedCount, setSelectedCount] = useState(0);
   const { cash = 0 } = useGetPlayer();
@@ -339,5 +356,15 @@ export function FactoryResource({ truck, resource, count, price, factoryId }: Fa
         </div>
       </div>
     </BuyableResourceContainer>
+  );
+}
+
+export function TruckIcon({ texture }: TruckIconProps) {
+  return (
+    <img
+      src={`/img/truck/${texture}`}
+      alt={"Truck icon"}
+      style={{ width: "32px", height: "32px" }}
+    />
   );
 }
