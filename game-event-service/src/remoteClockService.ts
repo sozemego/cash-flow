@@ -4,6 +4,8 @@ const fetch = require("node-fetch");
 import { getEurekaClient } from "./index";
 import { EurekaClient } from "eureka-js-client";
 import LegacyPortWrapper = EurekaClient.LegacyPortWrapper;
+const logger = require("./logger").namedLogger("remote-clock-service");
+
 
 let clock: Clock = null;
 
@@ -22,9 +24,11 @@ export async function getClock(): Promise<Clock | undefined> {
     const ipAddr = instance.ipAddr;
     const port = <LegacyPortWrapper>instance.port;
     const path = `http://${ipAddr}:${port["$"]}/clock`;
+    logger.info(`Fetching clock from ${path}`);
     const result = await fetch(path);
     const json = await result.json();
     clock = createCock(json);
+    logger.info(`Clock fetched ${JSON.stringify(clock)}`);
     return clock;
   }
 

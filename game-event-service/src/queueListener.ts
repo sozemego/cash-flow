@@ -1,4 +1,6 @@
 import amqplib = require("amqplib");
+const logger = require("./logger").namedLogger("queue-listener");
+
 import { handleAppEvent } from "./eventService";
 
 const queueName = "game-event-queue";
@@ -18,7 +20,7 @@ export async function connectToQueue() {
         channel.ack(message);
       }
     });
-    console.log(consume);
+    logger.info(JSON.stringify(consume));
   } catch (e) {
     console.log(e);
   }

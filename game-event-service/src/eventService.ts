@@ -44,7 +44,6 @@ function sendToSocket(message: string, socket: WebSocket) {
 async function transform(appEvent: AppEvent): Promise<GameEvent> {
   const id = uuid();
   const clock = await getClock();
-  console.log(clock);
   const timestamp = clock ? clock.getCurrentGameTime().getTime() : Date.now();
   const text = getText(appEvent);
   const level = getLevel(appEvent);
