@@ -22,7 +22,7 @@ const Info = styled.div`
 `;
 
 const Timestamp = styled.div`
-  margin: 4px;
+  margin-right: 4px;
 `;
 
 export function GameEvent({ event }: GameEventProps) {
@@ -35,7 +35,6 @@ export function GameEvent({ event }: GameEventProps) {
         </Info>
         <div>{event.text}</div>
       </Container>
-      <Divider />
     </>
   );
 }

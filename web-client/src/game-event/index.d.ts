@@ -40,3 +40,11 @@ export interface GameEventAction {
 }
 
 export type GameEventActions = GameEventAction;
+
+export interface GameEventParameter {
+  key: string;
+  value: string;
+  startIndex: number;
+  endIndex: number;
+  text?: string;
+}

@@ -11,14 +11,18 @@ export function GameEventList({ events }: GameEventListProps) {
   const { readyState } = useGameEventSocket();
 
   return (
-    <div>
+    <div style={{ marginLeft: "12px" }}>
       <Typography>
         Game events - state [{READY_STATE_TABLE[readyState]}]
       </Typography>
       <Divider />
+      <div style={{ height: "22px", opacity: 0 }}>A</div>
       <Card>
-        {events.map(event => (
-          <GameEvent key={event.id} event={event} />
+        {events.map((event, index) => (
+          <>
+            <GameEvent key={event.id} event={event} />
+            {/*{index < events.length - 1 && <Divider />}*/}
+          </>
         ))}
       </Card>
     </div>

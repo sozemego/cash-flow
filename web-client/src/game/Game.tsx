@@ -19,7 +19,7 @@ export function Game() {
   const factories = useGetFactories();
   const trucks = useGetTrucks();
   const cities = useGetCities();
-  const events = useGetEvents();
+  let events = [...useGetEvents()];
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,6 +33,12 @@ export function Game() {
       .then(res => res.json())
       .then(resources => dispatch(resourcesAdded(resources)));
   }, [dispatch]);
+
+  events = events.sort((a, b) => {
+    const timeA = a.timestamp.getTime();
+    const timeB = b.timestamp.getTime();
+    return timeA > timeB ? -1 : timeA === timeB ? 0 : 1;
+  });
 
   return (
     <div style={{ display: "flex", flexDirection: "row" }}>
