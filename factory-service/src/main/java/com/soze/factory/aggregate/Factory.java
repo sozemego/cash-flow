@@ -109,8 +109,8 @@ public class Factory implements EventVisitor, CommandVisitor {
 	@Override
 	public List<Event> visit(AddProductionLine addProductionLine) {
 		return Collections.singletonList(
-			new ProductionLineAdded(getId().toString(), LocalDateTime.now(), 1, addProductionLine.getResource(),
-															addProductionLine.getCount(), addProductionLine.getTime()
+			new ProductionLineAdded2(getId().toString(), LocalDateTime.now(), 1, addProductionLine.getInput(),
+															addProductionLine.getOutput(), addProductionLine.getTime()
 			));
 	}
 

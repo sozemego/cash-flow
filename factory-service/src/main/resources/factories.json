@@ -5,11 +5,14 @@
     "texture": "textures/buildings/medieval/medieval_lumber.png",
     "storage": {
       "capacities": {
-        "WOOD": 100
+        "WOOD": 50
       }
     },
     "producer": {
-      "resource": "WOOD",
+      "input": {},
+      "output": {
+        "WOOD": 1
+      },
       "time": 60
     }
   },
@@ -19,12 +22,33 @@
     "texture": "textures/buildings/medieval/quarry.png",
     "storage": {
       "capacities": {
-        "STONE": 250
+        "STONE": 150
       }
     },
     "producer": {
-      "resource": "STONE",
+      "input": {},
+      "output": {
+        "STONE": 1
+      },
       "time": 90
+    }
+  },
+  {
+    "id": "WOOD_CUTTER",
+    "name": "Wood cutter",
+    "texture": "textures/buildings/medieval/quarry.png",
+    "storage": {
+      "capacities": {
+        "WOOD": 50,
+        "PLANK": 150
+      }
+    },
+    "producer": {
+      "input": { "WOOD": 1 },
+      "output": {
+        "PLANK": 2
+      },
+      "time": 120
     }
   }
 ]

@@ -57,6 +57,8 @@ public class FactoryStarterService {
 		commands3.forEach(command -> command.accept(factoryCommandService));
 		List<Command> commands4 = templateLoader.getFactoryCommandsByTemplateId(UUID.randomUUID(),"STONE_QUARRY", opole.id);
 		commands4.forEach(command -> command.accept(factoryCommandService));
+		List<Command> commands5 = templateLoader.getFactoryCommandsByTemplateId(UUID.randomUUID(),"WOOD_CUTTER", opole.id);
+		commands5.forEach(command -> command.accept(factoryCommandService));
 	}
 
 }

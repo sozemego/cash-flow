@@ -65,9 +65,22 @@ public class FactoryTemplateLoader {
 		commands.add(new ChangeResourceStorageCapacity(factoryId, capacities));
 
 		JsonNode producer = root.get("producer");
-		Resource resource = Resource.valueOf(producer.get("resource").asText());
+
+		JsonNode inputNode = producer.get("input");
+		Map<Resource, Integer> input = new HashMap<>();
+		inputNode.fields().forEachRemaining(field -> {
+			input.put(Resource.valueOf(field.getKey()), field.getValue().asInt());
+		});
+
+		JsonNode outputNode = producer.get("output");
+		Map<Resource, Integer> output = new HashMap<>();
+		outputNode.fields().forEachRemaining(field -> {
+			output.put(Resource.valueOf(field.getKey()), field.getValue().asInt());
+		});
+
 		long time = producer.get("time").asLong();
-		commands.add(new AddProductionLine(factoryId, resource, 1, time));
+
+		commands.add(new AddProductionLine(factoryId, input, output, time));
 
 		return commands;
 	}
