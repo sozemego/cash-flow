@@ -4,7 +4,7 @@ import {
   FACTORY_INIT,
   PRODUCTION_FINISHED,
   PRODUCTION_LINE_ADDED,
-  PRODUCTION_STARTED,
+  PRODUCTION_STARTED, RESOURCE_BOUGHT,
   RESOURCE_PRICE_CHANGED,
   RESOURCE_PRODUCED,
   RESOURCE_PRODUCTION_STARTED,
@@ -130,6 +130,13 @@ export interface ResourceSoldAction {
   count: number;
 }
 
+export interface ResourceBoughtAction {
+  type: typeof RESOURCE_BOUGHT;
+  entityId: string;
+  resource: ResourceName;
+  count: number;
+}
+
 export interface ResourcePriceChangedAction {
   type: typeof RESOURCE_PRICE_CHANGED;
   entityId: string;
@@ -152,5 +159,6 @@ export type FactoryAction =
   | ProductionFinishedAction
   | ProductionStarted
   | ResourceSoldAction
+  | ResourceBoughtAction
   | ProductionLineAddedAction
   | ResourcePriceChangedAction;

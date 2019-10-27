@@ -5,6 +5,7 @@ import {
   PRODUCTION_FINISHED,
   PRODUCTION_LINE_ADDED,
   PRODUCTION_STARTED,
+  RESOURCE_BOUGHT,
   RESOURCE_PRICE_CHANGED,
   RESOURCE_SOLD,
   RESOURCE_STORAGE_CAPACITY_CHANGED,
@@ -21,7 +22,8 @@ import {
   ProductionLineAddedAction,
   IFactoryStorage,
   ProducerInput,
-  ProducerOutput
+  ProducerOutput,
+  ResourceBoughtAction
 } from "./index";
 import { StorageContentChangedAction } from "../storage";
 import { ResourceName } from "../world";
@@ -49,6 +51,8 @@ export function reducer(
       return productionStarted(state, action);
     case RESOURCE_SOLD:
       return resourceSold(state, action);
+    case RESOURCE_BOUGHT:
+      return resourceBought(state, action);
     case RESOURCE_PRICE_CHANGED:
       return resourcePriceChanged(state, action);
     case PRODUCTION_LINE_ADDED:
@@ -137,6 +141,18 @@ const resourceSold = produce(
     }
     const { storage } = factory;
     changeResourceCount(resource, -count, storage);
+  }
+);
+
+const resourceBought = produce(
+  (state: FactoryState, action: ResourceBoughtAction) => {
+    const { entityId, resource, count } = action;
+    const factory = findFactory(state, entityId);
+    if (!factory) {
+      return;
+    }
+    const { storage } = factory;
+    changeResourceCount(resource, count, storage);
   }
 );
 
