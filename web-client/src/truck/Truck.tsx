@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { CityInline } from "../world/CityInline";
 import { useGetCities, useGetHighlightedCity } from "../world/selectors";
 import {
-  createBuyResourceRequestMessage, createSellResourceRequestMessage,
+  createBuyResourceRequestMessage,
+  createSellResourceRequestMessage,
   createTruckTravelMessage,
   dump
 } from "./message";
@@ -46,6 +47,7 @@ const Header = styled.div`
 export function Truck({ truck }: TruckProps) {
   const highlightedCityId = useGetHighlightedCity();
   const { socket } = useTruckSocket();
+  const [hidden, setHidden] = useState(false);
 
   const { id, name, navigation, storage, texture } = truck;
   const { currentCityId, nextCityId } = navigation;
@@ -74,6 +76,12 @@ export function Truck({ truck }: TruckProps) {
         </div>
         <div>
           <Icon
+              type={hidden ? "down" : "up"}
+              onClick={() => {
+                setHidden(!hidden);
+              }}
+          />
+          <Icon
             type="delete"
             onClick={() => {
               socket.send(dump(id));
@@ -84,22 +92,24 @@ export function Truck({ truck }: TruckProps) {
           </Tooltip>
         </div>
       </Header>
-      <Card bodyStyle={cardStyle}>
-        <span>
-          <TruckIcon texture={texture} />
-          {nextCityId ? "->" : " "}
-          <CityInline cityId={nextCityId || currentCityId} />
-        </span>
-        <Divider style={{ margin: "4px" }} />
-        <Storage storage={storage} />
-        <Divider style={{ margin: "4px" }} />
-        <div style={buyStyle}>
-          <Trade truck={truck} cityId={nextCityId || currentCityId} />
+      {!hidden && (
+        <Card bodyStyle={cardStyle}>
+          <span>
+            <TruckIcon texture={texture} />
+            {nextCityId ? "->" : " "}
+            <CityInline cityId={nextCityId || currentCityId} />
+          </span>
           <Divider style={{ margin: "4px" }} />
-        </div>
-        {!nextCityId && <TravelTo truck={truck} />}
-        {nextCityId && <Traveling truck={truck} />}
-      </Card>
+          <Storage storage={storage} />
+          <Divider style={{ margin: "4px" }} />
+          <div style={buyStyle}>
+            <Trade truck={truck} cityId={nextCityId || currentCityId} />
+            <Divider style={{ margin: "4px" }} />
+          </div>
+          {!nextCityId && <TravelTo truck={truck} />}
+          {nextCityId && <Traveling truck={truck} />}
+        </Card>
+      )}
     </>
   );
 }
@@ -356,21 +366,21 @@ export function FactoryResource({
           <Button
             icon={"dollar"}
             onClick={() => {
-              let message = '';
+              let message = "";
               if (type === "INPUT") {
                 message = createSellResourceRequestMessage(
-                    truck.id,
-                    factory.id,
-                    resource,
-                    selectedCount
+                  truck.id,
+                  factory.id,
+                  resource,
+                  selectedCount
                 );
               }
               if (type === "OUTPUT") {
                 message = createBuyResourceRequestMessage(
-                    truck.id,
-                    factory.id,
-                    resource,
-                    selectedCount
+                  truck.id,
+                  factory.id,
+                  resource,
+                  selectedCount
                 );
               }
               socket.send(message);
