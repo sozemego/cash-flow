@@ -145,7 +145,6 @@ public class FactoryStorage {
 		});
 		this.resources.clear();
 		this.resources.putAll(newResources);
-		calculatePrices();
 	}
 
 	public FactoryStorage copy() {
