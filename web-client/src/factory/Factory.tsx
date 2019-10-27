@@ -18,6 +18,7 @@ import {
   FactoryEvent,
   FactoryEventsProps,
   FactoryProps,
+  IFactory,
   ProducerInputOutputProps,
   ResourceCountProps
 } from "./index";
@@ -81,22 +82,8 @@ export function Factory({ factory }: FactoryProps) {
   const dispatch = useDispatch();
   const highlightedCityId = useGetHighlightedCity();
   const cities = useGetCities();
-  const { id, name, storage, producer, cityId } = factory;
+  const { id, name, storage, cityId } = factory;
   const cityName = cities[cityId].name;
-
-  const { time, clock } = useGameClock({ interval: 500 });
-  const minutes = producer.time;
-  const ms = minutes * 1000;
-
-  let productionTimePassed =
-    (time - producer.productionStartTime) / clock.multiplier;
-  if (productionTimePassed >= ms) {
-    productionTimePassed = ms;
-  }
-
-  const productionEndTime = new Date(
-    producer.productionStartTime + ms * clock.multiplier
-  );
 
   const cardStyle: React.CSSProperties = Object.assign(
     {},
@@ -131,36 +118,51 @@ export function Factory({ factory }: FactoryProps) {
         <FactoryStorage storage={storage} />
         <Divider style={{ margin: "2px" }} />
         <div>
-          <Producer>
-            <ProducerResources>
-              <ProducerInputOutput
-                input={producer.input}
-                output={producer.output}
-              />
-              <div>
-                <Icon type="clock-circle" />
-                <span style={{ marginLeft: "4px" }}>
-                  {formatDuration(minutes)}
-                </span>
-              </div>
-            </ProducerResources>
-            <ProducerProgress>
-              <ProductionDate>
-                {getFormattedTime(new Date(producer.productionStartTime))}
-              </ProductionDate>
-              <Progress
-                percent={(productionTimePassed / ms) * 100}
-                showInfo={false}
-                strokeColor={productionTimePassed === ms ? "gray" : "green"}
-              />
-              <ProductionDate>
-                {getFormattedTime(productionEndTime)}
-              </ProductionDate>
-            </ProducerProgress>
-          </Producer>
+          <FactoryProducer factory={factory} />
         </div>
       </Card>
     </>
+  );
+}
+
+export function FactoryProducer({ factory }: { factory: IFactory }) {
+  const { producer } = factory;
+
+  const { time, clock } = useGameClock({ interval: 500 });
+  const minutes = producer.time;
+  const ms = minutes * 1000;
+
+  const productionEndTime = new Date(
+    producer.productionStartTime + ms * clock.multiplier
+  );
+
+  let productionTimePassed =
+    (time - producer.productionStartTime) / clock.multiplier;
+  if (productionTimePassed >= ms) {
+    productionTimePassed = ms;
+  }
+
+  return (
+    <Producer>
+      <ProducerResources>
+        <ProducerInputOutput input={producer.input} output={producer.output} />
+        <div>
+          <Icon type="clock-circle" />
+          <span style={{ marginLeft: "4px" }}>{formatDuration(minutes)}</span>
+        </div>
+      </ProducerResources>
+      <ProducerProgress>
+        <ProductionDate>
+          {getFormattedTime(new Date(producer.productionStartTime))}
+        </ProductionDate>
+        <Progress
+          percent={(productionTimePassed / ms) * 100}
+          showInfo={false}
+          strokeColor={productionTimePassed === ms ? "gray" : "green"}
+        />
+        <ProductionDate>{getFormattedTime(productionEndTime)}</ProductionDate>
+      </ProducerProgress>
+    </Producer>
   );
 }
 
