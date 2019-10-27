@@ -1,19 +1,31 @@
 package com.soze.common.dto;
 
+import java.util.Map;
+
 public class ProducerDTO {
 
-	private String resource;
+	private Map<Resource, Integer> input;
+	private Map<Resource, Integer> output;
+
 	private long time;
 	private long progress;
 	private boolean producing = false;
 	private long productionStartTime = -1L;
 
-	public String getResource() {
-		return resource;
+	public Map<Resource, Integer> getInput() {
+		return input;
 	}
 
-	public void setResource(String resource) {
-		this.resource = resource;
+	public void setInput(Map<Resource, Integer> input) {
+		this.input = input;
+	}
+
+	public Map<Resource, Integer> getOutput() {
+		return output;
+	}
+
+	public void setOutput(Map<Resource, Integer> output) {
+		this.output = output;
 	}
 
 	public long getTime() {
@@ -46,5 +58,10 @@ public class ProducerDTO {
 
 	public void setProductionStartTime(long productionStartTime) {
 		this.productionStartTime = productionStartTime;
+	}
+
+	@Override
+	public String toString() {
+		return "ProducerDTO{" + "input=" + input + ", output=" + output + ", time=" + time + ", progress=" + progress + ", producing=" + producing + ", productionStartTime=" + productionStartTime + '}';
 	}
 }
