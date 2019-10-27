@@ -120,6 +120,12 @@ public class Factory implements EventVisitor, CommandVisitor {
 		if (!storage.hasResource(sellResource.getResource(), sellResource.getCount())) {
 			return new ArrayList<>();
 		}
+		Producer producer = getProducer();
+		Map<Resource, Integer> input = producer.getInput();
+		if (input.containsKey(sellResource.getResource())) {
+			return new ArrayList<>();
+		}
+
 		storage.removeResource(sellResource.getResource(), sellResource.getCount());
 
 		ResourceSold resourceSold = new ResourceSold(getId().toString(), LocalDateTime.now(), 1,
