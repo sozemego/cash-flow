@@ -13,6 +13,7 @@ public class FactoryStorage {
 	public FactoryStorage(Map<Resource, StorageSlot> resources) {
 		Objects.requireNonNull(this.resources = resources);
 		validateSlots(this.resources);
+		calculatePrices();
 	}
 
 	public void addResource(Resource resource) {
@@ -25,6 +26,7 @@ public class FactoryStorage {
 		}
 		StorageSlot slot = getSlot(resource);
 		slot.setCount(slot.getCount() + count);
+		calculatePrices();
 	}
 
 	public void addResources(Map<Resource, Integer> resourceCounts) {
@@ -32,6 +34,7 @@ public class FactoryStorage {
 			return;
 		}
 		resourceCounts.forEach(this::addResource);
+		calculatePrices();
 	}
 
 	public boolean canFit(Resource resource) {
@@ -62,6 +65,7 @@ public class FactoryStorage {
 
 		StorageSlot slot = getSlot(resource);
 		slot.setCount(slot.getCount() - count);
+		calculatePrices();
 	}
 
 	public void removeResources(Map<Resource, Integer> resourceCounts) {
@@ -69,6 +73,7 @@ public class FactoryStorage {
 			return;
 		}
 		resourceCounts.forEach(this::removeResource);
+		calculatePrices();
 	}
 
 	public boolean hasResource(Resource resource) {
@@ -108,6 +113,7 @@ public class FactoryStorage {
 			int transferCount = Math.min(slot.getCount(), getRemainingCapacity(resource));
 			addResource(resource, transferCount);
 		});
+		calculatePrices();
 	}
 
 	/**
@@ -139,6 +145,7 @@ public class FactoryStorage {
 		});
 		this.resources.clear();
 		this.resources.putAll(newResources);
+		calculatePrices();
 	}
 
 	public FactoryStorage copy() {
@@ -151,6 +158,7 @@ public class FactoryStorage {
 
 	public void setCapacity(Resource resource, int capacity) {
 		getSlot(resource).setCapacity(capacity);
+		calculatePrices();
 	}
 
 	public void changeCapacities(Map<Resource, Integer> capacityChanges) {
@@ -158,7 +166,7 @@ public class FactoryStorage {
 			StorageSlot slot = getSlot(resource);
 			slot.setCapacity(slot.getCapacity() + change);
 		});
-		clean();
+		calculatePrices();
 	}
 
 	public Map<Resource, StorageSlot> getResources() {
@@ -188,6 +196,21 @@ public class FactoryStorage {
 			}
 			return slot;
 		});
+	}
+
+	private void calculatePrices() {
+		getResources().forEach((resource, slot) -> {
+			if (slot.getCapacity() == 0) {
+				return;
+			}
+
+			float percentTaken = slot.getCount() / (float) slot.getCapacity();
+			float percentFree = 1f - percentTaken;
+			float priceRange = resource.getMaxPrice() - resource.getMinPrice();
+			float price = (float) resource.getMinPrice() + (priceRange * percentFree);
+			slot.setPrice(Math.round(price));
+		});
+		clean();
 	}
 
 	@Override

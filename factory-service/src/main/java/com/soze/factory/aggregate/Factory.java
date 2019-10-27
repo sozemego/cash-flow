@@ -93,7 +93,6 @@ public class Factory implements EventVisitor, CommandVisitor {
 		FactoryStorage storage = getStorage().copy();
 		Producer producer = getProducer();
 		storage.addResources(producer.getOutput());
-		calculatePrices();
 		ResourcePriceChanged resourcePriceChanged = new ResourcePriceChanged(
 			getId().toString(), LocalDateTime.now(), storage.getPrices());
 		return Arrays.asList(productionFinished, resourcePriceChanged);
@@ -126,7 +125,6 @@ public class Factory implements EventVisitor, CommandVisitor {
 		ResourceSold resourceSold = new ResourceSold(getId().toString(), LocalDateTime.now(), 1,
 																								 sellResource.getResource().name(), sellResource.getCount()
 		);
-		calculatePrices();
 		ResourcePriceChanged resourcePriceChanged = new ResourcePriceChanged(getId().toString(), LocalDateTime.now(), storage.getPrices());
 
 		return Arrays.asList(resourceSold, resourcePriceChanged);
@@ -144,7 +142,6 @@ public class Factory implements EventVisitor, CommandVisitor {
 																								 buyResource.getResource().name(), buyResource.getCount()
 		);
 
-		calculatePrices();
 		ResourcePriceChanged resourcePriceChanged = new ResourcePriceChanged(getId().toString(), LocalDateTime.now(), storage.getPrices());
 
 		return Arrays.asList(resourceBought, resourcePriceChanged);
@@ -163,7 +160,6 @@ public class Factory implements EventVisitor, CommandVisitor {
 		this.name = factoryCreated.name;
 		this.texture = factoryCreated.texture;
 		this.cityId = factoryCreated.cityId;
-		calculatePrices();
 	}
 
 	@Override
@@ -176,7 +172,6 @@ public class Factory implements EventVisitor, CommandVisitor {
 		FactoryStorage storage = getStorage();
 		storage.removeResources(producer.getInput());
 		producer.startProduction(productionStarted2.productionStartTime);
-		calculatePrices();
 	}
 
 	@Override
@@ -188,7 +183,6 @@ public class Factory implements EventVisitor, CommandVisitor {
 	public void visit(ResourceStorageCapacityChanged resourceStorageCapacityChanged) {
 		FactoryStorage factoryStorage = getStorage();
 		factoryStorage.changeCapacities(resourceStorageCapacityChanged.capacityChanges);
-		calculatePrices();
 	}
 
 	@Override
@@ -204,7 +198,6 @@ public class Factory implements EventVisitor, CommandVisitor {
 		producer.setProducing(false);
 		producer.setTime(productionLineAdded2.time);
 		this.producer = producer;
-		calculatePrices();
 	}
 
 	@Override
@@ -212,7 +205,6 @@ public class Factory implements EventVisitor, CommandVisitor {
 		Map<Resource, Integer> output = getProducer().getOutput();
 		FactoryStorage storage = getStorage();
 		storage.addResources(output);
-		calculatePrices();
 		getProducer().stopProduction();
 	}
 
@@ -220,44 +212,17 @@ public class Factory implements EventVisitor, CommandVisitor {
 	public void visit(ResourceSold resourceSold) {
 		FactoryStorage storage = getStorage();
 		storage.removeResource(Resource.valueOf(resourceSold.resource), resourceSold.count);
-		calculatePrices();
 	}
 
 	@Override
 	public void visit(ResourceBought resourceBought) {
 		FactoryStorage storage = getStorage();
 		storage.addResource(Resource.valueOf(resourceBought.resource), resourceBought.count);
-		calculatePrices();
 	}
 
 	@Override
 	public void visit(ResourcePriceChanged resourcePriceChanged) {
 
-	}
-
-	private void calculatePrices() {
-		Producer producer = getProducer();
-		FactoryStorage storage = getStorage();
-		storage.getResources().forEach((resource, slot) -> {
-			if (slot.getCapacity() == 0) {
-				return;
-			}
-
-			float price = 0;
-			if (producer.isOutput(resource)) {
-				float percentTaken = slot.getCount() / (float) slot.getCapacity();
-				float percentFree = 1f - percentTaken;
-				float priceRange = resource.getMaxPrice() - resource.getMinPrice();
-				price = (float) resource.getMinPrice() + (priceRange * percentFree);
-			}
-			if (producer.isInput(resource)) {
-				float percentTaken = slot.getCount() / (float) slot.getCapacity();
-				float priceRange = resource.getMaxPrice() - resource.getMinPrice();
-				price = (float) resource.getMinPrice() + (priceRange * percentTaken);
-			}
-			slot.setPrice(Math.round(price));
-		});
-		storage.clean();
 	}
 
 }
