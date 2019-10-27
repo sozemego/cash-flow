@@ -44,7 +44,7 @@
       }
     },
     "producer": {
-      "input": { "WOOD": 1 },
+      "input": { "WOOD": 4 },
       "output": {
         "PLANK": 2
       },
