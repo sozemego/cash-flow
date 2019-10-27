@@ -1,11 +1,10 @@
 import React from "react";
 import { Icon } from "antd";
 import styled from "styled-components";
-import { useTransition, animated, config } from "react-spring";
+import { Transition } from "react-spring/renderprops-universal";
 
 import { GameEventLevelProps, GameEventProps, Level } from "./index.d";
 import { getFormattedDateTime } from "../clock/business";
-import { Transition } from "react-spring/renderprops-universal";
 
 const Container = styled.div`
   display: flex;
