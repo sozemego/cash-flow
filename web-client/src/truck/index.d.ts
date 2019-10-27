@@ -25,7 +25,7 @@ export interface TravellingProps {
   truck: ITruck;
 }
 
-export interface BuyProps {
+export interface TradeProps {
   truck: ITruck;
   cityId: string;
 }

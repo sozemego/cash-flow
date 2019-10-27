@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 	@JsonSubTypes.Type(value = ProductionLineAdded2.class, name = "PRODUCTION_LINE_ADDED2"),
 	@JsonSubTypes.Type(value = ProductionFinished.class, name = "PRODUCTION_FINISHED"),
 	@JsonSubTypes.Type(value = ResourceSold.class, name = "RESOURCE_SOLD"),
+	@JsonSubTypes.Type(value = ResourceBought.class, name = "RESOURCE_BOUGHT"),
 	@JsonSubTypes.Type(value = ResourceStorageCapacityChanged.class, name = "RESOURCE_STORAGE_CAPACITY_CHANGED"),
 	@JsonSubTypes.Type(value = ResourcePriceChanged.class, name = "RESOURCE_PRICE_CHANGED"),
 })
@@ -48,6 +49,6 @@ public abstract class Event implements Serializable {
 
 	public enum EventType {
 		FACTORY_CREATED, PRODUCTION_STARTED, STORAGE_CAPACITY_CHANGED, PRODUCTION_LINE_ADDED, PRODUCTION_FINISHED, RESOURCE_SOLD,
-		RESOURCE_STORAGE_CAPACITY_CHANGED, RESOURCE_PRICE_CHANGED, PRODUCTION_STARTED2, PRODUCTION_LINE_ADDED2;
+		RESOURCE_STORAGE_CAPACITY_CHANGED, RESOURCE_PRICE_CHANGED, PRODUCTION_STARTED2, PRODUCTION_LINE_ADDED2, RESOURCE_BOUGHT;
 	}
 }

@@ -1,11 +1,13 @@
 package com.soze.factory.controller;
 
 import com.soze.common.client.FactoryServiceClient;
+import com.soze.common.dto.BuyResultDTO;
 import com.soze.common.dto.FactoryDTO;
 import com.soze.common.dto.Resource;
 import com.soze.common.dto.SellResultDTO;
 import com.soze.factory.FactoryConverter;
 import com.soze.factory.aggregate.Factory;
+import com.soze.factory.command.BuyResource;
 import com.soze.factory.command.Command;
 import com.soze.factory.command.SellResource;
 import com.soze.factory.event.Event;
@@ -97,7 +99,19 @@ public class FactoryController implements FactoryServiceClient {
 			LOG.warn("Exception when trying to sell resource", e);
 			return new SellResultDTO(factoryId, resource, 0);
 		}
+	}
 
+	@Override
+	public BuyResultDTO buy(String factoryId, String resourceStr, Integer count) {
+		LOG.info("Called /buy endpoint, factoryId = {}, resource = {}, count = {}", factoryId, resourceStr, count);
+		Resource resource = Resource.valueOf(resourceStr);
+		try {
+			factoryCommandService.visit(new BuyResource(UUID.fromString(factoryId), resource, count));
+			return new BuyResultDTO(factoryId, resource, count);
+		} catch (Exception e) {
+			LOG.warn("Exception when trying to buy resource", e);
+			return new BuyResultDTO(factoryId, resource, 0);
+		}
 	}
 
 	@GetMapping("/events")

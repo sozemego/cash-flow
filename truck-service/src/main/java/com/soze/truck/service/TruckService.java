@@ -15,6 +15,7 @@ import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.external.RemoteWorldService;
 import com.soze.truck.repository.TruckRepository;
 import com.soze.truck.saga.BuyResourceSaga;
+import com.soze.truck.saga.SellResourceSaga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +127,13 @@ public class TruckService {
 		new BuyResourceSaga(
 			this, truckRepository, remoteFactoryService, playerService, sessionRegistry, truckId, factoryId, resource,
 			count
+		).run();
+	}
+
+	public void sellResource(UUID truckId, String factoryId, Resource resource, int count) {
+		new SellResourceSaga(
+			this, truckRepository, remoteFactoryService, playerService, sessionRegistry, truckId, resource, count,
+			factoryId
 		).run();
 	}
 

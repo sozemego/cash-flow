@@ -1,5 +1,6 @@
 package com.soze.truck.external;
 
+import com.soze.common.dto.BuyResultDTO;
 import com.soze.common.dto.FactoryDTO;
 import com.soze.common.client.FactoryServiceClient;
 import com.soze.common.dto.SellResultDTO;
@@ -25,6 +26,11 @@ public class RemoteFactoryService {
 	public SellResultDTO sell(String factoryId, String resource, int count) {
 		LOG.info("calling /sell, factoryId = {}, resource = {}, count = {}", factoryId, resource, count);
 		return client.sell(factoryId, resource, count);
+	}
+
+	public BuyResultDTO buy(String factoryId, String resource, int count) {
+		LOG.info("calling /buy, factoryId = {}, resource = {}, count = {}", factoryId, resource, count);
+		return client.buy(factoryId, resource, count);
 	}
 
 	public Optional<FactoryDTO> getFactory(String factoryId) {

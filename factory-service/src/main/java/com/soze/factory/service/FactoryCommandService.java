@@ -81,6 +81,11 @@ public class FactoryCommandService implements CommandVisitor {
 		return visit((Command) changeResourceStorageCapacity);
 	}
 
+	@Override
+	public List<Event> visit(BuyResource buyResource) {
+		return visit((Command) buyResource);
+	}
+
 	private List<Event> visit(Command command) {
 		LOG.info("{}", command);
 		Factory factory = getFactory(command.getEntityId());

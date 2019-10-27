@@ -12,5 +12,6 @@ public interface EventVisitor {
 	void visit(ResourcePriceChanged resourcePriceChanged);
   void visit(ProductionStarted2 productionStarted2);
 	void visit(ProductionLineAdded2 productionLineAdded2);
+	void visit(ResourceBought resourceBought);
 
 }

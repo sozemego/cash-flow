@@ -1,10 +1,7 @@
 package com.soze.truck.ws;
 
 import com.soze.common.json.JsonUtils;
-import com.soze.common.message.client.BuyResourceRequest;
-import com.soze.common.message.client.ClientMessage;
-import com.soze.common.message.client.DumpContent;
-import com.soze.common.message.client.TruckTravelRequest;
+import com.soze.common.message.client.*;
 import com.soze.common.message.server.TruckAdded;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.service.SessionRegistry;
@@ -82,6 +79,13 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 																 buyResourceRequest.getResource(), buyResourceRequest.getCount()
 																);
 			}
+			if (clientMessage.getType() == ClientMessage.ClientMessageType.SELL_RESOURCE_REQUEST) {
+				SellResourceRequest sellResourceRequest = (SellResourceRequest) clientMessage;
+				truckService.sellResource(UUID.fromString(sellResourceRequest.getTruckId()), sellResourceRequest.getFactoryId(),
+																	sellResourceRequest.getResource(), sellResourceRequest.getCount()
+																 );
+			}
+
 			if (clientMessage.getType() == ClientMessage.ClientMessageType.DUMP_CONTENT) {
 				DumpContent dumpContent = (DumpContent) clientMessage;
 				truckService.dump(UUID.fromString(dumpContent.getEntityId()));

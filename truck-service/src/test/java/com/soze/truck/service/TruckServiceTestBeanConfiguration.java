@@ -81,6 +81,11 @@ public class TruckServiceTestBeanConfiguration {
 			public FactoryDTO getFactory(String factoryId) {
 				return null;
 			}
+
+			@Override
+			public BuyResultDTO buy(String factoryId, String resource, Integer count) {
+				return null;
+			}
 		};
 	}
 

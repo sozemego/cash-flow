@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { CityInline } from "../world/CityInline";
 import { useGetCities, useGetHighlightedCity } from "../world/selectors";
 import {
-  createBuyResourceRequestMessage,
+  createBuyResourceRequestMessage, createSellResourceRequestMessage,
   createTruckTravelMessage,
   dump
 } from "./message";
@@ -27,7 +27,7 @@ import Select from "antd/lib/select";
 import { IFactory, InputOutput } from "../factory";
 import { PointerEventsProperty } from "csstype";
 import {
-  BuyProps,
+  TradeProps,
   FactoryResourceProps,
   TravellingProps,
   TravelToProps,
@@ -94,7 +94,7 @@ export function Truck({ truck }: TruckProps) {
         <Storage storage={storage} />
         <Divider style={{ margin: "4px" }} />
         <div style={buyStyle}>
-          <Buy truck={truck} cityId={nextCityId || currentCityId} />
+          <Trade truck={truck} cityId={nextCityId || currentCityId} />
           <Divider style={{ margin: "4px" }} />
         </div>
         {!nextCityId && <TravelTo truck={truck} />}
@@ -256,7 +256,7 @@ function getResourceList(factories: IFactory[]): ResourceFromFactory[] {
   return resources;
 }
 
-const BuyContainer = styled.div`
+const TradeContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -267,7 +267,7 @@ const TradeableResourceContainer = styled.div`
   justify-content: space-between;
 `;
 
-export function Buy({ truck, cityId }: BuyProps) {
+export function Trade({ truck, cityId }: TradeProps) {
   const allFactories: IFactory[] = useGetFactories();
   const factoriesInCity = allFactories.filter(
     factory => factory.cityId === cityId
@@ -285,7 +285,7 @@ export function Buy({ truck, cityId }: BuyProps) {
   }
 
   return (
-    <BuyContainer>
+    <TradeContainer>
       <span>
         Resources in <CityInline cityId={cityId} />
       </span>
@@ -302,7 +302,7 @@ export function Buy({ truck, cityId }: BuyProps) {
           />
         );
       })}
-    </BuyContainer>
+    </TradeContainer>
   );
 }
 
@@ -314,7 +314,6 @@ export function FactoryResource({
   factory,
   type
 }: FactoryResourceProps) {
-
   const { socket } = useTruckSocket();
   const [selectedCount, setSelectedCount] = useState(0);
   const { cash = 0 } = useGetPlayer();
@@ -325,15 +324,13 @@ export function FactoryResource({
     const capacity = truck.storage.capacity;
     const capacityTaken = calculateCapacityTaken(truck.storage);
     const canAffordAmount = Number((cash / price).toFixed(0));
-    max = Math.min(
-        canAffordAmount,
-        Math.min(capacity - capacityTaken, count)
-    );
+    max = Math.min(canAffordAmount, Math.min(capacity - capacityTaken, count));
   }
   if (type === "INPUT") {
     const slot = factory.storage[resource as ResourceName]!;
     const capacityRemaining = slot.capacity - slot.count;
-    const resourceInTruck = truck.storage.resources[resource as ResourceName] || 0;
+    const resourceInTruck =
+      truck.storage.resources[resource as ResourceName] || 0;
     max = Math.min(capacityRemaining, resourceInTruck);
   }
 
@@ -358,19 +355,35 @@ export function FactoryResource({
         <div style={{ minWidth: "84px" }}>
           <Button
             icon={"dollar"}
-            onClick={() =>
-              socket.send(
-                createBuyResourceRequestMessage(
-                  truck.id,
-                  factory.id,
-                  resource,
-                  selectedCount
-                )
-              )
-            }
+            onClick={() => {
+              let message = '';
+              if (type === "INPUT") {
+                message = createSellResourceRequestMessage(
+                    truck.id,
+                    factory.id,
+                    resource,
+                    selectedCount
+                );
+              }
+              if (type === "OUTPUT") {
+                message = createBuyResourceRequestMessage(
+                    truck.id,
+                    factory.id,
+                    resource,
+                    selectedCount
+                );
+              }
+              socket.send(message);
+            }}
             disabled={tradeDisabled}
             block
-            style={{ backgroundColor: tradeDisabled ? "#DDDDDD" : type === "INPUT" ? "#78D89C" : "#af2a1e" }}
+            style={{
+              backgroundColor: tradeDisabled
+                ? "#DDDDDD"
+                : type === "INPUT"
+                ? "#78D89C"
+                : "#af2a1e"
+            }}
           >
             {`${type === "OUTPUT" ? "Buy" : "Sell"} (${totalPrice})`}
           </Button>

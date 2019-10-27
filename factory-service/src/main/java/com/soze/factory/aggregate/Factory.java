@@ -133,6 +133,24 @@ public class Factory implements EventVisitor, CommandVisitor {
 	}
 
 	@Override
+	public List<Event> visit(BuyResource buyResource) {
+		FactoryStorage storage = getStorage().copy();
+		if (!storage.canFit(buyResource.getResource(), buyResource.getCount())) {
+			return new ArrayList<>();
+		}
+		storage.addResource(buyResource.getResource(), buyResource.getCount());
+
+		ResourceBought resourceBought = new ResourceBought(getId().toString(), LocalDateTime.now(), 1,
+																								 buyResource.getResource().name(), buyResource.getCount()
+		);
+
+		calculatePrices();
+		ResourcePriceChanged resourcePriceChanged = new ResourcePriceChanged(getId().toString(), LocalDateTime.now(), storage.getPrices());
+
+		return Arrays.asList(resourceBought, resourcePriceChanged);
+	}
+
+	@Override
 	public List<Event> visit(ChangeResourceStorageCapacity changeResourceStorageCapacity) {
 		return Collections.singletonList(new ResourceStorageCapacityChanged(getId().toString(), LocalDateTime.now(), 1,
 																																				changeResourceStorageCapacity.getCapacityChanges()
@@ -206,6 +224,13 @@ public class Factory implements EventVisitor, CommandVisitor {
 	}
 
 	@Override
+	public void visit(ResourceBought resourceBought) {
+		FactoryStorage storage = getStorage();
+		storage.addResource(Resource.valueOf(resourceBought.resource), resourceBought.count);
+		calculatePrices();
+	}
+
+	@Override
 	public void visit(ResourcePriceChanged resourcePriceChanged) {
 
 	}
@@ -232,6 +257,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 			}
 			slot.setPrice(Math.round(price));
 		});
+		storage.clean();
 	}
 
 }
