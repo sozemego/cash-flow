@@ -68,7 +68,7 @@ public class EventUpcastService {
 		Event result = event;
 		while (upcasts.containsKey(result.getType())) {
 			Function<Event, Event> upcast = upcasts.get(result.getType());
-			LOG.info("Upcasting {}", result);
+			LOG.trace("Upcasting {}", result);
 			result = upcast.apply(result);
 		}
 		return result;

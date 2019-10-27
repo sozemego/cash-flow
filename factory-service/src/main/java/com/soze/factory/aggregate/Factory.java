@@ -153,6 +153,8 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public void visit(ProductionStarted2 productionStarted2) {
+		FactoryStorage storage = getStorage();
+		storage.removeResources(producer.getInput());
 		producer.startProduction(productionStarted2.productionStartTime);
 	}
 

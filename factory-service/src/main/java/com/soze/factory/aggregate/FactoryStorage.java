@@ -68,6 +68,14 @@ public class FactoryStorage {
 		calculatePrices();
 	}
 
+	public void removeResources(Map<Resource, Integer> resourceCounts) {
+		if (!hasResources(resourceCounts)) {
+			return;
+		}
+		resourceCounts.forEach(this::removeResource);
+		calculatePrices();
+	}
+
 	public boolean hasResource(Resource resource) {
 		return hasResource(resource, 1);
 	}
