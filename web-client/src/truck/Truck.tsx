@@ -283,7 +283,7 @@ export function Buy({ truck, cityId }: BuyProps) {
       {resources.map(({ factoryId, resource, count, price }) => {
         return (
           <FactoryResource
-            key={factoryId}
+            key={factoryId + resource}
             factoryId={factoryId}
             resource={resource as ResourceName}
             truck={truck}
