@@ -4,7 +4,7 @@ import Icon from "antd/lib/icon";
 import Tag from "antd/lib/tag";
 import {
   IStorage,
-  ResourceCount,
+  IResourceCount,
   ResourceListProps,
   StorageProps
 } from "./index";
@@ -12,7 +12,7 @@ import { ResourceName } from "../world";
 
 export function Storage({ storage }: StorageProps) {
   const capacityTaken = calculateCapacityTaken(storage);
-  const resourceCounts: ResourceCount[] = Object.entries(storage.resources).map(
+  const resourceCounts: IResourceCount[] = Object.entries(storage.resources).map(
     entry => {
       const resource = entry[0] as ResourceName;
       const count = entry[1] as number;

@@ -2,7 +2,7 @@ import { IStorage } from "./index.d";
 import { ResourceName } from "../world";
 import { STORAGE_CONTENT_CHANGED } from "../truck/actions";
 
-export interface ResourceCount {
+export interface IResourceCount {
     resource: ResourceName;
     count: number;
 }
@@ -12,7 +12,7 @@ export interface StorageProps {
 }
 
 export interface ResourceListProps {
-    resources: ResourceCount[]
+    resources: IResourceCount[];
 }
 
 export interface IStorage {

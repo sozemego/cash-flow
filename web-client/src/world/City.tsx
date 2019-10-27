@@ -12,7 +12,7 @@ import { ResourceList } from "../storage/Storage";
 import { IFactoryStorage, IStorageSlot } from "../factory";
 import { combine } from "../factory/FactoryStorage";
 import { CityProps, ResourceName } from "./index";
-import { ResourceCount } from "../storage";
+import { IResourceCount } from "../storage";
 import { useGetTrucks } from "../truck/selectors";
 import { TruckIcon } from "../truck/Truck";
 
@@ -35,7 +35,7 @@ export function City({ city }: CityProps) {
     factoriesInThisCity.map(factory => factory.storage)
   );
 
-  const resourceCounts: ResourceCount[] = Object.entries(totalCityStorage).map(
+  const resourceCounts: IResourceCount[] = Object.entries(totalCityStorage).map(
     entry => {
       const resource = entry[0] as ResourceName;
       const slot = entry[1] as IStorageSlot;

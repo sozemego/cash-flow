@@ -11,7 +11,11 @@ import {
   RESOURCE_SOLD,
   RESOURCE_STORAGE_CAPACITY_CHANGED
 } from "./actions";
-import { ResourceCounts, StorageContentChangedAction } from "../storage";
+import {
+  IResourceCount,
+  ResourceCounts,
+  StorageContentChangedAction
+} from "../storage";
 
 export interface FactoryState {
   factories: IFactory[];
@@ -37,8 +41,17 @@ export interface IStorageSlot {
 
 export type IStorageSlotEntry = [ResourceName, IStorageSlot];
 
+export type ProducerEntry = [string, number];
+
+export type ProducerInput = {
+  [K in ResourceName]: number;
+};
+
+export type ProducerOutput = ProducerInput;
+
 export interface Producer {
-  resource: ResourceName;
+  input: ProducerInput;
+  output: ProducerOutput;
   time: number;
   progress: number;
   producing: boolean;
@@ -58,6 +71,18 @@ export interface FactoryEventsProps {
 export interface FactoryByCityProps {
   factories: IFactory[];
   cities: ICity[];
+}
+
+export interface ProducerInputOutputProps {
+  input: ProducerInput;
+  output: ProducerOutput;
+}
+
+export type InputOutput = "INPUT" | "OUTPUT";
+
+export interface ResourceCountProps {
+  resourceCount: IResourceCount;
+  input: InputOutput;
 }
 
 export interface BaseFactoryEvent {
@@ -114,7 +139,8 @@ export interface ResourcePriceChangedAction {
 export interface ProductionLineAddedAction {
   type: typeof PRODUCTION_LINE_ADDED;
   entityId: string;
-  resource: ResourceName;
+  input: ProducerInput;
+  output: ProducerOutput;
   time: number;
 }
 

@@ -18,8 +18,13 @@ import {
   FactoryEvent,
   FactoryEventsProps,
   FactoryProps,
+  ProducerInputOutputProps,
+  ResourceCountProps
 } from "./index";
 import { FactoryStorage } from "./FactoryStorage";
+import { ResourceName } from "../world/index.d";
+import { ResourceIcon } from "../components/ResourceIcon";
+import { IResourceCount } from "../storage";
 
 const Header = styled.div`
   display: flex;
@@ -30,6 +35,12 @@ const Header = styled.div`
 const Producer = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const ProducerResources = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const ProducerProgress = styled.div`
@@ -121,12 +132,18 @@ export function Factory({ factory }: FactoryProps) {
         <Divider style={{ margin: "2px" }} />
         <div>
           <Producer>
-            <div>
-              <span>
-                Production of 1 {producer.resource} takes{" "}
-                {formatDuration(minutes)}
-              </span>
-            </div>
+            <ProducerResources>
+              <ProducerInputOutput
+                input={producer.input}
+                output={producer.output}
+              />
+              <div>
+                <Icon type="clock-circle" />
+                <span style={{ marginLeft: "4px" }}>
+                  {formatDuration(minutes)}
+                </span>
+              </div>
+            </ProducerResources>
             <ProducerProgress>
               <ProductionDate>
                 {getFormattedTime(new Date(producer.productionStartTime))}
@@ -144,6 +161,62 @@ export function Factory({ factory }: FactoryProps) {
         </div>
       </Card>
     </>
+  );
+}
+
+export function ProducerInputOutput({
+  input,
+  output
+}: ProducerInputOutputProps) {
+  function nonZeroCount(resourceCount: IResourceCount) {
+    return resourceCount.count > 0;
+  }
+
+  const inputs = Object.keys(input)
+    .map(resource => ({
+      resource: resource as ResourceName,
+      count: input[resource as ResourceName]
+    }))
+    .filter(nonZeroCount);
+  const outputs = Object.keys(output)
+    .map(resource => ({
+      resource: resource as ResourceName,
+      count: output[resource as ResourceName]
+    }))
+    .filter(nonZeroCount);
+
+  return (
+    <div
+      style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+    >
+      {inputs.map(input => (
+        <ResourceCount
+          key={input.resource}
+          resourceCount={input}
+          input={"INPUT"}
+        />
+      ))}
+      {inputs.length > 0 && (
+        <Icon type="double-right" style={{ marginRight: "8px" }} />
+      )}
+      {outputs.map(output => (
+        <ResourceCount
+          key={output.resource}
+          resourceCount={output}
+          input={"OUTPUT"}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function ResourceCount({ resourceCount, input }: ResourceCountProps) {
+  const { resource, count } = resourceCount;
+  return (
+    <Tag color={input === "INPUT" ? "red" : "green"} key={resource}>
+      <span>{count}</span>
+      <ResourceIcon resource={resource} />
+    </Tag>
   );
 }
 

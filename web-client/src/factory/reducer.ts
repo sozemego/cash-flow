@@ -18,7 +18,10 @@ import {
   ProductionFinishedAction,
   ResourceSoldAction,
   ResourcePriceChangedAction,
-  ProductionLineAddedAction
+  ProductionLineAddedAction,
+  IFactoryStorage,
+  ProducerInput,
+  ProducerOutput
 } from "./index";
 import { StorageContentChangedAction } from "../storage";
 import { ResourceName } from "../world";
@@ -70,9 +73,8 @@ const productionFinished = produce(
       return state;
     }
     const { producer, storage } = factory;
-    const { resource } = producer;
-    const slot = storage[resource];
-    slot!.count += 1;
+    const { output } = producer;
+    addOutput(storage, output);
     factory.producer.productionStartTime = -1;
   }
 );
@@ -83,6 +85,9 @@ const productionStarted = produce((state, action) => {
   if (!factory) {
     return state;
   }
+  const { producer, storage } = factory;
+  const { input } = producer;
+  removeInput(storage, input);
   factory.producer.productionStartTime = productionStartTime;
 });
 
@@ -131,9 +136,7 @@ const resourceSold = produce(
       return;
     }
     const { storage } = factory;
-    const slot = storage[resource];
-    slot!.count -= count;
-    storage[resource] = slot;
+    changeResourceCount(resource, -count, storage);
   }
 );
 
@@ -153,13 +156,14 @@ const resourcePriceChanged = produce(
 
 const productionLineAdded = produce(
   (state: FactoryState, action: ProductionLineAddedAction) => {
-    const { entityId, resource, time } = action;
+    const { entityId, input, output, time } = action;
     const factory = findFactory(state, entityId);
     if (!factory) {
       return;
     }
     const { producer } = factory;
-    producer.resource = resource;
+    producer.input = input;
+    producer.output = output;
     producer.time = time;
   }
 );
@@ -169,4 +173,27 @@ function findFactory(
   factoryId: string
 ): IFactory | undefined {
   return state.factories.find(factory => factory.id === factoryId);
+}
+
+function removeInput(storage: IFactoryStorage, input: ProducerInput) {
+  Object.keys(input).forEach(resource => {
+    const count = input[resource as ResourceName] || 0;
+    changeResourceCount(resource as ResourceName, -count, storage);
+  });
+}
+
+function addOutput(storage: IFactoryStorage, output: ProducerOutput) {
+  Object.keys(output).forEach(resource => {
+    const count = output[resource as ResourceName] || 0;
+    changeResourceCount(resource as ResourceName, count, storage);
+  });
+}
+
+function changeResourceCount(
+  resource: ResourceName,
+  count: number,
+  storage: IFactoryStorage
+) {
+  const slot = storage[resource];
+  slot!.count += count;
 }
