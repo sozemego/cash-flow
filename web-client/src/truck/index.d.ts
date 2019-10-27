@@ -7,6 +7,7 @@ import {
 } from "./actions";
 import { ResourceName } from "../world";
 import { IStorage, StorageContentChangedAction } from "../storage";
+import { IFactory, InputOutput } from "../factory";
 
 export interface TruckState {
   trucks: TruckMap;
@@ -34,7 +35,8 @@ export interface FactoryResourceProps {
   resource: ResourceName;
   count: number;
   price: number;
-  factoryId: string;
+  factory: IFactory;
+  type: InputOutput;
 }
 
 export interface TruckListProps {

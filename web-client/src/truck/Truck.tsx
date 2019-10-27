@@ -24,7 +24,7 @@ import InputNumber from "antd/lib/input-number";
 import Button from "antd/lib/button";
 import Progress from "antd/lib/progress";
 import Select from "antd/lib/select";
-import { IFactory } from "../factory";
+import { IFactory, InputOutput } from "../factory";
 import { PointerEventsProperty } from "csstype";
 import {
   BuyProps,
@@ -234,7 +234,7 @@ function Traveling({ truck }: TravellingProps) {
 }
 
 interface ResourceFromFactory {
-  factoryId: string;
+  factory: IFactory;
   resource: string;
   count: number;
   price: number;
@@ -246,7 +246,7 @@ function getResourceList(factories: IFactory[]): ResourceFromFactory[] {
     const { storage } = factory;
     Object.entries(storage).forEach(([resource, slot]) => {
       resources.push({
-        factoryId: factory.id,
+        factory,
         resource,
         count: slot!.count,
         price: slot!.price
@@ -261,34 +261,44 @@ const BuyContainer = styled.div`
   flex-direction: column;
 `;
 
-const BuyableResourceContainer = styled.div`
+const TradeableResourceContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 
 export function Buy({ truck, cityId }: BuyProps) {
-  const allFactories: IFactory[] = Object.values(useGetFactories());
+  const allFactories: IFactory[] = useGetFactories();
   const factoriesInCity = allFactories.filter(
     factory => factory.cityId === cityId
   );
 
   const resources = getResourceList(factoriesInCity);
 
+  function getType(factory: IFactory, resource: ResourceName): InputOutput {
+    const { producer } = factory;
+    const { input } = producer;
+    if (input[resource]) {
+      return "INPUT";
+    }
+    return "OUTPUT";
+  }
+
   return (
     <BuyContainer>
       <span>
-        Resources to purchase in <CityInline cityId={cityId} />
+        Resources in <CityInline cityId={cityId} />
       </span>
-      {resources.map(({ factoryId, resource, count, price }) => {
+      {resources.map(({ factory, resource, count, price }) => {
         return (
           <FactoryResource
-            key={factoryId + resource}
-            factoryId={factoryId}
+            key={factory.id + resource}
+            factory={factory}
             resource={resource as ResourceName}
             truck={truck}
             count={count}
             price={price}
+            type={getType(factory, resource as ResourceName)}
           />
         );
       })}
@@ -301,34 +311,45 @@ export function FactoryResource({
   resource,
   count,
   price,
-  factoryId
+  factory,
+  type
 }: FactoryResourceProps) {
+
   const { socket } = useTruckSocket();
   const [selectedCount, setSelectedCount] = useState(0);
   const { cash = 0 } = useGetPlayer();
 
-  const capacity = truck.storage.capacity;
-  const capacityTaken = calculateCapacityTaken(truck.storage);
-  const canAffordAmount = Number((cash / price).toFixed(0));
-  const max = Math.min(
-    canAffordAmount,
-    Math.min(capacity - capacityTaken, count)
-  );
-  const buyDisabled = selectedCount === 0 || max === 0;
+  let max = 0;
+
+  if (type === "OUTPUT") {
+    const capacity = truck.storage.capacity;
+    const capacityTaken = calculateCapacityTaken(truck.storage);
+    const canAffordAmount = Number((cash / price).toFixed(0));
+    max = Math.min(
+        canAffordAmount,
+        Math.min(capacity - capacityTaken, count)
+    );
+  }
+  if (type === "INPUT") {
+    const slot = factory.storage[resource as ResourceName]!;
+    const capacityRemaining = slot.capacity - slot.count;
+    const resourceInTruck = truck.storage.resources[resource as ResourceName] || 0;
+    max = Math.min(capacityRemaining, resourceInTruck);
+  }
+
+  const tradeDisabled = selectedCount === 0 || max === 0;
+  const totalPrice = selectedCount * price;
 
   return (
-    <BuyableResourceContainer>
+    <TradeableResourceContainer>
       <div>
         <Tag color={"magenta"}>${price}</Tag>
         <ResourceIcon resource={resource} />
         <span>{count}</span>
       </div>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <InputNumber
-          max={Math.min(
-            canAffordAmount,
-            Math.min(capacity - capacityTaken, count)
-          )}
+          max={max}
           min={0}
           value={selectedCount}
           //@ts-ignore
@@ -341,21 +362,21 @@ export function FactoryResource({
               socket.send(
                 createBuyResourceRequestMessage(
                   truck.id,
-                  factoryId,
+                  factory.id,
                   resource,
                   selectedCount
                 )
               )
             }
-            disabled={buyDisabled}
+            disabled={tradeDisabled}
             block
-            style={{ backgroundColor: buyDisabled ? "#DDDDDD" : "#78D89C" }}
+            style={{ backgroundColor: tradeDisabled ? "#DDDDDD" : type === "INPUT" ? "#78D89C" : "#af2a1e" }}
           >
-            {selectedCount * price}
+            {`${type === "OUTPUT" ? "Buy" : "Sell"} (${totalPrice})`}
           </Button>
         </div>
       </div>
-    </BuyableResourceContainer>
+    </TradeableResourceContainer>
   );
 }
 
