@@ -13,7 +13,6 @@ public class FactoryStorage {
 	public FactoryStorage(Map<Resource, StorageSlot> resources) {
 		Objects.requireNonNull(this.resources = resources);
 		validateSlots(this.resources);
-		calculatePrices();
 	}
 
 	public void addResource(Resource resource) {
@@ -26,7 +25,6 @@ public class FactoryStorage {
 		}
 		StorageSlot slot = getSlot(resource);
 		slot.setCount(slot.getCount() + count);
-		calculatePrices();
 	}
 
 	public void addResources(Map<Resource, Integer> resourceCounts) {
@@ -34,7 +32,6 @@ public class FactoryStorage {
 			return;
 		}
 		resourceCounts.forEach(this::addResource);
-		calculatePrices();
 	}
 
 	public boolean canFit(Resource resource) {
@@ -65,7 +62,6 @@ public class FactoryStorage {
 
 		StorageSlot slot = getSlot(resource);
 		slot.setCount(slot.getCount() - count);
-		calculatePrices();
 	}
 
 	public void removeResources(Map<Resource, Integer> resourceCounts) {
@@ -73,7 +69,6 @@ public class FactoryStorage {
 			return;
 		}
 		resourceCounts.forEach(this::removeResource);
-		calculatePrices();
 	}
 
 	public boolean hasResource(Resource resource) {
@@ -144,20 +139,6 @@ public class FactoryStorage {
 		});
 		this.resources.clear();
 		this.resources.putAll(newResources);
-	}
-
-	private void calculatePrices() {
-		resources.forEach((resource, slot) -> {
-			if (slot.getCapacity() == 0) {
-				return;
-			}
-			float percentTaken = slot.getCount() / (float) slot.getCapacity();
-			float percentFree = 1f - percentTaken;
-			float priceRange = resource.getMaxPrice() - resource.getMinPrice();
-			float price = (float) resource.getMinPrice() + (priceRange * percentFree);
-			slot.setPrice(Math.round(price));
-		});
-		clean();
 	}
 
 	public FactoryStorage copy() {

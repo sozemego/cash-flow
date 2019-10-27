@@ -78,6 +78,14 @@ public class Producer {
 		return output;
 	}
 
+	public boolean isInput(Resource resource) {
+		return input.containsKey(resource);
+	}
+
+	public boolean isOutput(Resource resource) {
+		return output.containsKey(resource);
+	}
+
 	@Override
 	public String toString() {
 		return "Producer{" + "input=" + input + ", output=" + output + ", time=" + time + ", producing=" + producing + ", productionStartTime=" + productionStartTime + '}';
