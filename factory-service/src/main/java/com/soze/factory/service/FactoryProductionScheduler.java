@@ -58,8 +58,8 @@ public class FactoryProductionScheduler {
 				return;
 			}
 			FactoryStorage storage = factory.getStorage();
-			if (storage.isFull(producer.getResource())) {
-				LOG.trace("Factory {} is full", factory.getId());
+			if (storage.canFit(producer.getOutput())) {
+				LOG.trace("Factory {} cannot fit output of producer", factory.getId());
 				return;
 			}
 			commandService.visit(new StartProduction(factory.getId(), clock.getCurrentGameTime()));

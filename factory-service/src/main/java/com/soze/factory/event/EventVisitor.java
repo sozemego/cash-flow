@@ -10,5 +10,7 @@ public interface EventVisitor {
 	void visit(ResourceSold resourceSold);
 	void visit(ResourceStorageCapacityChanged resourceStorageCapacityChanged);
 	void visit(ResourcePriceChanged resourcePriceChanged);
+  void visit(ProductionStarted2 productionStarted2);
+	void visit(ProductionLineAdded2 productionLineAdded2);
 
 }

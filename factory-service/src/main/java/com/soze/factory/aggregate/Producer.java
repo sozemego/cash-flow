@@ -3,23 +3,19 @@ package com.soze.factory.aggregate;
 import com.soze.common.dto.Clock;
 import com.soze.common.dto.Resource;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Producer {
 
-	private Resource resource;
+	private Map<Resource, Integer> input = new HashMap<>();
+	private Map<Resource, Integer> output = new HashMap<>();
+
 	private long time;
 	private boolean producing = false;
 
 	private long productionStartTime = -1L;
-
-	public Resource getResource() {
-		return resource;
-	}
-
-	public void setResource(Resource resource) {
-		this.resource = resource;
-	}
 
 	/**
 	 * Time to produce in game minutes (not real minutes).
@@ -74,8 +70,16 @@ public class Producer {
 		this.productionStartTime = productionStartTime;
 	}
 
+	public Map<Resource, Integer> getInput() {
+		return input;
+	}
+
+	public Map<Resource, Integer> getOutput() {
+		return output;
+	}
+
 	@Override
 	public String toString() {
-		return "Producer{" + "resource=" + resource + ", time=" + time + ", producing=" + producing + '}';
+		return "Producer{" + "input=" + input + ", output=" + output + ", time=" + time + ", producing=" + producing + ", productionStartTime=" + productionStartTime + '}';
 	}
 }

@@ -23,7 +23,8 @@ public class EventUpcastService {
 	@PostConstruct
 	public void setup() {
 		LOG.info("EventUpcastService init...");
-		upcasts.put(Event.EventType.STORAGE_CAPACITY_CHANGED, (event) -> {
+
+		upcasts.put(Event.EventType.STORAGE_CAPACITY_CHANGED, event -> {
 			StorageCapacityChanged storageCapacityChanged = (StorageCapacityChanged) event;
 			ResourceStorageCapacityChanged resourceStorageCapacityChanged = new ResourceStorageCapacityChanged();
 			resourceStorageCapacityChanged.entityId = storageCapacityChanged.entityId;
@@ -36,6 +37,30 @@ public class EventUpcastService {
 			resourceStorageCapacityChanged.capacityChanges = capacityChanged;
 			return resourceStorageCapacityChanged;
 		});
+
+		upcasts.put(Event.EventType.PRODUCTION_STARTED, event -> {
+			ProductionStarted productionStarted = (ProductionStarted) event;
+			return new ProductionStarted2(
+				productionStarted.entityId, productionStarted.timestamp, productionStarted.version,
+				productionStarted.productionStartTime
+			);
+		});
+
+		upcasts.put(Event.EventType.PRODUCTION_LINE_ADDED, event -> {
+			ProductionLineAdded productionLineAdded = (ProductionLineAdded) event;
+			ProductionLineAdded2 productionLineAdded2 = new ProductionLineAdded2();
+			productionLineAdded2.entityId = productionLineAdded.entityId;
+			productionLineAdded2.timestamp = productionLineAdded.timestamp;
+			productionLineAdded2.version = productionLineAdded.version;
+
+			productionLineAdded2.time = productionLineAdded.time;
+			productionLineAdded2.input = new HashMap<>();
+			Map<Resource, Integer> output = new HashMap<>();
+			output.put(productionLineAdded.resource, productionLineAdded.count);
+			productionLineAdded2.output = output;
+			return productionLineAdded2;
+		});
+
 		LOG.info("Registered {} upcast functions", upcasts.size());
 	}
 
@@ -48,7 +73,6 @@ public class EventUpcastService {
 		}
 		return result;
 	}
-
 
 
 }

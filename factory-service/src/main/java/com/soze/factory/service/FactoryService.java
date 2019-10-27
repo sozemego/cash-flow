@@ -133,4 +133,18 @@ public class FactoryService implements EventVisitor {
 		LOG.info("{}", resourcePriceChanged);
 		sendToAll(resourcePriceChanged);
 	}
+
+	@Override
+	@EventListener
+	public void visit(ProductionStarted2 productionStarted2) {
+		LOG.info("{}", productionStarted2);
+		sendToAll(productionStarted2);
+	}
+
+	@Override
+	@EventListener
+	public void visit(ProductionLineAdded2 productionLineAdded2) {
+		LOG.info("{}", productionLineAdded2);
+		sendToAll(productionLineAdded2);
+	}
 }

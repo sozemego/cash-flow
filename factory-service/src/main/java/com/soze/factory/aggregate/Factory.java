@@ -66,17 +66,23 @@ public class Factory implements EventVisitor, CommandVisitor {
 		if (producer.isProducing()) {
 			return Collections.emptyList();
 		}
-		if (producer.getResource() == null) {
+		if (producer.getInput() == null || producer.getOutput() == null) {
 			return Collections.emptyList();
 		}
 
 		FactoryStorage storage = getStorage();
-		if (storage.isFull(producer.getResource())) {
+		Map<Resource, Integer> input = producer.getInput();
+		if (!storage.hasResources(input)) {
+			return Collections.emptyList();
+		}
+
+		Map<Resource, Integer> output = producer.getOutput();
+		if (!storage.canFit(output)) {
 			return Collections.emptyList();
 		}
 
 		return Collections.singletonList(
-			new ProductionStarted(startProduction.getFactoryId().toString(), LocalDateTime.now(), 1, producer.getResource(),
+			new ProductionStarted2(startProduction.getFactoryId().toString(), LocalDateTime.now(), 1,
 														startProduction.getCurrentGameTime()
 			));
 	}
@@ -86,7 +92,7 @@ public class Factory implements EventVisitor, CommandVisitor {
 		ProductionFinished productionFinished = new ProductionFinished(getId().toString(), LocalDateTime.now());
 		FactoryStorage storage = getStorage().copy();
 		Producer producer = getProducer();
-		storage.addResource(producer.getResource());
+		storage.addResources(producer.getOutput());
 		ResourcePriceChanged resourcePriceChanged = new ResourcePriceChanged(
 			getId().toString(), LocalDateTime.now(), storage.getPrices());
 		return Arrays.asList(productionFinished, resourcePriceChanged);
@@ -142,7 +148,12 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public void visit(ProductionStarted productionStarted) {
-		producer.startProduction(productionStarted.productionStartTime);
+		//do nothing, this even will be upcast
+	}
+
+	@Override
+	public void visit(ProductionStarted2 productionStarted2) {
+		producer.startProduction(productionStarted2.productionStartTime);
 	}
 
 	@Override
@@ -158,18 +169,24 @@ public class Factory implements EventVisitor, CommandVisitor {
 
 	@Override
 	public void visit(ProductionLineAdded productionLineAdded) {
+
+	}
+
+	@Override
+	public void visit(ProductionLineAdded2 productionLineAdded2) {
 		Producer producer = new Producer();
-		producer.setResource(productionLineAdded.resource);
+		producer.getInput().putAll(productionLineAdded2.input);
+		producer.getOutput().putAll(productionLineAdded2.output);
 		producer.setProducing(false);
-		producer.setTime(productionLineAdded.time);
+		producer.setTime(productionLineAdded2.time);
 		this.producer = producer;
 	}
 
 	@Override
 	public void visit(ProductionFinished productionFinished) {
-		Resource resource = getProducer().getResource();
+		Map<Resource, Integer> output = getProducer().getOutput();
 		FactoryStorage storage = getStorage();
-		storage.addResource(resource);
+		storage.addResources(output);
 		getProducer().stopProduction();
 	}
 
@@ -183,4 +200,5 @@ public class Factory implements EventVisitor, CommandVisitor {
 	public void visit(ResourcePriceChanged resourcePriceChanged) {
 
 	}
+
 }

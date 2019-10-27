@@ -31,9 +31,8 @@ public class FactoryConverter {
 		Producer producer = factory.getProducer();
 		producerDTO.setProducing(producer.isProducing());
 		producerDTO.setTime(producer.getTime());
-		if (producer.getResource() != null) {
-			producerDTO.setResource(producer.getResource().name());
-		}
+		producerDTO.setInput(producer.getInput());
+		producerDTO.setOutput(producer.getOutput());
 		producerDTO.setProductionStartTime(producer.getProductionStartTime());
 		factoryDTO.setProducer(producerDTO);
 

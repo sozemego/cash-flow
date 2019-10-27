@@ -29,12 +29,29 @@ public class FactoryStorage {
 		calculatePrices();
 	}
 
+	public void addResources(Map<Resource, Integer> resourceCounts) {
+		if (!canFit(resourceCounts)) {
+			return;
+		}
+		resourceCounts.forEach(this::addResource);
+		calculatePrices();
+	}
+
 	public boolean canFit(Resource resource) {
 		return canFit(resource, 1);
 	}
 
 	public boolean canFit(Resource resource, int count) {
 		return getRemainingCapacity(resource) >= count;
+	}
+
+	public boolean canFit(Map<Resource, Integer> resourceCounts) {
+		for (Map.Entry<Resource, Integer> resourceCount : resourceCounts.entrySet()) {
+			if (!canFit(resourceCount.getKey(), resourceCount.getValue())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void removeResource(Resource resource) {
@@ -58,6 +75,15 @@ public class FactoryStorage {
 	public boolean hasResource(Resource resource, int count) {
 		StorageSlot slot = resources.get(resource);
 		return slot != null && slot.getCount() >= count;
+	}
+
+	public boolean hasResources(Map<Resource, Integer> resourceCounts) {
+		for (Map.Entry<Resource, Integer> resourceCount : resourceCounts.entrySet()) {
+			if (!hasResource(resourceCount.getKey(), resourceCount.getValue())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public int getRemainingCapacity(Resource resource) {
@@ -110,10 +136,6 @@ public class FactoryStorage {
 		});
 		this.resources.clear();
 		this.resources.putAll(newResources);
-	}
-
-	public boolean isFull(Resource resource) {
-		return getRemainingCapacity(resource) == 0;
 	}
 
 	private void calculatePrices() {
