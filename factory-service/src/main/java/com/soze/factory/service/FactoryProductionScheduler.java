@@ -58,7 +58,7 @@ public class FactoryProductionScheduler {
 				return;
 			}
 			FactoryStorage storage = factory.getStorage();
-			if (storage.canFit(producer.getOutput())) {
+			if (!storage.canFit(producer.getOutput())) {
 				LOG.trace("Factory {} cannot fit output of producer", factory.getId());
 				return;
 			}
