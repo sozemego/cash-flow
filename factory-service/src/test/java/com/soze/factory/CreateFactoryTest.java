@@ -40,7 +40,7 @@ class CreateFactoryTest extends CommandTest {
 		Assertions.assertEquals(1, getEvents().size());
 		Assertions.assertTrue(getEvents().get(0) instanceof FactoryCreated);
 		Assertions.assertTrue(getFactoryRepository().findById(factoryId).isPresent());
-		Assertions.assertTrue(session.getMessages().get(0) instanceof FactoryAdded);
+		Assertions.assertTrue(session.getMessage(0, FactoryAdded.class) != null);
 	}
 
 	@Test
@@ -51,7 +51,7 @@ class CreateFactoryTest extends CommandTest {
 		Assertions.assertEquals(1, getEvents().size());
 		Assertions.assertTrue(getEvents().get(0) instanceof FactoryCreated);
 		Assertions.assertTrue(getFactoryRepository().findById(factoryId).isPresent());
-		Assertions.assertTrue(session.getMessages().get(0) instanceof FactoryAdded);
+		Assertions.assertTrue(session.getMessage(0, FactoryAdded.class) != null);
 		getEvents().clear();
 		Assertions.assertThrows(IllegalStateException.class, () -> issueCommand(createFactory));
 	}

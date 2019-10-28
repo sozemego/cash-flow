@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class TestWebSocketSession implements WebSocketSession {
 
-	private final List<ServerMessage> messages = new ArrayList<>();
+	private final List<String> messages = new ArrayList<>();
 
 	@Override
 	public String getId() {
@@ -87,7 +87,7 @@ public class TestWebSocketSession implements WebSocketSession {
 
 	@Override
 	public void sendMessage(WebSocketMessage<?> message) throws IOException {
-		this.messages.add(JsonUtils.parse((String) message.getPayload(), ServerMessage.class));
+		this.messages.add((String) message.getPayload());
 	}
 
 	@Override
@@ -105,7 +105,11 @@ public class TestWebSocketSession implements WebSocketSession {
 
 	}
 
-	public List<ServerMessage> getMessages() {
+	public List<String> getMessages() {
 		return messages;
+	}
+
+	public <T> T getMessage(int index, Class<T> clazz) {
+		return JsonUtils.parse(messages.get(index), clazz);
 	}
 }

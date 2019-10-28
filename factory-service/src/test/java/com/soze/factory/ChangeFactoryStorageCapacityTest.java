@@ -6,6 +6,7 @@ import com.soze.factory.aggregate.Factory;
 import com.soze.factory.aggregate.FactoryStorage;
 import com.soze.factory.command.ChangeStorageCapacity;
 import com.soze.factory.command.CreateFactory;
+import com.soze.factory.event.ResourceStorageCapacityChanged;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -30,7 +31,8 @@ public class ChangeFactoryStorageCapacityTest extends CommandTest {
 		Factory factory = getFactoryRepository().findById(factoryId).get();
 		FactoryStorage storage = factory.getStorage();
 		Assertions.assertEquals(5, storage.getCapacity(Resource.WOOD));
-		Assertions.assertTrue(getSession().getMessages().get(1) instanceof StorageCapacityChanged);
+		System.out.println(getSession().getMessages().size());
+		Assertions.assertTrue(getSession().getMessage(1, ResourceStorageCapacityChanged.class) != null);
 	}
 
 	@Test
