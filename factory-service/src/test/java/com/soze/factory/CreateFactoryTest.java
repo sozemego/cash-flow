@@ -56,5 +56,10 @@ class CreateFactoryTest extends CommandTest {
 		Assertions.assertThrows(IllegalStateException.class, () -> issueCommand(createFactory));
 	}
 
-
+	@Test
+	public void createFactory_cityDoesNotExist() {
+		UUID id = UUID.randomUUID();
+		Assertions.assertThrows(
+			IllegalArgumentException.class, () -> issueCommand(new CreateFactory(id, "Factory", ".png", "helloId")));
+	}
 }
