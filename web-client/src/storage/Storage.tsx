@@ -18,7 +18,8 @@ export function Storage({ storage }: StorageProps) {
       const count = entry[1] as number;
       return { resource, count };
     }
-  );
+  ).filter(resourceCount => resourceCount.count > 0);
+
   return (
     <div>
       <div>
