@@ -1,21 +1,17 @@
 import { ICity, ResourceName } from "../world";
 import {
-  FACTORY_ADDED,
-  FACTORY_INIT,
-  PRODUCTION_FINISHED,
-  PRODUCTION_LINE_ADDED,
-  PRODUCTION_STARTED, RESOURCE_BOUGHT,
-  RESOURCE_PRICE_CHANGED,
-  RESOURCE_PRODUCED,
-  RESOURCE_PRODUCTION_STARTED,
-  RESOURCE_SOLD,
-  RESOURCE_STORAGE_CAPACITY_CHANGED
+    FACTORY_ADDED,
+    FACTORY_INIT,
+    PRODUCTION_FINISHED,
+    PRODUCTION_LINE_ADDED,
+    PRODUCTION_STARTED,
+    RESOURCE_BOUGHT,
+    RESOURCE_PRICE_CHANGED,
+    RESOURCE_PRODUCED,
+    RESOURCE_SOLD,
+    RESOURCE_STORAGE_CAPACITY_CHANGED
 } from "./actions";
-import {
-  IResourceCount,
-  ResourceCounts,
-  StorageContentChangedAction
-} from "../storage";
+import { IResourceCount, ResourceCounts, StorageContentChangedAction } from "../storage";
 
 export interface FactoryState {
   factories: IFactory[];
@@ -162,3 +158,7 @@ export type FactoryAction =
   | ResourceBoughtAction
   | ProductionLineAddedAction
   | ResourcePriceChangedAction;
+
+export interface GroupButtonProps {
+    selected: boolean;
+}

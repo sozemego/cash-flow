@@ -27,6 +27,13 @@ import { ResourceName } from "../world/index.d";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { IResourceCount } from "../storage";
 
+const Container = styled.div`
+  max-height: 250px;
+  width: 100%;
+  max-width: 450px;
+  margin: 6px;
+`;
+
 const Header = styled.div`
   display: flex;
   flex-direction: row;
@@ -91,7 +98,7 @@ export function Factory({ factory }: FactoryProps) {
   );
 
   return (
-    <>
+    <Container>
       <Header>
         <div>
           <Tag color={"blue"}>{name}</Tag>
@@ -121,7 +128,7 @@ export function Factory({ factory }: FactoryProps) {
           <FactoryProducer factory={factory} />
         </div>
       </Card>
-    </>
+    </Container>
   );
 }
 

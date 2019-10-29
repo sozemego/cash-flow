@@ -6,7 +6,7 @@ import { READY_STATE_TABLE } from "../websocket/hook";
 import { useGetCities } from "../world/selectors";
 import { Divider } from "antd";
 import Tag from "antd/lib/tag";
-import { FactoryByCityProps, IFactory } from "./index";
+import { FactoryByCityProps, GroupButtonProps, IFactory } from "./index";
 
 const Container = styled.div`
   margin-left: 12px;
@@ -16,9 +16,11 @@ const Header = styled.div`
   min-height: 50px;
 `;
 
-interface GroupButtonProps {
-  selected: boolean;
-}
+const FactoryListContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
 
 const GroupButton = styled.button<GroupButtonProps>`
   display: inline-block;
@@ -90,11 +92,11 @@ export interface FactoryListProps {
 
 export function FactoryList({ factories }: FactoryListProps) {
   return (
-    <>
+    <FactoryListContainer>
       {factories.map(factory => (
         <Factory key={factory.id} factory={factory} />
       ))}
-    </>
+    </FactoryListContainer>
   );
 }
 
