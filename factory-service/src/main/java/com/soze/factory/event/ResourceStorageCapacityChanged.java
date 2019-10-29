@@ -28,4 +28,9 @@ public class ResourceStorageCapacityChanged extends Event {
 	public void accept(EventVisitor visitor) {
 		visitor.visit(this);
 	}
+
+	@Override
+	public String toString() {
+		return "ResourceStorageCapacityChanged{" + "capacityChanges=" + capacityChanges + ", entityId='" + entityId + '\'' + ", timestamp=" + timestamp + ", version=" + version + '}';
+	}
 }

@@ -26,11 +26,6 @@ public class ProductionStarted2 extends Event {
 
   @Override
   public String toString() {
-    return "ProductionStarted2{" +
-        "productionStartTime=" + productionStartTime +
-        ", entityId='" + entityId + '\'' +
-        ", timestamp=" + timestamp +
-        ", version=" + version +
-        '}';
+    return "ProductionStarted2{" + "productionStartTime=" + productionStartTime + ", entityId='" + entityId + '\'' + ", timestamp=" + timestamp + ", version=" + version + '}';
   }
 }
