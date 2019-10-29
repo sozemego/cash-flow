@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Producer {
 
-	private Map<Resource, Integer> input = new HashMap<>();
-	private Map<Resource, Integer> output = new HashMap<>();
+	private final Map<Resource, Integer> input = new HashMap<>();
+	private final Map<Resource, Integer> output = new HashMap<>();
 
 	private long time;
 	private boolean producing = false;

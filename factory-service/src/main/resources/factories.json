@@ -34,6 +34,24 @@
     }
   },
   {
+    "id": "STONE_CRUSHER",
+    "name": "Stone crushing facility",
+    "texture": "textures/buildings/medieval/quarry.png",
+    "storage": {
+      "capacities": {
+        "STONE": 150
+      }
+    },
+    "producer": {
+      "input": {
+        "STONE": 4
+      },
+      "output": {
+      },
+      "time": 60
+    }
+  },
+  {
     "id": "WOOD_CUTTER",
     "name": "Wood cutter",
     "texture": "textures/buildings/medieval/quarry.png",
@@ -44,7 +62,9 @@
       }
     },
     "producer": {
-      "input": { "WOOD": 4 },
+      "input": {
+        "WOOD": 4
+      },
       "output": {
         "PLANK": 2
       },

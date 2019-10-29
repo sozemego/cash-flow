@@ -66,11 +66,8 @@ public class Factory implements EventVisitor, CommandVisitor {
 		if (producer.isProducing()) {
 			return Collections.emptyList();
 		}
-		if (producer.getInput() == null) {
-			return Collections.emptyList();
-		}
 
-		if (producer.getOutput() == null || producer.getOutput().isEmpty()) {
+		if (producer.getInput().isEmpty() && producer.getOutput().isEmpty()) {
 			return Collections.emptyList();
 		}
 

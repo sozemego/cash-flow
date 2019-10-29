@@ -19,7 +19,6 @@ import java.util.UUID;
 
 @SpringBootTest
 @ActiveProfiles(value = {"test", "database-store"}, inheritProfiles = false)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CommandTest {
 
 	@Autowired
