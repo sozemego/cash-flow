@@ -10,6 +10,13 @@ const Container = styled.div`
   margin-left: 12px;
 `;
 
+const ListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-height: 1000px;
+`;
+
 export function TruckList({ trucks }: TruckListProps) {
   const { readyState } = useTruckSocket();
 
@@ -17,9 +24,11 @@ export function TruckList({ trucks }: TruckListProps) {
     <Container>
       <Typography>Trucks - state [{READY_STATE_TABLE[readyState]}]</Typography>
       <Divider />
-      {trucks.map(truck => (
-        <Truck key={truck.id} truck={truck} />
-      ))}
+      <ListContainer>
+        {trucks.map(truck => (
+          <Truck key={truck.id} truck={truck} />
+        ))}
+      </ListContainer>
     </Container>
   );
 }

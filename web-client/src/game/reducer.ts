@@ -3,8 +3,8 @@ import produce from "immer";
 
 const initialState: GameState = {
   selectedSections: {
-    [Section.GAME_EVENT]: true,
-    [Section.CITY]: true,
+    [Section.GAME_EVENT]: false,
+    [Section.CITY]: false,
     [Section.FACTORY]: true,
     [Section.TRUCK]: true
   }

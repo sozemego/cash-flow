@@ -37,6 +37,11 @@ import {
 } from "./index";
 import { ICity, ResourceName } from "../world";
 
+const Container = styled.div`
+  width: 450px;
+  margin: 6px;
+`;
+
 const Header = styled.div`
   display: flex;
   flex-direction: row;
@@ -68,7 +73,7 @@ export function Truck({ truck }: TruckProps) {
   );
 
   return (
-    <>
+    <Container>
       <Header>
         <div>
           <Tag color={"brown"}>{name}</Tag>
@@ -76,10 +81,10 @@ export function Truck({ truck }: TruckProps) {
         </div>
         <div>
           <Icon
-              type={hidden ? "down" : "up"}
-              onClick={() => {
-                setHidden(!hidden);
-              }}
+            type={hidden ? "down" : "up"}
+            onClick={() => {
+              setHidden(!hidden);
+            }}
           />
           <Icon
             type="delete"
@@ -110,7 +115,7 @@ export function Truck({ truck }: TruckProps) {
           {nextCityId && <Traveling truck={truck} />}
         </Card>
       )}
-    </>
+    </Container>
   );
 }
 
