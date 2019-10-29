@@ -9,6 +9,8 @@ import { ResourceIcon } from "../components/ResourceIcon";
 import { useGetFactories } from "../factory/selectors";
 import { IFactory, IStorageSlot } from "../factory";
 import { ResourceMap } from "../world";
+import { SectionSelector } from "./SectionSelector";
+import { ResourceData, ResourceDatas } from "./index";
 
 export function Header() {
   return (
@@ -29,6 +31,8 @@ export function Header() {
           <Resources />
         </div>
       </div>
+      <hr />
+      <SectionSelector />
       <hr />
     </>
   );

@@ -14,12 +14,15 @@ import {
 import { GameEventList } from "../game-event/GameEventList";
 import { ICity } from "../world";
 import { useGetEvents } from "../game-event/selectors";
+import { useGetSelectedSections } from "./selectors";
+import { Section } from "./index";
 
 export function Game() {
   const factories = useGetFactories();
   const trucks = useGetTrucks();
   const cities = useGetCities();
   const events = useGetEvents();
+  const selectedSections = useGetSelectedSections();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,20 +37,31 @@ export function Game() {
       .then(resources => dispatch(resourcesAdded(resources)));
   }, [dispatch]);
 
+  const numOfSections = Object.values(selectedSections).filter(Boolean).length;
+  const width = 100 / numOfSections;
+
   return (
     <div style={{ display: "flex", flexDirection: "row" }}>
-      <div style={{ width: "25%" }}>
-        <FactoryGroup factories={factories} />
-      </div>
-      <div style={{ width: "25%" }}>
-        <TruckList trucks={Object.values(trucks)} />
-      </div>
-      <div style={{ width: "25%" }}>
-        <CityList cities={cities} />
-      </div>
-      <div style={{ width: "25%" }}>
-        <GameEventList events={events} />
-      </div>
+      {selectedSections[Section.FACTORY] && (
+        <div style={{ width: `${width}%` }}>
+          <FactoryGroup factories={factories} />
+        </div>
+      )}
+      {selectedSections[Section.TRUCK] && (
+        <div style={{ width: `${width}%` }}>
+          <TruckList trucks={Object.values(trucks)} />
+        </div>
+      )}
+      {selectedSections[Section.CITY] && (
+        <div style={{ width: `${width}%` }}>
+          <CityList cities={cities} />
+        </div>
+      )}
+      {selectedSections[Section.GAME_EVENT] && (
+        <div style={{ width: `${width}%` }}>
+          <GameEventList events={events} />
+        </div>
+      )}
     </div>
   );
 }
