@@ -1,16 +1,55 @@
 import React from "react";
 import { Icon } from "antd";
 import Modal from "antd/lib/modal";
-import { Marker, Popup, TileLayer, Map, Tooltip } from "react-leaflet";
+import { Marker, TileLayer, Map, Tooltip } from "react-leaflet";
+import Leaflet from "leaflet";
 import { LatLngTuple } from "leaflet";
 import { useGetCities } from "../world/selectors";
 import { ICity } from "../world";
+import { useGetTrucks } from "../truck/selectors";
+import { ITruck } from "../truck";
+
+function randomDeviation(position: LatLngTuple): LatLngTuple {
+  const deviation = 0.005;
+  return [
+    position[0] + getRandomArbitrary(-deviation, deviation),
+    position[1] + getRandomArbitrary(-deviation, deviation)
+  ];
+}
+
+function getRandomArbitrary(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
 
 export function GameMap() {
   const position: LatLngTuple = [50.6625, 17.9262];
   const zoom = 5;
 
   const cities: ICity[] = Object.values(useGetCities());
+  const trucks: ITruck[] = Object.values(useGetTrucks());
+
+  function getPosition(truck: ITruck): LatLngTuple {
+    const city = cities.find(
+      city => city.id === truck.navigation.currentCityId
+    );
+    if (!city) {
+      return [0, 0];
+    }
+    return randomDeviation([city.latitude, city.longitude]);
+  }
+
+  function getTruckIcon(truck: ITruck): Leaflet.Icon {
+    return new Leaflet.Icon({
+      iconUrl: `img/truck/${truck.texture}`,
+      iconRetinaUrl: `img/truck/${truck.texture}`,
+      iconAnchor: undefined,
+      popupAnchor: undefined,
+      shadowUrl: undefined,
+      shadowSize: undefined,
+      shadowAnchor: undefined,
+      iconSize: [24, 24]
+    });
+  }
 
   return (
     <Map
@@ -24,22 +63,33 @@ export function GameMap() {
       />
       {cities.map(city => (
         <Marker key={city.id} position={[city.latitude, city.longitude]}>
-          <Tooltip>
-            {city.name}
-          </Tooltip>
+          <Tooltip>{city.name}</Tooltip>
         </Marker>
+      ))}
+      {trucks.map(truck => (
+        <Marker
+          key={truck.id}
+          position={getPosition(truck)}
+          icon={getTruckIcon(truck)}
+        />
       ))}
     </Map>
   );
 }
 
 export function GameMapIcon() {
-  const [showMap, setShowMap] = React.useState<boolean>(false);
+  const [showMap, setShowMap] = React.useState<boolean>(true);
 
   return (
     <>
       <Icon type="global" onClick={() => setShowMap(!showMap)} />
-      <Modal title="World map" visible={showMap} width={"750px"}>
+      <Modal
+        title="World map"
+        visible={showMap}
+        width={"750px"}
+        onOk={() => setShowMap(false)}
+        onCancel={() => setShowMap(false)}
+      >
         <GameMap />
       </Modal>
     </>
