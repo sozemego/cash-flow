@@ -10,6 +10,8 @@ import { useGetTrucks } from "../truck/selectors";
 import { ITruck } from "../truck";
 import { useGameClock } from "../clock/useGameClock";
 
+const deviationCache: Record<string, LatLngTuple> = {};
+
 function randomDeviation(position: LatLngTuple): LatLngTuple {
   const deviation = 0.005;
   return [
@@ -36,7 +38,12 @@ export function GameMap() {
   );
 
   function getPosition(truck: ITruck): LatLngTuple {
-    return randomDeviation(getCityPosition(truck.navigation.currentCityId));
+    const { currentCityId } = truck.navigation;
+    let cacheHit: LatLngTuple = deviationCache[truck.id + currentCityId];
+    if (!cacheHit) {
+      cacheHit = deviationCache[truck.id + currentCityId] = randomDeviation(getCityPosition(truck.navigation.currentCityId));
+    }
+    return cacheHit;
   }
 
   function getCityPosition(cityId: string): LatLngTuple {
