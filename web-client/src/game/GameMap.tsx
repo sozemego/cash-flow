@@ -135,7 +135,7 @@ export function GameMapIcon() {
       <Modal
         title="World map"
         visible={showMap}
-        width={"750px"}
+        width={`${window.innerWidth - 50}px`}
         onOk={() => setShowMap(false)}
         onCancel={() => setShowMap(false)}
       >
