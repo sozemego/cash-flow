@@ -28,7 +28,7 @@ export interface ResourceMap {
 }
 
 export interface WorldState {
-  cities: any;
+  cities: Record<string, ICity>;
   highlightedCity: string | null;
   resources: ResourceMap;
 }

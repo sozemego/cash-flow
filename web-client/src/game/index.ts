@@ -22,6 +22,10 @@ export type SectionName = Record<Section, string>;
 
 export type SectionSelection = Record<Section, boolean>;
 
+export interface GameMapProps {
+  showMap: boolean;
+}
+
 export interface GameState {
   selectedSections: SectionSelection;
 }
