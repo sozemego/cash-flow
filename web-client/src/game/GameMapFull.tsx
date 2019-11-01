@@ -41,12 +41,12 @@ export function GameMapFull({ height }: GameMapFullProps) {
 }
 
 const cityIcon = new Icon({
-    iconUrl: `img/city_icon.png`,
-    iconRetinaUrl: `img/city_icon.png`,
-    iconAnchor: undefined,
-    popupAnchor: undefined,
-    shadowUrl: undefined,
-    shadowSize: undefined,
-    shadowAnchor: undefined,
-    iconSize: [24, 24]
+  iconUrl: `img/city_icon.png`,
+  iconRetinaUrl: `img/city_icon.png`,
+  iconAnchor: undefined,
+  popupAnchor: undefined,
+  shadowUrl: undefined,
+  shadowSize: undefined,
+  shadowAnchor: undefined,
+  iconSize: [24, 24]
 });

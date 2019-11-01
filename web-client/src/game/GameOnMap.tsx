@@ -11,6 +11,10 @@ import { useTruckSocket } from "../truck/useTruckSocket";
 import { useFactorySocket } from "../factory/useFactorySocket";
 import { FactoryList } from "../factory/FactoryGroup";
 import { useGetFactories } from "../factory/selectors";
+import { CityList } from "../world/CityList";
+import { useGetCities } from "../world/selectors";
+import { TruckList } from "../truck/TruckList";
+import { useGetTrucks } from "../truck/selectors";
 
 export interface GameOnMapProps {
   height: number;
@@ -22,6 +26,8 @@ export function GameOnMap({ height }: GameOnMapProps) {
   useTruckSocket();
   useFactorySocket();
   const factories = useGetFactories();
+  const cities = useGetCities();
+  const trucks = Object.values(useGetTrucks());
 
   useEffect(() => {
     fetch(WORLD_SERVICE_CITIES_URL)
@@ -37,21 +43,30 @@ export function GameOnMap({ height }: GameOnMapProps) {
 
   return (
     <div style={{ display: "grid" }}>
-      <div style={{ gridColumn: 1, gridRow: 1 }}>
+      <div style={{ gridColumn: 1, gridRow: 1, width: "100%" }}>
         <GameMapFull height={height} />
       </div>
       <div
         style={{
           gridColumn: 1,
           gridRow: 1,
-          width: "20%",
           zIndex: 1059,
           maxHeight: height,
+          width: "100%",
           overflow: "scroll",
-          backgroundColor: "white"
+          backgroundColor: "transparent",
+          pointerEvents:"none"
         }}
       >
-        <FactoryList factories={factories} />
+        <div style={{ display: "flex", justifyContent: "space-between"}}>
+          <div style={{ width: "15%", background: "white", pointerEvents: "all" }}>
+            <FactoryList factories={factories} />
+          </div>
+          <div></div>
+          <div style={{ width: "25%", background: "white", pointerEvents: "all" }}>
+            <TruckList trucks={trucks} />
+          </div>
+        </div>
       </div>
     </div>
   );
