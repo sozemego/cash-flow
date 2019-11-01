@@ -38,7 +38,7 @@ export function GameMapFull({ height }: GameMapFullProps) {
     truck => truck.navigation.nextCityId !== null
   );
   const trucksAtCity = Object.values(trucks).filter(
-      truck => truck.navigation.nextCityId === null
+    truck => truck.navigation.nextCityId === null
   );
 
   function getCityPosition(cityId: string): LatLngTuple {
@@ -51,14 +51,16 @@ export function GameMapFull({ height }: GameMapFullProps) {
 
   function getCityName(cityId: string): string {
     const city = cities[cityId];
-    return city ? city.name : '';
+    return city ? city.name : "";
   }
 
   function getPosition(truck: ITruck): LatLngTuple {
     const { currentCityId } = truck.navigation;
     let cacheHit: LatLngTuple = deviationCache[truck.id + currentCityId];
     if (!cacheHit) {
-      cacheHit = deviationCache[truck.id + currentCityId] = randomDeviation(getCityPosition(truck.navigation.currentCityId));
+      cacheHit = deviationCache[truck.id + currentCityId] = randomDeviation(
+        getCityPosition(truck.navigation.currentCityId)
+      );
     }
     return cacheHit;
   }
@@ -78,11 +80,11 @@ export function GameMapFull({ height }: GameMapFullProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {trucksAtCity.map(truck => (
-          <Marker
-              key={truck.id}
-              position={getPosition(truck)}
-              icon={getTruckIcon(truck)}
-          />
+        <Marker
+          key={truck.id}
+          position={getPosition(truck)}
+          icon={getTruckIcon(truck)}
+        />
       ))}
       {Object.values(cities).map(city => (
         <Marker
@@ -121,14 +123,14 @@ export function GameMapFull({ height }: GameMapFullProps) {
         const positions = [start, endCity];
 
         return (
-          <>
+          <div key={truck.id}>
             <Polyline positions={positions} />
             <Marker key={truck.id} position={start} icon={getTruckIcon(truck)}>
               <Tooltip>
                 {truck.name} travelling to {getCityName(nextCityId!)}
               </Tooltip>
             </Marker>
-          </>
+          </div>
         );
       })}
     </Map>
