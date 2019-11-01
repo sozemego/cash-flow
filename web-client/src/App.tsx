@@ -11,13 +11,24 @@ function App() {
 
   const headerRef = React.useRef<HTMLDivElement>(null);
 
-  React.useLayoutEffect(() => {
+  function calcMapHeight() {
     const rect = headerRef.current!.getBoundingClientRect();
     const headerHeight = rect.height;
     const { innerHeight } = window;
     setMapHeight(innerHeight - headerHeight - 25);
+  }
+
+  React.useLayoutEffect(() => {
+    calcMapHeight();
   }, [headerRef]);
 
+  React.useEffect(() => {
+    function listener() {
+      calcMapHeight();
+    }
+    window.addEventListener("resize", listener);
+    return () => window.removeEventListener("resize", listener);
+  }, []);
 
   return (
     <div>
@@ -25,7 +36,7 @@ function App() {
         <h2 style={{ textAlign: "center" }}>Cash flow</h2>
         <Header />
       </div>
-      {gameOnMap ? <GameOnMap height={mapHeight} /> : <Game />}
+      {gameOnMap ? mapHeight > 0 && <GameOnMap height={mapHeight} /> : <Game />}
     </div>
   );
 }
