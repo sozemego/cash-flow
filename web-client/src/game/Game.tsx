@@ -49,13 +49,13 @@ const OverlayContainer = styled.div`
 
 const LeftSideContainer = styled.div`
   width: 15%;
-  background: white;
+  background: #e7e7e7;
   pointer-events: all;
 `;
 
 const RightSideContainer = styled.div`
   width: 25%;
-  background: white;
+  background: #e7e7e7;
   pointer-events: all;
 `;
 
