@@ -28,6 +28,12 @@ export function GameMapFull({ height }: GameMapFullProps) {
   const trucksAtCity = Object.values(trucks).filter(
     truck => truck.navigation.nextCityId === null
   );
+  const trucksPerCity: Record<string, ITruck[]> = {};
+  trucksAtCity.forEach(truck => {
+    const trucks = trucksPerCity[truck.navigation.currentCityId] || [];
+    trucks.push(truck);
+    trucksPerCity[truck.navigation.currentCityId] = trucks;
+  });
 
   function getCityPosition(cityId: string): LatLngTuple {
     const city = cities[cityId];
@@ -48,7 +54,7 @@ export function GameMapFull({ height }: GameMapFullProps) {
     if (cityPosition[0] === 0 && cityPosition[1] === 0) {
       return cityPosition;
     }
-    return [cityPosition[0], cityPosition[1] + index * 0.005 * 9];
+    return [cityPosition[0], cityPosition[1] + 0.1 + index * 0.02 * zoom];
   }
 
   const { time } = useGameClock({ interval: 2500 });
@@ -121,13 +127,16 @@ export function GameMapFull({ height }: GameMapFullProps) {
           </div>
         );
       })}
-      {trucksAtCity.map((truck, index) => (
-        <Marker
-          key={truck.id}
-          position={getPosition(truck, index)}
-          icon={getTruckIcon(truck)}
-        />
-      ))}
+      {Object.entries(trucksPerCity).map(entry => {
+        const trucks = entry[1];
+        return trucks.map((truck, index) => (
+          <Marker
+            key={truck.id}
+            position={getPosition(truck, index + 1)}
+            icon={getTruckIcon(truck)}
+          />
+        ));
+      })}
     </Map>
   );
 }
