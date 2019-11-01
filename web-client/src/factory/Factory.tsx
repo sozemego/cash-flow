@@ -90,7 +90,8 @@ export function Factory({ factory }: FactoryProps) {
   const highlightedCityId = useGetHighlightedCity();
   const cities = useGetCities();
   const { id, name, storage, cityId } = factory;
-  const cityName = cities[cityId].name;
+  const city = cities[cityId];
+  const cityName = city ? city.name : '';
 
   const cardStyle: React.CSSProperties = Object.assign(
     {},

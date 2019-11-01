@@ -19,6 +19,7 @@ export function GameMapFull({ height }: GameMapFullProps) {
       zoom={zoom}
       style={{ height, width: "auto" }}
       onViewportChanged={viewport => setZoom(viewport.zoom as number)}
+      zoomControl={false}
     >
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

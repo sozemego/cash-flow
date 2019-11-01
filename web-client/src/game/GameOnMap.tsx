@@ -9,6 +9,8 @@ import { useDispatch } from "react-redux";
 import { GameMapFull } from "./GameMapFull";
 import { useTruckSocket } from "../truck/useTruckSocket";
 import { useFactorySocket } from "../factory/useFactorySocket";
+import { FactoryList } from "../factory/FactoryGroup";
+import { useGetFactories } from "../factory/selectors";
 
 export interface GameOnMapProps {
   height: number;
@@ -19,6 +21,7 @@ export function GameOnMap({ height }: GameOnMapProps) {
 
   useTruckSocket();
   useFactorySocket();
+  const factories = useGetFactories();
 
   useEffect(() => {
     fetch(WORLD_SERVICE_CITIES_URL)
@@ -32,5 +35,24 @@ export function GameOnMap({ height }: GameOnMapProps) {
       .then(resources => dispatch(resourcesAdded(resources)));
   }, [dispatch]);
 
-  return <GameMapFull height={height} />;
+  return (
+    <div style={{ display: "grid" }}>
+      <div style={{ gridColumn: 1, gridRow: 1 }}>
+        <GameMapFull height={height} />
+      </div>
+      <div
+        style={{
+          gridColumn: 1,
+          gridRow: 1,
+          width: "20%",
+          zIndex: 1059,
+          maxHeight: height,
+          overflow: "scroll",
+          backgroundColor: "white"
+        }}
+      >
+        <FactoryList factories={factories} />
+      </div>
+    </div>
+  );
 }
