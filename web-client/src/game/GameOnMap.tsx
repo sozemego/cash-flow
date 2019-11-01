@@ -33,7 +33,6 @@ const OverlayContainer = styled.div`
   grid-column: 1;
   grid-row: 1;
   z-index: 1059;
-  maxheight: height;
   width: 100%;
   overflow: scroll;
   background-color: transparent;
@@ -43,6 +42,8 @@ const OverlayContainer = styled.div`
   ${props => css`
     // @ts-ignore
     width: ${props.width};
+    // @ts-ignore
+    max-height: ${props.height};
   `}
 `;
 
