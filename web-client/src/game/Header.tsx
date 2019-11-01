@@ -10,7 +10,6 @@ import { useGetFactories } from "../factory/selectors";
 import { IFactory, IStorageSlot } from "../factory";
 import { ResourceMap } from "../world";
 import { ResourceData, ResourceDatas } from "./index";
-import { GameMapIcon } from "./GameMap";
 
 export function Header() {
   return (
@@ -29,7 +28,6 @@ export function Header() {
         </div>
         <div>
           <Resources />
-          <GameMapIcon />
         </div>
       </div>
       <hr />
