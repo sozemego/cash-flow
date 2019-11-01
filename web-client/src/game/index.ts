@@ -22,10 +22,6 @@ export type SectionName = Record<Section, string>;
 
 export type SectionSelection = Record<Section, boolean>;
 
-export interface GameMapProps {
-  showMap: boolean;
-}
-
 export interface GameState {
   selectedSections: SectionSelection;
   selectedCity: string;
@@ -43,6 +39,6 @@ export interface CitySelectedAction {
 
 export type GameAction = SectionDisplaySelected | CitySelectedAction;
 
-export interface GameOnMapProps {
+export interface GameProps {
   height: number;
 }

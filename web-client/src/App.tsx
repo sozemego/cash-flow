@@ -1,7 +1,7 @@
 import React from "react";
 import "antd/dist/antd.css";
 import { Header } from "./game/Header";
-import { GameOnMap } from "./game/GameOnMap";
+import { Game } from "./game/Game";
 
 function App() {
   const [mapHeight, setMapHeight] = React.useState(0);
@@ -33,7 +33,7 @@ function App() {
         <h2 style={{ textAlign: "center" }}>Cash flow</h2>
         <Header />
       </div>
-      {mapHeight > 0 && <GameOnMap height={mapHeight}/>}
+      {mapHeight > 0 && <Game height={mapHeight}/>}
     </div>
   );
 }

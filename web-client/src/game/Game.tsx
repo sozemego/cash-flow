@@ -1,29 +1,72 @@
 import React, { useEffect } from "react";
-import { FactoryGroup } from "../factory/FactoryGroup";
-import { useGetFactories } from "../factory/selectors";
-import { TruckList } from "../truck/TruckList";
-import { useGetTrucks } from "../truck/selectors";
-import { CityList } from "../world/CityList";
-import { useGetCities } from "../world/selectors";
-import { useDispatch } from "react-redux";
-import { cityAdded, resourcesAdded } from "../world/actions";
 import {
   WORLD_SERVICE_CITIES_URL,
   WORLD_SERVICE_RESOURCES_URL
 } from "../config/urls";
-import { GameEventList } from "../game-event/GameEventList";
 import { ICity } from "../world";
-import { useGetEvents } from "../game-event/selectors";
-import { useGetSelectedSections } from "./selectors";
-import { Section } from "./index";
+import { cityAdded, resourcesAdded } from "../world/actions";
+import { useDispatch } from "react-redux";
+import { GameMapFull } from "./GameMapFull";
+import { useTruckSocket } from "../truck/useTruckSocket";
+import { useFactorySocket } from "../factory/useFactorySocket";
+import { FactoryList } from "../factory/FactoryGroup";
+import { useGetFactories } from "../factory/selectors";
+import { TruckList } from "../truck/TruckList";
+import { useGetTrucks } from "../truck/selectors";
+import { GameProps } from "./index";
+import styled, { css } from "styled-components";
+import { useGetSelectedCityId } from "./selectors";
+import { useGetCities } from "../world/selectors";
+import { citySelected } from "./actions";
 
-export function Game() {
-  const factories = useGetFactories();
-  const trucks = useGetTrucks();
-  const cities = useGetCities();
-  const events = useGetEvents();
-  const selectedSections = useGetSelectedSections();
+const Container = styled.div`
+  display: grid;
+`;
+
+const GameMapContainer = styled.div`
+  grid-column: 1;
+  grid-row: 1;
+  width: 100%;
+`;
+
+const OverlayContainer = styled.div`
+  grid-column: 1;
+  grid-row: 1;
+  z-index: 1059;
+  width: 100%;
+  overflow: scroll;
+  background-color: transparent;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  ${props => css`
+    // @ts-ignore
+    width: ${props.width};
+    // @ts-ignore
+    max-height: ${props.height};
+  `}
+`;
+
+const LeftSideContainer = styled.div`
+  width: 15%;
+  background: white;
+  pointer-events: all;
+`;
+
+const RightSideContainer = styled.div`
+  width: 25%;
+  background: white;
+  pointer-events: all;
+`;
+
+export function Game({ height }: GameProps) {
   const dispatch = useDispatch();
+
+  useTruckSocket();
+  useFactorySocket();
+  let factories = useGetFactories();
+  let trucks = Object.values(useGetTrucks());
+  const cities = useGetCities();
 
   useEffect(() => {
     fetch(WORLD_SERVICE_CITIES_URL)
@@ -37,31 +80,44 @@ export function Game() {
       .then(resources => dispatch(resourcesAdded(resources)));
   }, [dispatch]);
 
-  const numOfSections = Object.values(selectedSections).filter(Boolean).length;
-  const width = 100 / numOfSections;
+  useEffect(() => {
+    function listener(event: KeyboardEvent) {
+      if (event.code === "Escape") {
+        dispatch(citySelected(""));
+      }
+    }
+    window.addEventListener("keyup", listener);
+    return () => window.removeEventListener("keyup", listener);
+  }, [dispatch]);
+
+  let city = null;
+  const selectedCityId = useGetSelectedCityId();
+  if (selectedCityId) {
+    city = cities[selectedCityId];
+    factories = factories.filter(factory => factory.cityId === selectedCityId);
+    trucks = trucks.filter(
+      truck => truck.navigation.currentCityId === selectedCityId
+    );
+  }
 
   return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
-      {selectedSections[Section.FACTORY] && (
-        <div style={{ width: `${width}%` }}>
-          <FactoryGroup factories={factories} />
-        </div>
-      )}
-      {selectedSections[Section.TRUCK] && (
-        <div style={{ width: `${width}%` }}>
-          <TruckList trucks={Object.values(trucks)} />
-        </div>
-      )}
-      {selectedSections[Section.CITY] && (
-        <div style={{ width: `${width}%` }}>
-          <CityList cities={cities} />
-        </div>
-      )}
-      {selectedSections[Section.GAME_EVENT] && (
-        <div style={{ width: `${width}%` }}>
-          <GameEventList events={events} />
-        </div>
-      )}
-    </div>
+    <Container>
+      <GameMapContainer>
+        <GameMapFull height={height} />
+      </GameMapContainer>
+      <OverlayContainer>
+        {city && (
+          <LeftSideContainer>
+            <FactoryList factories={factories} />
+          </LeftSideContainer>
+        )}
+        <div></div>
+        {city && (
+          <RightSideContainer>
+            <TruckList trucks={trucks} />
+          </RightSideContainer>
+        )}
+      </OverlayContainer>
+    </Container>
   );
 }
