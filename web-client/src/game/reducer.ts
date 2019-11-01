@@ -1,5 +1,11 @@
-import { GameAction, GameState, Section } from "./index";
+import {
+  GameAction,
+  GameState,
+  Section,
+  SectionDisplaySelected
+} from "./index";
 import produce from "immer";
+import { CITY_SELECTED, SECTION_DISPLAY_SELECTED } from "./actions";
 
 const initialState: GameState = {
   selectedSections: {
@@ -7,20 +13,26 @@ const initialState: GameState = {
     [Section.CITY]: false,
     [Section.FACTORY]: true,
     [Section.TRUCK]: true
-  }
+  },
+  selectedCity: ""
 };
 
-export function reducer(state = initialState, action: GameAction) {
+export const reducer = produce((state = initialState, action: GameAction) => {
   switch (action.type) {
-    case "SECTION_DISPLAY_SELECTED":
-        return sectionDisplaySelected(state, action);
+    case SECTION_DISPLAY_SELECTED:
+      return sectionDisplaySelected(state, action);
+    case CITY_SELECTED:
+      state.selectedCity = action.cityId;
+      return;
     default:
       return state;
   }
-}
+});
 
-const sectionDisplaySelected = produce(
-  (state: GameState, action: GameAction) => {
-    state.selectedSections = action.selections;
-  }
-);
+function sectionDisplaySelected(
+  state: GameState,
+  action: SectionDisplaySelected
+) {
+  state.selectedSections = action.selections;
+  return;
+}

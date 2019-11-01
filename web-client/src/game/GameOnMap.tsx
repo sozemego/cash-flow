@@ -15,6 +15,9 @@ import { TruckList } from "../truck/TruckList";
 import { useGetTrucks } from "../truck/selectors";
 import { GameOnMapProps } from "./index";
 import styled, { css } from "styled-components";
+import { useGetSelectedCityId } from "./selectors";
+import { useGetCities } from "../world/selectors";
+import { citySelected } from "./actions";
 
 const Container = styled.div`
   display: grid;
@@ -60,8 +63,9 @@ export function GameOnMap({ height }: GameOnMapProps) {
 
   useTruckSocket();
   useFactorySocket();
-  const factories = useGetFactories();
-  const trucks = Object.values(useGetTrucks());
+  let factories = useGetFactories();
+  let trucks = Object.values(useGetTrucks());
+  const cities = useGetCities();
 
   useEffect(() => {
     fetch(WORLD_SERVICE_CITIES_URL)
@@ -75,19 +79,43 @@ export function GameOnMap({ height }: GameOnMapProps) {
       .then(resources => dispatch(resourcesAdded(resources)));
   }, [dispatch]);
 
+  useEffect(() => {
+    function listener(event: KeyboardEvent) {
+      if (event.code === "Escape") {
+        dispatch(citySelected(""));
+      }
+    }
+    window.addEventListener("keyup", listener);
+    return () => window.removeEventListener("keyup", listener);
+  }, [dispatch]);
+
+  let city = null;
+  const selectedCityId = useGetSelectedCityId();
+  if (selectedCityId) {
+    city = cities[selectedCityId];
+    factories = factories.filter(factory => factory.cityId === selectedCityId);
+    trucks = trucks.filter(
+      truck => truck.navigation.currentCityId === selectedCityId
+    );
+  }
+
   return (
     <Container>
       <GameMapContainer>
         <GameMapFull height={height} />
       </GameMapContainer>
       <OverlayContainer>
-        <LeftSideContainer>
-          <FactoryList factories={factories} />
-        </LeftSideContainer>
+        {city && (
+          <LeftSideContainer>
+            <FactoryList factories={factories} />
+          </LeftSideContainer>
+        )}
         <div></div>
-        <RightSideContainer>
-          <TruckList trucks={trucks} />
-        </RightSideContainer>
+        {city && (
+          <RightSideContainer>
+            <TruckList trucks={trucks} />
+          </RightSideContainer>
+        )}
       </OverlayContainer>
     </Container>
   );

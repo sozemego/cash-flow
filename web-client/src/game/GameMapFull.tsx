@@ -3,12 +3,15 @@ import { CityMapTooltip } from "../world/CityMapTooltip";
 import React from "react";
 import { Icon, LatLngTuple } from "leaflet";
 import { useGetCities } from "../world/selectors";
+import { useDispatch } from "react-redux";
+import { citySelected } from "./actions";
 
 export interface GameMapFullProps {
   height: number;
 }
 
 export function GameMapFull({ height }: GameMapFullProps) {
+  const dispatch = useDispatch();
   const [zoom, setZoom] = React.useState(5);
   const position: LatLngTuple = [50.6625, 17.9262];
   const cities = Object.values(useGetCities());
@@ -24,12 +27,14 @@ export function GameMapFull({ height }: GameMapFullProps) {
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        onClick={console.log}
       />
       {cities.map(city => (
         <Marker
           key={city.id}
           position={[city.latitude, city.longitude]}
           icon={cityIcon}
+          onClick={() => dispatch(citySelected(city.id))}
         >
           <Tooltip>
             <CityMapTooltip city={city} />

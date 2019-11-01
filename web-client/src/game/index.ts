@@ -1,4 +1,4 @@
-import { SECTION_DISPLAY_SELECTED } from "./actions";
+import { CITY_SELECTED, SECTION_DISPLAY_SELECTED } from "./actions";
 
 export interface ResourceDatas {
   [key: string]: ResourceData;
@@ -28,6 +28,7 @@ export interface GameMapProps {
 
 export interface GameState {
   selectedSections: SectionSelection;
+  selectedCity: string;
 }
 
 export interface SectionDisplaySelected {
@@ -35,8 +36,13 @@ export interface SectionDisplaySelected {
   selections: SectionSelection;
 }
 
-export type GameAction = SectionDisplaySelected;
+export interface CitySelectedAction {
+  type: typeof CITY_SELECTED;
+  cityId: string;
+}
+
+export type GameAction = SectionDisplaySelected | CitySelectedAction;
 
 export interface GameOnMapProps {
-    height: number;
+  height: number;
 }

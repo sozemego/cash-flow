@@ -7,6 +7,9 @@ import { useGetCities } from "../world/selectors";
 import { Divider } from "antd";
 import Tag from "antd/lib/tag";
 import { FactoryByCityProps, GroupButtonProps, IFactory } from "./index";
+import { FLAGS } from "../featureFlags";
+import { useGetSelectedCityId } from "../game/selectors";
+import { CityInline } from "../world/CityInline";
 
 const Container = styled.div`
   margin-left: 12px;
@@ -91,8 +94,14 @@ export interface FactoryListProps {
 }
 
 export function FactoryList({ factories }: FactoryListProps) {
+  const gameOnMap = FLAGS.GAME_ON_MAP;
+  const selectedCityId = useGetSelectedCityId();
+
   return (
     <FactoryListContainer>
+      {gameOnMap && <div style={{marginLeft: "12px"}}>
+        Factories in <CityInline cityId={selectedCityId}/>
+      </div>}
       {factories.map(factory => (
         <Factory key={factory.id} factory={factory} />
       ))}
