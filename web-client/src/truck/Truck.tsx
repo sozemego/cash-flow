@@ -178,6 +178,7 @@ export function TravelTo({ truck }: TravelToProps) {
             onChange={(value: string) => setCityToTravelToId(value)}
             style={{ width: 250 }}
             value={cityToTravelToId}
+            dropdownStyle={{ zIndex: 9000 }}
           >
             {citiesToTravelTo.map(city => (
               //@ts-ignore
