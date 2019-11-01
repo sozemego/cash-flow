@@ -36,3 +36,7 @@ export interface SectionDisplaySelected {
 }
 
 export type GameAction = SectionDisplaySelected;
+
+export interface GameOnMapProps {
+    height: number;
+}

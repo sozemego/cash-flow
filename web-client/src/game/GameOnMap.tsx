@@ -11,14 +11,49 @@ import { useTruckSocket } from "../truck/useTruckSocket";
 import { useFactorySocket } from "../factory/useFactorySocket";
 import { FactoryList } from "../factory/FactoryGroup";
 import { useGetFactories } from "../factory/selectors";
-import { CityList } from "../world/CityList";
-import { useGetCities } from "../world/selectors";
 import { TruckList } from "../truck/TruckList";
 import { useGetTrucks } from "../truck/selectors";
+import { GameOnMapProps } from "./index";
+import styled, { css } from "styled-components";
 
-export interface GameOnMapProps {
-  height: number;
-}
+const Container = styled.div`
+  display: grid;
+`;
+
+const GameMapContainer = styled.div`
+  grid-column: 1;
+  grid-row: 1;
+  width: 100%;
+`;
+
+const OverlayContainer = styled.div`
+  grid-column: 1;
+  grid-row: 1;
+  z-index: 1059;
+  maxheight: height;
+  width: 100%;
+  overflow: scroll;
+  background-color: transparent;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  ${props => css`
+    // @ts-ignore
+    width: ${props.width};
+  `}
+`;
+
+const LeftSideContainer = styled.div`
+  width: 15%;
+  background: white;
+  pointer-events: all;
+`;
+
+const RightSideContainer = styled.div`
+  width: 25%;
+  background: white;
+  pointer-events: all;
+`;
 
 export function GameOnMap({ height }: GameOnMapProps) {
   const dispatch = useDispatch();
@@ -26,7 +61,6 @@ export function GameOnMap({ height }: GameOnMapProps) {
   useTruckSocket();
   useFactorySocket();
   const factories = useGetFactories();
-  const cities = useGetCities();
   const trucks = Object.values(useGetTrucks());
 
   useEffect(() => {
@@ -42,32 +76,19 @@ export function GameOnMap({ height }: GameOnMapProps) {
   }, [dispatch]);
 
   return (
-    <div style={{ display: "grid" }}>
-      <div style={{ gridColumn: 1, gridRow: 1, width: "100%" }}>
+    <Container>
+      <GameMapContainer>
         <GameMapFull height={height} />
-      </div>
-      <div
-        style={{
-          gridColumn: 1,
-          gridRow: 1,
-          zIndex: 1059,
-          maxHeight: height,
-          width: "100%",
-          overflow: "scroll",
-          backgroundColor: "transparent",
-          pointerEvents:"none"
-        }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between"}}>
-          <div style={{ width: "15%", background: "white", pointerEvents: "all" }}>
-            <FactoryList factories={factories} />
-          </div>
-          <div></div>
-          <div style={{ width: "25%", background: "white", pointerEvents: "all" }}>
-            <TruckList trucks={trucks} />
-          </div>
-        </div>
-      </div>
-    </div>
+      </GameMapContainer>
+      <OverlayContainer>
+        <LeftSideContainer>
+          <FactoryList factories={factories} />
+        </LeftSideContainer>
+        <div></div>
+        <RightSideContainer>
+          <TruckList trucks={trucks} />
+        </RightSideContainer>
+      </OverlayContainer>
+    </Container>
   );
 }
