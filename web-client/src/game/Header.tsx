@@ -12,6 +12,7 @@ import { ResourceMap } from "../world";
 import { SectionSelector } from "./SectionSelector";
 import { ResourceData, ResourceDatas } from "./index";
 import { GameMapIcon } from "./GameMap";
+import { FLAGS } from "../featureFlags";
 
 export function Header() {
   return (
@@ -34,8 +35,12 @@ export function Header() {
         </div>
       </div>
       <hr />
-      <SectionSelector />
-      <hr />
+      {!FLAGS.GAME_ON_MAP && (
+        <>
+          <SectionSelector />
+          <hr />
+        </>
+      )}
     </>
   );
 }
