@@ -13,24 +13,12 @@ export interface GameMapFullProps {
   height: number;
 }
 
-const deviationCache: Record<string, LatLngTuple> = {};
-
-function randomDeviation(position: LatLngTuple): LatLngTuple {
-  const deviation = 0.005;
-  return [
-    position[0] + getRandomArbitrary(-deviation, deviation),
-    position[1] + getRandomArbitrary(-deviation, deviation)
-  ];
-}
-
-function getRandomArbitrary(min: number, max: number) {
-  return Math.random() * (max - min) + min;
-}
-
 export function GameMapFull({ height }: GameMapFullProps) {
   const dispatch = useDispatch();
   const trucks = useGetTrucks();
-  const [zoom, setZoom] = React.useState(5);
+  let [zoom, setZoom] = React.useState(5);
+  zoom = zoom > 7 ? 7 : zoom;
+  zoom = zoom < 3 ? 3 : zoom;
   const position: LatLngTuple = [50.6625, 17.9262];
   const cities = useGetCities();
 
@@ -54,18 +42,23 @@ export function GameMapFull({ height }: GameMapFullProps) {
     return city ? city.name : "";
   }
 
-  function getPosition(truck: ITruck): LatLngTuple {
+  function getPosition(truck: ITruck, index: number): LatLngTuple {
     const { currentCityId } = truck.navigation;
-    let cacheHit: LatLngTuple = deviationCache[truck.id + currentCityId];
-    if (!cacheHit) {
-      cacheHit = deviationCache[truck.id + currentCityId] = randomDeviation(
-        getCityPosition(truck.navigation.currentCityId)
-      );
+    const cityPosition = getCityPosition(currentCityId);
+    if (cityPosition[0] === 0 && cityPosition[1] === 0) {
+      return cityPosition;
     }
-    return cacheHit;
+    return [cityPosition[0], cityPosition[1] + index * 0.005 * 9];
   }
 
   const { time } = useGameClock({ interval: 2500 });
+
+  const mapRef = React.useRef<Map>();
+
+  React.useLayoutEffect(() => {
+    mapRef.current!.leafletElement.setMinZoom(3);
+    mapRef.current!.leafletElement.setMaxZoom(7);
+  });
 
   return (
     <Map
@@ -74,18 +67,13 @@ export function GameMapFull({ height }: GameMapFullProps) {
       style={{ height, width: "auto" }}
       onViewportChanged={viewport => setZoom(viewport.zoom as number)}
       zoomControl={false}
+      //@ts-ignore
+      ref={mapRef}
     >
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {trucksAtCity.map(truck => (
-        <Marker
-          key={truck.id}
-          position={getPosition(truck)}
-          icon={getTruckIcon(truck)}
-        />
-      ))}
       {Object.values(cities).map(city => (
         <Marker
           key={city.id}
@@ -133,6 +121,13 @@ export function GameMapFull({ height }: GameMapFullProps) {
           </div>
         );
       })}
+      {trucksAtCity.map((truck, index) => (
+        <Marker
+          key={truck.id}
+          position={getPosition(truck, index)}
+          icon={getTruckIcon(truck)}
+        />
+      ))}
     </Map>
   );
 }
@@ -145,7 +140,7 @@ const cityIcon = new Icon({
   shadowUrl: undefined,
   shadowSize: undefined,
   shadowAnchor: undefined,
-  iconSize: [24, 24]
+  iconSize: [32, 32]
 });
 
 function getTruckIcon(truck: ITruck): Leaflet.Icon {
