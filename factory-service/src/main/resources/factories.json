@@ -2,7 +2,7 @@
   {
     "id": "FORESTER",
     "name": "Forester",
-    "texture": "textures/buildings/medieval/medieval_lumber.png",
+    "texture": "medieval_lumber.png",
     "storage": {
       "capacities": {
         "WOOD": 50
@@ -19,7 +19,7 @@
   {
     "id": "STONE_QUARRY",
     "name": "Stone quarry",
-    "texture": "textures/buildings/medieval/quarry.png",
+    "texture": "stone_quarry.png",
     "storage": {
       "capacities": {
         "STONE": 150
@@ -36,7 +36,7 @@
   {
     "id": "STONE_CRUSHER",
     "name": "Stone crushing facility",
-    "texture": "textures/buildings/medieval/quarry.png",
+    "texture": "stone_crusher.png",
     "storage": {
       "capacities": {
         "STONE": 150
@@ -52,9 +52,9 @@
     }
   },
   {
-    "id": "WOOD_CUTTER",
-    "name": "Wood cutter",
-    "texture": "textures/buildings/medieval/quarry.png",
+    "id": "SAW_MILL",
+    "name": "Saw mill",
+    "texture": "saw_mill.png",
     "storage": {
       "capacities": {
         "WOOD": 50,
