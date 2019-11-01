@@ -145,15 +145,7 @@ build/
 
 node_modules/
 
-factory-store.json
-
 .env
 built/
 
 react-app-env.d.ts
-
-trucks.json
-trucks-test.json
-navigation.json
-navigation-test.json
-player.json
