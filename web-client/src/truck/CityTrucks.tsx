@@ -1,17 +1,23 @@
 import React from "react";
-import { Marker, Tooltip } from "react-leaflet";
-import { getTruckIcon } from "../game/business";
-import { ITruck } from "./index";
+import { CircleMarker, Marker, Tooltip } from "react-leaflet";
+import { Tag } from "antd";
 import { LatLngTuple } from "leaflet";
+import { getTruckIcon } from "../game/business";
+import { ITruck, TruckMapTooltipProps } from "./index";
 import { useGetCities } from "../world/selectors";
 import { CityTrucksProps } from "../game";
 import { useGetTrucks } from "./selectors";
-import { Tag } from "antd";
 import { Storage } from "../storage/Storage";
+import { truckSelected } from "../game/actions";
+import { useDispatch } from "react-redux";
+import { useGetSelectedTruckId } from "../game/selectors";
+import { useGameClock } from "../clock/useGameClock";
 
 export function CityTrucks({ zoom }: CityTrucksProps) {
+  const dispatch = useDispatch();
   const cities = useGetCities();
   const trucks = useGetTrucks();
+  const selectedTruckId = useGetSelectedTruckId();
 
   function getPosition(truck: ITruck, index: number): LatLngTuple {
     const { currentCityId } = truck.navigation;
@@ -50,6 +56,12 @@ export function CityTrucks({ zoom }: CityTrucksProps) {
     trucksPerCity[truck.navigation.currentCityId] = trucks;
   });
 
+  function isSelected(truckId: string): boolean {
+    return selectedTruckId === truckId;
+  }
+
+  useGameClock({ interval: 2500 });
+
   return (
     <>
       {Object.entries(trucksPerCity).map(entry => {
@@ -59,17 +71,28 @@ export function CityTrucks({ zoom }: CityTrucksProps) {
             key={truck.id}
             position={getPosition(truck, index + 1)}
             icon={getTruckIcon(truck)}
+            onClick={() => dispatch(truckSelected(truck.id))}
           >
+            {isSelected(truck.id) && (
+              <CircleMarker center={getPosition(truck, index + 1)} radius={15} />
+            )}
             <Tooltip>
-              <div>
-                <Tag color={"red"}>{truck.name}</Tag>
-                <span>Speed: {truck.speed}km/h</span>
-                <Storage storage={truck.storage} />
-              </div>
+              <div>{selectedTruckId === truck.id ? "SELECTED" : ""}</div>
+              <TruckMapTooltip truck={truck} />
             </Tooltip>
           </Marker>
         ));
       })}
     </>
+  );
+}
+
+export function TruckMapTooltip({ truck }: TruckMapTooltipProps) {
+  return (
+    <div>
+      <Tag color={"red"}>{truck.name}</Tag>
+      <span>Speed: {truck.speed}km/h</span>
+      <Storage storage={truck.storage} />
+    </div>
   );
 }
