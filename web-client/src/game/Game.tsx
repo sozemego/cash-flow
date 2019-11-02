@@ -4,7 +4,7 @@ import {
   WORLD_SERVICE_RESOURCES_URL
 } from "../config/urls";
 import { ICity } from "../world";
-import { citiesAdded, cityAdded, resourcesAdded } from "../world/actions";
+import { citiesAdded, resourcesAdded } from "../world/actions";
 import { useDispatch } from "react-redux";
 import { GameMapFull } from "./GameMapFull";
 import { useTruckSocket } from "../truck/useTruckSocket";
