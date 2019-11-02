@@ -57,7 +57,17 @@ export function GameMapFull({ height }: GameMapFullProps) {
     if (cityPosition[0] === 0 && cityPosition[1] === 0) {
       return cityPosition;
     }
-    return [cityPosition[0], cityPosition[1] + 0.1 + index * 0.02 * zoom];
+    const zoomMultiplier: Record<number, number> = {
+      3: 4,
+      4: 1.25,
+      5: 0.75,
+      6: 0.35,
+      7: 0.2
+    };
+    return [
+      cityPosition[0],
+      cityPosition[1] + 0.1 + index * zoomMultiplier[zoom]
+    ];
   }
 
   const { time } = useGameClock({ interval: 2500 });
