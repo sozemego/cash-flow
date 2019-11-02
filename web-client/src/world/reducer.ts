@@ -1,13 +1,7 @@
 import produce from "immer";
-import {
-  CITIES_ADDED,
-  CITY_ADDED,
-  CITY_HIGHLIGHTED,
-  RESOURCES_ADDED
-} from "./actions";
+import { CITIES_ADDED, CITY_HIGHLIGHTED, RESOURCES_ADDED } from "./actions";
 import {
   CitiesAddedAction,
-  CityAddedAction,
   CityHighlightedAction,
   ResourceMap,
   ResourcesAddedAction,
@@ -23,8 +17,6 @@ const initialState: WorldState = {
 
 export function reducer(state: WorldState = initialState, action: WorldAction) {
   switch (action.type) {
-    case CITY_ADDED:
-      return cityAdded(state, action);
     case CITIES_ADDED:
       return citiesAdded(state, action);
     case CITY_HIGHLIGHTED:
@@ -35,12 +27,6 @@ export function reducer(state: WorldState = initialState, action: WorldAction) {
       return state;
   }
 }
-
-const cityAdded = produce((state: WorldState, action: CityAddedAction) => {
-  const { city } = action;
-  state.cities[city.id] = city;
-  return state;
-});
 
 const citiesAdded = produce((state: WorldState, action: CitiesAddedAction) => {
   const { cities } = action;

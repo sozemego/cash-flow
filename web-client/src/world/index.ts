@@ -1,9 +1,4 @@
-import {
-  CITIES_ADDED,
-  CITY_ADDED,
-  CITY_HIGHLIGHTED,
-  RESOURCES_ADDED
-} from "./actions";
+import { CITIES_ADDED, CITY_HIGHLIGHTED, RESOURCES_ADDED } from "./actions";
 
 export enum ResourceName {
   WOOD = "WOOD",
@@ -50,11 +45,6 @@ export interface CityInlineProps {
   cityId: string | null;
 }
 
-export interface CityAddedAction {
-  type: typeof CITY_ADDED;
-  city: ICity;
-}
-
 export interface CitiesAddedAction {
   type: typeof CITIES_ADDED;
   cities: ICity[];
@@ -71,7 +61,6 @@ export interface ResourcesAddedAction {
 }
 
 export type WorldAction =
-  | CityAddedAction
   | CityHighlightedAction
   | ResourcesAddedAction
   | CitiesAddedAction;
