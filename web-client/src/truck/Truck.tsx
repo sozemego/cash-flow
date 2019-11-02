@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { CityInline } from "../world/CityInline";
 import { useGetCities, useGetHighlightedCity } from "../world/selectors";
 import {
-    createBuyResourceRequestMessage,
-    createSellResourceRequestMessage,
-    createTruckTravelMessage,
-    dump
+  createBuyResourceRequestMessage,
+  createSellResourceRequestMessage,
+  createTruckTravelMessage,
+  dump
 } from "./message";
 import { useTruckSocket } from "./useTruckSocket";
 import { getFormattedTime } from "../clock/business";
@@ -28,13 +28,13 @@ import Select from "antd/lib/select";
 import { IFactory, InputOutput } from "../factory";
 import { PointerEventsProperty } from "csstype";
 import {
-    FactoryResourceProps,
-    ResourceFromFactory,
-    TradeProps,
-    TravellingProps,
-    TravelToProps,
-    TruckIconProps,
-    TruckProps
+  FactoryResourceProps,
+  ResourceFromFactory,
+  TradeProps,
+  TravellingProps,
+  TravelToProps,
+  TruckIconProps,
+  TruckProps
 } from "./index";
 import { ResourceName } from "../world";
 import { useDispatch } from "react-redux";
@@ -150,8 +150,18 @@ export function TravelTo({ truck }: TravelToProps) {
         <span>Travel to </span>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <Icon type="car" onClick={() => dispatch(truckSelected(id))} />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center"
+          }}
+        >
+          <Icon
+            type="car"
+            onClick={() => dispatch(truckSelected(id))}
+            style={{ margin: "4px", fontSize: "1.2em" }}
+          />
           <Select
             onChange={(value: string) => setCityToTravelToId(value)}
             style={{ width: 250 }}
