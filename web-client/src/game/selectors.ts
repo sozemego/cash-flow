@@ -8,3 +8,7 @@ export function useGetSelectedSections() {
 export function useGetSelectedCityId() {
   return useSelector((state: AppState) => state.game.selectedCity);
 }
+
+export function useGetSelectedTruckId() {
+  return useSelector((state: AppState) => state.game.selectedTruck);
+}

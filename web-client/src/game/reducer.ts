@@ -5,7 +5,11 @@ import {
   SectionDisplaySelected
 } from "./index";
 import produce from "immer";
-import { CITY_SELECTED, SECTION_DISPLAY_SELECTED } from "./actions";
+import {
+  CITY_SELECTED,
+  SECTION_DISPLAY_SELECTED,
+  TRUCK_SELECTED
+} from "./actions";
 
 const initialState: GameState = {
   selectedSections: {
@@ -14,7 +18,8 @@ const initialState: GameState = {
     [Section.FACTORY]: true,
     [Section.TRUCK]: true
   },
-  selectedCity: ""
+  selectedCity: "",
+  selectedTruck: ""
 };
 
 export const reducer = produce((state = initialState, action: GameAction) => {
@@ -24,6 +29,9 @@ export const reducer = produce((state = initialState, action: GameAction) => {
     case CITY_SELECTED:
       state.selectedCity = action.cityId;
       return;
+    case TRUCK_SELECTED:
+      state.selectedTruck = action.truckId;
+      break;
     default:
       return state;
   }

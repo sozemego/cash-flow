@@ -1,6 +1,6 @@
 import React from "react";
 import { useGetCities } from "../world/selectors";
-import { useGetSelectedCityId } from "./selectors";
+import { useGetSelectedCityId, useGetSelectedTruckId } from "./selectors";
 import { Tag } from "antd";
 import { useGetTrucks } from "../truck/selectors";
 import { useGetFactories } from "../factory/selectors";
@@ -10,6 +10,7 @@ import { TruckIcon } from "../truck/Truck";
 export function GameHeader() {
   const cities = useGetCities();
   const selectedCityId = useGetSelectedCityId();
+  const selectedTruckId = useGetSelectedTruckId();
   let trucks = useGetTrucks(selectedCityId);
   let factories = useGetFactories(selectedCityId);
 
@@ -19,6 +20,8 @@ export function GameHeader() {
     factories = [];
     trucks = {};
   }
+
+  const truck = trucks[selectedTruckId];
 
   return (
     <div
@@ -33,7 +36,15 @@ export function GameHeader() {
           <FactoryIcon key={factory.id} texture={factory.texture} />
         ))}
       </div>
-      <div>
+      <div style={{ display: "flex" }}>
+        {truck && (
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <TruckIcon texture={truck.texture} />
+            <Tag color={"red"} style={{ fontSize: "1.2rem" }}>
+              {truck.name}
+            </Tag>
+          </div>
+        )}
         {city && (
           <div>
             <Tag color={"red"} style={{ fontSize: "1.2rem" }}>

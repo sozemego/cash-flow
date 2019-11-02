@@ -61,3 +61,7 @@ export interface ResourcesAddedAction {
 }
 
 export type WorldAction = CityAddedAction | CityHighlightedAction | ResourcesAddedAction;
+
+export interface CityMapTooltipProps {
+  city: ICity;
+}

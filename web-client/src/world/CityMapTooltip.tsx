@@ -1,19 +1,20 @@
 import React from "react";
-import { ICity } from "./index";
+import { CityMapTooltipProps } from "./index";
 import { useGetTrucks } from "../truck/selectors";
 import Tag from "antd/lib/tag";
 import { TruckIcon } from "../truck/Truck";
 import { useGetFactories } from "../factory/selectors";
 import { FactoryIcon } from "../factory/FactoryIcon";
-
-export interface CityMapTooltipProps {
-  city: ICity;
-}
+import { useGetSelectedTruckId } from "../game/selectors";
+import { useGetCities, useGetCity } from "./selectors";
+import { distanceTime } from "../truck/business";
 
 export function CityMapTooltip({ city }: CityMapTooltipProps) {
   const { id, name } = city;
 
-  const trucksInCity = Object.values(useGetTrucks()).filter(
+  const trucks = useGetTrucks();
+
+  const trucksInCity = Object.values(trucks).filter(
     truck => truck.navigation.currentCityId === id
   );
 
@@ -21,9 +22,14 @@ export function CityMapTooltip({ city }: CityMapTooltipProps) {
     factory => factory.cityId === id
   );
 
+  const selectedTruckId = useGetSelectedTruckId();
+  const truck = trucks[selectedTruckId];
+  const currentCity = useGetCity(truck ? truck.navigation.currentCityId : '');
+
   return (
     <div>
       <Tag color={"red"}>{name}</Tag>
+      {selectedTruckId && distanceTime(currentCity!, city, truck.speed)}
       {trucksInCity.length > 0 && (
         <div>
           Trucks:

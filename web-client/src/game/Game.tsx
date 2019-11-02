@@ -17,7 +17,7 @@ import { GameProps } from "./index";
 import styled, { css } from "styled-components";
 import { useGetSelectedCityId } from "./selectors";
 import { useGetCities } from "../world/selectors";
-import { citySelected } from "./actions";
+import { citySelected, truckSelected } from "./actions";
 
 const Container = styled.div`
   display: grid;
@@ -84,6 +84,7 @@ export function Game({ height }: GameProps) {
     function listener(event: KeyboardEvent) {
       if (event.code === "Escape") {
         dispatch(citySelected(""));
+        dispatch(truckSelected(""));
       }
     }
     window.addEventListener("keyup", listener);

@@ -23,7 +23,7 @@ import {
   ResourceCountProps
 } from "./index";
 import { FactoryStorage } from "./FactoryStorage";
-import { ResourceName } from "../world/index.d";
+import { ResourceName } from "../world";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { IResourceCount } from "../storage";
 

@@ -1,4 +1,8 @@
-import { CITY_SELECTED, SECTION_DISPLAY_SELECTED } from "./actions";
+import {
+  CITY_SELECTED,
+  SECTION_DISPLAY_SELECTED,
+  TRUCK_SELECTED
+} from "./actions";
 
 export interface ResourceDatas {
   [key: string]: ResourceData;
@@ -25,6 +29,7 @@ export type SectionSelection = Record<Section, boolean>;
 export interface GameState {
   selectedSections: SectionSelection;
   selectedCity: string;
+  selectedTruck: string;
 }
 
 export interface SectionDisplaySelected {
@@ -37,7 +42,15 @@ export interface CitySelectedAction {
   cityId: string;
 }
 
-export type GameAction = SectionDisplaySelected | CitySelectedAction;
+export interface TruckSelectedAction {
+  type: typeof TRUCK_SELECTED;
+  truckId: string;
+}
+
+export type GameAction =
+  | SectionDisplaySelected
+  | CitySelectedAction
+  | TruckSelectedAction;
 
 export interface GameProps {
   height: number;

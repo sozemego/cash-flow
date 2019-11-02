@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { CityMap, ResourceMap } from "./index";
+import { CityMap, ICity, ResourceMap } from "./index";
 import { AppState } from "../store";
 
 function getCitiesSelector(state: AppState) {
@@ -12,6 +12,10 @@ export function getCities(state: AppState) {
 
 export function useGetCities(): CityMap {
   return useSelector(getCitiesSelector);
+}
+
+export function useGetCity(cityId: string): ICity | undefined {
+    return useGetCities()[cityId];
 }
 
 export function useGetHighlightedCity() {

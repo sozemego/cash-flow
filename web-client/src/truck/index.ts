@@ -1,10 +1,4 @@
-import {
-  STORAGE_CAPACITY_CHANGED,
-  TRUCK_ADDED,
-  TRUCK_ARRIVED,
-  TRUCK_INIT,
-  TRUCK_TRAVEL_STARTED
-} from "./actions";
+import { STORAGE_CAPACITY_CHANGED, TRUCK_ADDED, TRUCK_ARRIVED, TRUCK_INIT, TRUCK_TRAVEL_STARTED } from "./actions";
 import { ResourceName } from "../world";
 import { IStorage, StorageContentChangedAction } from "../storage";
 import { IFactory, InputOutput } from "../factory";
@@ -103,3 +97,10 @@ export type TruckActions =
   | TruckArrivedAction
   | StorageContentChangedAction
   | StorageCapacityChanged;
+
+export interface ResourceFromFactory {
+    factory: IFactory;
+    resource: string;
+    count: number;
+    price: number;
+}
