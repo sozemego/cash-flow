@@ -1,11 +1,13 @@
-import { Marker } from "react-leaflet";
-import { getTruckIcon } from "./business";
+import { Marker, Tooltip } from "react-leaflet";
+import { getTruckIcon } from "../game/business";
 import React from "react";
-import { ITruck } from "../truck";
+import { ITruck } from "./index";
 import { LatLngTuple } from "leaflet";
 import { useGetCities } from "../world/selectors";
-import { CityTrucksProps } from "./index";
-import { useGetTrucks } from "../truck/selectors";
+import { CityTrucksProps } from "../game";
+import { useGetTrucks } from "./selectors";
+import { Tag } from "antd";
+import { Storage } from "../storage/Storage";
 
 export function CityTrucks({ zoom }: CityTrucksProps) {
   const cities = useGetCities();
@@ -57,7 +59,15 @@ export function CityTrucks({ zoom }: CityTrucksProps) {
             key={truck.id}
             position={getPosition(truck, index + 1)}
             icon={getTruckIcon(truck)}
-          />
+          >
+            <Tooltip>
+              <div>
+                <Tag color={"red"}>{truck.name}</Tag>
+                <span>Speed: {truck.speed}km/h</span>
+                <Storage storage={truck.storage} />
+              </div>
+            </Tooltip>
+          </Marker>
         ));
       })}
     </>

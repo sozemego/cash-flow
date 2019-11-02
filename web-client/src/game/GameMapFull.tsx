@@ -4,8 +4,8 @@ import { LatLngTuple } from "leaflet";
 import { useGameClock } from "../clock/useGameClock";
 import { GameMapFullProps } from "./index";
 import { MapCities } from "../world/MapCities";
-import { TravellingTrucks } from "./TravellingTrucks";
-import { CityTrucks } from "./CityTrucks";
+import { TravellingTrucks } from "../truck/TravellingTrucks";
+import { CityTrucks } from "../truck/CityTrucks";
 
 export function GameMapFull({ height }: GameMapFullProps) {
   let [zoom, setZoom] = React.useState(5);

@@ -1,10 +1,10 @@
 import { LatLngTuple } from "leaflet";
 import { Marker, Polyline, Tooltip } from "react-leaflet";
 import React from "react";
-import { useGetTrucks } from "../truck/selectors";
+import { useGetTrucks } from "./selectors";
 import { useGameClock } from "../clock/useGameClock";
 import { useGetCities } from "../world/selectors";
-import { getTruckIcon } from "./business";
+import { getTruckIcon } from "../game/business";
 
 export function TravellingTrucks() {
   const trucks = useGetTrucks();
