@@ -3,7 +3,7 @@ import React from "react";
 import { LatLngTuple } from "leaflet";
 import { useGameClock } from "../clock/useGameClock";
 import { GameMapFullProps } from "./index";
-import { MapCities } from "./MapCities";
+import { MapCities } from "../world/MapCities";
 import { TravellingTrucks } from "./TravellingTrucks";
 import { CityTrucks } from "./CityTrucks";
 

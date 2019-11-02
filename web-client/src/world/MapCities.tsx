@@ -1,11 +1,11 @@
 import React from "react";
 import { Marker, Tooltip } from "react-leaflet";
 import { createTruckTravelMessage } from "../truck/message";
-import { citySelected, truckSelected } from "./actions";
-import { CityMapTooltip } from "../world/CityMapTooltip";
-import { useGetCities } from "../world/selectors";
+import { citySelected, truckSelected } from "../game/actions";
+import { CityMapTooltip } from "./CityMapTooltip";
+import { useGetCities } from "./selectors";
 import { Icon } from "leaflet";
-import { useGetSelectedTruckId } from "./selectors";
+import { useGetSelectedTruckId } from "../game/selectors";
 import { useTruckSocket } from "../truck/useTruckSocket";
 import { useDispatch } from "react-redux";
 
