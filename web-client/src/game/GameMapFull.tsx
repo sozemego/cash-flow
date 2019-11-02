@@ -11,10 +11,7 @@ import { useGameClock } from "../clock/useGameClock";
 import { useTruckSocket } from "../truck/useTruckSocket";
 import { createTruckTravelMessage } from "../truck/message";
 import { useGetSelectedTruckId } from "./selectors";
-
-export interface GameMapFullProps {
-  height: number;
-}
+import { GameMapFullProps } from "./index";
 
 export function GameMapFull({ height }: GameMapFullProps) {
   const dispatch = useDispatch();

@@ -1,8 +1,4 @@
-import {
-  CITY_SELECTED,
-  SECTION_DISPLAY_SELECTED,
-  TRUCK_SELECTED
-} from "./actions";
+import { CITY_SELECTED, SECTION_DISPLAY_SELECTED, TRUCK_SELECTED } from "./actions";
 
 export interface ResourceDatas {
   [key: string]: ResourceData;
@@ -54,4 +50,8 @@ export type GameAction =
 
 export interface GameProps {
   height: number;
+}
+
+export interface GameMapFullProps {
+    height: number;
 }
