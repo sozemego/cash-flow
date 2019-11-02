@@ -4,10 +4,13 @@ import React from "react";
 import Leaflet, { Icon, LatLngTuple } from "leaflet";
 import { useGetCities } from "../world/selectors";
 import { useDispatch } from "react-redux";
-import { citySelected } from "./actions";
+import { citySelected, truckSelected } from "./actions";
 import { useGetTrucks } from "../truck/selectors";
 import { ITruck } from "../truck";
 import { useGameClock } from "../clock/useGameClock";
+import { useTruckSocket } from "../truck/useTruckSocket";
+import { createTruckTravelMessage } from "../truck/message";
+import { useGetSelectedTruckId } from "./selectors";
 
 export interface GameMapFullProps {
   height: number;
@@ -16,6 +19,9 @@ export interface GameMapFullProps {
 export function GameMapFull({ height }: GameMapFullProps) {
   const dispatch = useDispatch();
   const trucks = useGetTrucks();
+  const { socket } = useTruckSocket();
+  const selectedTruckId = useGetSelectedTruckId();
+
   let [zoom, setZoom] = React.useState(5);
   zoom = zoom > 7 ? 7 : zoom;
   zoom = zoom < 3 ? 3 : zoom;
@@ -85,7 +91,15 @@ export function GameMapFull({ height }: GameMapFullProps) {
           key={city.id}
           position={[city.latitude, city.longitude]}
           icon={cityIcon}
-          onClick={() => dispatch(citySelected(city.id))}
+          onClick={() => {
+            if (selectedTruckId) {
+              socket.send(createTruckTravelMessage(selectedTruckId, city.id));
+              dispatch(truckSelected(""));
+            } else {
+              dispatch(citySelected(city.id));
+              dispatch(truckSelected(""));
+            }
+          }}
         >
           <Tooltip>
             <CityMapTooltip city={city} />
