@@ -5,13 +5,14 @@ import { useGameClock } from "../clock/useGameClock";
 import { GameMapFullProps } from "./index";
 import { MapCities } from "../world/MapCities";
 import { TravellingTrucks } from "../truck/TravellingTrucks";
-import { CityTrucks } from "../truck/CityTrucks";
+import { CityTrucks, TooltipTravelLine } from "../truck/CityTrucks";
 
 export function GameMapFull({ height }: GameMapFullProps) {
   let [zoom, setZoom] = React.useState(5);
   zoom = zoom > 7 ? 7 : zoom;
   zoom = zoom < 3 ? 3 : zoom;
   const position: LatLngTuple = [50.6625, 17.9262];
+  const [cityTooltipId, setCityTooltipId] = React.useState<string | null>(null);
 
   useGameClock({ interval: 2500 });
 
@@ -36,9 +37,10 @@ export function GameMapFull({ height }: GameMapFullProps) {
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MapCities />
+      <MapCities onCityTooltip={setCityTooltipId}/>
       <TravellingTrucks />
       <CityTrucks zoom={zoom} />
+      <TooltipTravelLine cityId={cityTooltipId}/>
     </Map>
   );
 }

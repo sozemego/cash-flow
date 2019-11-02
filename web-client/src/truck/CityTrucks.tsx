@@ -1,5 +1,5 @@
 import React from "react";
-import { CircleMarker, Marker, Tooltip } from "react-leaflet";
+import { CircleMarker, Marker, Polyline, Tooltip } from "react-leaflet";
 import { Tag } from "antd";
 import { LatLngTuple } from "leaflet";
 import { getTruckIcon } from "../game/business";
@@ -74,7 +74,10 @@ export function CityTrucks({ zoom }: CityTrucksProps) {
             onClick={() => dispatch(truckSelected(truck.id))}
           >
             {isSelected(truck.id) && (
-              <CircleMarker center={getPosition(truck, index + 1)} radius={15} />
+              <CircleMarker
+                center={getPosition(truck, index + 1)}
+                radius={15}
+              />
             )}
             <Tooltip>
               <div>{selectedTruckId === truck.id ? "SELECTED" : ""}</div>
@@ -94,5 +97,29 @@ export function TruckMapTooltip({ truck }: TruckMapTooltipProps) {
       <span>Speed: {truck.speed}km/h</span>
       <Storage storage={truck.storage} />
     </div>
+  );
+}
+
+export interface TooltipTravelLineProps {
+  cityId: string | null;
+}
+
+export function TooltipTravelLine({ cityId }: TooltipTravelLineProps) {
+  const cities = useGetCities();
+  const city = cities[cityId as string];
+  const selectedTruckId = useGetSelectedTruckId();
+  const trucks = useGetTrucks();
+  const truck = trucks[selectedTruckId];
+
+  function getPositionsToCity(): LatLngTuple[] {
+    const currentCity = cities[truck.navigation.currentCityId];
+    return [
+      [currentCity!.latitude, currentCity!.longitude],
+      [city.latitude, city.longitude]
+    ];
+  }
+
+  return (
+    <div>{city && truck && <Polyline positions={getPositionsToCity()} />}</div>
   );
 }

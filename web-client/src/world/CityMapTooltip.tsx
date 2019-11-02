@@ -8,6 +8,7 @@ import { FactoryIcon } from "../factory/FactoryIcon";
 import { useGetSelectedTruckId } from "../game/selectors";
 import { useGetCity } from "./selectors";
 import { distanceTime } from "../truck/business";
+import { useGameClock } from "../clock/useGameClock";
 
 export function CityMapTooltip({ city }: CityMapTooltipProps) {
   const { id, name } = city;
@@ -25,6 +26,8 @@ export function CityMapTooltip({ city }: CityMapTooltipProps) {
   const selectedTruckId = useGetSelectedTruckId();
   const truck = trucks[selectedTruckId];
   const currentCity = useGetCity(truck ? truck.navigation.currentCityId : "");
+
+  useGameClock({ interval: 2500 });
 
   return (
     <div>

@@ -8,8 +8,9 @@ import { Icon } from "leaflet";
 import { useGetSelectedTruckId } from "../game/selectors";
 import { useTruckSocket } from "../truck/useTruckSocket";
 import { useDispatch } from "react-redux";
+import { MapCitiesProps } from "../game";
 
-export function MapCities() {
+export function MapCities({ onCityTooltip }: MapCitiesProps) {
   const dispatch = useDispatch();
   const cities = useGetCities();
   const selectedTruckId = useGetSelectedTruckId();
@@ -33,6 +34,7 @@ export function MapCities() {
               dispatch(truckSelected(""));
             }
           }}
+          onTooltipOpen={() => onCityTooltip(city.id)}
         >
           <Tooltip>
             <CityMapTooltip city={city} />

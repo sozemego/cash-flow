@@ -63,3 +63,7 @@ export interface GameMapFullProps {
 export interface CityTrucksProps {
   zoom: number;
 }
+
+export interface MapCitiesProps {
+  onCityTooltip: (cityId: string | null) => void;
+}
