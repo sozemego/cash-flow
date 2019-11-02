@@ -1,4 +1,9 @@
-import { CITY_ADDED, CITY_HIGHLIGHTED, RESOURCES_ADDED } from "./actions";
+import {
+  CITIES_ADDED,
+  CITY_ADDED,
+  CITY_HIGHLIGHTED,
+  RESOURCES_ADDED
+} from "./actions";
 
 export enum ResourceName {
   WOOD = "WOOD",
@@ -50,6 +55,11 @@ export interface CityAddedAction {
   city: ICity;
 }
 
+export interface CitiesAddedAction {
+  type: typeof CITIES_ADDED;
+  cities: ICity[];
+}
+
 export interface CityHighlightedAction {
   type: typeof CITY_HIGHLIGHTED;
   cityId: string;
@@ -57,10 +67,14 @@ export interface CityHighlightedAction {
 
 export interface ResourcesAddedAction {
   type: typeof RESOURCES_ADDED;
-  resources: Resource[]
+  resources: Resource[];
 }
 
-export type WorldAction = CityAddedAction | CityHighlightedAction | ResourcesAddedAction;
+export type WorldAction =
+  | CityAddedAction
+  | CityHighlightedAction
+  | ResourcesAddedAction
+  | CitiesAddedAction;
 
 export interface CityMapTooltipProps {
   city: ICity;

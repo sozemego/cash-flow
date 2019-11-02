@@ -4,7 +4,7 @@ import {
   WORLD_SERVICE_RESOURCES_URL
 } from "../config/urls";
 import { ICity } from "../world";
-import { cityAdded, resourcesAdded } from "../world/actions";
+import { citiesAdded, cityAdded, resourcesAdded } from "../world/actions";
 import { useDispatch } from "react-redux";
 import { GameMapFull } from "./GameMapFull";
 import { useTruckSocket } from "../truck/useTruckSocket";
@@ -71,7 +71,7 @@ export function Game({ height }: GameProps) {
   useEffect(() => {
     fetch(WORLD_SERVICE_CITIES_URL)
       .then<ICity[]>(res => res.json())
-      .then(cities => cities.forEach(city => dispatch(cityAdded(city))));
+      .then(cities => dispatch(citiesAdded(cities)));
   }, [dispatch]);
 
   useEffect(() => {
