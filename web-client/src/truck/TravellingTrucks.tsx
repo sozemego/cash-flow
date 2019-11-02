@@ -1,6 +1,6 @@
+import React from "react";
 import { LatLngTuple } from "leaflet";
 import { Marker, Polyline, Tooltip } from "react-leaflet";
-import React from "react";
 import { useGetTrucks } from "./selectors";
 import { useGameClock } from "../clock/useGameClock";
 import { useGetCities } from "../world/selectors";

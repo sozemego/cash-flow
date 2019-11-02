@@ -1,6 +1,6 @@
+import React from "react";
 import { Marker, Tooltip } from "react-leaflet";
 import { getTruckIcon } from "../game/business";
-import React from "react";
 import { ITruck } from "./index";
 import { LatLngTuple } from "leaflet";
 import { useGetCities } from "../world/selectors";
