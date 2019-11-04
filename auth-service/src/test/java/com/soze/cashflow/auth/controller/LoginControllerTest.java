@@ -1,7 +1,6 @@
 package com.soze.cashflow.auth.controller;
 
 import com.soze.cashflow.auth.dto.CreateUserDTO;
-import com.soze.cashflow.auth.dto.UserDTO;
 import com.soze.cashflow.auth.repository.UserRepository;
 import com.soze.common.json.JsonUtils;
 import io.micronaut.core.io.buffer.ByteBuffer;
@@ -12,7 +11,6 @@ import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.test.annotation.MicronautTest;
 import io.reactivex.Flowable;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +18,7 @@ import javax.inject.Inject;
 import java.nio.charset.Charset;
 
 @MicronautTest
-class CreateUserControllerTest {
+public class LoginControllerTest {
 
 	@Inject
 	@Client("/auth")
@@ -35,20 +33,20 @@ class CreateUserControllerTest {
 	}
 
 	@Test
-	public void createUser() {
+	public void login() {
 		CreateUserDTO createUserDTO = new CreateUserDTO("user", "password".toCharArray());
-		MutableHttpRequest<CreateUserDTO> post = HttpRequest.POST("/create", createUserDTO);
-		Flowable<HttpResponse<ByteBuffer>> exchange = client.exchange(post);
-		UserDTO userDTO = parse(exchange, UserDTO.class);
-		System.out.println(userDTO);
-		Assertions.assertEquals("user", userDTO.name);
-		Assertions.assertNotNull(userDTO.createTime);
-		Assertions.assertNotNull(userDTO.id);
-		Assertions.assertNotNull(userDTO.token);
+		client.exchange(HttpRequest.POST("/create", createUserDTO)).blockingFirst();
+		Flowable<HttpResponse<ByteBuffer>> flowable = client.exchange(HttpRequest.POST("/login", createUserDTO));
+		String token = parse(flowable, String.class);
+		System.out.println(token);
 	}
 
 	private <T> T parse(Flowable<HttpResponse<ByteBuffer>> flowable, Class<T> clazz) {
 		HttpResponse<ByteBuffer> httpResponse = flowable.blockingFirst();
+		System.out.println(httpResponse.body().toByteArray().length);
+		if (clazz == String.class) {
+			return (T) new String(httpResponse.body().toByteArray());
+		}
 		String responseBody = httpResponse.body().toString(Charset.defaultCharset());
 		return JsonUtils.parse(responseBody, clazz);
 	}
