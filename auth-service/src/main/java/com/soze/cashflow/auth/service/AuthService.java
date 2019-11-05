@@ -1,5 +1,6 @@
 package com.soze.cashflow.auth.service;
 
+import com.soze.cashflow.auth.AuthException;
 import com.soze.cashflow.auth.domain.tables.records.UserRecord;
 import com.soze.cashflow.auth.dto.CreateUserDTO;
 import com.soze.cashflow.auth.repository.UserRepository;
@@ -30,15 +31,13 @@ public class AuthService {
 
 	public UserRecord createUser(String username, char[] password) {
 		LOG.info("Creating user = {}", username);
-		Objects.requireNonNull(username);
-		Objects.requireNonNull(password);
 
-		if (username.isEmpty()) {
-			throw new IllegalArgumentException("Username cannot be empty");
+		if (username == null || username.isEmpty()) {
+			throw new AuthException("Username cannot be empty");
 		}
 
-		if (password.length < 6) {
-			throw new IllegalArgumentException("Password cannot be shorter than 6 characters");
+		if (password == null || password.length < 6) {
+			throw new AuthException("Password cannot be shorter than 6 characters");
 		}
 
 		UserRecord createUserRecord = new UserRecord();
@@ -63,11 +62,14 @@ public class AuthService {
 		boolean passwordMatches = BCrypt.checkpw(new String(createUserDTO.password), hash);
 		if (!passwordMatches) {
 			Arrays.fill(createUserDTO.password, 'a');
-			throw new IllegalArgumentException("Invalid username or password");
+			throw new AuthException("Invalid username or password");
 		}
 
 		return tokenService.createToken(createUserDTO.username);
 	}
 
+	public UserRecord findUserByName(String username) {
+		return userRepository.findUserByName(username);
+	}
 
 }
