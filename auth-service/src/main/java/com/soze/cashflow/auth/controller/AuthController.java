@@ -14,6 +14,7 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Error;
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.hateoas.JsonError;
+import org.jooq.exception.DataAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,9 +69,18 @@ public class AuthController {
 
 	@Error
 	public HttpResponse<JsonError> onAuthException(HttpRequest request, AuthException e) {
+		LOG.info("Handling exception to {}", request.getMethod(), e);
 		Objects.requireNonNull(e.getMessage());
-		LOG.info("Handling exception", e);
 		JsonError error = new JsonError(e.getMessage());
 		return HttpResponse.<JsonError>status(HttpStatus.BAD_REQUEST).body(error);
 	}
+
+	@Error
+	public HttpResponse<JsonError> onDataAccessException(HttpRequest request, DataAccessException e) {
+		LOG.info("Handling exception to {}", request.getMethod(), e);
+		Objects.requireNonNull(e.getMessage());
+		JsonError error = new JsonError("Invalid username or password");
+		return HttpResponse.<JsonError>status(HttpStatus.BAD_REQUEST).body(error);
+	}
+
 }

@@ -40,12 +40,15 @@ public class AuthService {
 			throw new AuthException("Password cannot be shorter than 6 characters");
 		}
 
+		UserRecord existingUser = userRepository.findUserByName(username);
+		if (existingUser != null) {
+			throw new AuthException("Username already exists!");
+		}
+
 		UserRecord createUserRecord = new UserRecord();
-		createUserRecord.values(
-			UUID.randomUUID(), Timestamp.from(Instant.now()), username,
-			BCrypt.hashpw(new String(password), BCrypt.gensalt())
-										 );
-		Arrays.fill(password, 'a');
+		createUserRecord.values(UUID.randomUUID(), Timestamp.from(Instant.now()), username,
+														BCrypt.hashpw(new String(password), BCrypt.gensalt())
+													 );
 
 		userRepository.saveUser(createUserRecord);
 		LOG.info("User created = {}", username);
