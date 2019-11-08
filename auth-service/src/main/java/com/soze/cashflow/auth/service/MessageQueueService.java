@@ -1,9 +1,6 @@
 package com.soze.cashflow.auth.service;
 
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.BasicProperties;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.ConfirmListener;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.soze.common.json.JsonUtils;
@@ -12,7 +9,6 @@ import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.jms.JmsProperties;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -48,28 +44,22 @@ public class MessageQueueService {
 	}
 
 	public void sendEvent(Object object) {
-		this.sendEvent(object, null);
-	}
-
-	public void sendEvent(Object object, ConfirmListener confirmListener) {
 		LOG.trace("Sending event {}", object);
 		String payload = JsonUtils.serialize(object);
-		send(payload.getBytes(), confirmListener);
+		send(payload.getBytes());
 	}
 
-	private void send(byte[] payload, ConfirmListener confirmListener) {
-		RetryUtils.retry(25, Duration.ofMillis(1000), () -> {
-			try {
-				Channel channel = connection.createChannel();
-				if (confirmListener != null) {
-					channel.addConfirmListener(confirmListener);
-				}
+	private void send(byte[] payload) {
+		RetryUtils.retry(5, Duration.ofMillis(1000), () -> {
+			try (Channel channel = connection.createChannel()) {
+				LOG.info("{}", channel == null);
 				channel.basicPublish(EXCHANGE_NAME, "", null, payload);
 			} catch (Throwable t) {
 				LOG.info("Throwable", t);
 				throw new IllegalStateException(t);
 			}
 		});
+
 	}
 
 	private void connect() {

@@ -40,17 +40,6 @@ public class UserCreatedConfirmationService {
 	public void sendUserCreated(UserRecord userRecord) {
 		LOG.info("Sending UserCreated = {}", userRecord.getName());
 		UserCreated userCreated = new UserCreated(userRecord.getId().toString(), userRecord.getName(), userRecord.getCreateTime().toString());
-		messageQueueService.sendEvent(userCreated, new ConfirmListener() {
-			@Override
-			public void handleAck(long deliveryTag, boolean multiple) throws IOException {
-				LOG.info("UserCreated ack! confirming user = {}", userRecord.getName());
-				repository.confirmUser(userRecord.getName());
-			}
-
-			@Override
-			public void handleNack(long deliveryTag, boolean multiple) throws IOException {
-				LOG.info("UserCreated nack!");
-			}
-		});
+		messageQueueService.sendEvent(userCreated);
 	}
 }
