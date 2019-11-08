@@ -9,15 +9,40 @@ pool.on("error", (err, client) => {
   process.exit(-1);
 });
 
-export async function getPlayer(): Promise<Player> {
-  logger.info("Fetching player");
-  await pool.query("SET SCHEMA 'player'");
-  const data = await pool.query("SELECT * FROM player");
+export async function getPlayer(id: string): Promise<Player> {
+  logger.info(`Fetching player id = ${id}`);
+  if (!id) {
+    throw new Error("Cannot fetch player without id");
+  }
+  const data = await pool.query("SELECT * FROM player.player WHERE id = $1", [
+    id
+  ]);
+  return data.rows[0];
+}
+
+export async function getPlayerByUserId(userId: string): Promise<Player> {
+  logger.info(`Fetching player userId = ${userId}`);
+  if (!userId) {
+    throw new Error("Cannot fetch player without user_id");
+  }
+  const data = await pool.query("SELECT * FROM player.player WHERE user_id = $1", [
+    userId
+  ]);
   return data.rows[0];
 }
 
 export async function updatePlayer(player): Promise<void> {
   logger.info(`Updating player ${JSON.stringify(player)}`);
-  await pool.query("SET SCHEMA 'player'");
-  await pool.query(`UPDATE player SET cash = ${player.cash} WHERE id = '${player.id}'`);
+  await pool.query(
+    `UPDATE player.player SET cash = ${player.cash} WHERE id = '${player.id}'`
+  );
+}
+
+export async function createPlayer(player: Player): Promise<void> {
+  logger.info(`Creating new player = ${JSON.stringify(player)}`);
+  await pool.query(
+    `INSERT INTO player.player (USER_ID, NAME, CASH) VALUES ($1, $2, $3)`,
+    [player.user_id, player.name, player.cash]
+  );
+  logger.info(`Player name = ${player.name} created`);
 }

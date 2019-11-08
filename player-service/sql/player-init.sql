@@ -4,11 +4,12 @@ CREATE SCHEMA player;
 
 CREATE TABLE player.player (
     ID UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    USER_ID UUID NOT NULL,
     NAME VARCHAR NOT NULL,
     CASH INT NOT NULL DEFAULT 0
 );
 
-INSERT INTO player.player (NAME, CASH) VALUES ('Owner', 5000);
+ALTER TABLE player.player ADD UNIQUE (USER_ID, NAME);
 
 GRANT ALL PRIVILEGES ON SCHEMA player to "player-user";
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA player TO "player-user";

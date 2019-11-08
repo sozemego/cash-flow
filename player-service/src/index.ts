@@ -9,6 +9,7 @@ import cors = require("cors");
 import { Eureka } from "eureka-js-client";
 
 import { router as playerRouter } from "./player/router";
+import { connectToExchange } from "./player/queueListener";
 const { startWebsocket } = require("./player/socketRoute");
 const logger = require("./logger").namedLogger("index");
 
@@ -27,8 +28,10 @@ startWebsocket(server);
 
 let eurekaClient: Eureka = null;
 
-server.listen(port, () => {
+server.listen(port, async () => {
   logger.info("App listening on " + port);
+
+  await connectToExchange();
 
   logger.info("Registering in eureka service discovery");
   eurekaClient = new Eureka({
