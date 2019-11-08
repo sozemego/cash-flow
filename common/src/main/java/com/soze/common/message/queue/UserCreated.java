@@ -5,6 +5,7 @@ public class UserCreated {
 	public String id;
 	public String name;
 	public String createTime;
+	public final String type = "USER_CREATED";
 
 	public UserCreated() {
 	}
