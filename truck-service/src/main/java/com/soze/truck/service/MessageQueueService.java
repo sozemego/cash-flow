@@ -50,8 +50,7 @@ public class MessageQueueService {
 
 	private void send(byte[] payload) {
 		RetryUtils.retry(25, Duration.ofMillis(1000), () -> {
-			try {
-				Channel channel = connection.createChannel();
+			try (Channel channel = connection.createChannel()) {
 				channel.basicPublish("", QUEUE_NAME, null, payload);
 			} catch (Throwable t) {
 				LOG.info("Throwable", t);
