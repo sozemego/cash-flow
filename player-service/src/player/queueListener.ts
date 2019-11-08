@@ -46,6 +46,7 @@ export async function sendUserCreatedConfirmation(
       })
     )
   );
+  channel.close();
 }
 
 export const USER_CREATED = "USER_CREATED";
