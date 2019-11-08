@@ -1,20 +1,22 @@
 package com.soze.cashflow.auth.service;
 
+import com.rabbitmq.client.ConfirmListener;
 import com.soze.cashflow.auth.AuthException;
 import com.soze.cashflow.auth.domain.tables.records.UserRecord;
 import com.soze.cashflow.auth.dto.CreateUserDTO;
 import com.soze.cashflow.auth.repository.UserRepository;
+import com.soze.common.message.queue.UserCreated;
+import io.micronaut.scheduling.annotation.Scheduled;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Singleton
 public class AuthService {
@@ -22,11 +24,15 @@ public class AuthService {
 	private static final Logger LOG = LoggerFactory.getLogger(AuthService.class);
 	private final UserRepository userRepository;
 	private final TokenService tokenService;
+	private final UserCreatedConfirmationService confirmationService;
 
 	@Inject
-	public AuthService(UserRepository userRepository, TokenService tokenService) {
+	public AuthService(UserRepository userRepository, TokenService tokenService,
+										 UserCreatedConfirmationService confirmationService
+										) {
 		this.userRepository = userRepository;
 		this.tokenService = tokenService;
+		this.confirmationService = confirmationService;
 	}
 
 	public UserRecord createUser(String username, char[] password) {
@@ -45,15 +51,18 @@ public class AuthService {
 			throw new AuthException("Username already exists!");
 		}
 
-		UserRecord createUserRecord = new UserRecord();
+		UserRecord createUserRecord = userRepository.userRecord();
 		createUserRecord.values(UUID.randomUUID(), Timestamp.from(Instant.now()), username,
-														BCrypt.hashpw(new String(password), BCrypt.gensalt())
+														BCrypt.hashpw(new String(password), BCrypt.gensalt()), false
 													 );
 
 		userRepository.saveUser(createUserRecord);
 		LOG.info("User created = {}", username);
 
-		return userRepository.findUserByName(username);
+		UserRecord createdUser = userRepository.findUserByName(username);
+		confirmationService.sendUserCreated(createUserRecord);
+
+		return createdUser;
 	}
 
 	public String login(CreateUserDTO createUserDTO) {
