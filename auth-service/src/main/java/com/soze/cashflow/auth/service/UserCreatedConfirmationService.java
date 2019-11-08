@@ -1,17 +1,18 @@
 package com.soze.cashflow.auth.service;
 
-import com.rabbitmq.client.ConfirmListener;
 import com.soze.cashflow.auth.domain.tables.records.UserRecord;
 import com.soze.cashflow.auth.repository.UserRepository;
+import com.soze.common.message.queue.QueueMessage;
 import com.soze.common.message.queue.UserCreated;
+import com.soze.common.message.queue.UserCreatedConfirmation;
 import io.micronaut.scheduling.annotation.Scheduled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Singleton
 public class UserCreatedConfirmationService {
@@ -26,9 +27,10 @@ public class UserCreatedConfirmationService {
 																			 ) {
 		this.repository = repository;
 		this.messageQueueService = messageQueueService;
+		messageQueueService.registerQueueMessageConsumer(this::consumeQueueMessage);
 	}
 
-	@Scheduled(fixedDelay = "5s", initialDelay = "5s")
+	@Scheduled(fixedDelay = "60s", initialDelay = "5s")
 	public void resendUserCreated() {
 		List<UserRecord> unconfirmedUsers = repository.findUnconfirmed();
 		LOG.info("Resending UserCreated for {} users", unconfirmedUsers.size());
@@ -41,5 +43,22 @@ public class UserCreatedConfirmationService {
 		LOG.info("Sending UserCreated = {}", userRecord.getName());
 		UserCreated userCreated = new UserCreated(userRecord.getId().toString(), userRecord.getName(), userRecord.getCreateTime().toString());
 		messageQueueService.sendEvent(userCreated);
+	}
+
+	private void consumeQueueMessage(QueueMessage queueMessage) {
+		LOG.info("Consuming {}", queueMessage.getType());
+		if (queueMessage.getType() == QueueMessage.QueueMessageType.USER_CREATED_CONFIRMATION) {
+			handleUserCreatedConfirmation((UserCreatedConfirmation) queueMessage);
+		}
+	}
+
+	private void handleUserCreatedConfirmation(UserCreatedConfirmation confirmation) {
+		UserRecord userRecord = repository.findUserById(UUID.fromString(confirmation.id));
+		if (userRecord == null) {
+			LOG.warn("Cannot confirm used creation for user {}, does not exist", confirmation.id);
+			return;
+		}
+		userRecord.setConfirmed(true);
+		userRecord.store();
 	}
 }

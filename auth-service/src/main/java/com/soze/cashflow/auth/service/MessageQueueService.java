@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.soze.common.json.JsonUtils;
+import com.soze.common.message.queue.QueueMessage;
 import com.soze.common.resilience.RetryUtils;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Value;
@@ -14,10 +15,11 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 
 @Singleton
 @Context
@@ -26,11 +28,12 @@ public class MessageQueueService {
 	private static final Logger LOG = LoggerFactory.getLogger(MessageQueueService.class);
 
 	private static final String EXCHANGE_NAME = "domain-event-queue";
-	private static final String DEAD_LETTER_QUEUE_NAME = "domain-event-queue-dead-letter";
 
 	private final String queueHost;
 
 	private Connection connection;
+
+	private final Set<Consumer<QueueMessage>> queueMessageConsumers = Collections.synchronizedSet(new HashSet<>());
 
 	@Inject
 	public MessageQueueService(@Value("${queue.host}") String queueHost) {
@@ -40,7 +43,7 @@ public class MessageQueueService {
 	@PostConstruct
 	public void setup() {
 		LOG.info("{} init...", this.getClass().getSimpleName());
-		connect();
+		connectToExchange();
 	}
 
 	public void sendEvent(Object object) {
@@ -52,7 +55,6 @@ public class MessageQueueService {
 	private void send(byte[] payload) {
 		RetryUtils.retry(5, Duration.ofMillis(1000), () -> {
 			try (Channel channel = connection.createChannel()) {
-				LOG.info("{}", channel == null);
 				channel.basicPublish(EXCHANGE_NAME, "", null, payload);
 			} catch (Throwable t) {
 				LOG.info("Throwable", t);
@@ -62,7 +64,7 @@ public class MessageQueueService {
 
 	}
 
-	private void connect() {
+	private void connectToExchange() {
 		LOG.info("Connecting to exchange = {}", EXCHANGE_NAME);
 		RetryUtils.retry(10, Duration.ofMillis(2000), () -> {
 			ConnectionFactory factory = new ConnectionFactory();
@@ -70,12 +72,21 @@ public class MessageQueueService {
 				Connection connection = factory.newConnection(queueHost);
 				Channel channel = connection.createChannel();
 				channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+
+				String queueName = channel.queueDeclare().getQueue();
+				channel.queueBind(queueName, EXCHANGE_NAME, "");
+
+				channel.basicConsume(queueName, true, (consumerTag, delivery) -> {
+					String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+					QueueMessage queueMessage = JsonUtils.parse(message, QueueMessage.class);
+					for (Consumer<QueueMessage> consumer : queueMessageConsumers) {
+						consumer.accept(queueMessage);
+					}
+				}, consumerTag -> {
+
+				});
+
 				setConnection(connection);
-
-				Map<String, Object> args = new HashMap<String, Object>();
-				args.put("x-dead-letter-exchange", EXCHANGE_NAME);
-				channel.queueDeclare(DEAD_LETTER_QUEUE_NAME, true, false, false, args);
-
 			} catch (IOException | TimeoutException e) {
 				e.printStackTrace();
 				throw new IllegalStateException(e);
@@ -85,6 +96,11 @@ public class MessageQueueService {
 
 	private void setConnection(Connection connection) {
 		this.connection = connection;
+	}
+
+	public void registerQueueMessageConsumer(Consumer<QueueMessage> consumer) {
+		Objects.requireNonNull(consumer);
+		queueMessageConsumers.add(consumer);
 	}
 
 }

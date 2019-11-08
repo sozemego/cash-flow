@@ -10,6 +10,7 @@ import org.jooq.impl.TableRecordImpl;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.UUID;
 
 @Singleton
 public class UserRepository {
@@ -23,6 +24,10 @@ public class UserRepository {
 
 	public void saveUser(UserRecord userRecord) {
 		userRecord.store();
+	}
+
+	public UserRecord findUserById(UUID id) {
+		return context.selectFrom(User.USER).where(User.USER.ID.eq(id)).fetchAny();
 	}
 
 	public UserRecord findUserByName(String username) {
