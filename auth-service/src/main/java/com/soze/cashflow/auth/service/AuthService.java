@@ -1,19 +1,15 @@
 package com.soze.cashflow.auth.service;
 
-import com.rabbitmq.client.ConfirmListener;
 import com.soze.cashflow.auth.AuthException;
 import com.soze.cashflow.auth.domain.tables.records.UserRecord;
 import com.soze.cashflow.auth.dto.CreateUserDTO;
 import com.soze.cashflow.auth.repository.UserRepository;
-import com.soze.common.message.queue.UserCreated;
-import io.micronaut.scheduling.annotation.Scheduled;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
