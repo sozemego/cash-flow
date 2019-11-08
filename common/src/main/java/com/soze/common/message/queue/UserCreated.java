@@ -1,11 +1,10 @@
 package com.soze.common.message.queue;
 
-public class UserCreated {
+public class UserCreated extends QueueMessage {
 
 	public String id;
 	public String name;
 	public String createTime;
-	public final String type = "USER_CREATED";
 
 	public UserCreated() {
 	}
@@ -14,5 +13,10 @@ public class UserCreated {
 		this.id = id;
 		this.name = name;
 		this.createTime = createTime;
+	}
+
+	@Override
+	public QueueMessageType getType() {
+		return QueueMessageType.USER_CREATED;
 	}
 }
