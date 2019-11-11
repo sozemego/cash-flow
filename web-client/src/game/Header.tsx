@@ -34,7 +34,7 @@ export function Header() {
         </div>
         <div>
           <Resources />
-          <LogoutIcon />
+          {user && <LogoutIcon />}
         </div>
       </div>
       <hr />
