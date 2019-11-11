@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { usePlayerSocket } from "./usePlayerSocket";
-import { PLAYER_SERVICE_PLAYER_BY_USER_ID_URL, PLAYER_SERVICE_PLAYER_URL } from "../config/urls";
+import { PLAYER_SERVICE_PLAYER_BY_USER_ID_URL } from "../config/urls";
 import { playerAdded } from "./actions";
 import { useGetPlayer } from "./selectors";
 import { useDispatch } from "react-redux";
 import { useGetUser } from "../auth/selectors";
+import { getAsJson } from "../rest/client";
 
 export function Player() {
   usePlayerSocket();
@@ -15,8 +16,7 @@ export function Player() {
 
   useEffect(
     () => {
-      fetch(PLAYER_SERVICE_PLAYER_BY_USER_ID_URL + `?id=${user.id}`)
-        .then(response => response.json())
+      getAsJson(PLAYER_SERVICE_PLAYER_BY_USER_ID_URL + `?id=${user.id}`)
         .then(payload => dispatch(playerAdded(payload)))
         .catch((err) => console.log(err));
     },
