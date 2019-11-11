@@ -28,6 +28,17 @@ router.get("/player", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/playerByUser", async (req: Request, res: Response) => {
+  const { id } = req.query;
+  try {
+    const player = await service.getPlayerByUserId(id);
+    logger.info(`Returning ${JSON.stringify(player)}`);
+    res.send(player);
+  } catch (e) {
+    res.status(400).send({ message: "Problem retrieving player!" });
+  }
+});
+
 router.post("/transfer", async (req: Request, res: Response) => {
   const { query } = req;
   const amount = Number(query.amount);

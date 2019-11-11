@@ -1,11 +1,17 @@
 import { registry } from "./socketRegistry";
-import { createPlayer, getPlayer, getPlayerByUserId, updatePlayer } from "./repository";
+import {
+  createPlayer,
+  getPlayer,
+  getPlayerByUserId,
+  updatePlayer
+} from "./repository";
 import { sendUserCreatedConfirmation, UserCreated } from "./queueListener";
 const logger = require("../logger").namedLogger("player-service");
 
 interface PlayerService {
   transfer: (number: number, id: string) => Promise<TransferResult>;
   getPlayer: (id: string) => Promise<Player>;
+  getPlayerByUserId: (id: string) => Promise<Player>;
 }
 
 interface TransferResult {
@@ -69,5 +75,6 @@ function syncCashChange(amount) {
 
 export const service: PlayerService = {
   getPlayer,
-  transfer
+  transfer,
+  getPlayerByUserId
 };
