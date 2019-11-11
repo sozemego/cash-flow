@@ -24,7 +24,7 @@ router.get("/player", async (req: Request, res: Response) => {
     logger.info(`Returning ${JSON.stringify(player)}`);
     res.send(player);
   } catch (e) {
-    res.status(400).send("Problem retrieving player!");
+    res.status(400).send({ message: "Problem retrieving player!" });
   }
 });
 
