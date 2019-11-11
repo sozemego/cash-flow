@@ -73,7 +73,7 @@ public class AuthService {
 			throw new AuthException("Invalid username or password");
 		}
 
-		return tokenService.createToken(createUserDTO.username);
+		return tokenService.createToken(userRecord);
 	}
 
 	public UserRecord findUserByName(String username) {

@@ -63,7 +63,7 @@ public class AuthController {
 		userDTO.createTime = LocalDateTime.ofInstant(
 			Instant.ofEpochMilli(userRecord.getCreateTime().getTime()), ZoneId.systemDefault());
 		userDTO.name = userRecord.getName();
-		userDTO.token = tokenService.createToken(userRecord.getName());
+		userDTO.token = tokenService.createToken(userRecord);
 		return userDTO;
 	}
 
