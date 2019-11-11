@@ -10,11 +10,15 @@ export function Player() {
   const player = useGetPlayer();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    fetch(PLAYER_SERVICE_PLAYER_URL)
-      .then(response => response.json(), console.log)
-      .then(payload => dispatch(playerAdded(payload)));
-  }, /* eslint-disable-line */ []);
+  useEffect(
+    () => {
+      fetch(PLAYER_SERVICE_PLAYER_URL)
+        .then(response => response.json())
+        .then(payload => dispatch(playerAdded(payload)))
+        .catch((err) => console.log(err));
+    },
+    /* eslint-disable-line */ []
+  );
 
   return (
     <div>
