@@ -16,5 +16,12 @@ eureka:
     service-url:
       default-zone: http://localhost:8761/eureka/
 
-zuul:
-#  ignored-services: '*'
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        cloud:
+#          netflix: trace
+#      apache:
+#        http:
+#          wire: debug
