@@ -12,6 +12,9 @@ import { ResourceMap } from "../world";
 import { ResourceData, ResourceDatas } from "./index";
 import { GameHeader } from "./GameHeader";
 import { useGetUser } from "../auth/selectors";
+import { Button } from "antd";
+import { useDispatch } from "react-redux";
+import { userLoggedOut } from "../auth/actions";
 
 export function Header() {
   const user = useGetUser();
@@ -31,6 +34,7 @@ export function Header() {
         </div>
         <div>
           <Resources />
+          <LogoutIcon />
         </div>
       </div>
       <hr />
@@ -136,4 +140,9 @@ function Resources() {
       </Modal>
     </>
   );
+}
+
+export function LogoutIcon() {
+  const dispatch = useDispatch();
+  return <Icon type="logout" onClick={() => dispatch(userLoggedOut())} />;
 }
