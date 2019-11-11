@@ -30,7 +30,7 @@ public class UserCreatedConfirmationService {
 		messageQueueService.registerQueueMessageConsumer(this::consumeQueueMessage);
 	}
 
-	@Scheduled(fixedDelay = "60s", initialDelay = "5s")
+	@Scheduled(fixedDelay = "360s", initialDelay = "240s")
 	public void resendUserCreated() {
 		List<UserRecord> unconfirmedUsers = repository.findUnconfirmed();
 		LOG.info("Resending UserCreated for {} users", unconfirmedUsers.size());
