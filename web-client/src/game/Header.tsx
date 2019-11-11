@@ -12,7 +12,6 @@ import { ResourceMap } from "../world";
 import { ResourceData, ResourceDatas } from "./index";
 import { GameHeader } from "./GameHeader";
 import { useGetUser } from "../auth/selectors";
-import { Button } from "antd";
 import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../auth/actions";
 
