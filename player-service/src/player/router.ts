@@ -1,5 +1,6 @@
 import express = require("express");
 import { Request, Response, NextFunction } from "express";
+const jwt = require("jsonwebtoken");
 import { service } from "./service";
 const logger = require("../logger").namedLogger("router");
 
@@ -14,6 +15,10 @@ router.use((req: Request, res: Response, next: NextFunction) => {
       " " +
       JSON.stringify(req.query)
   );
+  const token = getJWT(req);
+  if (!token) {
+    return res.send(401).end();
+  }
   next();
 });
 
@@ -30,6 +35,16 @@ router.get("/player", async (req: Request, res: Response) => {
 
 router.get("/playerByUser", async (req: Request, res: Response) => {
   const { id } = req.query;
+  const token = getJWT(req);
+  const idFromToken = token.id;
+  if (idFromToken !== id) {
+    res
+      .status(401)
+      .send({ message: `Invalid token!` })
+      .end();
+    return;
+  }
+
   try {
     const player = await service.getPlayerByUserId(id);
     logger.info(`Returning ${JSON.stringify(player)}`);
@@ -55,3 +70,16 @@ router.post("/transfer", async (req: Request, res: Response) => {
     res.status(400).send(`Error when transfering cash to player id = ${id}`);
   }
 });
+
+function getJWT(request: Request): any | null {
+  const { headers } = request;
+  const authorization = headers.authorization;
+  if (!authorization) {
+    return null;
+  }
+  const token = authorization.split(" ")[1];
+  if (!token) {
+    return null;
+  }
+  return jwt.decode(token);
+}
