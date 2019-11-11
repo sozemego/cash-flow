@@ -3,6 +3,9 @@ export const WORLD_SERVICE_URL = `${API_GATEWAY_URL}/world-service`;
 export const WORLD_SERVICE_RESOURCES_URL = `${WORLD_SERVICE_URL}/world/resources`;
 export const WORLD_SERVICE_CITIES_URL = `${WORLD_SERVICE_URL}/world`;
 
+export const CLOCK_SERVICE_URL = `${API_GATEWAY_URL}/clock-service`;
+export const CLOCk_SERVICE_CLOCK_URL = `${CLOCK_SERVICE_URL}/clock`;
+
 export const FACTORY_SERVICE_URL = `${API_GATEWAY_URL}/factory-service`;
 export const FACTORY_SERVICE_URL_EVENTS = `${FACTORY_SERVICE_URL}/events`;
 export const FACTORY_SERVICE_SOCKET_URL = "ws://localhost:9001/websocket";
