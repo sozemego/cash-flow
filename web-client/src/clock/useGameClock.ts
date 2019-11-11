@@ -5,7 +5,7 @@ import { CLOCK_FETCHED } from "./actions";
 import { useDispatch } from "react-redux";
 import { getCurrentGameDate } from "./business";
 import { GameClockHook, UseGameClockInitial } from "./index";
-import { CLOCk_SERVICE_CLOCK_URL } from "../config/urls";
+import { CLOCK_SERVICE_CLOCK_URL } from "../config/urls";
 
 export function useGameClock({ interval }: UseGameClockInitial): GameClockHook {
   const clock = useGetGameClock();
@@ -13,7 +13,7 @@ export function useGameClock({ interval }: UseGameClockInitial): GameClockHook {
 
   useEffect(() => {
     if (!clock.multiplier) {
-      fetch(CLOCk_SERVICE_CLOCK_URL)
+      fetch(CLOCK_SERVICE_CLOCK_URL)
         .then(result => result.json())
         .then(json => dispatch({ type: CLOCK_FETCHED, clock: json }));
     }

@@ -5,6 +5,7 @@ import { ClockState } from "../clock";
 import { FactoryState } from "../factory";
 import { GameEventState } from "../game-event";
 import { GameState } from "../game";
+import { AuthState } from "../auth";
 
 export interface AppState {
   readonly player: PlayerState;
@@ -14,6 +15,7 @@ export interface AppState {
   readonly factory: FactoryState;
   readonly gameEvent: GameEventState;
   readonly game: GameState;
+  readonly auth: AuthState;
 }
 
 export interface Action {

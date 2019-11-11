@@ -2,6 +2,8 @@ import React from "react";
 import "antd/dist/antd.css";
 import { Header } from "./game/Header";
 import { Game } from "./game/Game";
+import { useGetUser } from "./auth/selectors";
+import { AuthForm } from "./auth/AuthForm";
 
 function App() {
   const [mapHeight, setMapHeight] = React.useState(0);
@@ -27,13 +29,16 @@ function App() {
     return () => window.removeEventListener("resize", listener);
   }, []);
 
+  const user = useGetUser();
+
   return (
-    <div>
+    <div style={{height: "100%"}}>
       <div style={{ backgroundColor: "#e7e7e7" }} ref={headerRef}>
         <h2 style={{ textAlign: "center" }}>Cash flow</h2>
         <Header />
       </div>
-      {mapHeight > 0 && <Game height={mapHeight}/>}
+      {user && mapHeight > 0 && <Game height={mapHeight} />}
+      {!user && <AuthForm />}
     </div>
   );
 }

@@ -11,8 +11,10 @@ import { IFactory, IStorageSlot } from "../factory";
 import { ResourceMap } from "../world";
 import { ResourceData, ResourceDatas } from "./index";
 import { GameHeader } from "./GameHeader";
+import { useGetUser } from "../auth/selectors";
 
 export function Header() {
+  const user = useGetUser();
   return (
     <>
       <div
@@ -25,7 +27,7 @@ export function Header() {
         <div></div>
         <div>
           <Clock />
-          <Player />
+          {user && <Player />}
         </div>
         <div>
           <Resources />
