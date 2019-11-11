@@ -16,6 +16,7 @@ eureka:
     service-url:
       default-zone: http://localhost:8761/eureka/
 
+
 #logging:
 #  level:
 #    org:
@@ -25,3 +26,5 @@ eureka:
 #      apache:
 #        http:
 #          wire: debug
+zuul:
+  sensitive-headers: Cookie, Set-Cookie
