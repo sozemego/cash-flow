@@ -28,7 +28,7 @@ export function Header() {
       >
         <div></div>
         <div>
-          <Clock />
+          {user && <Clock />}
           {user && <Player />}
         </div>
         <div>
