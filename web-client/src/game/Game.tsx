@@ -3,7 +3,6 @@ import {
   WORLD_SERVICE_CITIES_URL,
   WORLD_SERVICE_RESOURCES_URL
 } from "../config/urls";
-import { ICity } from "../world";
 import { citiesAdded, resourcesAdded } from "../world/actions";
 import { useDispatch } from "react-redux";
 import { GameMapFull } from "./GameMapFull";
@@ -18,6 +17,7 @@ import styled, { css } from "styled-components";
 import { useGetSelectedCityId } from "./selectors";
 import { useGetCities } from "../world/selectors";
 import { citySelected, truckSelected } from "./actions";
+import { getAsJson } from "../rest/client";
 
 const Container = styled.div`
   display: grid;
@@ -69,14 +69,12 @@ export function Game({ height }: GameProps) {
   const cities = useGetCities();
 
   useEffect(() => {
-    fetch(WORLD_SERVICE_CITIES_URL)
-      .then<ICity[]>(res => res.json())
+    getAsJson(WORLD_SERVICE_CITIES_URL)
       .then(cities => dispatch(citiesAdded(cities)));
   }, [dispatch]);
 
   useEffect(() => {
-    fetch(WORLD_SERVICE_RESOURCES_URL)
-      .then(res => res.json())
+    getAsJson(WORLD_SERVICE_RESOURCES_URL)
       .then(resources => dispatch(resourcesAdded(resources)));
   }, [dispatch]);
 
