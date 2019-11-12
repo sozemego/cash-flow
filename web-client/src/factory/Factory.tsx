@@ -26,6 +26,7 @@ import { FactoryStorage } from "./FactoryStorage";
 import { ResourceName } from "../world";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { IResourceCount } from "../storage";
+import { getAsJson } from "../rest/client";
 
 const Container = styled.div`
   max-height: 250px;
@@ -240,8 +241,7 @@ export function FactoryEvents({
     if (!showEvents) {
       return;
     }
-    fetch(FACTORY_SERVICE_URL_EVENTS + "?id=" + factory.id)
-      .then(result => result.json())
+    getAsJson(FACTORY_SERVICE_URL_EVENTS + "?id=" + factory.id)
       .then(events => {
         return events.map((event: FactoryEvent) => {
           const parsedEvent: any = { ...event };
