@@ -24,17 +24,18 @@ public class TruckSchedulerService {
 	private final TruckNavigationService truckNavigationService;
 	private final SessionRegistry sessionRegistry;
 	private final Clock clock;
-	private final MessageQueueService messageQueueService;
+	private final MessageProducerService messageProducerService;
 
 	@Autowired
 	public TruckSchedulerService(TruckService truckService, TruckNavigationService truckNavigationService,
-															 SessionRegistry sessionRegistry, Clock clock, MessageQueueService messageQueueService
+															 SessionRegistry sessionRegistry, Clock clock,
+															 MessageProducerService messageProducerService
 															) {
 		this.truckService = truckService;
 		this.truckNavigationService = truckNavigationService;
 		this.sessionRegistry = sessionRegistry;
 		this.clock = clock;
-		this.messageQueueService = messageQueueService;
+		this.messageProducerService = messageProducerService;
 	}
 
 	@Scheduled(fixedRate = 1000L)
@@ -54,7 +55,7 @@ public class TruckSchedulerService {
 				truckNavigationService.finishTravel(truckId);
 				TruckArrived truckArrived = new TruckArrived(truckId.toString(), navigation.nextCityId);
 				sessionRegistry.sendToAll(truckArrived);
-				messageQueueService.sendEvent(truckArrived);
+				messageProducerService.sendEvent(truckArrived);
 			}
 		}
 	}
