@@ -9,7 +9,7 @@ import cors = require("cors");
 import { Eureka } from "eureka-js-client";
 
 import { startWebsocket } from "./socketRoute";
-import { connectToQueue } from "./queueListener";
+import { connectToTopic } from "./messageListener";
 
 const logger = require("./logger").namedLogger("index");
 
@@ -33,7 +33,7 @@ export function getEurekaClient() {
 
 server.listen(port, async () => {
   logger.info("App listening on " + port);
-  await connectToQueue();
+  await connectToTopic();
 
   eurekaClient = new Eureka({
     // application instance information
