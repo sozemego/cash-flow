@@ -2,6 +2,7 @@ package com.soze.cashflow.auth.service;
 
 import com.soze.cashflow.auth.domain.tables.records.UserRecord;
 import com.soze.cashflow.auth.repository.UserRepository;
+import com.soze.common.json.JsonUtils;
 import com.soze.common.message.queue.QueueMessage;
 import com.soze.common.message.queue.UserCreated;
 import com.soze.common.message.queue.UserCreatedConfirmation;
@@ -20,14 +21,12 @@ public class UserCreatedConfirmationService {
 	private static final Logger LOG = LoggerFactory.getLogger(UserCreatedConfirmationService.class);
 
 	private final UserRepository repository;
-	private final MessageQueueService messageQueueService;
+	private final KafkaClient kafkaClient;
 
 	@Inject
-	public UserCreatedConfirmationService(UserRepository repository, MessageQueueService messageQueueService
-																			 ) {
+	public UserCreatedConfirmationService(UserRepository repository, KafkaClient kafkaClient) {
 		this.repository = repository;
-		this.messageQueueService = messageQueueService;
-		messageQueueService.registerQueueMessageConsumer(this::consumeQueueMessage);
+		this.kafkaClient = kafkaClient;
 	}
 
 	@Scheduled(fixedDelay = "360s", initialDelay = "240s")
@@ -42,7 +41,7 @@ public class UserCreatedConfirmationService {
 	public void sendUserCreated(UserRecord userRecord) {
 		LOG.info("Sending UserCreated = {}", userRecord.getName());
 		UserCreated userCreated = new UserCreated(userRecord.getId().toString(), userRecord.getName(), userRecord.getCreateTime().toString());
-		messageQueueService.sendEvent(userCreated);
+		kafkaClient.sendMessage(null, JsonUtils.serialize(userCreated));
 	}
 
 	private void consumeQueueMessage(QueueMessage queueMessage) {

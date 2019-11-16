@@ -107,9 +107,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>5.7.3</version>
+            <groupId>io.micronaut.configuration</groupId>
+            <artifactId>micronaut-kafka</artifactId>
+            <version>1.2.0</version>
         </dependency>
 
         <dependency>
