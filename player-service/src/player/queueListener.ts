@@ -31,26 +31,7 @@ export async function connectToExchange() {
   }
 }
 
-export async function sendUserCreatedConfirmation(
-  userId: string
-): Promise<void> {
-    logger.info(`Sending UserCreatedConfirmation for userId = ${userId}`);
-  const channel = await connection.createChannel();
-  await channel.publish(
-    exchangeName,
-    "",
-    Buffer.from(
-      JSON.stringify({
-        type: USER_CREATED_CONFIRMATION,
-        id: userId
-      })
-    )
-  );
-  channel.close();
-}
-
 export const USER_CREATED = "USER_CREATED";
-export const USER_CREATED_CONFIRMATION = "USER_CREATED_CONFIRMATION";
 
 export interface UserCreated {
   id: string;

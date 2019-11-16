@@ -5,7 +5,7 @@ import {
   getPlayerByUserId,
   updatePlayer
 } from "./repository";
-import { sendUserCreatedConfirmation, UserCreated } from "./queueListener";
+import { UserCreated } from "./queueListener";
 const logger = require("../logger").namedLogger("player-service");
 
 interface PlayerService {
@@ -35,13 +35,11 @@ export async function handleUserCreated(userCreated: UserCreated) {
 
   const existingPlayer = await getPlayerByUserId(userCreated.id);
   if (existingPlayer) {
-    await sendUserCreatedConfirmation(existingPlayer.user_id);
     return;
   }
 
   try {
     await createPlayer(player);
-    await sendUserCreatedConfirmation(player.user_id);
   } catch (e) {
     logger.warn(`Problem creating player ${JSON.stringify(player)} = ${e}`);
   }
