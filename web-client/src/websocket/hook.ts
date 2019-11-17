@@ -25,8 +25,8 @@ export function useWebsocket(url: string, dispatch: Function, resetAction: Funct
         setReadyState(WebSocket.OPEN);
       };
       socket.onclose = function onClose(arg) {
+        resetAction();
         setTimeout(() => {
-          resetAction();
           setReadyState(WebSocket.CLOSED);
         }, 2500);
       };
