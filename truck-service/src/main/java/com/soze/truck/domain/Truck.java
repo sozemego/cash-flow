@@ -5,7 +5,10 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
@@ -18,6 +21,9 @@ public class Truck {
 
 	@Column(name = "template_id")
 	private String templateId;
+
+	@Column(name = "player_id")
+	private UUID playerId;
 
 	@Column(name = "name")
 	private String name;
@@ -50,6 +56,14 @@ public class Truck {
 
 	public void setTemplateId(String templateId) {
 		this.templateId = templateId;
+	}
+
+	public UUID getPlayerId() {
+		return playerId;
+	}
+
+	public void setPlayerId(UUID playerId) {
+		this.playerId = playerId;
 	}
 
 	public String getName() {
