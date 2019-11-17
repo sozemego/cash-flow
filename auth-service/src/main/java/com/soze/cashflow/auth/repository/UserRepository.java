@@ -34,15 +34,6 @@ public class UserRepository {
 		return context.selectFrom(User.USER).where(User.USER.NAME.eq(username)).fetchAny();
 	}
 
-	public List<UserRecord> findUnconfirmed() {
-		Result<UserRecord> result = context.selectFrom(User.USER).where(User.USER.CONFIRMED.eq(false)).fetch();
-		return result.map(TableRecordImpl::original);
-	}
-
-	public void confirmUser(String username) {
-		context.update(User.USER).set(User.USER.CONFIRMED, true).where(User.USER.NAME.eq(username));
-	}
-
 	public void deleteAll() {
 		context.deleteFrom(User.USER).execute();
 	}

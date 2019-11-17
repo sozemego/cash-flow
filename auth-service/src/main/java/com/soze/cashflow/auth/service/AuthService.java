@@ -49,7 +49,7 @@ public class AuthService {
 
 		UserRecord createUserRecord = userRepository.userRecord();
 		createUserRecord.values(UUID.randomUUID(), Timestamp.from(Instant.now()), username,
-														BCrypt.hashpw(new String(password), BCrypt.gensalt()), false
+														BCrypt.hashpw(new String(password), BCrypt.gensalt())
 													 );
 
 		userRepository.saveUser(createUserRecord);
