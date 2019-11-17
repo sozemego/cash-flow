@@ -8,6 +8,7 @@ import {
 import { ResourceName } from "../world";
 import { IStorage, StorageContentChangedAction } from "../storage";
 import { IFactory, InputOutput } from "../factory";
+import { UserLoggedOut } from "../auth";
 
 export interface TruckState {
   trucks: TruckMap;
@@ -102,7 +103,8 @@ export type TruckActions =
   | TruckAddedAction
   | TruckArrivedAction
   | StorageContentChangedAction
-  | StorageCapacityChanged;
+  | StorageCapacityChanged
+  | UserLoggedOut;
 
 export interface ResourceFromFactory {
   factory: IFactory;

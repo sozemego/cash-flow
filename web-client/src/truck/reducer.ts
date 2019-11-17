@@ -17,6 +17,7 @@ import {
   TruckTravelStartedAction
 } from "./index";
 import { StorageContentChangedAction } from "../storage";
+import { USER_LOGGED_OUT } from "../auth/actions";
 
 const initialState: TruckState = {
   trucks: {}
@@ -39,6 +40,8 @@ export function reducer(
       return storageContentChanged(state, action);
     case STORAGE_CAPACITY_CHANGED:
       return storageCapacityChanged(state, action);
+    case USER_LOGGED_OUT:
+      return initialState;
     default:
       return state;
   }
