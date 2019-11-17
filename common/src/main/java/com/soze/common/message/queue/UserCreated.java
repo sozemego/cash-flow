@@ -19,4 +19,9 @@ public class UserCreated extends QueueMessage {
 	public QueueMessageType getType() {
 		return QueueMessageType.USER_CREATED;
 	}
+
+	@Override
+	public String toString() {
+		return "UserCreated{" + "id='" + id + '\'' + ", name='" + name + '\'' + ", createTime='" + createTime + '\'' + '}';
+	}
 }
