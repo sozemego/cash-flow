@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useGetGameClock } from "./selectors";
 import { useRealClock } from "./useRealClock";
-import { CLOCK_FETCHED } from "./actions";
+import { clockFetched } from "./actions";
 import { useDispatch } from "react-redux";
 import { getCurrentGameDate } from "./business";
-import { GameClockHook, UseGameClockInitial } from "./index";
+import { GameClockHook, IClock, UseGameClockInitial } from "./index";
 import { CLOCK_SERVICE_CLOCK_URL } from "../config/urls";
 import { useGetUser } from "../auth/selectors";
 import { getAsJson } from "../rest/client";
@@ -16,8 +16,8 @@ export function useGameClock({ interval }: UseGameClockInitial): GameClockHook {
 
   useEffect(() => {
     if (!clock.multiplier && user) {
-      getAsJson(CLOCK_SERVICE_CLOCK_URL)
-        .then(json => dispatch({ type: CLOCK_FETCHED, clock: json }));
+      getAsJson<IClock>(CLOCK_SERVICE_CLOCK_URL)
+        .then(response => dispatch(clockFetched(response.payload)));
     }
   }, [clock.multiplier, dispatch, user]);
 

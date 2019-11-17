@@ -1,3 +1,5 @@
+import { JsonResponse } from "./index";
+
 let token: string | null = null;
 
 export function setToken(_token: string | null) {
@@ -12,7 +14,13 @@ export async function get(url: string) {
   return fetch(url, { headers });
 }
 
-export async function getAsJson(url: string) {
-  const response = await get(url);
-  return response.json();
+export async function getAsJson<T>(url: string): Promise<JsonResponse<T>> {
+  const response: Response = await get(url);
+  const json: T = await response.json();
+  return {
+    payload: json,
+    ...response
+  };
 }
+
+

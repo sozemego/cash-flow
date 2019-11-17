@@ -14,11 +14,18 @@ export function Player() {
 
   const user = useGetUser()!;
 
+  async function getPlayer() {
+      const response = await getAsJson(PLAYER_SERVICE_PLAYER_BY_USER_ID_URL + `?id=${user.id}`);
+      if (response.status === 404) {
+          getPlayer();
+          return;
+      }
+      dispatch(playerAdded(response.payload));
+  }
+
   useEffect(
     () => {
-      getAsJson(PLAYER_SERVICE_PLAYER_BY_USER_ID_URL + `?id=${user.id}`)
-        .then(payload => dispatch(playerAdded(payload)))
-        .catch((err) => console.log(err));
+        getPlayer();
     },
     /* eslint-disable-line */ [user.id]
   );

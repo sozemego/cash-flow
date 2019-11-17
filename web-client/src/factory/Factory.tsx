@@ -27,6 +27,7 @@ import { ResourceName } from "../world";
 import { ResourceIcon } from "../components/ResourceIcon";
 import { IResourceCount } from "../storage";
 import { getAsJson } from "../rest/client";
+import { JsonResponse } from "../rest";
 
 const Container = styled.div`
   max-height: 250px;
@@ -241,9 +242,9 @@ export function FactoryEvents({
     if (!showEvents) {
       return;
     }
-    getAsJson(FACTORY_SERVICE_URL_EVENTS + "?id=" + factory.id)
-      .then(events => {
-        return events.map((event: FactoryEvent) => {
+    getAsJson<FactoryEvent[]>(FACTORY_SERVICE_URL_EVENTS + "?id=" + factory.id)
+      .then((response: JsonResponse<FactoryEvent[]>) => {
+        return response.payload.map((event: FactoryEvent) => {
           const parsedEvent: any = { ...event };
           const { timestamp: ts } = event;
           parsedEvent.timestamp = new Date(
@@ -257,7 +258,7 @@ export function FactoryEvents({
           return parsedEvent;
         });
       })
-      .then(setEvents);
+      .then(events => setEvents(events as any));
   }, [showEvents, factory.id]);
 
   return (

@@ -18,6 +18,7 @@ import { useGetSelectedCityId } from "./selectors";
 import { useGetCities } from "../world/selectors";
 import { citySelected, truckSelected } from "./actions";
 import { getAsJson } from "../rest/client";
+import { ICity, Resource } from "../world";
 
 const Container = styled.div`
   display: grid;
@@ -69,13 +70,17 @@ export function Game({ height }: GameProps) {
   const cities = useGetCities();
 
   useEffect(() => {
-    getAsJson(WORLD_SERVICE_CITIES_URL)
-      .then(cities => dispatch(citiesAdded(cities)));
+    getAsJson<ICity[]>(
+      WORLD_SERVICE_CITIES_URL
+    ).then((response) =>
+      dispatch(citiesAdded(response.payload))
+    );
   }, [dispatch]);
 
   useEffect(() => {
-    getAsJson(WORLD_SERVICE_RESOURCES_URL)
-      .then(resources => dispatch(resourcesAdded(resources)));
+    getAsJson<Resource[]>(WORLD_SERVICE_RESOURCES_URL).then(response => {
+      dispatch(resourcesAdded(response.payload));
+    });
   }, [dispatch]);
 
   useEffect(() => {
