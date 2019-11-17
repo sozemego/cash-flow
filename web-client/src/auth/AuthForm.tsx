@@ -24,8 +24,12 @@ export function AuthForm() {
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" }
     });
-    const user = await response.json();
-    dispatch(userLoggedIn(user));
+    const payload = await response.json();
+    if (response.status === 200) {
+      dispatch(userLoggedIn(payload));
+    } else {
+      setError(payload.message);
+    }
   }
 
   async function signUp() {
@@ -38,8 +42,12 @@ export function AuthForm() {
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" }
     });
-    const user = await response.json();
-    dispatch(userLoggedIn(user));
+    const payload = await response.json();
+    if (response.status === 200) {
+      dispatch(userLoggedIn(payload));
+    } else {
+      setError(payload.message);
+    }
   }
 
   return (
