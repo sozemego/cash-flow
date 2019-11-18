@@ -33,8 +33,7 @@ public class UserCreatedListener {
 		QueueMessage queueMessage = JsonUtils.parse(message, QueueMessage.class);
 		if (queueMessage.getType() == QueueMessage.QueueMessageType.USER_CREATED) {
 			LOG.info("Handling {}", queueMessage);
-			String id = ((UserCreated)queueMessage).id;
-			truckServiceStarter.createPlayer(UUID.fromString(id));
+			truckServiceStarter.createPlayer((UserCreated)queueMessage);
 		}
 	}
 

@@ -49,4 +49,8 @@ public class TruckRepository {
 		crudRepository.deleteAll();
 	}
 
+	public List<Truck> findByPlayerId(UUID playerId) {
+		return crudRepository.findByPlayerId(playerId);
+	}
+
 }

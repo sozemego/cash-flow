@@ -75,6 +75,10 @@ public class TruckService {
 		return truckRepository.getTrucks();
 	}
 
+	public List<Truck> getTrucks(UUID playerId) {
+		return truckRepository.findByPlayerId(playerId);
+	}
+
 	private void validateTruck(Truck truck) {
 		if (truck.getId() == null) {
 			throw new IllegalArgumentException("id cannot be null");

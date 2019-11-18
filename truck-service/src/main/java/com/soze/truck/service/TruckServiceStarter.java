@@ -1,6 +1,7 @@
 package com.soze.truck.service;
 
 import com.soze.common.dto.CityDTO;
+import com.soze.common.message.queue.UserCreated;
 import com.soze.truck.domain.Player;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteWorldService;
@@ -33,8 +34,9 @@ public class TruckServiceStarter {
 		this.playerRepository = playerRepository;
 	}
 
-	public void createPlayer(UUID playerId) {
-		LOG.info("createPlayer called for player = {}", playerId);
+	public void createPlayer(UserCreated userCreated) {
+		LOG.info("createPlayer called for userCreated = {}", userCreated);
+		UUID playerId = UUID.fromString(userCreated.id);
 		Optional<Player> optionalPlayer = playerRepository.findById(playerId);
 		if (optionalPlayer.isPresent()) {
 			LOG.info("Player = {} already exists", playerId);
@@ -42,6 +44,7 @@ public class TruckServiceStarter {
 			LOG.info("Player with id = {} does not exist yet, creating", playerId);
 			Player player = new Player();
 			player.setId(playerId);
+			player.setName(userCreated.name);
 			player.setInitialized(false);
 			playerRepository.save(player);
 		}

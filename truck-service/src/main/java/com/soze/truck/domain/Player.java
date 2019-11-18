@@ -13,6 +13,9 @@ public class Player {
 	@Id
 	private UUID id;
 
+	@Column(name = "name")
+	private String name;
+
 	@Column
 	private boolean initialized;
 
@@ -22,6 +25,14 @@ public class Player {
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public boolean isInitialized() {
@@ -34,6 +45,6 @@ public class Player {
 
 	@Override
 	public String toString() {
-		return "Player{" + "id=" + id + ", initialized=" + initialized + '}';
+		return "Player{" + "id=" + id + ", name='" + name + '\'' + ", initialized=" + initialized + '}';
 	}
 }
