@@ -86,6 +86,7 @@ class TruckServiceTest {
 	@Test
 	void test_addTruck() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		String cityId = "CityID";
 		truckService.addTruck(truck, cityId);
 
@@ -101,6 +102,7 @@ class TruckServiceTest {
 	@Test
 	public void test_addTruck_cityIdIsNull() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		Assertions.assertThrows(NullPointerException.class, () -> truckService.addTruck(truck, null));
 	}
 
@@ -123,6 +125,7 @@ class TruckServiceTest {
 	@Test
 	public void test_addTruck_alreadyAdded() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		truckService.addTruck(truck, "cityId");
 		Assertions.assertThrows(IllegalArgumentException.class, () -> truckService.addTruck(truck, "cityId"));
 	}
@@ -130,6 +133,7 @@ class TruckServiceTest {
 	@Test
 	public void test_addSession() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		String cityId = "CityID";
 		truckService.addTruck(truck, cityId);
 
@@ -146,6 +150,7 @@ class TruckServiceTest {
 	@Test
 	public void travel_cityDoesNotExist() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		String cityId = "cityId";
 		this.truckService.addTruck(truck, cityId);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(truck.getId(), cityId));
@@ -154,6 +159,7 @@ class TruckServiceTest {
 	@Test
 	public void travel_alreadyAtCity() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		String cityId = "Warsaw";
 		this.truckService.addTruck(truck, cityId);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(truck.getId(), cityId));
@@ -163,6 +169,7 @@ class TruckServiceTest {
 	@Test
 	public void travel() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		truck.setSpeed(500);
 		String currentCityId = "Warsaw";
 		this.truckService.addTruck(truck, currentCityId);
@@ -183,6 +190,7 @@ class TruckServiceTest {
 	@Test
 	public void buyResource_truckDoesNotHaveEnoughStorage() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		Storage truckStorage = new Storage(1);
 		truck.setStorage(truckStorage);
 
@@ -195,6 +203,7 @@ class TruckServiceTest {
 	@Test
 	public void buyResource_factoryDoesNotExist() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		Storage truckStorage = new Storage(10);
 		truck.setStorage(truckStorage);
 
@@ -211,6 +220,7 @@ class TruckServiceTest {
 	@Test
 	public void buyResource_factoryDoesNotHaveEnoughResources() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		Storage truckStorage = new Storage(10);
 		truck.setStorage(truckStorage);
 
@@ -232,6 +242,7 @@ class TruckServiceTest {
 	@Test
 	public void buyResource() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		Storage truckStorage = new Storage(10);
 		truck.setStorage(truckStorage);
 
@@ -264,6 +275,7 @@ class TruckServiceTest {
 	@Test
 	public void buyResource_notEnoughCash() {
 		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
 		Storage truckStorage = new Storage(10);
 		truck.setStorage(truckStorage);
 
