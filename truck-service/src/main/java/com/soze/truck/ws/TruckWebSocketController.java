@@ -60,7 +60,7 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 		String playerName = session.getPrincipal().getName();
 		Player player = playerRepository.findByNameEquals(playerName).get();
 		truckServiceStarter.startPlayer(player.getId());
-		for (Truck truck : truckService.getTrucks(player.getId())) {
+		for (Truck truck : truckService.getTrucks()) {
 			sessionRegistry.sendTo(session, new TruckAdded(truckConverter.convert(truck)));
 		}
 	}
