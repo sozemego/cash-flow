@@ -12,6 +12,7 @@ import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.external.RemoteWorldService;
 import com.soze.truck.repository.TruckNavigationRepository;
 import com.soze.truck.repository.TruckRepository;
+import com.soze.truck.ws.SessionRegistry;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

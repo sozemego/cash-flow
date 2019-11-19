@@ -11,9 +11,6 @@ import org.springframework.kafka.annotation.PartitionOffset;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
-
 @Service
 public class UserCreatedListener {
 
@@ -27,7 +24,8 @@ public class UserCreatedListener {
 	}
 
 	@KafkaListener(groupId = "user-created-id",
-		topicPartitions = @TopicPartition(topic = "domain", partitionOffsets = @PartitionOffset(initialOffset = "0", partition = "0"))
+		topicPartitions = @TopicPartition(topic = "domain", partitionOffsets = @PartitionOffset(initialOffset = "0", partition = "0")),
+		autoStartup="${kafka.listeners.enabled}"
 	)
 	public void onUserCreated(String message) {
 		QueueMessage queueMessage = JsonUtils.parse(message, QueueMessage.class);

@@ -7,7 +7,7 @@ import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.repository.TruckRepository;
-import com.soze.truck.service.SessionRegistry;
+import com.soze.truck.ws.SessionRegistry;
 import com.soze.truck.service.TruckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,6 +16,7 @@ import com.soze.truck.external.RemoteWorldService;
 import com.soze.truck.repository.TruckRepository;
 import com.soze.truck.saga.BuyResourceSaga;
 import com.soze.truck.saga.SellResourceSaga;
+import com.soze.truck.ws.SessionRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class TruckService {
 
 	/**
 	 * Adds a truck to the world in a certain cityId.
-	 * <p>
+	 *
 	 * Sends out {@link TruckAdded} message to all connected sessions.
 	 */
 	public void addTruck(Truck truck, String cityId) {

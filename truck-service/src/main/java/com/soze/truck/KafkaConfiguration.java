@@ -3,6 +3,7 @@ package com.soze.truck;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
+@Profile("!test")
 public class KafkaConfiguration {
 
 	@Bean

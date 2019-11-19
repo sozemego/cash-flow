@@ -10,16 +10,12 @@ import com.soze.common.message.server.TruckAdded;
 import com.soze.truck.domain.Player;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.repository.PlayerRepository;
-import com.soze.truck.service.SessionRegistry;
 import com.soze.truck.service.TruckConverter;
 import com.soze.truck.service.TruckService;
 import com.soze.truck.service.TruckServiceStarter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -56,12 +52,13 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 	public void afterConnectionEstablished(WebSocketSession session
 																				) throws Exception {
 		LOG.info("{} connected", session.getId());
-		sessionRegistry.addSession(session);
 		String playerName = session.getPrincipal().getName();
 		Player player = playerRepository.findByNameEquals(playerName).get();
+		WebSocket socket = WebSocketFactory.createSocket(session, playerName, player.getId());
+		sessionRegistry.addSocket(socket);
 		truckServiceStarter.startPlayer(player.getId());
 		for (Truck truck : truckService.getTrucks()) {
-			sessionRegistry.sendTo(session, new TruckAdded(truckConverter.convert(truck)));
+			sessionRegistry.sendTo(socket, new TruckAdded(truckConverter.convert(truck)));
 		}
 	}
 
