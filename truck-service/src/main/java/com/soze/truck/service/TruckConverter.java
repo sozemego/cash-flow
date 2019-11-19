@@ -21,6 +21,7 @@ public class TruckConverter {
 	public TruckDTO convert(Truck truck) {
 		TruckDTO truckDTO = new TruckDTO();
 		truckDTO.setId(truck.getId().toString());
+		truckDTO.setPlayerId(truck.getPlayerId().toString());
 		truckDTO.setName(truck.getName());
 		truckDTO.setSpeed(truck.getSpeed());
 		truckDTO.setTemplateId(truck.getTemplateId());
