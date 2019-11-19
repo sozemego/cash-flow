@@ -1,6 +1,8 @@
 package com.soze.truck.ws;
 
 import com.soze.common.json.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -9,6 +11,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class WebSocketImpl implements WebSocket {
+
+	private static final Logger LOG = LoggerFactory.getLogger(WebSocketImpl.class);
 
 	private final WebSocketSession session;
 	private final String playerName;
@@ -37,6 +41,7 @@ public class WebSocketImpl implements WebSocket {
 
 	@Override
 	public void send(Object message) throws IOException {
+		LOG.info("Sending message = {} to socketId = {}, playerName = {}", message, getId(), getPlayerName());
 		TextMessage textMessage = getTextMessage(message);
 		session.sendMessage(textMessage);
 	}

@@ -5,7 +5,6 @@ import com.soze.common.message.server.ServerMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
@@ -36,22 +35,25 @@ public class SocketRegistry {
 	}
 
 	public void sendTo(WebSocket socket, ServerMessage serverMessage) {
-		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
-		sendTo(textMessage, socket);
+		try {
+			socket.send(serverMessage);
+		} catch (IOException e) {
+			LOG.warn("Exception when sending a server message, to session {}", socket.getId(), e);
+		}
 	}
 
-	public void sendTo(TextMessage textMessage, WebSocket socket) {
+	public void sendTo(WebSocket socket, String payload) {
 		try {
-			socket.send(textMessage);
+			socket.send(payload);
 		} catch (IOException e) {
 			LOG.warn("Exception when sending a server message, to session {}", socket.getId(), e);
 		}
 	}
 
 	public void sendToAll(ServerMessage serverMessage) {
-		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
+		String payload = JsonUtils.serialize(serverMessage);
 		for (WebSocket socket : sockets.values()) {
-			sendTo(textMessage, socket);
+			sendTo(socket, payload);
 		}
 	}
 
