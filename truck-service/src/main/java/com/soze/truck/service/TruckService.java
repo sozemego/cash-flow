@@ -16,7 +16,8 @@ import com.soze.truck.external.RemoteWorldService;
 import com.soze.truck.repository.TruckRepository;
 import com.soze.truck.saga.BuyResourceSaga;
 import com.soze.truck.saga.SellResourceSaga;
-import com.soze.truck.ws.SessionRegistry;
+import com.soze.truck.ws.SocketRegistry;
+import com.soze.truck.ws.WebSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +38,13 @@ public class TruckService {
 	private final RemotePlayerService playerService;
 	private final Clock clock;
 	private final TruckRepository truckRepository;
-	private final SessionRegistry sessionRegistry;
+	private final SocketRegistry socketRegistry;
 
 	@Autowired
 	public TruckService(TruckConverter truckConverter, TruckNavigationService truckNavigationService,
 											RemoteWorldService remoteWorldService, RemoteFactoryService remoteFactoryService,
 											RemotePlayerService playerService, Clock clock, TruckRepository truckRepository,
-											SessionRegistry sessionRegistry
+											SocketRegistry socketRegistry
 										 ) {
 		this.truckConverter = truckConverter;
 		this.truckNavigationService = truckNavigationService;
@@ -52,7 +53,7 @@ public class TruckService {
 		this.playerService = playerService;
 		this.clock = clock;
 		this.truckRepository = truckRepository;
-		this.sessionRegistry = sessionRegistry;
+		this.socketRegistry = socketRegistry;
 	}
 
 	/**
@@ -69,7 +70,7 @@ public class TruckService {
 		truckNavigationService.setCityId(truck.getId(), cityId);
 
 		TruckAdded truckAdded = new TruckAdded(truckConverter.convert(truck));
-		sessionRegistry.sendToAll(truckAdded);
+		socketRegistry.sendToAll(truckAdded);
 	}
 
 	public List<Truck> getTrucks() {
@@ -96,10 +97,13 @@ public class TruckService {
 	/**
 	 * Sends a given truck to a given city.
 	 */
-	public void travel(UUID truckId, String cityId) {
-		LOG.info("Truck {} wants to travel to {}", truckId, cityId);
+	public void travel(WebSocket socket, UUID truckId, String cityId) {
+		LOG.info("Player {} wants truck {} to travel to {}", socket.getPlayerId(), truckId, cityId);
 		Truck truck = getTruck(truckId).orElseThrow(
 			() -> new IllegalArgumentException("Truck with id = " + truckId + " does not exist"));
+		if (!truck.getPlayerId().equals(socket.getPlayerId())) {
+			throw new IllegalStateException("Truck with id = " + truck.getId() + " is not owned by player with id = " + socket.getPlayerId());
+		}
 		CityDTO city = remoteWorldService.getCityById(cityId).orElseThrow(
 			() -> new IllegalArgumentException("City with id = " + cityId + " does not exist"));
 
@@ -118,7 +122,7 @@ public class TruckService {
 
 		TruckTravelStarted truckTravelStarted = new TruckTravelStarted(
 			truckId.toString(), cityId, navigation.startTime, navigation.arrivalTime);
-		sessionRegistry.sendToAll(truckTravelStarted);
+		socketRegistry.sendToAll(truckTravelStarted);
 	}
 
 	public Optional<Truck> getTruck(UUID truckId) {
@@ -130,14 +134,14 @@ public class TruckService {
 	 */
 	public void buyResource(UUID truckId, String factoryId, Resource resource, int count) {
 		new BuyResourceSaga(
-			this, truckRepository, remoteFactoryService, playerService, sessionRegistry, truckId, factoryId, resource,
+			this, truckRepository, remoteFactoryService, playerService, socketRegistry, truckId, factoryId, resource,
 			count
 		).run();
 	}
 
 	public void sellResource(UUID truckId, String factoryId, Resource resource, int count) {
 		new SellResourceSaga(
-			this, truckRepository, remoteFactoryService, playerService, sessionRegistry, truckId, resource, count,
+			this, truckRepository, remoteFactoryService, playerService, socketRegistry, truckId, resource, count,
 			factoryId
 		).run();
 	}
@@ -157,7 +161,7 @@ public class TruckService {
 			storageContentChangedList.add(new StorageContentChanged(truckId.toString(), entry.getKey(), -entry.getValue()));
 		}
 		for (ServerMessage serverMessage : storageContentChangedList) {
-			sessionRegistry.sendToAll(serverMessage);
+			socketRegistry.sendToAll(serverMessage);
 		}
 		storage.clear();
 		LOG.info("Contents of truck {} cleared", truckId);

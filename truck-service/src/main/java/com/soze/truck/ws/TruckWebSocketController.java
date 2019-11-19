@@ -29,18 +29,18 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TruckWebSocketController.class);
 
-	private final SessionRegistry sessionRegistry;
+	private final SocketRegistry socketRegistry;
 	private final TruckService truckService;
 	private final TruckConverter truckConverter;
 	private final PlayerRepository playerRepository;
 	private final TruckServiceStarter truckServiceStarter;
 
 	@Autowired
-	public TruckWebSocketController(SessionRegistry sessionRegistry, TruckService truckService,
+	public TruckWebSocketController(SocketRegistry socketRegistry, TruckService truckService,
 																	TruckConverter truckConverter, PlayerRepository playerRepository,
 																	TruckServiceStarter truckServiceStarter
 																 ) {
-		this.sessionRegistry = sessionRegistry;
+		this.socketRegistry = socketRegistry;
 		this.truckService = truckService;
 		this.truckConverter = truckConverter;
 		this.playerRepository = playerRepository;
@@ -55,10 +55,10 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 		String playerName = session.getPrincipal().getName();
 		Player player = playerRepository.findByNameEquals(playerName).get();
 		WebSocket socket = WebSocketFactory.createSocket(session, playerName, player.getId());
-		sessionRegistry.addSocket(socket);
+		socketRegistry.addSocket(socket);
 		truckServiceStarter.startPlayer(player.getId());
 		for (Truck truck : truckService.getTrucks()) {
-			sessionRegistry.sendTo(socket, new TruckAdded(truckConverter.convert(truck)));
+			socketRegistry.sendTo(socket, new TruckAdded(truckConverter.convert(truck)));
 		}
 	}
 
@@ -67,7 +67,7 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status
 																	 ) throws Exception {
 		LOG.info("{} disconnected", session.getId());
-		sessionRegistry.removeSession(session);
+		socketRegistry.removeSession(session);
 	}
 
 	@Override
@@ -83,10 +83,15 @@ public class TruckWebSocketController extends TextWebSocketHandler {
 			ClientMessage clientMessage = JsonUtils.parse(message.getPayload(), ClientMessage.class);
 			LOG.trace("Client message type = {} from client id = {}", clientMessage.getType(), session.getId());
 
+			WebSocket socket = socketRegistry.getWebSocket(session);
+			if (socket == null) {
+				throw new IllegalStateException("WebSocket for session " + session + " is null");
+			}
 			if (clientMessage.getType() == ClientMessage.ClientMessageType.TRUCK_TRAVEL_REQUEST) {
 				TruckTravelRequest truckTravelRequest = (TruckTravelRequest) clientMessage;
-				truckService.travel(
-					UUID.fromString(truckTravelRequest.getTruckId()), truckTravelRequest.getDestinationCityId());
+				truckService.travel(socket, UUID.fromString(truckTravelRequest.getTruckId()),
+														truckTravelRequest.getDestinationCityId()
+													 );
 			}
 
 			if (clientMessage.getType() == ClientMessage.ClientMessageType.BUY_RESOURCE_REQUEST) {

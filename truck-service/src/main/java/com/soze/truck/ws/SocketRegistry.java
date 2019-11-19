@@ -9,27 +9,30 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class SessionRegistry {
+public class SocketRegistry {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SessionRegistry.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SocketRegistry.class);
 
-	private final Set<WebSocket> sockets = Collections.synchronizedSet(new HashSet<>());
+	private final Map<String, WebSocket> sockets = new ConcurrentHashMap<>();
 
 	public void addSocket(WebSocket socket) {
-		sockets.add(socket);
+		sockets.put(socket.getId(), socket);
 	}
 
 	public void removeSocket(WebSocket socket) {
-		sockets.remove(socket);
+		sockets.remove(socket.getId());
 	}
 
 	public void removeSession(WebSocketSession session) {
-		sockets.removeIf(socket -> socket.getId().equals(session.getId()));
+		sockets.remove(session.getId());
+	}
+
+	public WebSocket getWebSocket(WebSocketSession session) {
+		return sockets.get(session.getId());
 	}
 
 	public void sendTo(WebSocket socket, ServerMessage serverMessage) {
@@ -47,7 +50,7 @@ public class SessionRegistry {
 
 	public void sendToAll(ServerMessage serverMessage) {
 		TextMessage textMessage = new TextMessage(JsonUtils.serialize(serverMessage));
-		for (WebSocket socket : sockets) {
+		for (WebSocket socket : sockets.values()) {
 			sendTo(textMessage, socket);
 		}
 	}

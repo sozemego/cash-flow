@@ -12,7 +12,9 @@ import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.external.RemoteWorldService;
 import com.soze.truck.repository.TruckNavigationRepository;
 import com.soze.truck.repository.TruckRepository;
-import com.soze.truck.ws.SessionRegistry;
+import com.soze.truck.ws.SocketRegistry;
+import com.soze.truck.ws.WebSocket;
+import com.soze.truck.ws.WebSocketFactory;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +61,7 @@ class TruckServiceTest {
 	private TruckNavigationRepository truckNavigationRepository;
 
 	@Autowired
-	private SessionRegistry sessionRegistry;
+	private SocketRegistry socketRegistry;
 
 	@MockBean
 	private FactoryServiceClient factoryServiceClient;
@@ -74,7 +76,7 @@ class TruckServiceTest {
 		testWebSocketSession = new TestWebSocketSession();
 		truckService = new TruckService(truckConverter, truckNavigationService, remoteWorldService,
 																		remoteFactoryService, playerService, new Clock(60, System.currentTimeMillis()),
-																		truckRepository, sessionRegistry
+																		truckRepository, socketRegistry
 		);
 	}
 
@@ -145,7 +147,8 @@ class TruckServiceTest {
 
 	@Test
 	public void travel_truckDoesNotExist() {
-		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(UUID.randomUUID(), "cityId"));
+		WebSocket socket = WebSocketFactory.createSocket(testWebSocketSession, "name", UUID.randomUUID());
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(socket, UUID.randomUUID(), "cityId"));
 	}
 
 	@Test
@@ -154,7 +157,8 @@ class TruckServiceTest {
 		truck.setPlayerId(UUID.randomUUID());
 		String cityId = "cityId";
 		this.truckService.addTruck(truck, cityId);
-		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(truck.getId(), cityId));
+		WebSocket socket = WebSocketFactory.createSocket(testWebSocketSession, "name", truck.getPlayerId());
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(socket, truck.getId(), cityId));
 	}
 
 	@Test
@@ -163,7 +167,8 @@ class TruckServiceTest {
 		truck.setPlayerId(UUID.randomUUID());
 		String cityId = "Warsaw";
 		this.truckService.addTruck(truck, cityId);
-		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(truck.getId(), cityId));
+		WebSocket socket = WebSocketFactory.createSocket(testWebSocketSession, "name", truck.getPlayerId());
+		Assertions.assertThrows(IllegalArgumentException.class, () -> this.truckService.travel(socket, truck.getId(), cityId));
 	}
 
 
@@ -176,11 +181,24 @@ class TruckServiceTest {
 		this.truckService.addTruck(truck, currentCityId);
 		String toCityId = "Wro";
 
-		TestWebSocketSession session = new TestWebSocketSession();
-		this.truckService.travel(truck.getId(), toCityId);
+		WebSocket socket = WebSocketFactory.createSocket(testWebSocketSession, "name", truck.getPlayerId());
+		this.truckService.travel(socket, truck.getId(), toCityId);
 
 		TruckNavigation navigation = truckNavigationService.getTruckNavigation(truck.getId());
 		Assertions.assertEquals(toCityId, navigation.nextCityId);
+	}
+
+	@Test
+	public void travel_truckDoesNotBelongToPlayer() {
+		Truck truck = truckTemplateLoader.constructTruckByTemplateId("BASIC_TRUCK");
+		truck.setPlayerId(UUID.randomUUID());
+		truck.setSpeed(500);
+		String currentCityId = "Warsaw";
+		this.truckService.addTruck(truck, currentCityId);
+		String toCityId = "Wro";
+
+		WebSocket socket = WebSocketFactory.createSocket(testWebSocketSession, "name_other", UUID.randomUUID());
+		Assertions.assertThrows(IllegalStateException.class, () -> this.truckService.travel(socket, truck.getId(), toCityId));
 	}
 
 	@Test

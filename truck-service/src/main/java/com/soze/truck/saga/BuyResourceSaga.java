@@ -7,7 +7,7 @@ import com.soze.truck.domain.Truck;
 import com.soze.truck.external.RemoteFactoryService;
 import com.soze.truck.external.RemotePlayerService;
 import com.soze.truck.repository.TruckRepository;
-import com.soze.truck.ws.SessionRegistry;
+import com.soze.truck.ws.SocketRegistry;
 import com.soze.truck.service.TruckService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class BuyResourceSaga {
 	private final TruckRepository truckRepository;
 	private final RemoteFactoryService factoryService;
 	private final RemotePlayerService playerService;
-	private final SessionRegistry sessionRegistry;
+	private final SocketRegistry socketRegistry;
 
 	private final UUID truckId;
 	private final String factoryId;
@@ -32,14 +32,14 @@ public class BuyResourceSaga {
 	private final int count;
 
 	public BuyResourceSaga(TruckService truckService, TruckRepository truckRepository, RemoteFactoryService factoryService,
-												 RemotePlayerService playerService, SessionRegistry sessionRegistry, UUID truckId, String factoryId,
+												 RemotePlayerService playerService, SocketRegistry socketRegistry, UUID truckId, String factoryId,
 												 Resource resource, int count
 												) {
 		this.truckService = truckService;
 		this.truckRepository = truckRepository;
 		this.factoryService = factoryService;
 		this.playerService = playerService;
-		this.sessionRegistry = sessionRegistry;
+		this.socketRegistry = socketRegistry;
 		this.truckId = truckId;
 		this.factoryId = factoryId;
 		this.resource = resource;
@@ -124,6 +124,6 @@ public class BuyResourceSaga {
 		LOG.info("Successfully bought {} of {} from {} for truck {}", count, resource, factoryId, truck.getId());
 
 		StorageContentChanged storageContentChanged = new StorageContentChanged(truckId.toString(), resource, count);
-		sessionRegistry.sendToAll(storageContentChanged);
+		socketRegistry.sendToAll(storageContentChanged);
 	}
 }

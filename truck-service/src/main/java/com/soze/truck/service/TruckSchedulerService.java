@@ -4,7 +4,7 @@ import com.soze.common.dto.Clock;
 import com.soze.common.message.server.TruckArrived;
 import com.soze.truck.domain.Truck;
 import com.soze.truck.domain.TruckNavigation;
-import com.soze.truck.ws.SessionRegistry;
+import com.soze.truck.ws.SocketRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +23,18 @@ public class TruckSchedulerService {
 
 	private final TruckService truckService;
 	private final TruckNavigationService truckNavigationService;
-	private final SessionRegistry sessionRegistry;
+	private final SocketRegistry socketRegistry;
 	private final Clock clock;
 	private final MessageProducerService messageProducerService;
 
 	@Autowired
 	public TruckSchedulerService(TruckService truckService, TruckNavigationService truckNavigationService,
-															 SessionRegistry sessionRegistry, Clock clock,
+															 SocketRegistry socketRegistry, Clock clock,
 															 MessageProducerService messageProducerService
 															) {
 		this.truckService = truckService;
 		this.truckNavigationService = truckNavigationService;
-		this.sessionRegistry = sessionRegistry;
+		this.socketRegistry = socketRegistry;
 		this.clock = clock;
 		this.messageProducerService = messageProducerService;
 	}
@@ -55,7 +55,7 @@ public class TruckSchedulerService {
 				LOG.trace("Truck with id = {} finished travel", truckId);
 				truckNavigationService.finishTravel(truckId);
 				TruckArrived truckArrived = new TruckArrived(truckId.toString(), navigation.nextCityId);
-				sessionRegistry.sendToAll(truckArrived);
+				socketRegistry.sendToAll(truckArrived);
 				messageProducerService.sendEvent(truckArrived);
 			}
 		}
