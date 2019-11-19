@@ -5,6 +5,7 @@ export interface PlayerState {
 }
 
 export interface IPlayer {
+  id: string;
   name: string;
   cash: number;
 }

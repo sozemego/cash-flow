@@ -5,8 +5,10 @@ import { useGetTrucks } from "./selectors";
 import { useGameClock } from "../clock/useGameClock";
 import { useGetCities } from "../world/selectors";
 import { getTruckIcon } from "../game/business";
+import { useGetUser } from "../auth/selectors";
 
 export function TravellingTrucks() {
+  const user = useGetUser();
   const trucks = useGetTrucks();
   const cities = useGetCities();
 
@@ -57,7 +59,7 @@ export function TravellingTrucks() {
         return (
           <div key={truck.id}>
             <Polyline positions={positions} />
-            <Marker key={truck.id} position={start} icon={getTruckIcon(truck)}>
+            <Marker key={truck.id} position={start} icon={getTruckIcon(truck, user!.id === truck.playerId)}>
               <Tooltip>
                 {truck.name} travelling to {getCityName(nextCityId!)}
               </Tooltip>

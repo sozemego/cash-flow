@@ -40,6 +40,7 @@ import { ResourceName } from "../world";
 import { useDispatch } from "react-redux";
 import { truckSelected } from "../game/actions";
 import { calculateDistance, distanceTime } from "./business";
+import { useGetUser } from "../auth/selectors";
 
 const Container = styled.div`
   width: 450px;
@@ -58,7 +59,7 @@ export function Truck({ truck }: TruckProps) {
   const { socket } = useTruckSocket();
   const [hidden, setHidden] = useState(false);
 
-  const { id, name, navigation, storage, texture } = truck;
+  const { id, name, navigation, storage } = truck;
   const { currentCityId, nextCityId } = navigation;
 
   const cardStyle = Object.assign(
@@ -104,7 +105,7 @@ export function Truck({ truck }: TruckProps) {
       {!hidden && (
         <Card bodyStyle={cardStyle}>
           <span>
-            <TruckIcon texture={texture} />
+            <TruckIcon truck={truck} />
             {nextCityId ? "->" : " "}
             <CityInline cityId={nextCityId || currentCityId} />
           </span>
@@ -390,10 +391,14 @@ export function FactoryResource({
   );
 }
 
-export function TruckIcon({ texture }: TruckIconProps) {
+export function TruckIcon({ truck }: TruckIconProps) {
+  const user = useGetUser() || { id: "" };
+  const own = truck.playerId === user.id;
+  const texture = truck.texture;
+  const parts = texture.split(".");
   return (
     <img
-      src={`/img/truck/${texture}`}
+      src={`/img/truck/${parts[0]}${own ? "_own." : "."}${parts[1]}`}
       alt={"Truck icon"}
       style={{ width: "32px", height: "32px" }}
     />

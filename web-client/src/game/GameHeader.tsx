@@ -39,7 +39,7 @@ export function GameHeader() {
       <div style={{ display: "flex" }}>
         {truck && (
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <TruckIcon texture={truck.texture} />
+            <TruckIcon truck={truck} />
             <Tag color={"red"} style={{ fontSize: "1.2rem" }}>
               {truck.name}
             </Tag>
@@ -55,7 +55,7 @@ export function GameHeader() {
       </div>
       <div>
         {Object.values(trucks).map(truck => (
-          <TruckIcon key={truck.id} texture={truck.texture} />
+          <TruckIcon key={truck.id} truck={truck} />
         ))}
       </div>
     </div>

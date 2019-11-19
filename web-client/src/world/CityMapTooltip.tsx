@@ -37,7 +37,7 @@ export function CityMapTooltip({ city }: CityMapTooltipProps) {
         <div>
           Trucks:
           {trucksInCity.map(truck => (
-            <TruckIcon key={truck.id} texture={truck.texture} />
+            <TruckIcon key={truck.id} truck={truck} />
           ))}
         </div>
       )}

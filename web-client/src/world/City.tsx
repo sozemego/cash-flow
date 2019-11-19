@@ -63,7 +63,7 @@ export function City({ city }: CityProps) {
         <ResourceList resources={resourceCounts} />
         <div>
           {trucksInCity.map(truck => (
-            <TruckIcon key={truck.id} texture={truck.texture} />
+            <TruckIcon key={truck.id} truck={truck} />
           ))}
         </div>
       </Card>

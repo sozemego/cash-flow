@@ -8,7 +8,7 @@ import {
 } from "./index";
 
 const initialState: PlayerState = {
-  player: { name: "void", cash: 0 }
+  player: { id: "", name: "void", cash: 0 }
 };
 
 export function reducer(
