@@ -3,6 +3,7 @@ package com.soze.common.dto;
 public class TruckDTO {
 
 	private String id;
+	private String playerId;
 	private String templateId;
 	private String name;
 	private String texture;
@@ -23,6 +24,14 @@ public class TruckDTO {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getPlayerId() {
+		return playerId;
+	}
+
+	public void setPlayerId(String playerId) {
+		this.playerId = playerId;
 	}
 
 	public String getTemplateId() {
@@ -75,6 +84,6 @@ public class TruckDTO {
 
 	@Override
 	public String toString() {
-		return "TruckDTO{" + "id='" + id + '\'' + ", templateId='" + templateId + '\'' + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", storage=" + storage + ", speed=" + speed + '}';
+		return "TruckDTO{" + "id='" + id + '\'' + ", playerId='" + playerId + '\'' + ", templateId='" + templateId + '\'' + ", name='" + name + '\'' + ", texture='" + texture + '\'' + ", storage=" + storage + ", speed=" + speed + ", navigation=" + navigation + '}';
 	}
 }
