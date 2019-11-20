@@ -1,17 +1,18 @@
 import { registry } from "./socketRegistry";
 import {
-  createPlayer,
+  createPlayer as repoCreatePlayer,
   getPlayer,
   getPlayerByUserId,
   updatePlayer
 } from "./repository";
-import { UserCreated } from "./queueListener";
+import { sendDomainMessage } from "./messageListener";
 const logger = require("../logger").namedLogger("player-service");
 
 interface PlayerService {
   transfer: (number: number, id: string) => Promise<TransferResult>;
   getPlayer: (id: string) => Promise<Player>;
   getPlayerByUserId: (id: string) => Promise<Player>;
+  createPlayer: (name: string, userId: string) => Promise<Player>;
 }
 
 interface TransferResult {
@@ -20,6 +21,7 @@ interface TransferResult {
 }
 
 export interface Player {
+  id: string | null;
   name: string;
   cash: number;
   user_id: string;
@@ -27,11 +29,6 @@ export interface Player {
 
 export async function handleUserCreated(userCreated: UserCreated) {
   logger.info(`Handling UserCreated for user ${userCreated.name}`);
-  const player: Player = {
-    name: userCreated.name,
-    cash: 5000,
-    user_id: userCreated.id
-  };
 
   const existingPlayer = await getPlayerByUserId(userCreated.id);
   if (existingPlayer) {
@@ -39,9 +36,12 @@ export async function handleUserCreated(userCreated: UserCreated) {
   }
 
   try {
-    await createPlayer(player);
+    const player = await createPlayer(userCreated.name, userCreated.id);
+    await sendDomainMessage(createPlayerCreatedMessage(player));
   } catch (e) {
-    logger.warn(`Problem creating player ${JSON.stringify(player)} = ${e}`);
+    logger.warn(
+      `Problem creating player for userId = ${userCreated.id} = ${e}`
+    );
   }
 }
 
@@ -71,8 +71,49 @@ function syncCashChange(amount) {
   );
 }
 
+function createPlayerCreatedMessage(player: Player): PlayerCreated {
+  return {
+    playerId: player.id,
+    playerName: player.name,
+    userId: player.user_id,
+    type: PLAYER_CREATED
+  };
+}
+
+async function createPlayer(name: string, userId: string) {
+  const player: Player = {
+    id: null,
+    name,
+    user_id: userId,
+    cash: 5000
+  };
+  logger.info(`Creating player = ${JSON.stringify(player)}`);
+  const createdPlayer = await repoCreatePlayer(player);
+  await sendDomainMessage(createPlayerCreatedMessage(createdPlayer));
+  return createdPlayer;
+}
+
 export const service: PlayerService = {
   getPlayer,
   transfer,
-  getPlayerByUserId
+  getPlayerByUserId,
+  createPlayer
 };
+
+export const USER_CREATED = "USER_CREATED";
+
+export interface UserCreated {
+  id: string;
+  name: string;
+  createTime: string;
+  type: typeof USER_CREATED;
+}
+
+export const PLAYER_CREATED = "PLAYER_CREATED";
+
+export interface PlayerCreated {
+  userId: string;
+  playerId: string;
+  playerName: string;
+  type: typeof PLAYER_CREATED;
+}

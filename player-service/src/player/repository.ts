@@ -38,11 +38,13 @@ export async function updatePlayer(player): Promise<void> {
   );
 }
 
-export async function createPlayer(player: Player): Promise<void> {
+export async function createPlayer(player: Player): Promise<Player> {
   logger.info(`Creating new player = ${JSON.stringify(player)}`);
-  await pool.query(
-    `INSERT INTO player.player (USER_ID, NAME, CASH) VALUES ($1, $2, $3)`,
+  const result = await pool.query(
+    `INSERT INTO player.player (USER_ID, NAME, CASH) VALUES ($1, $2, $3) RETURNING *`,
     [player.user_id, player.name, player.cash]
   );
-  logger.info(`Player name = ${player.name} created`);
+  const createdPlayer = result.rows[0];
+  logger.info(`Player = ${JSON.stringify(player)} created`);
+  return createdPlayer;
 }

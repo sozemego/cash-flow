@@ -9,6 +9,7 @@ import { Eureka } from "eureka-js-client";
 
 import { router as playerRouter } from "./player/router";
 import { connectToTopic } from "./player/messageListener";
+import { createPlayer } from "./player/repository";
 const { startWebsocket } = require("./player/socketRoute");
 const logger = require("./logger").namedLogger("index");
 

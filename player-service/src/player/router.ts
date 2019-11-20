@@ -33,6 +33,19 @@ router.get("/player", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/player", async (req: Request, res: Response) => {
+  const { name } = req.query;
+  const token = getJWT(req);
+  try {
+    const player = await service.createPlayer(name, token.id);
+    logger.info(`Returning ${JSON.stringify(player)}`);
+    res.send(player);
+  } catch (e) {
+    console.error(e);
+    res.status(400).send({ message: "Problem creating player!" });
+  }
+});
+
 router.get("/playerByUser", async (req: Request, res: Response) => {
   const { id } = req.query;
   const token = getJWT(req);
