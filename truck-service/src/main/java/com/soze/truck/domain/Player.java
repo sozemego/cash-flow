@@ -13,6 +13,9 @@ public class Player {
 	@Id
 	private UUID id;
 
+	@Column(name = "user_id")
+	private UUID userId;
+
 	@Column(name = "name")
 	private String name;
 
@@ -25,6 +28,14 @@ public class Player {
 
 	public void setId(UUID id) {
 		this.id = id;
+	}
+
+	public UUID getUserId() {
+		return userId;
+	}
+
+	public void setUserId(UUID userId) {
+		this.userId = userId;
 	}
 
 	public String getName() {
@@ -45,6 +56,6 @@ public class Player {
 
 	@Override
 	public String toString() {
-		return "Player{" + "id=" + id + ", name='" + name + '\'' + ", initialized=" + initialized + '}';
+		return "Player{" + "id=" + id + ", userId=" + userId + ", name='" + name + '\'' + ", initialized=" + initialized + '}';
 	}
 }

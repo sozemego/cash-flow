@@ -44,6 +44,7 @@ public class TruckServiceStarter {
 			LOG.info("Player with id = {} does not exist yet, creating", playerId);
 			Player player = new Player();
 			player.setId(playerId);
+			player.setUserId(UUID.fromString(playerCreated.userId));
 			player.setName(playerCreated.playerName);
 			player.setInitialized(false);
 			playerRepository.save(player);
