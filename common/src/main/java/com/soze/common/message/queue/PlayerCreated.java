@@ -3,7 +3,6 @@ package com.soze.common.message.queue;
 public class PlayerCreated extends QueueMessage {
 
 	public String userId;
-	public String userName;
 	public String playerId;
 	public String playerName;
 
@@ -11,9 +10,8 @@ public class PlayerCreated extends QueueMessage {
 
 	}
 
-	public PlayerCreated(String userId, String userName, String playerId, String playerName) {
+	public PlayerCreated(String userId, String playerId, String playerName) {
 		this.userId = userId;
-		this.userName = userName;
 		this.playerId = playerId;
 		this.playerName = playerName;
 	}
@@ -21,5 +19,10 @@ public class PlayerCreated extends QueueMessage {
 	@Override
 	public QueueMessageType getType() {
 		return QueueMessageType.PLAYER_CREATED;
+	}
+
+	@Override
+	public String toString() {
+		return "PlayerCreated{" + "userId='" + userId + '\'' + ", playerId='" + playerId + '\'' + ", playerName='" + playerName + '\'' + '}';
 	}
 }
