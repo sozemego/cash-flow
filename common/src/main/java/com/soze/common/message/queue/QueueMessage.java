@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes(value = {
 	@JsonSubTypes.Type(value = UserCreated.class, name = "USER_CREATED"),
 	@JsonSubTypes.Type(value = UserCreatedConfirmation.class, name = "USER_CREATED_CONFIRMATION"),
+	@JsonSubTypes.Type(value = PlayerCreated.class, name = "PLAYER_CREATED"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class QueueMessage {
@@ -15,7 +16,7 @@ public abstract class QueueMessage {
 	public abstract QueueMessageType getType();
 
 	public enum QueueMessageType {
-		USER_CREATED, USER_CREATED_CONFIRMATION
+		USER_CREATED, USER_CREATED_CONFIRMATION, PLAYER_CREATED
 	}
 
 }
