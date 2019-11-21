@@ -9,12 +9,14 @@ import { useGetSelectedTruckId } from "../game/selectors";
 import { useTruckSocket } from "../truck/useTruckSocket";
 import { useDispatch } from "react-redux";
 import { MapCitiesProps } from "../game";
+import { useGetTrucks } from "../truck/selectors";
 
 export function MapCities({ onCityTooltip }: MapCitiesProps) {
   const dispatch = useDispatch();
   const cities = useGetCities();
   const selectedTruckId = useGetSelectedTruckId();
   const { socket: truckSocket } = useTruckSocket();
+  const trucks = useGetTrucks();
 
   return (
     <>
@@ -25,10 +27,13 @@ export function MapCities({ onCityTooltip }: MapCitiesProps) {
           icon={cityIcon}
           onClick={() => {
             if (selectedTruckId) {
-              truckSocket.send(
-                createTruckTravelMessage(selectedTruckId, city.id)
-              );
-              dispatch(truckSelected(""));
+              const truck = trucks[selectedTruckId];
+              if (truck && truck.own) {
+                truckSocket.send(
+                    createTruckTravelMessage(selectedTruckId, city.id)
+                );
+                dispatch(truckSelected(""));
+              }
             } else {
               dispatch(citySelected(city.id));
               dispatch(truckSelected(""));
