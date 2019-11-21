@@ -3,4 +3,4 @@ matrix:
     - language: java
       java: 8
       script:
-        - mvn clean install
+        - mvn clean test
