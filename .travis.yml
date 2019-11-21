@@ -1,0 +1,6 @@
+matrix:
+  include:
+    - language: java
+      java: 8
+      script:
+        - mvn clean install
