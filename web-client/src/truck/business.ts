@@ -1,4 +1,5 @@
 import { ICity } from "../world";
+import { ITruck } from "./index";
 
 export function calculateDistance(from: ICity, to: ICity) {
   if (!from || !to) {
@@ -30,4 +31,11 @@ export function distanceTime(
   const travelTime = (distance / speed).toFixed(1);
 
   return `${distance}km - ${travelTime}h`;
+}
+
+export function getTruckTexture(truck: ITruck): string {
+  const { texture, own } = truck;
+  const parts = texture.split(".");
+  const ownPart = own ? "_own." : ".";
+  return `/img/truck/${parts[0]}${ownPart}${parts[1]}`;
 }

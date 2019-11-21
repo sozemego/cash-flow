@@ -1,12 +1,12 @@
 import { ITruck } from "../truck";
 import Leaflet from "leaflet";
+import { getTruckTexture } from "../truck/business";
 
-export function getTruckIcon(truck: ITruck, own: boolean): Leaflet.Icon {
-  const texture = truck.texture;
-  const parts = texture.split(".");
+export function getTruckIcon(truck: ITruck): Leaflet.Icon {
+  const truckTexture = getTruckTexture(truck);
   return new Leaflet.Icon({
-    iconUrl: `/img/truck/${parts[0]}${own ? "_own." : "."}${parts[1]}`,
-    iconRetinaUrl: `/img/truck/${parts[0]}${own ? "_own." : "."}${parts[1]}`,
+    iconUrl: truckTexture,
+    iconRetinaUrl: truckTexture,
     iconAnchor: undefined,
     popupAnchor: undefined,
     shadowUrl: undefined,

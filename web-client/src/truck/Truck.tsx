@@ -39,8 +39,7 @@ import {
 import { ResourceName } from "../world";
 import { useDispatch } from "react-redux";
 import { truckSelected } from "../game/actions";
-import { calculateDistance, distanceTime } from "./business";
-import { useGetUser } from "../auth/selectors";
+import { calculateDistance, distanceTime, getTruckTexture } from "./business";
 
 const Container = styled.div`
   width: 450px;
@@ -392,13 +391,9 @@ export function FactoryResource({
 }
 
 export function TruckIcon({ truck }: TruckIconProps) {
-  const user = useGetUser() || { id: "" };
-  const own = truck.playerId === user.id;
-  const texture = truck.texture;
-  const parts = texture.split(".");
   return (
     <img
-      src={`/img/truck/${parts[0]}${own ? "_own." : "."}${parts[1]}`}
+      src={getTruckTexture(truck)}
       alt={"Truck icon"}
       style={{ width: "32px", height: "32px" }}
     />

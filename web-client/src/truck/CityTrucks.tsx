@@ -12,11 +12,9 @@ import { truckSelected } from "../game/actions";
 import { useDispatch } from "react-redux";
 import { useGetSelectedTruckId } from "../game/selectors";
 import { useGameClock } from "../clock/useGameClock";
-import { useGetUser } from "../auth/selectors";
 
 export function CityTrucks({ zoom }: CityTrucksProps) {
   const dispatch = useDispatch();
-  const user = useGetUser();
   const cities = useGetCities();
   const trucks = useGetTrucks();
   const selectedTruckId = useGetSelectedTruckId();
@@ -72,7 +70,7 @@ export function CityTrucks({ zoom }: CityTrucksProps) {
           <Marker
             key={truck.id}
             position={getPosition(truck, index + 1)}
-            icon={getTruckIcon(truck, user!.id === truck.playerId)}
+            icon={getTruckIcon(truck)}
             onClick={() => dispatch(truckSelected(truck.id))}
           >
             {isSelected(truck.id) && (
