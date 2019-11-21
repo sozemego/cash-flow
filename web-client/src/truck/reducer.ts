@@ -18,6 +18,8 @@ import {
 } from "./index";
 import { StorageContentChangedAction } from "../storage";
 import { USER_LOGGED_OUT } from "../auth/actions";
+import { PLAYER_ADDED } from "../player/actions";
+import { PlayerAddedAction } from "../player";
 
 const initialState: TruckState = {
   trucks: {}
@@ -42,6 +44,8 @@ export function reducer(
       return storageCapacityChanged(state, action);
     case USER_LOGGED_OUT:
       return initialState;
+    case PLAYER_ADDED:
+      return playerAdded(state, action);
     default:
       return state;
   }
@@ -109,3 +113,11 @@ const storageCapacityChanged = produce(
     truck.storage = nextStorage;
   }
 );
+
+const playerAdded = produce((state: TruckState, action: PlayerAddedAction) => {
+  Object.values(state.trucks).forEach(truck => {
+    const { playerId } = truck;
+    const { id } = action.player;
+    truck.own = playerId === id;
+  });
+});

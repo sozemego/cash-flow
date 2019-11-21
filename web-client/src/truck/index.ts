@@ -9,6 +9,8 @@ import { ResourceName } from "../world";
 import { IStorage, StorageContentChangedAction } from "../storage";
 import { IFactory, InputOutput } from "../factory";
 import { UserLoggedOut } from "../auth";
+import { Action } from "../store";
+import { PlayerAddedAction } from "../player";
 
 export interface TruckState {
   trucks: TruckMap;
@@ -60,6 +62,7 @@ export interface ITruck {
   speed: number;
   navigation: INavigation;
   storage: IStorage;
+  own: boolean;
 }
 
 export interface INavigation {
@@ -81,7 +84,7 @@ export interface TruckTravelStartedAction {
   arrivalTime: number;
 }
 
-export interface TruckAddedAction {
+export interface TruckAddedAction extends Action {
   type: typeof TRUCK_ADDED;
   truck: ITruck;
 }
@@ -105,7 +108,8 @@ export type TruckActions =
   | TruckArrivedAction
   | StorageContentChangedAction
   | StorageCapacityChanged
-  | UserLoggedOut;
+  | UserLoggedOut
+  | PlayerAddedAction;
 
 export interface ResourceFromFactory {
   factory: IFactory;

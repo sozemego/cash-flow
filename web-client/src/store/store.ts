@@ -1,4 +1,4 @@
-import { combineReducers, compose, createStore as _createStore } from "redux";
+import { combineReducers, compose, createStore as _createStore, applyMiddleware } from "redux";
 
 import { reducer as factory } from "../factory/reducer";
 import { reducer as truck } from "../truck/reducer";
@@ -9,6 +9,8 @@ import { reducer as gameEvent } from "../game-event/reducer";
 import { reducer as game } from "../game/reducer";
 import { reducer as auth } from "../auth/reducer";
 
+import { truckMiddleware } from "../truck/truckMiddleware";
+
 declare global {
   interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
@@ -17,7 +19,7 @@ declare global {
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const enhancer = composeEnhancers();
+const enhancer = composeEnhancers(applyMiddleware(truckMiddleware()));
 
 const reducer = combineReducers({
   factory,
