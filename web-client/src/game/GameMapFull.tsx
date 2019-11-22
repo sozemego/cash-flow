@@ -37,7 +37,7 @@ export function GameMapFull({ height }: GameMapFullProps) {
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <MapCities onCityTooltip={setCityTooltipId} cityTooltipId={cityTooltipId}/>
+      <MapCities onCityTooltip={setCityTooltipId} />
       <TravellingTrucks />
       <CityTrucks zoom={zoom} />
       <TooltipTravelLine cityId={cityTooltipId}/>

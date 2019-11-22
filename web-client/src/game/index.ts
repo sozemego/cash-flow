@@ -66,5 +66,4 @@ export interface CityTrucksProps {
 
 export interface MapCitiesProps {
   onCityTooltip: (cityId: string | null) => void;
-  cityTooltipId: string | null;
 }
