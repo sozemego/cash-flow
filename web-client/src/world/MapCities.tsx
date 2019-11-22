@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { MapCitiesProps } from "../game";
 import { useGetTrucks } from "../truck/selectors";
 
-export function MapCities({ onCityTooltip }: MapCitiesProps) {
+export function MapCities({ onCityTooltip, cityTooltipId }: MapCitiesProps) {
   const dispatch = useDispatch();
   const cities = useGetCities();
   const selectedTruckId = useGetSelectedTruckId();
@@ -30,7 +30,7 @@ export function MapCities({ onCityTooltip }: MapCitiesProps) {
               const truck = trucks[selectedTruckId];
               if (truck && truck.own) {
                 truckSocket.send(
-                    createTruckTravelMessage(selectedTruckId, city.id)
+                  createTruckTravelMessage(selectedTruckId, city.id)
                 );
                 dispatch(truckSelected(""));
               }
@@ -40,6 +40,7 @@ export function MapCities({ onCityTooltip }: MapCitiesProps) {
             }
           }}
           onTooltipOpen={() => onCityTooltip(city.id)}
+          onMouseOut={() => onCityTooltip(null)}
         >
           <Tooltip>
             <CityMapTooltip city={city} />
