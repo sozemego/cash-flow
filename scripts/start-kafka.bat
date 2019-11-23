@@ -1,2 +1,2 @@
-start /b call zookeeper.bat
-start /b call kafka.bat
+start /b call scripts/zookeeper.bat
+start /b call scripts/kafka.bat
