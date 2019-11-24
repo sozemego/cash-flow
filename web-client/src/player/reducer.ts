@@ -1,6 +1,12 @@
 import produce from "immer";
-import { PLAYER_ADDED, PLAYER_CASH_CHANGED, PLAYER_INIT } from "./actions";
 import {
+  COMPETITOR_PLAYERS_ADDED,
+  PLAYER_ADDED,
+  PLAYER_CASH_CHANGED,
+  PLAYER_INIT
+} from "./actions";
+import {
+  CompetitorPlayersAdded,
   PlayerAction,
   PlayerAddedAction,
   PlayerCashChangedAction,
@@ -8,7 +14,8 @@ import {
 } from "./index";
 
 const initialState: PlayerState = {
-  player: { id: "", name: "void", cash: 0 }
+  player: { id: "", name: "void", cash: 0 },
+  competitors: []
 };
 
 export function reducer(
@@ -22,6 +29,8 @@ export function reducer(
       return playerAdded(state, action);
     case PLAYER_CASH_CHANGED:
       return playerCashChanged(state, action);
+    case COMPETITOR_PLAYERS_ADDED:
+      return competitorPlayersAdded(state, action);
     default:
       return state;
   }
@@ -34,5 +43,11 @@ const playerAdded = produce((state: PlayerState, action: PlayerAddedAction) => {
 const playerCashChanged = produce(
   (state: PlayerState, action: PlayerCashChangedAction) => {
     state.player.cash += action.amount;
+  }
+);
+
+const competitorPlayersAdded = produce(
+  (state: PlayerState, action: CompetitorPlayersAdded) => {
+    state.competitors = action.players;
   }
 );

@@ -15,6 +15,7 @@ export const TRUCK_SERVICE_SOCKET_URL = "ws://localhost:9003/websocket";
 export const PLAYER_SERVICE_URL = `${API_GATEWAY_URL}/player-service`;
 export const PLAYER_SERVICE_PLAYER_URL = `${PLAYER_SERVICE_URL}/player`;
 export const PLAYER_SERVICE_PLAYER_BY_USER_ID_URL = `${PLAYER_SERVICE_URL}/playerByUser`;
+export const PLAYER_SERVICE_PLAYERS_URL = `${PLAYER_SERVICE_URL}/players`;
 
 export const PLAYER_SERVICE_SOCKET_URL = "ws://localhost:9005/websocket";
 

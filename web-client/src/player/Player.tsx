@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { usePlayerSocket } from "./usePlayerSocket";
-import { PLAYER_SERVICE_PLAYER_BY_USER_ID_URL } from "../config/urls";
-import { playerAdded } from "./actions";
+import { PLAYER_SERVICE_PLAYER_BY_USER_ID_URL, PLAYER_SERVICE_PLAYERS_URL } from "../config/urls";
+import { competitorPlayersAdded, playerAdded } from "./actions";
 import { useGetPlayer } from "./selectors";
 import { useDispatch } from "react-redux";
 import { useGetUser } from "../auth/selectors";
@@ -23,9 +23,15 @@ export function Player() {
       dispatch(playerAdded(response.payload));
   }
 
+  async function getCompetitors() {
+      const response = await getAsJson(PLAYER_SERVICE_PLAYERS_URL);
+      dispatch(competitorPlayersAdded(response.payload));
+  }
+
   useEffect(
     () => {
         getPlayer();
+        getCompetitors();
     },
     /* eslint-disable-line */ [user.id]
   );

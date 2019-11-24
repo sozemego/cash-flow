@@ -11,3 +11,6 @@ export const playerCashChanged = makeActionCreator(
   PLAYER_CASH_CHANGED,
   "amount"
 );
+
+export const COMPETITOR_PLAYERS_ADDED = "COMPETITOR_PLAYERS_ADDED";
+export const competitorPlayersAdded = makeActionCreator(COMPETITOR_PLAYERS_ADDED, "players");
