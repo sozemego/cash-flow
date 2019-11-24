@@ -120,6 +120,10 @@ export function TooltipTravelLine({ cityId }: TooltipTravelLineProps) {
   }
 
   return (
-    <div>{city && truck && truck.own && <Polyline positions={getPositionsToCity()} />}</div>
+    <div>
+      {city && truck && truck.own && (
+        <Polyline color={"green"} positions={getPositionsToCity()} />
+      )}
+    </div>
   );
 }
