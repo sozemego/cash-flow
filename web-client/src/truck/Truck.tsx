@@ -14,7 +14,7 @@ import { useGameClock } from "../clock/useGameClock";
 import { calculateCapacityTaken, Storage } from "../storage/Storage";
 import { useGetFactories } from "../factory/selectors";
 import { ResourceIcon } from "../components/ResourceIcon";
-import { useGetPlayer } from "../player/selectors";
+import { useGetCompetitors, useGetPlayer } from "../player/selectors";
 import Card from "antd/lib/card";
 import Divider from "antd/lib/divider";
 import Tag from "antd/lib/tag";
@@ -76,12 +76,19 @@ export function Truck({ truck }: TruckProps) {
       : { opacity: 1, pointerEvents: "all" as PointerEventsProperty }
   );
 
+  const competitors = useGetCompetitors();
+
+  const { playerId } = truck;
+  const player = competitors.find(competitor => competitor.id === playerId);
+  const ownerName = truck.own ? "YOU" : player ? player.name : '';
+
   return (
     <Container>
       <Header>
         <div>
           <Tag color={"brown"}>{name}</Tag>
           <Tag color={"gray"}>{id}</Tag>
+          <Tag color={"blue"}>Owner -> {ownerName}</Tag>
         </div>
         <div>
           <Icon
