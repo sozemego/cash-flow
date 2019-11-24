@@ -1,4 +1,5 @@
-import { combineReducers, compose, createStore as _createStore, applyMiddleware } from "redux";
+import { combineReducers } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
 
 import { reducer as factory } from "../factory/reducer";
 import { reducer as truck } from "../truck/reducer";
@@ -11,16 +12,7 @@ import { reducer as auth } from "../auth/reducer";
 
 import { truckMiddleware } from "../truck/truckMiddleware";
 
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-  }
-}
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const enhancer = composeEnhancers(applyMiddleware(truckMiddleware()));
-
+//@ts-ignore
 const reducer = combineReducers({
   factory,
   truck,
@@ -32,10 +24,11 @@ const reducer = combineReducers({
   auth
 });
 
-export const store = createStore();
+//@ts-ignore
+export const store = configureStore({ reducer, middleware: [truckMiddleware()] });
 
 function createStore() {
-  return _createStore(reducer, enhancer);
+  return configureStore({ reducer });
 }
 
 export default createStore;
