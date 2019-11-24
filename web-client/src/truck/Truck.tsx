@@ -122,7 +122,7 @@ export function Truck({ truck }: TruckProps) {
             <Trade truck={truck} cityId={nextCityId || currentCityId} />
             <Divider style={{ margin: "4px" }} />
           </div>
-          {!nextCityId && <TravelTo truck={truck} />}
+          {/*{!nextCityId && <TravelTo truck={truck} />}*/}
           {nextCityId && <Traveling truck={truck} />}
         </Card>
       )}
