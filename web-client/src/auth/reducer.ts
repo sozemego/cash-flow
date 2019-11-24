@@ -38,6 +38,7 @@ function getUser(): IUser | null {
 function saveUser(user: IUser | null) {
   if (user === null) {
     localStorage.removeItem("user");
+  } else {
+    localStorage.setItem("user", JSON.stringify(user));
   }
-  localStorage.setItem("user", JSON.stringify(user));
 }
