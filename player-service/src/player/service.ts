@@ -2,6 +2,7 @@ import { registry } from "./socketRegistry";
 import {
   createPlayer as repoCreatePlayer,
   getPlayer,
+  getPlayers,
   getPlayerByUserId,
   updatePlayer
 } from "./repository";
@@ -11,6 +12,7 @@ const logger = require("../logger").namedLogger("player-service");
 interface PlayerService {
   transfer: (number: number, id: string) => Promise<TransferResult>;
   getPlayer: (id: string) => Promise<Player>;
+  getPlayers: () => Promise<Player[]>;
   getPlayerByUserId: (id: string) => Promise<Player>;
   createPlayer: (name: string, userId: string) => Promise<Player>;
 }
@@ -95,6 +97,7 @@ async function createPlayer(name: string, userId: string) {
 
 export const service: PlayerService = {
   getPlayer,
+  getPlayers,
   transfer,
   getPlayerByUserId,
   createPlayer

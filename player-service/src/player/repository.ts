@@ -20,6 +20,12 @@ export async function getPlayer(id: string): Promise<Player> {
   return data.rows[0];
 }
 
+export async function getPlayers(): Promise<Player[]> {
+  logger.info(`Fetching players`);
+  const data = await pool.query("SELECT id, user_id, name FROM player.player");
+  return data.rows;
+}
+
 export async function getPlayerByUserId(userId: string): Promise<Player> {
   logger.info(`Fetching player userId = ${userId}`);
   if (!userId) {

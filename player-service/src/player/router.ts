@@ -33,6 +33,16 @@ router.get("/player", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/players", async (req: Request, res: Response) => {
+  try {
+    const players = await service.getPlayers();
+    logger.info(`Returning ${players.length} players`);
+    res.send(players);
+  } catch (e) {
+    res.status(400).send({ message: "Problem retrieving players!" });
+  }
+});
+
 router.post("/player", async (req: Request, res: Response) => {
   const { name } = req.query;
   const token = getJWT(req);
