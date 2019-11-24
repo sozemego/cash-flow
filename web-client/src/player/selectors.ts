@@ -8,3 +8,7 @@ export function getPlayer(state: AppState) {
 export function useGetPlayer() {
   return useSelector((state: AppState) => state.player.player);
 }
+
+export function useGetCompetitors() {
+  return useSelector((state: AppState) => state.player.competitors);
+}

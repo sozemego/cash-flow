@@ -12,6 +12,7 @@ import { truckSelected } from "../game/actions";
 import { useDispatch } from "react-redux";
 import { useGetSelectedTruckId } from "../game/selectors";
 import { useGameClock } from "../clock/useGameClock";
+import { useGetCompetitors } from "../player/selectors";
 
 export function CityTrucks({ zoom }: CityTrucksProps) {
   const dispatch = useDispatch();
@@ -91,8 +92,15 @@ export function CityTrucks({ zoom }: CityTrucksProps) {
 }
 
 export function TruckMapTooltip({ truck }: TruckMapTooltipProps) {
+  const competitors = useGetCompetitors();
+
+  const { playerId } = truck;
+  const player = competitors.find(competitor => competitor.id === playerId);
+  const ownerName = truck.own ? "YOU" : player ? player.name : '';
+
   return (
     <div>
+      <Tag color={"blue"}>Owner -> {ownerName}</Tag>
       <Tag color={"red"}>{truck.name}</Tag>
       <span>Speed: {truck.speed}km/h</span>
       <Storage storage={truck.storage} />
