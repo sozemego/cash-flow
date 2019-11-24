@@ -92,18 +92,19 @@ export function CityTrucks({ zoom }: CityTrucksProps) {
 }
 
 export function TruckMapTooltip({ truck }: TruckMapTooltipProps) {
+  const { own } = truck;
   const competitors = useGetCompetitors();
 
   const { playerId } = truck;
   const player = competitors.find(competitor => competitor.id === playerId);
-  const ownerName = truck.own ? "YOU" : player ? player.name : '';
+  const ownerName = own ? "YOU" : player ? player.name : "";
 
   return (
     <div>
       <Tag color={"blue"}>Owner -> {ownerName}</Tag>
       <Tag color={"red"}>{truck.name}</Tag>
-      <span>Speed: {truck.speed}km/h</span>
-      <Storage storage={truck.storage} />
+      {own && <span>Speed: {truck.speed}km/h</span>}
+      {own && <Storage storage={truck.storage} />}
     </div>
   );
 }
