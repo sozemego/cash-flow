@@ -58,7 +58,7 @@ export function Truck({ truck }: TruckProps) {
   const { socket } = useTruckSocket();
   const [hidden, setHidden] = useState(false);
 
-  const { id, name, navigation, storage } = truck;
+  const { id, name, navigation, storage, own } = truck;
   const { currentCityId, nextCityId } = navigation;
 
   const cardStyle = Object.assign(
@@ -80,7 +80,7 @@ export function Truck({ truck }: TruckProps) {
 
   const { playerId } = truck;
   const player = competitors.find(competitor => competitor.id === playerId);
-  const ownerName = truck.own ? "YOU" : player ? player.name : '';
+  const ownerName = truck.own ? "YOU" : player ? player.name : "";
 
   return (
     <Container>
@@ -116,12 +116,14 @@ export function Truck({ truck }: TruckProps) {
             <CityInline cityId={nextCityId || currentCityId} />
           </span>
           <Divider style={{ margin: "4px" }} />
-          <Storage storage={storage} />
-          <Divider style={{ margin: "4px" }} />
-          <div style={buyStyle}>
-            <Trade truck={truck} cityId={nextCityId || currentCityId} />
-            <Divider style={{ margin: "4px" }} />
-          </div>
+          {own && <Storage storage={storage} />}
+          {own && <Divider style={{ margin: "4px" }} />}
+          {own && (
+            <div style={buyStyle}>
+              <Trade truck={truck} cityId={nextCityId || currentCityId} />
+              <Divider style={{ margin: "4px" }} />
+            </div>
+          )}
           {/*{!nextCityId && <TravelTo truck={truck} />}*/}
           {nextCityId && <Traveling truck={truck} />}
         </Card>
