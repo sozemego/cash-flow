@@ -1,0 +1,19 @@
+<configuration scan="true" debug="true">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="remote" class="com.soze.cashflow.logaggregator.appender.HttpLogAggregatorAppender">
+        <address>http://localhost:8999</address>
+    </appender>
+
+<!--    <logger name="io.micronaut.http.client" level="TRACE" />-->
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="remote" />
+    </root>
+</configuration>
