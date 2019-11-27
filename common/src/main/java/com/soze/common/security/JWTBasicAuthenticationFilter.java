@@ -35,7 +35,7 @@ public class JWTBasicAuthenticationFilter extends BasicAuthenticationFilter {
 	@Override
 	protected void doFilterInternal(final HttpServletRequest req, final HttpServletResponse res, final FilterChain chain
 																 ) throws IOException, ServletException {
-		LOG.info("Checking token from {}", req.getRemoteAddr());
+		LOG.info("Checking token from {} to {}", req.getRemoteAddr(), req.getRequestURL());
 		String header = req.getHeader(AUTHORIZATION);
 		LOG.info("Authorization header = {}", header);
 		if (header == null) {
