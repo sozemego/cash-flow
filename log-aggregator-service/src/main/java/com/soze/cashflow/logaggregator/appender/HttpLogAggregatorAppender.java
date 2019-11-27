@@ -17,9 +17,10 @@ public class HttpLogAggregatorAppender extends AppenderBase<ILoggingEvent> {
 
 	private AppenderHttpWorker appenderHttpWorker;
 
-	private String address;
-
 	private ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+	private String address;
+	private String application;
 
 	public HttpLogAggregatorAppender() {
 
@@ -36,7 +37,7 @@ public class HttpLogAggregatorAppender extends AppenderBase<ILoggingEvent> {
 			LOG.trace("{}", event);
 		}
 		AppenderHttpWorker worker = getWorker();
-		LogEventDTO dto = LoggingEventConverter.convert(event);
+		LogEventDTO dto = LoggingEventConverter.convert(event, application);
 		worker.addLogEvent(dto);
 	}
 
@@ -58,5 +59,13 @@ public class HttpLogAggregatorAppender extends AppenderBase<ILoggingEvent> {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getApplication() {
+		return application;
+	}
+
+	public void setApplication(String application) {
+		this.application = application;
 	}
 }

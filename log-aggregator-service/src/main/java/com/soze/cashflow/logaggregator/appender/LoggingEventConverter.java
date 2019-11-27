@@ -5,10 +5,11 @@ import com.soze.cashflow.logaggregator.dto.LogEventDTO;
 
 public class LoggingEventConverter {
 
-	public static LogEventDTO convert(ILoggingEvent e) {
+	public static LogEventDTO convert(ILoggingEvent e, String app) {
 		LogEventDTO dto = new LogEventDTO();
+		dto.application = app;
 		dto.level = e.getLevel().levelStr;
-		dto.message = e.getMessage();
+		dto.message = e.getFormattedMessage();
 		return dto;
 	}
 
