@@ -1,6 +1,6 @@
 package com.soze.cashflow.logaggregator.client;
 
-import com.soze.cashflow.logaggregator.controller.LogController;
+import com.soze.cashflow.logaggregator.controller.LogAggregatorClient;
 import com.soze.cashflow.logaggregator.dto.LogEventDTO;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MediaType;
@@ -12,13 +12,13 @@ import org.slf4j.LoggerFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class LogAggregatorClient implements LogController {
+public class LogAggregatorClientImpl implements LogAggregatorClient {
 
-	private static final Logger LOG = LoggerFactory.getLogger(LogAggregatorClient.class);
+	private static final Logger LOG = LoggerFactory.getLogger(LogAggregatorClientImpl.class);
 
 	private final HttpClient client;
 
-	public LogAggregatorClient(String address) {
+	public LogAggregatorClientImpl(String address) {
 		LOG.info("Creating LogAggregatorClient with address = {}", address);
 		try {
 			client = HttpClient.create(new URL(address));
