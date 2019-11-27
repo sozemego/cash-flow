@@ -20,11 +20,11 @@
         <module>world-service</module>
         <module>factory-service</module>
         <module>truck-service</module>
-        <module>warehouse-service</module>
         <module>clock-service</module>
         <module>service-discovery</module>
         <module>auth-service</module>
         <module>api-gateway</module>
+        <module>log-aggregator-service</module>
     </modules>
 
     <repositories>
