@@ -69,13 +69,13 @@ public class HttpLogAggregatorAppender extends AppenderBase<ILoggingEvent> {
 
 	@Override
 	public void start() {
-		appenderHttpWorker.start();
+		getWorker().start();
 		super.start();
 	}
 
 	@Override
 	public void stop() {
-		appenderHttpWorker.stop();
+		getWorker().stop();
 		super.stop();
 	}
 }

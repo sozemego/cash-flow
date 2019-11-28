@@ -1,0 +1,17 @@
+DROP SCHEMA IF EXISTS log_aggregator CASCADE;
+
+CREATE SCHEMA log_aggregator;
+
+CREATE TABLE log_aggregator.log (
+    ID UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    APPLICATION VARCHAR NOT NULL,
+    LEVEL VARCHAR NOT NULL,
+    MESSAGE VARCHAR NOT NULL,
+    TIMESTAMP TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX app_index ON log_aggregator.log (APPLICATION);
+
+GRANT ALL PRIVILEGES ON SCHEMA log_aggregator to "log-aggregator-user";
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA log_aggregator TO "log-aggregator-user";
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA log_aggregator TO "log-aggregator-user";
