@@ -16,12 +16,10 @@ public class AppenderHttpWorker implements Runnable {
 	private static final Logger LOG = LoggerFactory.getLogger(AppenderHttpWorker.class);
 
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-	private Future<?> task = null;
-
-	private final Queue<LogEventDTO> buffer = new ConcurrentLinkedQueue<>();
-
+	private final Queue<RetryableLogEventDTO> buffer = new ConcurrentLinkedQueue<>();
 	private final LogAggregatorClient client;
-
+	private Future<?> task = null;
+	private int maxRetries = 5;
 	private boolean running = false;
 
 	public AppenderHttpWorker(LogAggregatorClient client) {
@@ -31,29 +29,48 @@ public class AppenderHttpWorker implements Runnable {
 	@Override
 	public void run() {
 		LOG.info("Starting loop...");
-		boolean running = true;
+		RetryableLogEventDTO current = null;
+
 		while (running) {
 
-			if (LOG.isTraceEnabled()) {
-				LOG.trace("Sending {} events from buffer", buffer.size());
-			}
-			LogEventDTO current = null;
-			while ((current = buffer.poll()) != null) {
-				client.handleLog(current);
-			}
-
 			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {
-				running = false;
-			}
 
+				if (LOG.isTraceEnabled()) {
+					LOG.trace("Sending {} events from buffer", buffer.size());
+				}
+				while ((current = buffer.poll()) != null) {
+					client.handleLog(current.dto);
+				}
+
+				sleep(250);
+
+			} catch (Exception e) {
+					if (current != null) {
+						current.retries++;
+						if (current.retries < maxRetries) {
+							addRetryableLogEvent(current);
+						}
+					}
+			}
 		}
+
 		LOG.info("Ending loop...");
 	}
 
 	public void addLogEvent(LogEventDTO event) {
+		buffer.add(new RetryableLogEventDTO(event));
+	}
+
+	private void addRetryableLogEvent(RetryableLogEventDTO event) {
 		buffer.add(event);
+	}
+
+	private void sleep(long ms) {
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			running = false;
+		}
 	}
 
 	public boolean isStarted() {
@@ -65,13 +82,24 @@ public class AppenderHttpWorker implements Runnable {
 			return;
 		}
 		task = executorService.submit(this);
+		running = true;
 	}
 
 	public void stop() {
-		if(!isStarted()) {
+		if (!isStarted()) {
 			return;
 		}
 		running = false;
 		task.cancel(true);
+	}
+
+	private static class RetryableLogEventDTO {
+
+		public int retries = 0;
+		public LogEventDTO dto;
+
+		public RetryableLogEventDTO(LogEventDTO dto) {
+			this.dto = dto;
+		}
 	}
 }
