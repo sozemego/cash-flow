@@ -8,16 +8,11 @@ import com.soze.cashflow.logaggregator.dto.LogEventDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class HttpLogAggregatorAppender extends AppenderBase<ILoggingEvent> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HttpLogAggregatorAppender.class);
 
 	private AppenderHttpWorker appenderHttpWorker;
-
-	private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 	private String address;
 	private String application;
@@ -28,7 +23,6 @@ public class HttpLogAggregatorAppender extends AppenderBase<ILoggingEvent> {
 
 	public HttpLogAggregatorAppender(LogAggregatorClient client) {
 		this.appenderHttpWorker = new AppenderHttpWorker(client);
-		executorService.submit(appenderHttpWorker);
 	}
 
 	@Override
@@ -44,7 +38,6 @@ public class HttpLogAggregatorAppender extends AppenderBase<ILoggingEvent> {
 	private AppenderHttpWorker getWorker() {
 		if (appenderHttpWorker == null) {
 			appenderHttpWorker = new AppenderHttpWorker(createClient());
-			executorService.submit(appenderHttpWorker);
 		}
 		return appenderHttpWorker;
 	}
@@ -67,5 +60,22 @@ public class HttpLogAggregatorAppender extends AppenderBase<ILoggingEvent> {
 
 	public void setApplication(String application) {
 		this.application = application;
+	}
+
+	@Override
+	public boolean isStarted() {
+		return appenderHttpWorker.isStarted();
+	}
+
+	@Override
+	public void start() {
+		appenderHttpWorker.start();
+		super.start();
+	}
+
+	@Override
+	public void stop() {
+		appenderHttpWorker.stop();
+		super.stop();
 	}
 }

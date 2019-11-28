@@ -7,14 +7,22 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class AppenderHttpWorker implements Runnable {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AppenderHttpWorker.class);
 
+	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+	private Future<?> task = null;
+
 	private final Queue<LogEventDTO> buffer = new ConcurrentLinkedQueue<>();
 
 	private final LogAggregatorClient client;
+
+	private boolean running = false;
 
 	public AppenderHttpWorker(LogAggregatorClient client) {
 		this.client = client;
@@ -46,5 +54,24 @@ public class AppenderHttpWorker implements Runnable {
 
 	public void addLogEvent(LogEventDTO event) {
 		buffer.add(event);
+	}
+
+	public boolean isStarted() {
+		return running;
+	}
+
+	public void start() {
+		if (isStarted()) {
+			return;
+		}
+		task = executorService.submit(this);
+	}
+
+	public void stop() {
+		if(!isStarted()) {
+			return;
+		}
+		running = false;
+		task.cancel(true);
 	}
 }
