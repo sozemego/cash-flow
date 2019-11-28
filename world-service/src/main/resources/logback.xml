@@ -8,9 +8,10 @@
 
     <appender name="remote" class="com.soze.cashflow.logaggregator.appender.HttpLogAggregatorAppender">
         <address>http://localhost:8999</address>
+        <application>world-service</application>
     </appender>
 
-<!--    <logger name="io.micronaut.http.client" level="TRACE" />-->
+    <logger name="com.soze.cashflow.logaggregator.appender" level="INFO" />
 
     <root level="info">
         <appender-ref ref="STDOUT" />
