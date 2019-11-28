@@ -11,12 +11,12 @@ import io.micronaut.http.annotation.Post;
 import javax.inject.Inject;
 
 @Controller("/log")
-public class LogAggregatorClientImpl implements LogAggregatorClient {
+public class LogAggregatorController implements LogAggregatorClient {
 
 	private final LogAggregatorService service;
 
 	@Inject
-	public LogAggregatorClientImpl(LogAggregatorService service) {
+	public LogAggregatorController(LogAggregatorService service) {
 		this.service = service;
 	}
 
