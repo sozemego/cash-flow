@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -20,6 +21,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class LogAggregatorService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(LogAggregatorService.class);
+
+	private int flushEverySeconds = 2;
+	private LocalDateTime lastFlushTime = LocalDateTime.now();
 
 	private final LogRepository logRepository;
 	private final Queue<LogEventEntity> buffer = new ConcurrentLinkedQueue<>();
@@ -34,10 +38,13 @@ public class LogAggregatorService {
 		LogEventEntity entity = convert(logEventDTO);
 		buffer.add(entity);
 
-		if (buffer.size() > 100) {
-			LOG.info("Buffer size exceeded, saving LogEventEntities in a batch");
+		LocalDateTime now = LocalDateTime.now();
+
+		if (buffer.size() > 100 || now.minusSeconds(flushEverySeconds).isAfter(lastFlushTime)) {
+			LOG.info("Buffer size exceeded or time since last flush, saving LogEventEntities in a batch");
 			List<LogEventEntity> batch = sliceForBatchUpdate();
 			logRepository.save(batch);
+			lastFlushTime = LocalDateTime.now();
 		}
 	}
 
