@@ -4,7 +4,7 @@ import { Logs } from "./Logs";
 
 function App() {
   return (
-    <div style={{ overflow: "always" }}>
+    <div>
       <Header />
       <Logs />
     </div>
