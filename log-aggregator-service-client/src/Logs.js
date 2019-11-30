@@ -27,15 +27,19 @@ export function Logs() {
   const levels = new Set();
   logs.forEach(log => levels.add(log.level));
 
+  function areAllValuesFalse(obj) {
+    return Object.values(obj).filter(Boolean).length === 0;
+  }
+
   function levelFilterFn(log) {
-    if (Object.values(levelFilter).length === 0) {
+    if (areAllValuesFalse(levelFilter)) {
       return true;
     }
     return levelFilter[log.level] === true;
   }
 
   function appFilterFn(log) {
-    if (Object.values(appFilter).length === 0) {
+    if (areAllValuesFalse(appFilter)) {
       return true;
     }
     return appFilter[log.application] === true;
