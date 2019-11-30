@@ -7,9 +7,8 @@
     </appender>
 
     <appender name="remote" class="com.soze.cashflow.logaggregator.appender.HttpLogAggregatorAppender">
-        <host>http://localhost:8999</host>
-        <path>/log-aggregator-service</path>
-        <application>world-service</application>
+        <host>http://localhost:9010</host>
+        <application>api-gateway</application>
     </appender>
 
     <logger name="com.soze.cashflow.logaggregator.appender" level="INFO" />

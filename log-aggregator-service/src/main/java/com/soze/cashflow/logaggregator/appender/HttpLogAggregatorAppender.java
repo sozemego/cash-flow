@@ -14,7 +14,8 @@ public class HttpLogAggregatorAppender extends AppenderBase<ILoggingEvent> {
 
 	private AppenderHttpWorker appenderHttpWorker;
 
-	private String address;
+	private String host;
+	private String path = "";
 	private String application;
 
 	public HttpLogAggregatorAppender() {
@@ -43,15 +44,23 @@ public class HttpLogAggregatorAppender extends AppenderBase<ILoggingEvent> {
 	}
 
 	private LogAggregatorClientImpl createClient() {
-		return new LogAggregatorClientImpl(getAddress());
+		return new LogAggregatorClientImpl(getHost(), getPath());
 	}
 
-	public String getAddress() {
-		return address;
+	public String getHost() {
+		return host;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public String getApplication() {

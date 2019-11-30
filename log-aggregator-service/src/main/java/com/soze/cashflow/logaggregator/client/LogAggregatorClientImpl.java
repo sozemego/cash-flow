@@ -17,19 +17,21 @@ public class LogAggregatorClientImpl implements LogAggregatorClient {
 	private static final Logger LOG = LoggerFactory.getLogger(LogAggregatorClientImpl.class);
 
 	private final HttpClient client;
+	private final String path;
 
-	public LogAggregatorClientImpl(String address) {
+	public LogAggregatorClientImpl(String address, String path) {
 		LOG.info("Creating LogAggregatorClient with address = {}", address);
 		try {
 			client = HttpClient.create(new URL(address));
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
+		this.path = path;
 	}
 
 	@Override
 	public void handleLog(LogEventDTO logEvent) {
-		HttpRequest<LogEventDTO> request = HttpRequest.POST("/log-aggregator-service/log", logEvent);
+		HttpRequest<LogEventDTO> request = HttpRequest.POST(path + "/log", logEvent);
 		MutableHttpHeaders headers = (MutableHttpHeaders) request.getHeaders();
 		headers.contentType(MediaType.APPLICATION_JSON_TYPE);
 		client.toBlocking().exchange(request);
