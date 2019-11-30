@@ -2,17 +2,20 @@ package com.soze.cashflow.logaggregator.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Entity
 @Table(name = "log_aggregator.log")
 public class LogEventEntity {
 
 	@Id
-	private UUID id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
 	@Column
 	private String application;
 	@Column
@@ -26,11 +29,11 @@ public class LogEventEntity {
 
 	}
 
-	public UUID getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

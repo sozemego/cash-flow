@@ -11,7 +11,6 @@ import javax.inject.Singleton;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @Singleton
 public class LogAggregatorService {
@@ -33,7 +32,6 @@ public class LogAggregatorService {
 
 	private LogEventEntity convert(LogEventDTO dto) {
 		LogEventEntity entity = new LogEventEntity();
-		entity.setId(UUID.randomUUID());
 		entity.setApplication(dto.application);
 		entity.setLevel(dto.level);
 		entity.setMessage(dto.message);
