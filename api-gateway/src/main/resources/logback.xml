@@ -6,15 +6,15 @@
         </encoder>
     </appender>
 
-    <appender name="remote" class="com.soze.cashflow.logaggregator.appender.HttpLogAggregatorAppender">
-        <host>http://localhost:9010</host>
-        <application>api-gateway</application>
-    </appender>
+<!--    <appender name="remote" class="com.soze.cashflow.logaggregator.appender.HttpLogAggregatorAppender">-->
+<!--        <host>http://localhost:9010</host>-->
+<!--        <application>api-gateway</application>-->
+<!--    </appender>-->
 
     <logger name="com.soze.cashflow.logaggregator.appender" level="INFO" />
 
     <root level="info">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="remote" />
+<!--        <appender-ref ref="remote" />-->
     </root>
 </configuration>
