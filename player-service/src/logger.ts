@@ -1,11 +1,13 @@
 import winston = require("winston");
 import { Logger } from "winston";
 import { Format } from "logform";
+import { HttpAppenderTransport } from "./HttpAppenderTransport";
 
 const consoleTransport = new winston.transports.Console();
+const httpAppenderTransport = new HttpAppenderTransport();
 
 const defaultOptions: winston.LoggerOptions = {
-  transports: [consoleTransport],
+  transports: [consoleTransport, httpAppenderTransport],
   level: "info",
   format: getDefaultFormat()
 };
@@ -43,7 +45,7 @@ export const logger = winston.createLogger(defaultOptions);
 
 export function namedLogger(name: string): Logger {
   const namedOptions: winston.LoggerOptions = {
-    transports: [consoleTransport],
+    transports: [consoleTransport, httpAppenderTransport],
     level: "info",
     format: getNamedFormat(name)
   };
