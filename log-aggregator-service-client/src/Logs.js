@@ -45,6 +45,16 @@ export function Logs() {
     return appFilter[log.application] === true;
   }
 
+  function lengthFilter(log, index, array) {
+    const length = array.length;
+    const max = 200;
+    if (length < max) {
+      return true;
+    }
+    const minIndex = length - max;
+    return index > minIndex;
+  }
+
   return (
     <div>
       <Filters>
@@ -62,6 +72,7 @@ export function Logs() {
       {logs
         .filter(levelFilterFn)
         .filter(appFilterFn)
+        .filter(lengthFilter)
         .map(log => (
           <Log log={log} key={log.id} />
         ))}
