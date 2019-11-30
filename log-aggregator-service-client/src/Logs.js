@@ -1,7 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import CheckableTag from "antd/lib/tag/CheckableTag";
 import styled from "styled-components";
 import { Log } from "./Log";
+
+const Container = styled.div`
+  // max-height: ${prop => prop.height || 0}px;
+`;
 
 const Filters = styled.div`
   display: flex;
@@ -11,6 +15,7 @@ const Filters = styled.div`
 `;
 
 export function Logs() {
+  const scrollRef = React.useRef();
   const [logs, setLogs] = React.useState([]);
   const [appFilter, setAppFilter] = React.useState({});
   const [levelFilter, setLevelFilter] = React.useState({});
@@ -55,8 +60,12 @@ export function Logs() {
     return index > minIndex;
   }
 
+  useLayoutEffect(() => {
+    scrollRef.current.scrollIntoView({ behavior: "smooth" });
+  });
+
   return (
-    <div>
+    <Container height={window.innerHeight - 50}>
       <Filters>
         <ApplicationFilter
           applications={Array.from(applications)}
@@ -76,7 +85,8 @@ export function Logs() {
         .map(log => (
           <Log log={log} key={log.id} />
         ))}
-    </div>
+      <div ref={scrollRef} />
+    </Container>
   );
 }
 
