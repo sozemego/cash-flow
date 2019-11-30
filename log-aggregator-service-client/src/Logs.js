@@ -3,13 +3,13 @@ import CheckableTag from "antd/lib/tag/CheckableTag";
 import styled from "styled-components";
 import { Log } from "./Log";
 
-const Container = styled.div`
-
-`;
+const Container = styled.div``;
 
 const LogsContainer = styled.div`
   max-height: ${props => props.height || 0}px;
   overflow: scroll;
+  background: #300A24;
+  color: green;
 `;
 
 const Filters = styled.div`

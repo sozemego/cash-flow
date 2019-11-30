@@ -12,6 +12,7 @@ const Timestamp = styled.div`
   margin-right: 4px;
   flex-grow: 1;
   overflow: hidden;
+  color: gray;
 `;
 
 const Level = styled.div`
@@ -22,10 +23,12 @@ const Application = styled.div`
   margin: 2px;
   margin-right: 4px;
   overflow: hidden;
+  color: gray;
 `;
 
 const Message = styled.div`
   overflow: hidden;
+  color: white;
 `;
 
 export function Log({ log }) {
