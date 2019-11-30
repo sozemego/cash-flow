@@ -4,7 +4,12 @@ import styled from "styled-components";
 import { Log } from "./Log";
 
 const Container = styled.div`
-  // max-height: ${prop => prop.height || 0}px;
+
+`;
+
+const LogsContainer = styled.div`
+  max-height: ${props => props.height || 0}px;
+  overflow: scroll;
 `;
 
 const Filters = styled.div`
@@ -65,7 +70,7 @@ export function Logs() {
   });
 
   return (
-    <Container height={window.innerHeight - 50}>
+    <Container>
       <Filters>
         <ApplicationFilter
           applications={Array.from(applications)}
@@ -78,14 +83,16 @@ export function Logs() {
           setLevelFilter={setLevelFilter}
         />
       </Filters>
-      {logs
-        .filter(levelFilterFn)
-        .filter(appFilterFn)
-        .filter(lengthFilter)
-        .map(log => (
-          <Log log={log} key={log.id} />
-        ))}
-      <div ref={scrollRef} />
+      <LogsContainer height={window.innerHeight - 125}>
+        {logs
+          .filter(levelFilterFn)
+          .filter(appFilterFn)
+          .filter(lengthFilter)
+          .map(log => (
+            <Log log={log} key={log.id} />
+          ))}
+        <div ref={scrollRef} />
+      </LogsContainer>
     </Container>
   );
 }
