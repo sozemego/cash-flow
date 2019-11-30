@@ -64,4 +64,7 @@ public class LogAggregatorService {
 		return batch;
 	}
 
+	public List<LogEventDTO> getAllLogs() {
+		return logRepository.getAllLogs();
+	}
 }
